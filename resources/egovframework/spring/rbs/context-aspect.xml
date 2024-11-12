@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+	
+	<!-- 
+		로그 bean 
+		expression추가방법 : execution(* rbs.modules.패키지명..impl.*Impl.함수명(..)) or execution(* rbs.modules.패키지명..impl.*Impl.함수명(..))
+	 	
+	 	사용시에 아래의 주석 제거
+	-->
+	<!-- 
+	<bean id="logTransfer" class="rbs.egovframework.aspect.LogTransfer"/>
+	<aop:config>
+	    <aop:pointcut id="insertMethod" expression="execution(* rbs.modules.board..impl.*Impl.insert(..)) or execution(* rbs.modules.member..impl.*Impl.insert(..))"/>
+		<aop:pointcut id="updateMethod" expression="execution(* rbs.modules.board..impl.*Impl.update(..)) or execution(* rbs.modules.member..impl.*Impl.update(..))" />
+	    <aop:pointcut id="deleteMethod" expression="execution(* rbs.modules.board..impl.*Impl.delete(..)) or execution(* rbs.modules.member..impl.*Impl.delete(..))"/>
+	    <aop:pointcut id="restoreMethod" expression="execution(* rbs.modules.board..impl.*Impl.restore(..)) or execution(* rbs.modules.member..impl.*Impl.restore(..))"/>
+	    <aop:pointcut id="cdeleteMethod" expression="execution(* rbs.modules.board..impl.*Impl.cdelete(..)) or execution(* rbs.modules.member..impl.*Impl.cdelete(..))"/>
+	    <aop:aspect ref="logTransfer">
+	        <aop:after-returning pointcut-ref="insertMethod" method="insertLog" returning="result"/>
+			<aop:after-returning pointcut-ref="updateMethod" method="updateLog" returning="result"/>
+			<aop:after-returning pointcut-ref="deleteMethod" method="deleteLog" returning="result"/>
+			<aop:after-returning pointcut-ref="restoreMethod" method="restoreLog" returning="result"/>
+			<aop:after-returning pointcut-ref="cdeleteMethod" method="cdeleteLog" returning="result"/>
+	    </aop:aspect>
+	</aop:config>
+	-->
+</beans>

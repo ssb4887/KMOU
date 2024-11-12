@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.adm.dashboard.dashboardMapper">
+	
+	<!-- 사용자 사이트 -->
+	<select id="websiteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.SITE_ID, A.SITE_NAME, A.SITE_DOMAIN, A.LOCALE_LANG, OPT_LOCALE.OPTION_NAME LOCALE_LANG_NAME
+			, A.SITE_TYPE, OPT_TYPE.OPTION_NAME SITE_TYPE_NAME
+			, A.REGI_DATE 
+			FROM 
+			<include refid="rbs.modules.website.websiteMapper.WEBSITE_TABLE_NAME"/> A 
+			LEFT OUTER JOIN (
+				<include refid="rbs.modules.code.OptionJoinMapper.optionJoinSql"/> AND MASTER_CODE = 'LOCALE'
+			) OPT_LOCALE 
+			ON A.LOCALE_LANG = OPT_LOCALE.OPTION_CODE 
+			LEFT OUTER JOIN (
+				<include refid="rbs.modules.code.OptionJoinMapper.optionJoinSql"/> AND MASTER_CODE = 'SITE_TYPE'
+			) OPT_TYPE 
+			ON A.SITE_TYPE = OPT_TYPE.OPTION_CODE 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/> 
+			ORDER BY A.ORDER_IDX ASC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<!-- 선택 사용자 사이트 -->
+	<select id="websiteView" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+		A.SITE_ID, A.SITE_NAME, A.SITE_DOMAIN, A.LOCALE_LANG, OPT_LOCALE.OPTION_NAME LOCALE_LANG_NAME
+		, A.SITE_TYPE, OPT_TYPE.OPTION_NAME SITE_TYPE_NAME
+		, A.REGI_DATE 
+		FROM 
+		<include refid="rbs.modules.website.websiteMapper.WEBSITE_TABLE_NAME"/> A 
+		LEFT OUTER JOIN (
+			<include refid="rbs.modules.code.OptionJoinMapper.optionJoinSql"/> AND MASTER_CODE = 'LOCALE'
+		) OPT_LOCALE 
+		ON A.LOCALE_LANG = OPT_LOCALE.OPTION_CODE 
+		LEFT OUTER JOIN (
+			<include refid="rbs.modules.code.OptionJoinMapper.optionJoinSql"/> AND MASTER_CODE = 'SITE_TYPE'
+		) OPT_TYPE 
+		ON A.SITE_TYPE = OPT_TYPE.OPTION_CODE 
+		WHERE A.ISDELETE = '0' AND A.SITE_ID = #{siteId}
+	</select>
+	
+	<!-- 콘텐츠 -->
+	<select id="contentsList" parameterType="java.util.HashMap" resultType="dataMap">
+		<if test="lastIndex > 0">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+		</if>
+			SELECT 
+			MENU.MENU_IDX, MENU.MENU_NAME, CONT.CONTENTS_CODE, CONT.CONTENTS_NAME, BRANCH.BRANCH_IDX, BRANCH.BRANCH_NAME, BRANCH.BRANCH_TYPE, OPT_BTYPE.OPTION_NAME BRANCH_TYPE_NAME, A.VER_IDX, A.WORK_TYPE, OPT_TYPE.OPTION_NAME WORK_TYPE_NAME
+			FROM 
+			<include refid="rbs.modules.contents.lang.contVersionMapper.VIEW_VERSION_TABLE_NAME"/> A 
+			LEFT OUTER JOIN <include refid="rbs.modules.contents.lang.contVersionMapper.VIEW_VERSION_TABLE_NAME"/> APPL_VER ON APPL_VER.ISDELETE = '0' AND APPL_VER.WORK_TYPE = '10' AND A.CONTENTS_CODE = APPL_VER.CONTENTS_CODE AND A.BRANCH_IDX = APPL_VER.BRANCH_IDX AND A.LOCALE_LANG = APPL_VER.LOCALE_LANG
+			INNER JOIN <include refid="rbs.modules.contents.lang.branchMapper.VIEW_BRANCH_TABLE_NAME"/> BRANCH ON A.CONTENTS_CODE = BRANCH.CONTENTS_CODE AND A.BRANCH_IDX = BRANCH.BRANCH_IDX AND A.LOCALE_LANG = BRANCH.LOCALE_LANG  
+			INNER JOIN <include refid="rbs.modules.contents.lang.contentsMapper.VIEW_CONTENTS_TABLE_NAME"/> CONT ON BRANCH.CONTENTS_CODE = CONT.CONTENTS_CODE AND BRANCH.LOCALE_LANG = CONT.LOCALE_LANG  
+			INNER JOIN <include refid="rbs.modules.menu.menuMapper.MENU_A_TABLE_NAME"/> MENU ON A.CONTENTS_CODE = MENU.CONTENTS_CODE AND A.BRANCH_IDX = MENU.BRANCH_IDX  
+			LEFT OUTER JOIN (
+				<include refid="rbs.modules.code.OptionJoinMapper.optionJoinSql"/> AND MASTER_CODE = 'WORK_TYPE'
+			) OPT_TYPE 
+			ON A.WORK_TYPE = OPT_TYPE.OPTION_CODE 
+			LEFT OUTER JOIN (
+				<include refid="rbs.modules.code.OptionJoinMapper.optionJoinSql"/> AND MASTER_CODE = 'SITE_TYPE'
+			) OPT_BTYPE 
+			ON BRANCH.BRANCH_TYPE = OPT_BTYPE.OPTION_CODE 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/> 
+			<![CDATA[AND A.WORK_TYPE < '10' AND (APPL_VER.VER_IDX IS NULL OR A.VER_IDX > APPL_VER.VER_IDX) ]]>
+			AND BRANCH.ISDELETE = '0' AND CONT.ISDELETE = '0'
+			<bind name="defaultOrderStr" value="'CONT.CONTENTS_CODE DESC, BRANCH.BRANCH_IDX DESC, A.VER_IDX DESC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+		<if test="lastIndex > 0">
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+		</if>
+	</select>
+	
+	<!-- 현재 접속자 -->
+	<select id="statsList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			* 
+			FROM 
+			<include refid="rbs.modules.contact.contactMapper.CONTACT_U_TABLE_NAME"/> A 
+			ORDER BY A.YEAR DESC, A.MONTH DESC, A.DAY DESC, A.HOUR DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+
+	<!-- 1번 차트 (검색 건수 추이) -->
+	<select id="selectChart1Data" parameterType="java.util.HashMap" resultType="egovMap">
+		SELECT
+			REGI_DATE,
+			COUNT(*) AS COUNT
+		FROM
+			(
+			SELECT
+				HST_IDX,
+				DATE_FORMAT(REGI_DATE, '%Y-%m') AS REGI_DATE
+			FROM
+				UNI_QRYWD_HST
+			WHERE REGI_DATE <![CDATA[>=]]> DATE_FORMAT(CURDATE() - INTERVAL 6 MONTH, '%Y-%m-01')
+			GROUP BY
+				HST_IDX,
+				DATE_FORMAT(REGI_DATE, '%Y-%m')
+			) AS SUBQUERY
+		GROUP BY REGI_DATE
+		ORDER BY REGI_DATE
+	</select>
+	
+	<!-- 2번 차트 (검색어 통계) -->
+	<select id="selectChart2Data" parameterType="java.util.HashMap" resultType="egovMap">
+		SELECT KEYWORD, COUNT(KEYWORD) AS COUNT
+		FROM (
+			SELECT
+				HST_IDX,
+				KEYWORD,
+				USER_TYPE,
+				DEPT_CD,
+				DATE_FORMAT(REGI_DATE, '%Y-%m-%d') AS REGI_DATE
+			FROM
+				UNI_QRYWD_HST
+			WHERE 1=1
+				AND DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			GROUP BY
+				HST_IDX,
+				KEYWORD,
+				USER_TYPE,
+				DEPT_CD,
+				DATE_FORMAT(REGI_DATE, '%Y-%m-%d')
+		) AS SUBQUERY
+		GROUP BY KEYWORD
+		ORDER BY COUNT DESC
+		LIMIT 5
+	</select>
+	
+	<!-- 3번 차트 (로그인 통계) -->
+	<select id="selectChart3Data" parameterType="java.util.HashMap" resultType="egovMap">
+		SELECT 
+			DATE_FORMAT(REGI_DATE, '%Y-%m') AS REGI_DATE, 
+			SUM(CON_CNT) AS COUNT
+		FROM 
+			RBS_C_WEB_INFO
+		WHERE 1=1
+		  AND REGI_DATE >= DATE_FORMAT(CURDATE() - INTERVAL 6 MONTH, '%Y-%m-01')
+		GROUP BY DATE_FORMAT(REGI_DATE, '%Y-%m')
+	</select>
+	
+	<!-- 4번 차트 (메뉴별 접속자 수) -->
+	<select id="selectChart4Data" parameterType="java.util.HashMap" resultType="egovMap">
+		SELECT NAME, MENU_IDX, CNT
+		FROM (
+			SELECT
+				A.MENU_PATH AS NAME,
+				A.MENU_IDX,
+				SUM(A.CON_CNT) AS CNT
+			FROM (
+				SELECT
+					MENU_IDX,
+					FN_RBS_MENU_DN_FPATH_NAMES('>', 'web', 1, MENU_IDX) AS MENU_PATH,
+					CON_CNT
+				FROM
+					RBS_C_WEB_M_INFO
+				WHERE
+					1 = 1
+					AND MENU_IDX != 1
+					AND DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			) AS A
+			GROUP BY A.MENU_IDX, A.MENU_PATH
+			ORDER BY CNT DESC
+		) AS B
+		LIMIT 5
+	</select>
+	
+	<!-- 5번 차트 (찜현황 통계) -->
+	<select id="selectChart5Data" parameterType="java.util.HashMap" resultType="egovMap">
+		SELECT all_year.YEAR, all_year.MENU_FG, COALESCE(counts.COUNT, 0) AS COUNT
+		FROM (SELECT DISTINCT base.YEAR, base.MENU_FG
+		      FROM (SELECT YEAR(CURDATE()) AS YEAR, MENU_FG
+		            FROM UNI_PERS_BOOKMARK
+		            UNION ALL
+		            SELECT YEAR(CURDATE()) - 1 AS YEAR, MENU_FG
+		            FROM UNI_PERS_BOOKMARK) base) all_year
+		         LEFT JOIN (SELECT DATE_FORMAT(REGI_DATE, '%Y') AS YEAR, MENU_FG, COUNT(MENU_FG) AS COUNT
+		                    FROM UNI_PERS_BOOKMARK
+		                    WHERE DATE_FORMAT(REGI_DATE, '%Y') = YEAR(CURDATE())
+		                    GROUP BY DATE_FORMAT(REGI_DATE, '%Y'), MENU_FG
+		                    UNION ALL
+		                    SELECT DATE_FORMAT(REGI_DATE, '%Y') AS YEAR, MENU_FG, COUNT(MENU_FG) AS COUNT
+		                    FROM UNI_PERS_BOOKMARK
+		                    WHERE DATE_FORMAT(REGI_DATE, '%Y') = YEAR(CURDATE()) - 1
+		                    GROUP BY DATE_FORMAT(REGI_DATE, '%Y'), MENU_FG) counts
+		                   ON all_year.YEAR = counts.YEAR AND all_year.MENU_FG = counts.MENU_FG
+		ORDER BY all_year.YEAR, all_year.MENU_FG
+	</select>
+	
+	<!-- 6번 차트 (해시태그 키워드 통계) -->
+	<select id="selectChart6Data" parameterType="java.util.HashMap" resultType="egovMap">
+		SELECT NM, CNT, PER
+		FROM (
+			SELECT
+				A.HASHTAG AS NM,
+				COUNT(*) AS CNT,
+				ROUND((COUNT(*) / (SELECT COUNT(*) FROM rbs_hashtag_info WHERE DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate} AND FLAG_DEL = 'N') * 100), 2) AS PER
+			FROM
+				rbs_hashtag_info A
+			WHERE
+				DATE_FORMAT(A.REGI_DATE, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			AND FLAG_DEL = 'N'
+			GROUP BY A.HASHTAG
+			ORDER BY CNT DESC
+		) AS B
+		LIMIT 10
+	</select>
+
+	
+</mapper>

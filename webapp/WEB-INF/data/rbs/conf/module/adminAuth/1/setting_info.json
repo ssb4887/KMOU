@@ -1,0 +1,13 @@
+{
+	"setting_info": {
+		"list_title":"권한 목록"
+		, "input_title":"권한 등록"
+		, "deleteList_title":"권한 삭제목록"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+		, "page_name":"page"
+		, "idx_name":"mnuCd"
+		, "idx_column":"MENU_IDX"
+	}
+}

@@ -1,0 +1,28 @@
+@charset "utf-8";
+
+/* BUTTON */
+.btnTypeA {width:100px; height:45px; display:inline-block; font-weight:600; font-size:16px; color:#fff !important; line-height:45px; text-align:center; text-decoration:none !important; border:0px; background:#1C83D3; border-radius:5px;}
+.btnTypeAL {width:160px; height:64px; display:inline-block; font-weight:600; font-size:16px; color:#fff !important; line-height:64px; text-align:center; text-decoration:none !important; border:0px; background:#1C83D3; border-radius:10px;}
+.btnTypeB {width:100px; height:45px; display:inline-block; font-weight:600; font-size:16px; color:#fff !important; line-height:45px; text-align:center; text-decoration:none !important; border:0px; background:#5d5d5d; border-radius:5px;}
+.btnTypeBL {width:160px; height:64px; display:inline-block; font-weight:600; font-size:16px; color:#fff !important; line-height:64px; text-align:center; text-decoration:none !important; border:0px; background:#5d5d5d; border-radius:10px;}
+
+.btnTypeC {/*padding-right:22px;*/ font-weight:bold; color:#3e3e3e !important; text-decoration:none !important; background:url(../images/button/bg_type_b.gif) no-repeat 100% 0;}
+.btnTypeC span {display:block; height:37px; padding:0 20px; line-height:37px; background:url(../images/button/bg_type_b.gif) no-repeat 0 0;}
+.btnTypeD {width:151px; height:30px; font-weight:bold; color:#3e3e3e !important; line-height:30px; text-align:center; text-decoration:none !important; border:0px; background:#fff;}
+.btnTypeD span {padding-right:15px; background:url(../images/common/bul_arrow_blue.gif) no-repeat 100% 14px;}
+.btnTypeE {padding:0 12px; display:inline-block; border-radius:5px; font-size:14px; font-weight:600; color:#fff !important; line-height:40px; text-decoration:none !important; background:#269E57; border:0px;}
+.btnTypeF {padding:0 12px; display:inline-block; border-radius:5px; font-size:14px; font-weight:600; color:#fff !important; line-height:40px; text-decoration:none !important; background:#666; border:0px;}
+.btnTypeG {padding:0 12px; display:inline-block; border-radius:5px; font-size:14px; font-weight:600; color:#fff !important; line-height:40px; text-decoration:none !important; background:#E27F23; border:0px;}
+.btnTypeH {padding:0 12px; display:inline-block; border-radius:5px; font-size:14px; font-weight:600; color:#fff !important; line-height:40px; text-decoration:none !important; background:#524069; border:0px;}
+/*.btnTypeH {padding:0 12px; display:inline-block; border-radius:5px; font-size:14px; font-weight:600; color:#fff !important; line-height:40px; text-decoration:none !important; background:url(../images/button/bg_type_h.gif) repeat-x 0 0; border:0px;}*/
+.btnTypeHL {height:30px; line-height:30px; padding:0 9px 0 10px; font-size:15px; font-weight:bold; color:#fff !important;  text-decoration:none !important; background:url(../images/button/bg_type_h.gif) repeat 0 0; border:0px;}
+.btnTypeI {padding:0 12px; font-size:14px; font-weight:bold; color:#fff !important; line-height:25px; text-decoration:none !important; background:url(../images/button/bg_type_i.gif) repeat-x 0 0; border:0px;}
+.btnTypeJ {padding:0 12px; font-size:14px; font-weight:bold; color:#fff !important; line-height:25px; text-decoration:none !important; background:url(../images/button/bg_type_j.gif) repeat-x 0 0; border:0px;}
+.btnTypeK {width:121px; height:42px; padding-right:10px; font-weight:bold; color:#fff !important; line-height:42px; text-align:center; text-decoration:none !important; border-bottom:1px solid #005491; background:#006dba url(../images/common/bul_arrow_white.gif) no-repeat 98px 17px;}
+.btnTypeL {width:131px; height:42px; font-weight:bold; color:#fff !important; line-height:42px; text-align:center; text-decoration:none !important; border-bottom:1px solid #696969; background:#808080;}
+.btnTypeM {padding:0 12px; font-size:14px; font-weight:600; color:#fff !important; line-height:40px; text-decoration:none !important; border:0px; background:#5d5d5d;}
+.btnTypeN {padding:0 12px; font-size:14px; font-weight:600; color:#fff !important; line-height:40px; text-decoration:none !important; background:#888; border-radius:5px; border:0;}
+.btnTypeAM {padding:0 12px; font-size:14px; font-weight:600; color:#fff !important; line-height:40px; text-decoration:none !important; border:0px; background:#006dba;}
+.btnTypeAS {margin:1px 0; width:80px; height:25px; font-size:14px; font-weight:bold; color:#fff !important; line-height:25px; text-align:center; text-decoration:none !important; background:#006dba; border:0px;}
+
+.btnTypeH.fn_btn_member_log_open {padding:0 12px; display:inline-block; border-radius:5px; font-size:15px; font-weight:600; color:#fff !important; line-height:40px; text-decoration:none !important; background:#5B4671; border:0px;}

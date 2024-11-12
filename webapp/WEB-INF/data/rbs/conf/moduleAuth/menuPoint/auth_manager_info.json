@@ -1,0 +1,22 @@
+{
+	"auth_list": [
+		{
+			"item_id":"write"
+			, "column_id":"WRT"
+			, "item_name":"등록"
+			, "usr_min_utp":5
+		}, {
+			"item_id":"manage"
+			, "column_id":"MNG"
+			, "item_name":"등록관리"
+			, "usr_closed":1
+			, "adm_min_utp":50
+		}, {
+			"item_id":"cdelete"
+			, "column_id":"CDT"
+			, "item_name":"완전삭제"
+			, "usr_closed":1
+			, "adm_min_utp":50
+		}
+	]
+}

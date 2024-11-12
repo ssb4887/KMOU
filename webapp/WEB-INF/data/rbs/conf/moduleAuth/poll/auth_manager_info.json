@@ -1,0 +1,35 @@
+{
+	"module_name":"설문"
+	, "auth_list": [
+		{
+			"item_id":"list"
+			, "column_id":"LST"
+			, "item_name":"목록조회"
+		}, {
+			"item_id":"view"
+			, "column_id":"VEW"
+			, "item_name":"결과보기"
+		}, {
+			"item_id":"replywrite"
+			, "column_id":"RWT"
+			, "item_name":"참여"
+			, "usr_min_utp":5
+		}, {
+			"item_id":"down"
+			, "column_id":"DWN"
+			, "item_name":"다운로드"
+		}, {
+			"item_id":"manage"
+			, "column_id":"MNG"
+			, "item_name":"등록관리"
+			, "usr_closed":1
+			, "adm_min_utp":45
+		}, {
+			"item_id":"cdelete"
+			, "column_id":"CDT"
+			, "item_name":"완전삭제"
+			, "usr_closed":1
+			, "adm_min_utp":50
+		}
+	]
+}

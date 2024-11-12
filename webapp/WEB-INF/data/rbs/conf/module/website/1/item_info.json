@@ -1,0 +1,1365 @@
+{
+	"item_info":{
+		"items":{
+			"site_id":{
+				"item_id":"site_id"
+				,"column_id":"SITE_ID"
+				,"item_name":"사이트 아이디"
+				,"item_name_ko":"사이트아이디"
+				,"item_name_en":"site_id"
+				,"item_type":"1,2"
+				,"required_write":1
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":10
+				,"write_type":0
+				,"modify_type":10
+				,"setting_type":10
+				,"manage_type":10
+				,"default_item":1
+				,"object_style":"width:300px;"
+			},"site_name":{
+				"item_id":"site_name"
+				,"column_id":"SITE_NAME"
+				,"item_name":"사이트명"
+				,"item_name_ko":"사이트명"
+				,"item_name_en":"site name"
+				,"required_write":1
+				,"required_modify":1
+				,"required_setting":1
+				,"format_type":0
+				,"object_type":0
+				,"maximum":255
+				,"object_style":"width:300px;"
+				,"write_type":0
+				,"modify_type":0
+				,"setting_type":0
+				,"manage_type":10
+				,"default_item":1
+			},"copy_site_id":{
+				"item_id":"copy_site_id"
+				,"item_name":"메뉴복제 사이트"
+				,"item_name_ko":"메뉴복제 사이트"
+				,"item_name_en":"메뉴복제 사이트"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":2
+				,"option_type":9
+				,"write_type":0
+				,"modify_type":10
+				,"setting_type":10
+				,"manage_type":10
+				,"default_item":1
+			},"copy_ver_idx":{
+				"item_id":"copy_ver_idx"
+				,"item_name":"메뉴복제버전"
+				,"item_name_ko":"메뉴복제버전"
+				,"item_name_en":"메뉴복제버전"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":2
+				,"option_type":9
+				,"write_type":0
+				,"modify_type":10
+				,"setting_type":10
+				,"manage_type":10
+				,"default_item":1
+			},"site_domain":{
+				"item_id":"site_domain"
+				,"column_id":"SITE_DOMAIN"
+				,"item_name":"도메인"
+				,"item_name_ko":"도메인"
+				,"item_name_en":"domain"
+				,"required_write":1
+				,"required_modify":1
+				,"required_setting":1
+				,"format_type":0
+				,"object_type":0
+				,"object_style":"width:300px;"
+				,"maximum":1000
+				,"write_type":0
+				,"modify_type":0
+				,"setting_type":0
+				,"manage_type":10
+				,"default_item":1
+				,"comment":"사용자 페이지로 연결할 URL을 입력하셔야 합니다. (예: http://www.test.com)"
+			},"site_type":{
+				"item_id":"site_type"
+				,"column_id":"SITE_TYPE"
+				,"item_name":"사이트구분"
+				,"item_name_ko":"사이트구분"
+				,"item_name_en":"site type"
+				,"required_write":1
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":2
+				,"option_type":0
+				,"master_code":"SITE_TYPE"
+				,"write_type":0
+				,"modify_type":10
+				,"setting_type":10
+				,"manage_type":10
+				,"default_item":1
+			},"site_temp":{
+				"item_id":"site_temp"
+				,"column_id":"SITE_TEMP"
+				,"item_name":"디자인 템플릿"
+				,"item_name_ko":"디자인 템플릿"
+				,"item_name_en":"디자인 템플릿"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":100
+				,"option_type":7
+				,"write_type":0
+				,"modify_type":10
+				,"setting_type":10
+				,"manage_type":10
+				,"default_item":1
+			},"locale_lang":{
+				"item_id":"locale_lang"
+				,"column_id":"LOCALE_LANG"
+				,"item_name":"언어"
+				,"item_name_ko":"언어"
+				,"item_name_en":"locale"
+				,"required_write":1
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":2
+				,"option_type":0
+				,"master_code":"LOCALE"
+				,"write_type":0
+				,"modify_type":10
+				,"setting_type":10
+				,"manage_type":10
+				,"default_item":1
+			},"site_title":{
+				"item_id":"site_title"
+				,"column_id":"SITE_TITLE"
+				,"item_name":"사이트 TITLE"
+				,"item_name_ko":"사이트 TITLE "
+				,"item_name_en":"site TITLE"
+				,"required_write":1
+				,"required_modify":1
+				,"required_setting":1
+				,"format_type":0
+				,"object_type":0
+				,"object_style":"width:300px;"
+				,"maximum":500
+				,"write_type":0
+				,"modify_type":0
+				,"setting_type":0
+				,"manage_type":10
+				,"default_item":1
+			},"manager_name":{
+				"item_id":"manager_name"
+				,"column_id":"MANAGER_NAME"
+				,"item_name":"담당"
+				,"item_name_ko":"담당"
+				,"item_name_en":"manager_name"
+				,"format_type":0
+				,"object_type":0
+				,"object_style":"width:300px;"
+				,"maximum":500
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"site_email":{
+				"item_id":"site_email"
+				,"column_id":"SITE_EMAIL"
+				,"item_name":"대표 이메일"
+				,"item_name_ko":"대표이메일"
+				,"item_name_en":"site_email"
+				,"format_type":0
+				,"object_type":0
+				,"object_style":"width:300px;"
+				,"maximum":500
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"site_phone":{
+				"item_id":"site_phone"
+				,"column_id":"SITE_PHONE"
+				,"item_name":"전화번호"
+				,"item_name_ko":"전화번호"
+				,"item_name_en":"site_phone"
+				,"format_type":0
+				,"object_type":0
+				,"object_style":"width:300px;"
+				,"maximum":500
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"site_fax":{
+				"item_id":"site_fax"
+				,"column_id":"SITE_FAX"
+				,"item_name":"팩스번호"
+				,"item_name_ko":"팩스번호"
+				,"item_name_en":"site_fax"
+				,"format_type":0
+				,"object_type":0
+				,"object_style":"width:300px;"
+				,"maximum":500
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"site_addr":{
+				"item_id":"site_addr"
+				,"column_id":"SITE_ADDR"
+				,"item_name":"주소"
+				,"item_name_ko":"주소"
+				,"item_name_en":"site_addr"
+				,"format_type":0
+				,"object_type":0
+				,"object_style":"width:300px;"
+				,"maximum":1000
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"site_copyright":{
+				"item_id":"site_copyright"
+				,"column_id":"SITE_COPYRIGHT"
+				,"item_name":"copyright"
+				,"item_name_ko":"copyright"
+				,"item_name_en":"copyright"
+				,"format_type":0
+				,"object_type":0
+				,"object_style":"width:300px;"
+				,"maximum":1000
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"pri_manager_name":{
+				"item_id":"pri_manager_name"
+				,"column_id":"PRI_MANAGER_NAME"
+				,"item_name":"개인정보보호정책 담당"
+				,"item_name_ko":"개인정보보호정책 담당"
+				,"item_name_en":"pri_manager"
+				,"format_type":0
+				,"object_type":0
+				,"object_style":"width:300px;"
+				,"maximum":500
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"remarks":{
+				"item_id":"remarks"
+				,"column_id":"REMARKS"
+				,"item_name":"비고"
+				,"item_name_ko":"비고"
+				,"item_name_en":"remarks"
+				,"format_type":0
+				,"object_type":1
+				,"maximum":1000
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"ssl_port":{
+				"item_id":"ssl_port"
+				,"column_id":"SSL_PORT"
+				,"item_name":"보안서버(ssl) 포트"
+				,"item_name_ko":"보안서버(ssl) 포트"
+				,"item_name_en":"SSL PORT"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"item_type":"1"
+				,"maximum":10
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:300px;"
+			},"twitter":{
+				"item_id":"twitter"
+				,"item_name":"트위터 설정"
+				,"item_name_ko":"트위터 설정"
+				,"item_name_en":"트위터 설정"
+			},"twitter_ckey":{
+				"group_item_id":"twitter"
+				,"item_id":"twitter_ckey"
+				,"column_id":"TWITTER_CKEY"
+				,"item_name":"Consumer Key"
+				,"item_name_ko":"Consumer Key"
+				,"item_name_en":"Consumer Key"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":100
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:190px;"
+			},"twitter_csecret":{
+				"group_item_id":"twitter"
+				,"item_id":"twitter_csecret"
+				,"column_id":"TWITTER_CSECRET"
+				,"item_name":"Consumer Secret"
+				,"item_name_ko":"Consumer Secret"
+				,"item_name_en":"Consumer Secret"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":100
+				,"write_type":0
+				,"modify_type":0
+				,"object_style":"width:190px;"
+				,"default_item":1
+			},"twitter_id":{
+				"group_item_id":"twitter"
+				,"item_id":"twitter_id"
+				,"column_id":"TWITTER_ID"
+				,"item_name":"ID"
+				,"item_name_ko":"ID"
+				,"item_name_en":"ID"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":50
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:190px;"
+			},"twitter_url":{
+				"group_item_id":"twitter"
+				,"item_id":"twitter_url"
+				,"column_id":"TWITTER_URL"
+				,"item_name":"URL"
+				,"item_name_ko":"URL"
+				,"item_name_en":"URL"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":250
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:190px;"
+			},"twitter_wgid":{
+				"group_item_id":"twitter"
+				,"item_id":"twitter_wgid"
+				,"column_id":"TWITTER_WGID"
+				,"item_name":"WIDGET ID"
+				,"item_name_ko":"WIDGET ID"
+				,"item_name_en":"WIDGET ID"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":50
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:190px;"
+			},"facebook":{
+				"item_id":"facebook"
+				,"item_name":"페이스북 설정"
+				,"item_name_ko":"페이스북 설정"
+				,"item_name_en":"페이스북 설정"
+			},"facebook_aid":{
+				"group_item_id":"facebook"
+				,"item_id":"facebook_aid"
+				,"column_id":"FACEBOOK_AID"
+				,"item_name":"App ID"
+				,"item_name_ko":"App ID"
+				,"item_name_en":"App ID"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":100
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:190px;"
+			},"facebook_asecret":{
+				"group_item_id":"facebook"
+				,"item_id":"facebook_asecret"
+				,"column_id":"FACEBOOK_ASECRET"
+				,"item_name":"App Secret"
+				,"item_name_ko":"App Secret"
+				,"item_name_en":"App Secret"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":100
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:190px;"
+			},"facebook_id":{
+				"group_item_id":"facebook"
+				,"item_id":"facebook_id"
+				,"column_id":"FACEBOOK_ID"
+				,"item_name":"ID"
+				,"item_name_ko":"ID"
+				,"item_name_en":"ID"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":50
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:190px;"
+			},"facebook_url":{
+				"group_item_id":"facebook"
+				,"item_id":"facebook_url"
+				,"column_id":"FACEBOOK_URL"
+				,"item_name":"URL"
+				,"item_name_ko":"URL"
+				,"item_name_en":"URL"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":250
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:190px;"
+			},"facebook_atoken":{
+				"group_item_id":"facebook"
+				,"item_id":"facebook_atoken"
+				,"column_id":"FACEBOOK_ATOKEN"
+				,"item_name":"APP TOKEN"
+				,"item_name_ko":"APP TOKEN"
+				,"item_name_en":"APP TOKEN"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":200
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:190px;"
+			},"kakao":{
+				"item_id":"kakao"
+				,"item_name":"카카오 설정"
+				,"item_name_ko":"카카오 설정"
+				,"item_name_en":"카카오 설정"
+			},"kakao_aid":{
+				"group_item_id":"kakao"
+				,"item_id":"kakao_aid"
+				,"column_id":"KAKAO_AID"
+				,"item_name":"App ID"
+				,"item_name_ko":"App ID"
+				,"item_name_en":"App ID"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":100
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:190px;"
+			},"kakao_asecret":{
+				"group_item_id":"kakao"
+				,"item_id":"kakao_asecret"
+				,"column_id":"KAKAO_ASECRET"
+				,"item_name":"App Secret"
+				,"item_name_ko":"App Secret"
+				,"item_name_en":"App Secret"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":100
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:190px;"
+			},"naver":{
+				"item_id":"naver"
+				,"item_name":"네이버 설정"
+				,"item_name_ko":"네이버 설정"
+				,"item_name_en":"네이버 설정"
+			},"naver_aid":{
+				"group_item_id":"naver"
+				,"item_id":"naver_aid"
+				,"column_id":"NAVER_AID"
+				,"item_name":"App ID"
+				,"item_name_ko":"App ID"
+				,"item_name_en":"App ID"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":100
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:190px;"
+			},"naver_asecret":{
+				"group_item_id":"naver"
+				,"item_id":"naver_asecret"
+				,"column_id":"NAVER_ASECRET"
+				,"item_name":"App Secret"
+				,"item_name_ko":"App Secret"
+				,"item_name_en":"App Secret"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":100
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:190px;"
+			},"google":{
+				"item_id":"google"
+				,"item_name":"구글 설정"
+				,"item_name_ko":"구글 설정"
+				,"item_name_en":"구글 설정"
+			},"google_aid":{
+				"group_item_id":"google"
+				,"item_id":"google_aid"
+				,"column_id":"GOOGLE_AID"
+				,"item_name":"App ID"
+				,"item_name_ko":"App ID"
+				,"item_name_en":"App ID"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":100
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:190px;"
+			},"google_asecret":{
+				"group_item_id":"google"
+				,"item_id":"google_asecret"
+				,"column_id":"GOOGLE_ASECRET"
+				,"item_name":"App Secret"
+				,"item_name_ko":"App Secret"
+				,"item_name_en":"App Secret"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":100
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:190px;"
+			}, "sns_login":{
+				"item_id":"sns_login" 
+				,"column_id":"SNS_LOGIN"
+				,"item_name":"SNS 로그인"
+			},"facebook_login":{
+				"group_item_id":"sns_login"
+				,"item_id":"facebook_login"
+				,"column_id":"FACEBOOK_LOGIN"
+				,"item_name":"페이스북"
+				,"format_type":0
+				,"object_type":14
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"kakao_login":{
+				"group_item_id":"sns_login"
+				,"item_id":"kakao_login"
+				,"column_id":"KAKAO_LOGIN"
+				,"item_name":"카카오"
+				,"format_type":0
+				,"object_type":14
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"naver_login":{
+				"group_item_id":"sns_login"
+				,"item_id":"naver_login"
+				,"column_id":"NAVER_LOGIN"
+				,"item_name":"네이버"
+				,"format_type":0
+				,"object_type":14
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"google_login":{
+				"group_item_id":"sns_login"
+				,"item_id":"google_login"
+				,"column_id":"GOOGLE_LOGIN"
+				,"item_name":"구글"
+				,"format_type":0
+				,"object_type":14
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"daum_map_key":{
+				"item_id":"daum_map_key"
+				,"column_id":"DAUM_MAP_KEY"
+				,"item_name":"다음 지도 Key"
+				,"item_name_ko":"다음 지도 Key"
+				,"item_name_en":"다음 지도 Key"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":100
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:300px;"
+			},"daum_local_key":{
+				"item_id":"daum_local_key"
+				,"column_id":"DAUM_LOCAL_KEY"
+				,"item_name":"다음 로컬 Key"
+				,"item_name_ko":"다음 로컬 Key"
+				,"item_name_en":"다음 로컬 Key"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":100
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:300px;"
+			},"banner_fn_idx":{
+				"item_id":"banner_fn_idx"
+				,"column_id":"BANNER_FN_IDX"
+				,"item_name":"배너"
+				,"item_name_ko":"배너"
+				,"item_name_en":"배너"
+				,"format_type":0
+				,"object_type":2
+				,"option_type":9
+				,"item_type":"1"
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:190px;"
+			},"popup_fn_idx":{
+				"item_id":"popup_fn_idx"
+				,"column_id":"POPUP_FN_IDX"
+				,"item_name":"팝업"
+				,"item_name_ko":"팝업"
+				,"item_name_en":"팝업"
+				,"format_type":0
+				,"object_type":2
+				,"option_type":9
+				,"item_type":"1"
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"object_style":"width:190px;"
+			},"member_clause":{
+				"item_id":"member_clause"
+				,"column_id":"MEMBER_CLAUSE"
+				,"item_name":"회원약관"
+				,"item_name_ko":"회원약관"
+				,"item_name_en":"회원약관"
+				,"format_type":0
+				,"object_type":1
+				,"object_style":"width:500px;height:300px;"
+				,"maximum":200000
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"member_perinfo":{
+				"item_id":"member_perinfo"
+				,"column_id":"MEMBER_PERINFO"
+				,"item_name":"개인정보수집 이용안내"
+				,"item_name_ko":"개인정보수집 이용안내"
+				,"item_name_en":"개인정보수집 이용안내"
+				,"format_type":0
+				,"object_type":1
+				,"object_style":"width:500px;height:300px;"
+				,"maximum":200000
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			}, "manager_member_idxs":{
+				"item_id":"manager_member_idxs"
+				,"column_id":"MANAGER_MEMBER_IDXS"
+				,"item_name":"관리담당자"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":3
+				, "option_type":8
+				, "onclick":"fn_mbrMbrListSearchForm(this)"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"access_restrict":{
+				"group_item_id":"access_restrict"
+				,"item_id":"access_restrict"
+				,"column_id":"ACCESS_RESTRICT"
+				,"item_name":"접근제한"
+				,"format_type":0
+				,"object_type":14
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"restrict_ip":{
+				"item_id":"restrict_ip"
+				,"column_id":"RESTRICT_IP"
+				,"item_name":"제한IP"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":0
+				,"maximum":1000
+				,"write_type":0
+				,"modify_type":0
+				,"object_style":"width:500px;"
+				,"comment":"IPV4를 ',(콤마)'로 구분하여 입력 - 예)192.168.1.101,192.168.1.105~192.168.1.110,192.168.2.1~192.168.2.101"
+			}
+		},"keyField_items":{
+			"search1":{
+				"item_id":"site_id"
+				,"column_id":"A.SITE_ID"
+			},"search2":{
+				"item_id":"site_name"
+				,"column_id":"A.SITE_NAME"
+			},"search3":{
+				"item_id":"site_domain"
+				,"column_id":"A.SITE_DOMAIN"
+			}
+		},"keyField_order":[
+			"search1"
+			,"search2"
+			,"search3"
+		]
+		,"list_order":[
+			"site_id"
+			,"site_name"
+			,"site_domain"
+			,"site_type"
+			,"locale_lang"
+		],"write_order":[
+			"site_id"
+			,"site_name"
+			,"site_domain"
+			,"site_type"
+			,"copy_site_id"
+			,"site_temp"
+			,"locale_lang"
+			,"site_title"
+			,"ssl_port"
+			,"access_restrict"
+			,"restrict_ip"
+			,"banner_fn_idx"
+			,"popup_fn_idx"
+			,"manager_member_idxs"
+			,"twitter_id"
+			,"twitter_url"
+			,"twitter_ckey"
+			,"twitter_csecret"
+			,"twitter_wgid"
+			,"facebook_id"
+			,"facebook_url"
+			,"facebook_atoken"
+			,"facebook_aid"
+			,"facebook_asecret"
+			,"kakao_aid"
+			,"kakao_asecret"
+			,"naver_aid"
+			,"naver_asecret"
+			,"google_aid"
+			,"google_asecret"
+			,"facebook_login"
+			,"kakao_login"
+			,"naver_login"
+			,"google_login"
+			,"daum_map_key"
+			,"daum_local_key"
+			,"manager_name"
+			,"site_email"
+			,"site_phone"
+			,"site_fax"
+			,"site_addr"
+			,"site_copyright"
+			,"pri_manager_name"
+			,"member_clause"
+			,"member_perinfo"
+		],"writeproc_order":[
+			"site_id"
+			,"site_name"
+			,"site_domain"
+			,"site_type"
+			,"site_temp"
+			,"locale_lang"
+			,"site_title"
+			,"ssl_port"
+			,"access_restrict"
+			,"restrict_ip"
+			,"banner_fn_idx"
+			,"popup_fn_idx"
+			,"daum_map_key"
+			,"daum_local_key"
+			,"twitter_id"
+			,"twitter_url"
+			,"twitter_ckey"
+			,"twitter_csecret"
+			,"twitter_wgid"
+			,"facebook_id"
+			,"facebook_url"
+			,"facebook_atoken"
+			,"facebook_aid"
+			,"facebook_asecret"
+			,"kakao_aid"
+			,"kakao_asecret"
+			,"naver_aid"
+			,"naver_asecret"
+			,"google_aid"
+			,"google_asecret"
+			,"facebook_login"
+			,"kakao_login"
+			,"naver_login"
+			,"google_login"
+			,"manager_name"
+			,"site_email"
+			,"site_phone"
+			,"site_fax"
+			,"site_addr"
+			,"site_copyright"
+			,"pri_manager_name"
+			,"member_clause"
+			,"member_perinfo"
+		],"write_fileproc_order":[
+			"site_id"
+			,"site_name"
+			,"site_domain"
+			,"site_type"
+			,"site_temp"
+			,"locale_lang"
+			,"site_title"
+			,"ssl_port"
+			,"access_restrict"
+			,"restrict_ip"
+			,"banner_fn_idx"
+			,"popup_fn_idx"
+			,"daum_map_key"
+			,"daum_local_key"
+			,"twitter_id"
+			,"twitter_url"
+			,"twitter_ckey"
+			,"twitter_csecret"
+			,"twitter_wgid"
+			,"facebook_id"
+			,"facebook_url"
+			,"facebook_atoken"
+			,"facebook_aid"
+			,"facebook_asecret"
+			,"kakao_aid"
+			,"kakao_asecret"
+			,"naver_aid"
+			,"naver_asecret"
+			,"google_aid"
+			,"google_asecret"
+			,"facebook_login"
+			,"kakao_login"
+			,"naver_login"
+			,"google_login"
+			,"manager_name"
+			,"site_email"
+			,"site_phone"
+			,"site_fax"
+			,"site_addr"
+			,"site_copyright"
+			,"pri_manager_name"
+		],"modify_order":[
+			"site_id"
+			,"site_name"
+			,"site_domain"
+			,"site_type"
+			,"site_temp"
+			,"locale_lang"
+			,"site_title"
+			,"ssl_port"
+			,"access_restrict"
+			,"restrict_ip"
+			,"banner_fn_idx"
+			,"popup_fn_idx"
+			,"manager_member_idxs"
+			,"daum_map_key"
+			,"daum_local_key"
+			,"twitter_id"
+			,"twitter_url"
+			,"twitter_ckey"
+			,"twitter_csecret"
+			,"twitter_wgid"
+			,"facebook_id"
+			,"facebook_url"
+			,"facebook_atoken"
+			,"facebook_aid"
+			,"facebook_asecret"
+			,"kakao_aid"
+			,"kakao_asecret"
+			,"naver_aid"
+			,"naver_asecret"
+			,"google_aid"
+			,"google_asecret"
+			,"facebook_login"
+			,"kakao_login"
+			,"naver_login"
+			,"google_login"
+			,"manager_name"
+			,"site_email"
+			,"site_phone"
+			,"site_fax"
+			,"site_addr"
+			,"site_copyright"
+			,"pri_manager_name"
+			,"member_clause"
+			,"member_perinfo"
+		],"modifyproc_order":[
+			"site_name"
+			,"site_domain"
+			,"site_temp"
+			,"site_title"
+			,"ssl_port"
+			,"access_restrict"
+			,"restrict_ip"
+			,"banner_fn_idx"
+			,"popup_fn_idx"
+			,"twitter_id"
+			,"twitter_url"
+			,"twitter_ckey"
+			,"twitter_csecret"
+			,"twitter_wgid"
+			,"facebook_id"
+			,"facebook_url"
+			,"facebook_atoken"
+			,"facebook_aid"
+			,"facebook_asecret"
+			,"kakao_aid"
+			,"kakao_asecret"
+			,"naver_aid"
+			,"naver_asecret"
+			,"google_aid"
+			,"google_asecret"
+			,"facebook_login"
+			,"kakao_login"
+			,"naver_login"
+			,"google_login"
+			,"daum_map_key"
+			,"daum_local_key"
+			,"manager_name"
+			,"site_email"
+			,"site_phone"
+			,"site_fax"
+			,"site_addr"
+			,"site_copyright"
+			,"pri_manager_name"
+			,"member_clause"
+			,"member_perinfo"
+		],"modify_fileproc_order":[
+			"site_name"
+			,"site_domain"
+			,"site_temp"
+			,"site_title"
+			,"ssl_port"
+			,"access_restrict"
+			,"restrict_ip"
+			,"banner_fn_idx"
+			,"popup_fn_idx"
+			,"twitter_id"
+			,"twitter_url"
+			,"twitter_ckey"
+			,"twitter_csecret"
+			,"twitter_wgid"
+			,"facebook_id"
+			,"facebook_url"
+			,"facebook_atoken"
+			,"facebook_aid"
+			,"facebook_asecret"
+			,"kakao_aid"
+			,"kakao_asecret"
+			,"naver_aid"
+			,"naver_asecret"
+			,"google_aid"
+			,"google_asecret"
+			,"facebook_login"
+			,"kakao_login"
+			,"naver_login"
+			,"google_login"
+			,"daum_map_key"
+			,"daum_local_key"
+			,"manager_name"
+			,"site_email"
+			,"site_phone"
+			,"site_fax"
+			,"site_addr"
+			,"site_copyright"
+			,"pri_manager_name"
+		],"setting_order":[
+			"site_id"
+			,"site_name"
+			,"site_domain"
+			,"site_type"
+			,"site_temp"
+			,"locale_lang"
+			,"site_title"
+			,"ssl_port"
+			,"access_restrict"
+			,"restrict_ip"
+			,"daum_map_key"
+			,"daum_local_key"
+			,"twitter_id"
+			,"twitter_url"
+			,"twitter_ckey"
+			,"twitter_csecret"
+			,"twitter_wgid"
+			,"facebook_id"
+			,"facebook_url"
+			,"facebook_atoken"
+			,"facebook_aid"
+			,"facebook_asecret"
+			,"kakao_aid"
+			,"kakao_asecret"
+			,"naver_aid"
+			,"naver_asecret"
+			,"google_aid"
+			,"google_asecret"
+			,"facebook_login"
+			,"kakao_login"
+			,"naver_login"
+			,"google_login"
+		],"settingproc_order":[
+			"site_name"
+			,"site_domain"
+			,"site_title"
+			,"ssl_port"
+			,"access_restrict"
+			,"restrict_ip"
+			,"daum_map_key"
+			,"daum_local_key"
+			,"twitter_id"
+			,"twitter_url"
+			,"twitter_ckey"
+			,"twitter_csecret"
+			,"twitter_wgid"
+			,"facebook_id"
+			,"facebook_url"
+			,"facebook_atoken"
+			,"facebook_aid"
+			,"facebook_asecret"
+			,"kakao_aid"
+			,"kakao_asecret"
+			,"naver_aid"
+			,"naver_asecret"
+			,"google_aid"
+			,"google_asecret"
+			,"facebook_login"
+			,"kakao_login"
+			,"naver_login"
+			,"google_login"
+		],"setting_fileproc_order":[
+			"site_name"
+			,"site_domain"
+			,"site_title"
+			,"ssl_port"
+			,"access_restrict"
+			,"restrict_ip"
+			,"daum_map_key"
+			,"daum_local_key"
+			,"twitter_id"
+			,"twitter_url"
+			,"twitter_ckey"
+			,"twitter_csecret"
+			,"twitter_wgid"
+			,"facebook_id"
+			,"facebook_url"
+			,"facebook_atoken"
+			,"facebook_aid"
+			,"facebook_asecret"
+			,"kakao_aid"
+			,"kakao_asecret"
+			,"naver_aid"
+			,"naver_asecret"
+			,"google_aid"
+			,"google_asecret"
+			,"facebook_login"
+			,"kakao_login"
+			,"naver_login"
+			,"google_login"
+		],"manage_order":[
+			"manager_name"
+			,"site_email"
+			,"site_phone"
+			,"site_fax"
+			,"site_addr"
+			,"site_copyright"
+			,"pri_manager_name"
+			,"member_clause"
+			,"member_perinfo"
+		],"manageproc_order":[
+			"manager_name"
+			,"site_email"
+			,"site_phone"
+			,"site_fax"
+			,"site_addr"
+			,"site_copyright"
+			,"pri_manager_name"
+			,"member_clause"
+			,"member_perinfo"
+		],"manage_fileproc_order":[
+			"manager_name"
+			,"site_email"
+			,"site_phone"
+			,"site_fax"
+			,"site_addr"
+			,"site_copyright"
+			,"pri_manager_name"
+		]
+		, "list_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+					"siteId":{
+						"column_id":"SITE_ID"
+						, "item_name":"사이트 아이디"
+					}, "siteName":{
+						"column_id":"SITE_NAME"
+						, "item_name":"사이트명"
+					}, "siteDomain":{
+						"column_id":"SITE_DOMAIN"
+						, "item_name":"도메인"
+					}
+				}, "select_order":[
+					"siteId"
+					, "siteName"
+					, "siteDomain"
+				]
+			}, "searchForm_order":[
+				"keyField"
+			], "search_order":[
+				"keyField"
+			]
+		}
+	}, "version_item_info":{
+		"items":{
+			"ver_idx":{
+				"item_id":"ver_idx"
+				,"column_id":"VER_IDX"
+				, "item_name":"버전"
+				, "item_name_ko":"버전"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "write_type":0
+				, "modify_type":10
+				, "default_item":1
+			},"local_path":{
+				"item_id":"local_path"
+				,"column_id":"LOCAL_PATH"
+				,"item_name":"기본경로"
+				,"item_name_ko":"기본경로"
+				,"item_name_en":"기본경로"
+				,"required_write":1
+				,"required_modify":1
+				,"format_type":0
+				,"object_type":0
+				,"maximum":500
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"comment":"사이트의 디자인 루트 경로 (예:/web)"
+			},"layout_tmp":{
+				"item_id":"layout_tmp"
+				,"column_id":"LAYOUT_TMP"
+				,"name_column_id":"LAYOUT_TMP"
+				,"item_name":"레이아웃 템플릿"
+				,"item_name_ko":"레이아웃 템플릿"
+				,"item_name_en":"레이아웃 템플릿"
+				,"format_type":0
+				,"object_type":"8"
+				,"option_type":7
+				,"onclick":"fn_layoutTmpListSearchForm()"
+				,"maximum":100
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"layout_theme":{
+				"item_id":"layout_theme"
+				,"column_id":"LAYOUT_THEME"
+				,"name_column_id":"LAYOUT_THEME"
+				,"item_name":"레이아웃 테마"
+				,"item_name_ko":"레이아웃 테마"
+				,"item_name_en":"레이아웃 테마"
+				,"format_type":0
+				,"object_type":"8"
+				,"option_type":7
+				,"onclick":"fn_layoutThemeListSearchForm()"
+				,"maximum":100
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			}, "logo":{
+				"item_id":"logo"
+				, "column_id":"LOGO"
+				, "item_name":"로고"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":6
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+				, "isimage":1
+				, "use_file_ext":1
+				, "dset_file_ext":"gif,jpg,jpeg,png"
+			}, "include_top":{
+				"item_id":"include_top"
+				,"column_id":"INCLUDE_TOP"
+				,"item_name":"상단 인클루드 경로"
+				,"item_name_ko":"상단 인클루드 경로"
+				,"item_name_en":"상단 인클루드 경로"
+				,"required_write":1
+				,"required_modify":1
+				,"format_type":0
+				,"object_type":0
+				,"maximum":500
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			}, "include_bottom":{
+				"item_id":"include_bottom"
+				,"column_id":"INCLUDE_BOTTOM"
+				,"item_name":"하단 인클루드 경로"
+				,"item_name_ko":"하단 인클루드 경로"
+				,"item_name_en":"하단 인클루드 경로"
+				,"required_write":1
+				,"required_modify":1
+				,"format_type":0
+				,"object_type":0
+				,"maximum":500
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"copy_ver_idx":{
+				"item_id":"copy_ver_idx"
+				,"item_name":"메뉴복제버전"
+				,"item_name_ko":"메뉴복제버전"
+				,"item_name_en":"메뉴복제버전"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":2
+				,"option_type":9
+				,"write_type":0
+				,"modify_type":10
+				,"setting_type":10
+				,"manage_type":10
+				,"default_item":1
+			},"remarks":{
+				"item_id":"remarks"
+				,"column_id":"REMARKS"
+				,"item_name":"비고"
+				,"item_name_ko":"비고"
+				,"item_name_en":"remarks"
+				,"format_type":0
+				,"object_type":1
+				,"maximum":1000
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			}
+		},"site_order":[
+			"local_path"
+			,"include_top"
+			,"include_bottom"
+		],"siteproc_order":[
+			"local_path"
+			,"include_top"
+			,"include_bottom"
+		],"list_order":[
+			"local_path"
+			,"remarks"
+		],"write_order":[
+			"copy_ver_idx"
+			,"local_path"
+			,"include_top"
+			,"include_bottom"
+			,"remarks"
+		],"writeproc_order":[
+			"local_path"
+			,"include_top"
+			,"include_bottom"
+			,"remarks"
+		],"modify_order":[
+			"ver_idx"
+			,"local_path"
+			,"include_top"
+			,"include_bottom"
+			,"remarks"
+		],"modifyproc_order":[
+			"local_path"
+			,"include_top"
+			,"include_bottom"
+			,"remarks"
+		],"layout_site_order":[
+			"layout_tmp"
+			,"layout_theme"
+			,"logo"
+			,"local_path"
+			,"include_top"
+			,"include_bottom"
+		],"layout_siteproc_order":[
+			"layout_tmp"
+			,"layout_theme"
+			,"logo"
+			,"local_path"
+			,"include_top"
+			,"include_bottom"
+		],"layout_list_order":[
+			"local_path"
+			,"layout_tmp"
+			,"layout_theme"
+			,"remarks"
+		],"layout_write_order":[
+			"copy_ver_idx"
+			,"layout_tmp"
+			,"layout_theme"
+			,"logo"
+			,"local_path"
+			,"include_top"
+			,"include_bottom"
+			,"remarks"
+		],"layout_writeproc_order":[
+			"layout_tmp"
+			,"layout_theme"
+			,"logo"
+			,"local_path"
+			,"include_top"
+			,"include_bottom"
+			,"remarks"
+		],"layout_modify_order":[
+			"ver_idx"
+			,"layout_tmp"
+			,"layout_theme"
+			,"logo"
+			,"local_path"
+			,"include_top"
+			,"include_bottom"
+			,"remarks"
+		],"layout_modifyproc_order":[
+			"layout_tmp"
+			,"layout_theme"
+			,"logo"
+			,"local_path"
+			,"include_top"
+			,"include_bottom"
+			,"remarks"
+		]
+	}
+} 

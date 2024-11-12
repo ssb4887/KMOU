@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.poll.trespMapper">
+
+	<sql id="RESP_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />POLL_${fnIdx}_TRESP_INFO</trim></sql>
+	
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(RESP_IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="RESP_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT RESP_IDX
+		FROM 
+			<include refid="RESP_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="RESP_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="RESP_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="RESP_TABLE_NAME"/> SET REGI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="RESP_TABLE_NAME"/>  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+</mapper>

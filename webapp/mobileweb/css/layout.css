@@ -1,0 +1,4 @@
+@charset "utf-8";
+.ui-header .ui-title {font-size:15px;}
+.ui-footer .ui-title {font-size:10px;}
+h2 {background: url(../images/common/bul_circle_blue.png) no-repeat 0 center; padding-left:25px; line-height:35px; font-size: 16px; font-weight: bold;}

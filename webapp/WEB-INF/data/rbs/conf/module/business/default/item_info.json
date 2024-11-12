@@ -1,0 +1,232 @@
+{
+	"item_info":{
+		"items":{
+			"issupport":{
+				"item_id":"issupport"
+				,"column_id":"ISSUPPORT"
+				,"item_name":"사업지원"
+				,"item_name_ko":"사업지원"
+				,"item_name_en":"issupport"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":2
+				,"option_type":0
+				,"master_code":"SUPPORT_TYPE"
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"necessity":{
+				"column_id":"NECESSITY"
+				,"default_item":1
+				,"format_type":0
+				,"item_id":"necessity"
+				,"item_name":"사업필요성"
+				,"item_name_de":"사업필요성"
+				,"item_name_en":"사업필요성"
+				,"item_name_es":"사업필요성"
+				,"item_name_fr":"사업필요성"
+				,"item_name_ja":"사업필요성"
+				,"item_name_ko":"사업필요성"
+				,"item_name_zh":"사업필요성"
+				,"object_style":"height:170px;" 
+				,"object_type":1
+				,"editor":'1'
+				,"content_type":2
+			},"purpose":{
+				"column_id":"PURPOSE"
+				,"default_item":1
+				,"format_type":0
+				,"item_id":"purpose"
+				,"item_name":"사업목적"
+				,"item_name_de":"사업목적"
+				,"item_name_en":"사업목적"
+				,"item_name_es":"사업목적"
+				,"item_name_fr":"사업목적"
+				,"item_name_ja":"사업목적"
+				,"item_name_ko":"사업목적"
+				,"item_name_zh":"사업목적"
+				,"object_style":"height:170px;" 
+				,"object_type":1
+				,"editor":'1'
+				,"content_type":2
+			},"summary":{
+				"column_id":"SUMMARY"
+				,"default_item":1
+				,"format_type":0
+				,"item_id":"summary"
+				,"item_name":"사업개요"
+				,"item_name_de":"사업개요"
+				,"item_name_en":"사업개요"
+				,"item_name_es":"사업개요"
+				,"item_name_fr":"사업개요"
+				,"item_name_ja":"사업개요"
+				,"item_name_ko":"사업개요"
+				,"item_name_zh":"사업개요"
+				,"object_style":"height:170px;" 
+				,"object_type":1
+				,"editor":'1'
+				,"content_type":2
+			},"effect":{
+				"column_id":"EFFECT"
+				,"default_item":1
+				,"format_type":0
+				,"item_id":"effect"
+				,"item_name":"기대효과"
+				,"item_name_de":"기대효과"
+				,"item_name_en":"기대효과"
+				,"item_name_es":"기대효과"
+				,"item_name_fr":"기대효과"
+				,"item_name_ja":"기대효과"
+				,"item_name_ko":"기대효과"
+				,"item_name_zh":"기대효과"
+				,"object_style":"height:170px;" 
+				,"object_type":1
+				,"editor":'1'
+				,"content_type":2
+			},"contents":{
+				"column_id":"CONTENTS"
+				,"default_item":1
+				,"format_type":0
+				,"item_id":"contents"
+				,"item_name":"사업내용"
+				,"item_name_de":"사업내용"
+				,"item_name_en":"사업내용"
+				,"item_name_es":"사업내용"
+				,"item_name_fr":"사업내용"
+				,"item_name_ja":"사업내용"
+				,"item_name_ko":"사업내용"
+				,"item_name_zh":"사업내용"
+				,"object_style":"height:170px;" 
+				,"object_type":1
+				,"editor":'1'
+				,"content_type":2
+			},"subject":{
+				"column_id":"SUBJECT"
+				,"default_item":1
+				,"format_type":0
+				,"item_id":"subject"
+				,"item_name":"제목"
+				,"item_name_de":"제목"
+				,"item_name_en":"제목"
+				,"item_name_es":"제목"
+				,"item_name_fr":"제목"
+				,"item_name_ja":"제목"
+				,"item_name_ko":"제목"
+				,"item_name_zh":"제목"
+				,"maximum":"200"
+				,"required_modify":1
+				,"required_write":1
+			}
+		}, "list_order":[
+			"subject"
+			,"issupport"
+			,"necessity"
+			,"purpose"
+			,"summary"
+			,"effect"
+			,"contents"
+		]
+		, "view_order":[
+			"subject"
+			,"issupport"
+			,"necessity"
+			,"purpose"
+			,"summary"
+			,"effect"
+			,"contents"
+		]
+		, "write_order":[
+			"subject"
+			,"issupport"
+			,"necessity"
+			,"purpose"
+			,"summary"
+			,"effect"
+			,"contents"
+		]
+		, "writeproc_order":[
+			"subject"
+			,"issupport"
+			,"necessity"
+			,"purpose"
+			,"summary"
+			,"effect"
+			,"contents"
+		]
+		, "modify_order":[
+			"subject"
+			,"issupport"
+			,"necessity"
+			,"purpose"
+			,"summary"
+			,"effect"
+			,"contents"
+		]
+		, "modifyproc_order":[
+			"subject"
+			,"issupport"
+			,"necessity"
+			,"purpose"
+			,"summary"
+			,"effect"
+			,"contents"
+		]
+	}, "class_item_info": {
+		"items":{
+				"optName":{
+				"column_id":"CLASS_NAME"
+				, "item_name":"분류명"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "ordType":{
+				"item_name":"위치"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"ORD_TYPE"
+				, "default_value":"2"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "remarks":{
+				"column_id":"REMARKS"
+				, "item_name":"비고"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "maximum":500
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}
+		}, "list_order":[
+			"optCd"
+			, "optName"
+			, "remarks"
+		], "write_order":[
+			"optName"
+			, "ordType"
+			, "remarks"
+		], "writeproc_order":[
+			"optName"
+			, "remarks"
+		], "modify_order":[
+			"optName"
+			, "ordType"
+			, "remarks"
+		], "modifyproc_order":[
+			"optName"
+			, "remarks"
+		]
+	}
+}

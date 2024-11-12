@@ -1,0 +1,40 @@
+{
+	"item_info":{
+		"items":{
+			"design":{
+				"item_id":"design"
+				,"button_name":"검색"
+				,"column_id":"DESIGN"
+				,"format_type":0
+				,"item_name":"기본 템플릿"
+				,"item_name_en":"기본 템플릿"
+				,"item_name_ko":"기본 템플릿"
+				,"maximum":50
+				,"minimum":0
+				,"modify_type":0
+				,"object_type":8
+				,"option_type":0
+				,"onclick":"fn_designListSearchForm()"
+				,"required_modify":0
+				,"required_write":0
+			},"dset_cate_tab_id":{
+				"item_id":"dset_cate_tab_id"
+				,"column_id":"DSET_CATE_TAB_ID"
+				,"item_name":"사업지원 분류"
+				,"item_name_ko":"사업지원 분류"
+				,"object_type":2
+				,"master_code":"_CATE_ITEMS"
+				,"required_modify":1
+				,"required_write":1
+			}
+		}
+		,"modify_order":[
+			"design"
+			,"dset_cate_tab_id"
+		]
+		,"modifyproc_order":[
+			"design"
+			,"dset_cate_tab_id"
+		]
+	}
+}

@@ -1,0 +1,52 @@
+.registWrap {float:right; margin-bottom:10px; }
+.addWrap {float:right; margin-bottom:10px; margin-top:20px;}
+.btnAdd {background:#006dba; width: 120px; height:45px; color:#fff !important; border:0px; display:block; padding:0px; font-size:15px; font-weight:666; line-height:45px; vertical-align:middle; border-radius:5px; text-align:center; }
+.btnRegist {background:#006dba; width: 120px; height:45px; color:#fff !important; border:0px; display:block; padding:0px; font-size:15px; font-weight:666; line-height:45px; vertical-align:middle; border-radius:5px; text-align:center; }
+.btnCopy {background:#1C83D3; width: 100px; height:45px; color:#fff !important; border:0px; display:block; padding:0px; font-size:15px; font-weight:666; line-height:45px; vertical-align:middle; border-radius:5px; text-align:center; }
+.btnDelete {background:#ff9f31; width: 100px; height:45px; color:#fff !important; border:0px; display:block; padding:0px; font-size:15px; font-weight:666; line-height:45px; vertical-align:middle; border-radius:5px; text-align:center; }
+
+.filebox .upload-name {
+    display: inline-block;
+    height: 40px;
+    padding: 0 10px;
+    vertical-align: middle;
+    border: 1px solid #dddddd;
+    width: 18%;
+    color: #999999;
+}
+
+.filebox label {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #fff;
+    vertical-align: middle;
+    background-color: #999999;
+    cursor: pointer;
+    height: 40px;
+    margin-left: 10px;
+}
+
+ #wrapper {
+    position: relative;
+    width: 100%;
+    height: auto !important;
+    right: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+}
+
+
+td table {
+    max-width: 100%;
+    overflow: auto;
+}
+
+.tabTypeA.tab {list-style:none; display:flex; width:100%;}
+
+.fn_tab_view {float:left; flex:1; text-align:center; background:#fafafa; font-weight:bold; padding:15px 3px; margin-left: -1px; border: 1px solid #e4e8eb;}
+
+.fn_tab_view.on {float:left; flex:1; text-align:center; font-weight:bold; padding:15px 3px; margin-left: -1px; position:relative; background: #fff; border: 1px solid #000;}
+
+.tbWriteA.trackTable tbody tr th {text-align:center;!important}
+

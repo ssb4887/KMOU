@@ -1,0 +1,25 @@
+{
+	"master_setting_info": {
+		"list_title":"마스터코드 목록"
+		, "input_title":"마스터코드 등록"
+		, "deleteList_title":"마스터코드 삭제목록"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+		, "page_name":"page"
+		, "idx_name":"mstCd"
+		, "input_module":{
+			"code:optn":1
+		}
+	}
+	, "option_setting_info": {
+		"list_title":"코드 목록"
+		, "input_title":"코드 등록"
+		, "deleteList_title":"코드 삭제목록"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":0
+		, "page_name":"page"
+		, "idx_name":"classIdx"
+	}
+}

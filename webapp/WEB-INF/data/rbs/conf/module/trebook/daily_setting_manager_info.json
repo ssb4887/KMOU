@@ -1,0 +1,257 @@
+{
+	"item_info":{
+		"items":{
+			"design_type":{
+				"item_id":"design_type"
+				,"column_id":"DESIGN_TYPE"
+				,"item_name":"이북구분"
+				,"item_name_ko":"이북구분"
+				,"item_name_en":"design type"
+				,"required_write":1
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":2
+				,"option_type":0
+				,"master_code":"TREBOOK_TYPE"
+				,"write_type":0
+				,"modify_type":10
+				,"default_item":1
+			}
+			,"design":{
+				"item_id":"design"
+				,"button_name":"검색"
+				,"column_id":"DESIGN"
+				,"format_type":"0"
+				,"item_name":"기본 템플릿"
+				,"item_name_en":"기본 템플릿"
+				,"item_name_ko":"기본 템플릿"
+				,"maximum":"50"
+				,"minimum":"0"
+				,"modify_type":"0"
+				,"object_type":"8"
+				,"option_type":"0"
+				,"onclick":"fn_designListSearchForm()"
+				,"required_modify":"0"
+				,"required_write":"0"
+				,"use_list":"1"
+				,"use_modify":"1"
+				,"use_view":"1"
+				,"use_write":"1"
+				,"write_type":0
+			}
+			,"dset_cate_master_code":{
+				"item_id":"dset_cate_master_code"
+				,"column_id":"DSET_CATE_MASTER_CODE"
+				,"item_name":"분류 코드"
+				,"item_name_ko":"분류 코드"
+				,"item_type":"0"
+				,"object_type":2
+				,"master_code":"_CATE_ITEMS"
+				,"default_value":"0"
+			}
+			,"use_cate_tab_total":{
+				"item_id":"use_cate_tab_total"
+				,"column_id":"USE_CATE_TAB_TOTAL"
+				,"item_name":"전체탭 추가"
+				,"item_name_ko":"전체탭 추가"
+				,"object_type":14
+				,"item_type":"1"
+				,"default_value":"0"
+			}
+			, "use_etc_setting":{
+				"item_name":"사용설정"
+				, "required_write":0
+				, "required_modify":0
+				, "default_item":1
+			}
+			,"use_multi_cate":{
+				"item_id":"use_multi_cate"
+				,"column_id":"USE_MULTI_CATE"
+				,"item_name":"3차분류"
+				,"item_name_ko":"3차분류"
+				,"object_type":14
+				,"item_type":"1"
+				,"default_value":"0"
+			}
+			,"use_cont_list":{
+				"item_id":"use_cont_list"
+				,"column_id":"USE_CONT_LIST"
+				,"item_name":"내용목록"
+				,"item_name_ko":"내용목록"
+				,"object_type":14
+				,"item_type":"1"
+				,"default_value":"0"
+			}
+			,"use_pdf_upload":{
+				"item_id":"use_pdf_upload"
+				,"column_id":"USE_PDF_UPLOAD"
+				,"item_name":"PDF 업로드"
+				,"item_name_ko":"PDF 업로드"
+				,"object_type":14
+				,"item_type":"1"
+				,"default_value":"0"
+			}
+			,"use_pdf_total":{
+				"item_id":"use_pdf_total"
+				,"column_id":"USE_PDF_TOTAL"
+				,"item_name":"PDF 전체 다운로드"
+				,"item_name_ko":"PDF 전체 다운로드"
+				,"object_type":14
+				,"item_type":"1"
+				,"default_value":"0"
+			}
+			,"use_display_year":{
+				"item_id":"use_display_year"
+				,"column_id":"USE_DISPLAY_YEAR"
+				,"item_name":"년도별 페이징"
+				,"item_name_ko":"년도별 페이징"
+				,"object_type":14
+				,"item_type":"1"
+				,"default_value":"0"
+			}
+			,"use_part_type":{
+				"item_id":"use_part_type"
+				,"column_id":"USE_PART_TYPE"
+				,"item_name":"분기"
+				,"item_name_ko":"분기"
+				,"object_type":14
+				,"item_type":"1"
+				,"default_value":"0"
+			}
+			,"use_outer_downlink":{
+				"item_id":"use_outer_downlink"
+				,"column_id":"USE_OUTER_DOWNLINK"
+				,"item_name":"다운로드 외부링크"
+				,"item_name_ko":"다운로드 외부링크"
+				,"object_type":14
+				,"item_type":"1"
+				,"default_value":"0"
+			}
+			,"use_paging":{
+				"item_id":"use_paging"
+				,"column_id":"USE_PAGING"
+				,"item_name":"페이징"
+				,"item_name_ko":"페이징"
+				,"object_type":14
+				,"item_type":"1"
+				,"default_value":"0"
+			}
+			,"dset_start_year":{
+				"item_id":"dset_start_year"
+				,"column_id":"DSET_START_YEAR"
+				,"item_name":"시작년도"
+				,"item_name_ko":"시작년도"
+				,"item_type":"1"
+				,"object_type":0
+				,"maximum":"4"
+			}
+			,"dset_file_totalsize":{
+				"item_id":"dset_file_totalsize"
+				,"column_id":"DSET_FILE_TOTALSIZE"
+				,"item_name":"첨부파일전체크기"
+				,"item_name_ko":"첨부파일전체크기"
+				,"item_type":"1"
+				,"object_type":0
+				,"maximum":"10"
+			}
+			,"dset_list_block":{
+				"item_id":"dset_list_block"
+				,"column_id":"DSET_LIST_BLOCK"
+				,"item_name":"페이징 수"
+				,"item_name_ko":"페이징 수"
+				,"item_type":"1"
+				,"object_type":0
+				,"maximum":"3"
+			}
+			,"dset_list_count":{
+				"item_id":"dset_list_count"
+				,"column_id":"DSET_LIST_COUNT"
+				,"item_name":"목록 수"
+				,"item_name_ko":"목록 수"
+				,"item_type":"1"
+				,"object_type":0
+				,"maximum":"3"
+			}
+			,"dset_simg_width":{
+				"item_id":"dset_simg_width"
+				,"column_id":"DSET_SIMG_WIDTH"
+				,"item_name":"썸네일 가로크기"
+				,"item_name_ko":"썸네일 가로크기"
+				,"item_type":"1"
+				,"object_type":0
+				,"maximum":"3"
+			}
+			,"dset_simg_height":{
+				"item_id":"dset_simg_height"
+				,"column_id":"DSET_SIMG_HEIGHT"
+				,"item_name":"썸네일 세로크기"
+				,"item_name_ko":"썸네일 세로크기"
+				,"item_type":"1"
+				,"object_type":0
+				,"maximum":"3"
+			}
+		}
+		,"fn_write_order":[
+			"design_type"
+		]
+		,"fn_writeproc_order":[
+			"design_type"
+		]
+		,"fn_modify_order":[
+			"design_type"
+		]
+		,"modify_order":[
+			"design_type"
+			,"design"
+			,"use_multi_cate"
+			,"dset_cate_master_code"
+			,"use_part_type"
+			,"use_paging"
+			,"use_display_year"
+			,"use_cont_list"
+			,"use_pdf_upload"
+			,"use_pdf_total"
+			,"dset_start_year"
+			,"dset_list_block"
+			,"dset_list_count"
+			,"dset_file_totalsize"
+			,"dset_simg_width"
+			,"dset_simg_height"
+		]
+		,"use_item_order":[
+			"use_paging"
+			,"use_display_year"
+			,"use_cont_list"
+			,"use_pdf_upload"
+			,"use_pdf_total"
+		]
+		,"dset_item_order":[
+			"dset_start_year"
+			,"dset_list_block"
+			,"dset_list_count"
+			,"dset_file_totalsize"
+			,"dset_simg_width"
+			,"dset_simg_height"
+		]
+		,"modifyproc_order":[
+			"design"
+			,"use_multi_cate"
+			,"dset_cate_master_code"
+			,"use_part_type"
+			,"use_paging"
+			,"use_display_year"
+			,"use_cont_list"
+			,"use_pdf_upload"
+			,"use_pdf_total"
+			,"dset_start_year"
+			,"dset_list_block"
+			,"dset_list_count"
+			,"dset_file_totalsize"
+			,"dset_simg_width"
+			,"dset_simg_height"
+		],"menu_order":[
+			"dset_list_block"
+			,"dset_list_count"
+		]
+	}
+}

@@ -1,0 +1,316 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+	<bean id="egov.propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:/egovframework/egovProps/globals.properties</value>
+            </list>
+        </property>
+    </bean>
+    
+    <mvc:interceptors>
+        
+        <!-- 통합관리 시스템 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/${Globals.site.id.adm}/**/*.do" />
+            <mvc:mapping path="/${Globals.site.id.adm}/*.do" />
+            <mvc:mapping path="/${Globals.site.id.adm}/menu/*.json" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/popup/*.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/banner/*.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/menuContents/*.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/menuContents/*/**/*.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/menuContents/*/**/*.json" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/moduleFn/*/*.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/moduleFn/*/*.json" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/login/login*.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/*/image.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/*/movie.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/*/download.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/editor/*.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/stats/contact.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.adm.ADMControlInterceptor" />
+        </mvc:interceptor>
+        
+    	<!-- 통합관리 시스템 : 배너관리 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/${Globals.site.id.adm}/banner/*.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/banner/image.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/banner/movie.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/banner/download.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.adm.ADMBannerControlInterceptor" />
+        </mvc:interceptor>
+        
+    	<!-- 통합관리 시스템 : 팝업관리 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/${Globals.site.id.adm}/popup/*.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/popup/image.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/popup/movie.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/popup/download.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.adm.ADMPopupControlInterceptor" />
+        </mvc:interceptor>
+        
+    	<!-- 통합관리 시스템 : 메뉴콘텐츠관리 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/${Globals.site.id.adm}/menuContents/*.do" />
+            <mvc:mapping path="/${Globals.site.id.adm}/menuContents/*.json" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.adm.ADMMContControlInterceptor" />
+        </mvc:interceptor>
+        
+    	<!-- 통합관리 시스템 : 메뉴콘텐츠관리 > 사용자메뉴관리 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/${Globals.site.id.adm}/menuContents/*/**/*.do" />
+            <mvc:mapping path="/${Globals.site.id.adm}/menuContents/*/**/*.json" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/menuContents/**/image.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/menuContents/**/movie.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/menuContents/stats/contact.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.adm.ADMMCMngControlInterceptor" />
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/${Globals.site.id.adm}/menuContents/**/image.do" />
+            <mvc:mapping path="/${Globals.site.id.adm}/menuContents/**/movie.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.adm.ADMMCMngImageControlInterceptor" />
+        </mvc:interceptor>
+        
+        
+    	<!-- 통합관리 시스템 : 기능등록관리 > 관리 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/${Globals.site.id.adm}/moduleFn/*/*.do" />
+            <mvc:mapping path="/${Globals.site.id.adm}/moduleFn/*/*.json" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/moduleFn/*/download.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/moduleFn/*/image.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/moduleFn/*/movie.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.adm.ADMModuleControlInterceptor" />
+        </mvc:interceptor>
+        <!-- 통합관리 시스템 : 기능등록관리 > 관리 다운로드 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/${Globals.site.id.adm}/moduleFn/*/download.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.adm.ADMModuleDownloadControlInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- 통합관리 시스템 : 이미지 보기 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/${Globals.site.id.adm}/moduleFn/*/image.do" />
+            <mvc:mapping path="/${Globals.site.id.adm}/moduleFn/*/movie.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.adm.ADMModuleImageControlInterceptor" />
+        </mvc:interceptor>
+    
+    	<!-- 통합관리 시스템 : 에디터 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/${Globals.site.id.adm}/editor/*.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.adm.ADMEditorControlInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- 통합관리 시스템 : json 
+        <mvc:interceptor>
+            <mvc:mapping path="/${Globals.site.id.adm}/*/*.json" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.adm.ADMJsonControlInterceptor" />
+        </mvc:interceptor>
+        -->
+        
+        <!-- 통합관리 시스템 : 다운로드 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/${Globals.site.id.adm}/*/download.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.adm.ADMDownloadControlInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- 통합관리 시스템 : 이미지 보기 - 배너/팝업 이미지 포함 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/${Globals.site.id.adm}/*/image.do" />
+            <mvc:mapping path="/${Globals.site.id.adm}/*/movie.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.adm.ADMImageControlInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- 로그인 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/${Globals.site.id.adm}/login/login*.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.adm.ADMLoginControlInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- 사용자모드 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**/*.do" />
+            <mvc:mapping path="/**/*.json" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/**" />
+            <mvc:exclude-mapping path="${Globals.site.path.sns}/**" />
+            <mvc:exclude-mapping path="/**/login/login*.do" />
+            <mvc:exclude-mapping path="/**/image.do" />
+            <mvc:exclude-mapping path="/**/movie.do" />
+            <mvc:exclude-mapping path="/**/download.do" />
+            <mvc:exclude-mapping path="/**/popup.do" />
+            <mvc:exclude-mapping path="/**/editor/*.do" />
+            <mvc:exclude-mapping path="/**/nice/*.do" />
+            <mvc:exclude-mapping path="/**/captcha/*.do" />
+            <mvc:exclude-mapping path="/**/stats/contact.do" />
+            <mvc:exclude-mapping path="/*/menu/pointInput*.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.usr.USRControlInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- 사용자모드 dashboard -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**/main/main.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/**" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.usr.DashboardControlInterceptor" />
+        </mvc:interceptor>
+        
+        
+        <!-- 사용자모드 dashboard 이미지 : 배너/팝업/게시판 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**/main/banner/image.do" />
+            <mvc:mapping path="/**/main/popup/image.do" />
+            <mvc:mapping path="/**/main/board/image.do" />
+            <mvc:mapping path="/**/main/board/movie.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/**/main/banner/image.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/**/main/popup/image.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/**/main/board/image.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/**/main/board/movie.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.usr.DashboardImageControlInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- 사용자모드 메뉴 만족도 등록 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/*/menu/pointInput*.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.ImportControlInterceptor" />
+        </mvc:interceptor>
+    
+    	<!-- 사용자모드 : 에디터 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**/editor/*.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/editor/*.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/menuContents/*/**/*.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.usr.USREditorControlInterceptor" />
+        </mvc:interceptor>
+         
+        <!-- 사용자모드 : json 
+        <mvc:interceptor>
+            <mvc:mapping path="/**/*.json" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/**" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.usr.USRJsonControlInterceptor" />
+        </mvc:interceptor>
+        -->
+        
+        <!-- 사용자모드 : 다운로드 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**/download.do" />
+            <mvc:exclude-mapping path="/*/main/download.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/**" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/moduleFn/*/download.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.usr.USRDownloadControlInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- 사용자모드 : 이미지 보기 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**/image.do" />
+            <mvc:mapping path="/**/movie.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/**" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/moduleFn/*/image.do" />
+            <mvc:exclude-mapping path="/**/main/banner/image.do" />
+            <mvc:exclude-mapping path="/**/main/popup/image.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/moduleFn/*/movie.do" />
+            <mvc:exclude-mapping path="/**/main/banner/movie.do" />
+            <mvc:exclude-mapping path="/**/main/popup/movie.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.usr.USRImageControlInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- 로그인 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**/login/login*.do" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/**" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.usr.USRLoginControlInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- 통합관리 시스템 : 팝업 보기 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**/popup/popup.do" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.PopupControlInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- 로그인 session 삭제 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**/*.do" />
+            <mvc:exclude-mapping path="/**/login/loginProc.do" />
+            <mvc:exclude-mapping path="/**/stats/contact.do" />
+            <mvc:exclude-mapping path="/*/menu/pointInput*.do" />
+            <mvc:exclude-mapping path="/**/image.do" />
+            <mvc:exclude-mapping path="/**/movie.do" />
+            <bean class="rbs.egovframework.web.interceptor.LoginSessionControlInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- 본인인증 session 삭제 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**/*.do" />
+            <mvc:exclude-mapping path="/**/member/join03.do" />
+            <mvc:exclude-mapping path="/**/zipCode/searchList.do" />
+            <mvc:exclude-mapping path="/**/member/idsearchProc.do" />
+            <mvc:exclude-mapping path="/**/member/pwsearchProc.do" />
+            <mvc:exclude-mapping path="/**/member/joinoutProc.do" />
+            <mvc:exclude-mapping path="/**/stats/contact.do" />
+            <mvc:exclude-mapping path="/*/menu/pointInput*.do" />
+            <mvc:exclude-mapping path="/**/image.do" />
+            <mvc:exclude-mapping path="/**/movie.do" />
+            <bean class="rbs.egovframework.web.interceptor.JoinSessionControlInterceptor" />
+        </mvc:interceptor>
+        
+        <mvc:interceptor>
+            <mvc:mapping path="/**/*.do" />
+            <mvc:exclude-mapping path="/**/member/join03Proc.do" />
+            <mvc:exclude-mapping path="/**/zipCode/searchList.do" />
+            <mvc:exclude-mapping path="/**/member/idConfirmProc.do" />
+            <mvc:exclude-mapping path="/**/member/emailConfirmProc.do" />
+            <mvc:exclude-mapping path="/**/captcha/*.do" />
+            <mvc:exclude-mapping path="/**/stats/contact.do" />
+            <mvc:exclude-mapping path="/*/menu/pointInput*.do" />
+            <mvc:exclude-mapping path="/**/image.do" />
+            <mvc:exclude-mapping path="/**/movie.do" />
+            <bean class="rbs.egovframework.web.interceptor.JoinISessionControlInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- sns 로그인 사용여부 체크 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/sns/**" />
+            <mvc:mapping path="/**/login/snsLogin*.do" />
+            <mvc:mapping path="/**/member/snsJoin*.do" />
+            <bean class="rbs.egovframework.web.interceptor.SnsCheckControlInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- sns 로그인(로그인, 회원정보수정) session 정보 삭제 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**/*.do" />
+            <mvc:exclude-mapping path="/**/login/snsLoginProc.do" />
+            <mvc:exclude-mapping path="/**/member/snsJoinProc.do" />
+            <bean class="rbs.egovframework.web.interceptor.SnsJoinSessionControlInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- sns 계정 등록(회원가입) session 정보 삭제 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**/*.do" />
+            <mvc:mapping path="/sns/**" />
+            <mvc:exclude-mapping path="/**/nice/**" />
+            <mvc:exclude-mapping path="/**/member/snsJoin*.do" />
+            <mvc:exclude-mapping path="/**/member/join*.do" />
+            <mvc:exclude-mapping path="/**/zipCode/searchList.do" />
+            <mvc:exclude-mapping path="/**/member/idConfirmProc.do" />
+            <mvc:exclude-mapping path="/**/member/emailConfirmProc.do" />
+            <mvc:exclude-mapping path="/**/captcha/*.do" />
+            <mvc:exclude-mapping path="/**/stats/contact.do" />
+            <mvc:exclude-mapping path="/*/menu/pointInput*.do" />
+            <mvc:exclude-mapping path="/**/image.do" />
+            <mvc:exclude-mapping path="/**/movie.do" />
+            <bean class="rbs.egovframework.web.interceptor.SnsJoinISessionControlInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- 사용자모드 index -->
+        <mvc:interceptor>
+            <mvc:mapping path="/*/index.ido" />
+            <mvc:exclude-mapping path="/${Globals.site.id.adm}/**" />
+            <bean class="com.woowonsoft.egovframework.web.interceptor.usr.LayoutTmpIndexControlInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- 해양대학교 session 확인 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/web/**/*.do" />
+            <mvc:exclude-mapping path="/**/login/login*.do" />
+            <bean class="rbs.egovframework.web.interceptor.KmouSessionControlInterceptor" />
+        </mvc:interceptor>
+        
+    </mvc:interceptors> 
+</beans>

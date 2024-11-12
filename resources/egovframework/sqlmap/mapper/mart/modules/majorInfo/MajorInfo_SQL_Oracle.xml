@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	1. IDX, <include refid="MAJOR_BASICINFO_TABLE_NAME"/>, [목록에 사용할 컬럼], [기본정렬쿼리], 테이블명 등 변경해서 사용
+	2. 그 외 필요에 따라 쿼리 수정하여 사용 
+-->
+<mapper namespace="mart.modules.majorInfo.majorInfoOraMapper">
+	<!-- 테이블명 -->
+	<sql id="MAJOR_BASICINFO_TABLE_NAME"><trim>MAJOR_INFO</trim></sql>
+	<sql id="MAJOR_ABTYINFO_TABLE_NAME"><trim>MAJOR_ABTY_INFO</trim></sql>
+	<sql id="MAJOR_ABTYINFO_DETAIL_TABLE_NAME"><trim>MAJOR_ABTY_DETAIL_INFO</trim></sql>
+	<sql id="MAJOR_COUR_MAJORINFO_TABLE_NAME"><trim>MAJOR_EDU_COUR_INFO</trim></sql>
+	<sql id="MAJOR_NONSBJT_TABLE_NAME"><trim>MAJOR_NONSBJT_INFO</trim></sql>
+	<sql id="MAJOR_LICENSE_TABLE_NAME"><trim>MAJOR_LICENSE_INFO</trim></sql>
+	
+	<!-- KEY가 INT인 경우 -->
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="MAJOR_BASICINFO_TABLE_NAME"/> A
+	</select>
+	
+	<!-- KEY가 STRING인 경우 - KEY형식에 맞게 변경하여 사용 
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT <include refid="rbs.commonDBMSMapper.currentDateYYYYMM"/> || LPAD(TO_NUMBER(SUBSTR(NVL(MAX(A.IDX), <include refid="rbs.commonDBMSMapper.currentDateYYYYMM"/> || '0'), 7)) + 1, 4, '0') MAXID
+		FROM 
+		<include refid="MAJOR_BASICINFO_TABLE_NAME"/> A 
+		WHERE A.IDX LIKE <include refid="rbs.commonDBMSMapper.currentDateYYYYMM"/> || '%'
+	</select>
+	-->
+	<!-- 수정/삭제 권한 : 등록자 -->
+    <!-- 목록 수정/삭제 권한 조건 쿼리 -->
+	<sql id="editAuthListQuery">
+		<if test="AUTH_MEMBER_IDX != null">
+		, CASE WHEN A.REGI_IDX = #{AUTH_MEMBER_IDX} THEN '1' ELSE '0' END AS AUTH_MNG
+		</if>
+	</sql>
+	
+    <!-- 수정/삭제 권한 조건 쿼리 -->	
+	<sql id="editAuthWhereQuery">
+		<if test="AUTH_MEMBER_IDX != null">
+		AND A.REGI_IDX = #{AUTH_MEMBER_IDX} 
+		</if>
+	</sql>
+	
+	
+	
+	<!-- 종합정보에서 교과목 조회 -->
+	<select id="selectAddMajorList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT YEAR
+		    , SMT
+		    , SCO.COMMON_CDNM(SMT) AS SMT_NM
+			, SUBJECT_CD
+			, SUF.UF_SUF_SUBJECT_NM(SUBJECT_CD) AS SUBJECT_NM
+			, DEPT_CD
+			, SCO.DEPT_CDNM(DEPT_CD) AS DEPT_NM
+			, COMDIV_CODE
+      		, SCO.COMMON_CDNM(COMDIV_CODE) AS COMDIV_CODE_NM
+			, COM_GRADE
+			, CDT_NUM
+			, WTIME_NUM
+			, PTIME_NUM
+		 FROM (SELECT A.*, SUF.UF_SUF_SUBJECT_NM(A.SUBJECT_CD) AS SUBJECT_NM FROM SUF.SUF050TB A)
+		  WHERE YEAR    = TO_CHAR(SYSDATE,'YYYY')
+		  AND DEPT_CD   = #{MAJOR_CD}
+		  <if test=' SUBJECT_NM != null and SUBJECT_NM != "" '>
+	  		AND SUBJECT_NM LIKE '%${SUBJECT_NM}%'
+		  </if>
+		  ORDER BY COM_GRADE, SUBJECT_NM
+	</select>
+	
+	
+</mapper>            

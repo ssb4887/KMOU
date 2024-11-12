@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	1. IDX, RBS_SBJT_1_INFO, SUBJECT, IDX, 테이블명 등 변경해서 사용
+	2. 그 외 필요에 따라 쿼리 수정하여 사용 
+-->
+
+<mapper namespace="mart.modules.studPlan.studPlanOraMapper">
+
+	<select id="getCollegeList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT A.*
+			FROM SCO.V_AI_ORG A
+			WHERE 1=1
+			AND DEPT_CD LIKE '3%'
+			AND UP_DEPT_CD = 300000
+			AND USE_FG = 'Y'
+			AND COLG_CD IN ('301000', '309000', '310000', '308000')
+			<if test='SBJT_DGN_RNG_FG.equals("IMG")'>
+				OR DEPT_CD = '446000'
+			</if>
+			ORDER BY DEPT_NM ASC
+	</select>
+	
+	<select id="getDepartList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT A.*
+			FROM SCO.V_AI_ORG A
+			WHERE ORG_LVL = 3
+			AND DEPT_CD LIKE '3%'
+			AND CATEGORY != '부서'
+			<if test='UNIV != null and !UNIV.equals("")'>
+			AND UP_DEPT_CD = #{UNIV}
+			</if>
+			AND USE_FG = 'Y'
+			AND COLG_CD IS NOT NULL
+			ORDER BY DEPT_NM ASC
+	</select>
+	
+	<select id="getMajorList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT A.*
+			FROM SCO.V_AI_ORG A
+			WHERE ORG_LVL = 4
+			AND DEPT_CD LIKE '3%'
+			<if test='DEPART != null and !DEPART.equals("")'>
+			AND UP_DEPT_CD = #{DEPART}
+			</if>
+			AND USE_FG = 'Y'
+			AND COLG_CD IS NOT NULL
+			ORDER BY DEPT_NM ASC
+	</select>
+ 
+	
+	<select id="getProfDepartList" parameterType="java.util.HashMap" resultType="dataMap">
+            SELECT
+                   NOW_DEPT_CD AS DEPT_CD, UF_GET_ORG_CODESET('D', NOW_DEPT_CD) AS DEPT_NM
+            FROM APS.APS010TB
+            WHERE EMP_GB_CODE NOT IN ('PS011', 'PS016')
+              AND NOW_JOBG_CD NOT IN
+                  ('12050501', '12030201', '12060101', '12090801', '12030101', '12060201', '12050202', '12040601',
+                   '12010101', '12050502', '12050201')
+              AND NOW_DEPT_CD LIKE '3%'
+              AND RTI_FL = 0
+            GROUP BY NOW_DEPT_CD
+            ORDER BY UF_GET_ORG_CODESET('D', NOW_DEPT_CD)			
+	</select>
+	
+	<select id="getSbjtList" parameterType="java.util.HashMap" resultType="dataMap">
+		WITH CURR AS(
+<!-- 		               SELECT -->
+<!-- 		               			B.SUBJECT_CD || '_' || B.DEPT_CD || '_' || B.YEAR || '_' || B.COM_GRADE || '_' || B.SMT AS DOC_ID -->
+<!-- 		                     ,	B.SUBJECT_CD -->
+<!-- 		                   	 ,  A.SUBJECT_NM -->
+<!-- 		                   	 ,  A.SUBJECT_ENM -->
+<!-- 		                     ,  C.COLG_CD  AS COLG_CD -->
+<!-- 		                     ,  C.COLG_NM  AS COLG_NM -->
+<!-- 		                     ,  CASE WHEN C.ORG_LVL = '3' THEN C.DEPT_CD ELSE C.UP_DEPT_CD END AS DEPT_CD -->
+<!-- 		                     ,  CASE WHEN C.ORG_LVL = '3' THEN C.DEPT_NM ELSE DEPT_CDNM(C.UP_DEPT_CD) END AS DEPT_NM -->
+<!-- 		                  	 ,  CASE WHEN (SELECT CATEGORY FROM SCO.V_AI_ORG WHERE DEPT_CD = C.UP_DEPT_CD) = '학과' THEN UP_DEPT_CD ELSE C.DEPT_CD END AS MAJOR_CD -->
+<!-- 		                   	 ,  CASE WHEN (SELECT CATEGORY FROM SCO.V_AI_ORG WHERE DEPT_CD = C.UP_DEPT_CD) = '학과' THEN  DEPT_CDNM(C.UP_DEPT_CD) ELSE  DEPT_CDNM(C.DEPT_CD) END AS MAJOR_NM -->
+<!-- 		                  	 ,  B.YEAR -->
+<!-- 		                  	 ,  B.COM_GRADE -->
+<!-- 		                  	 ,  B.SMT -->
+<!-- 		                   	 ,  UF_GET_SYS020TB(B.SMT) AS SMT_NM -->
+<!-- 		                     ,  ROUND(B.WTIME_NUM) AS WTIME_NUM -->
+<!-- 		                     ,  ROUND(B.PTIME_NUM) AS PTIME_NUM -->
+<!-- 		                	 ,  B.CDT_NUM -->
+<!-- 		                   	 ,  B.COMDIV_CODE -->
+<!-- 		                   	 ,  UF_GET_SYS020TB(B.COMDIV_CODE) AS COMDIV_CODE_NM -->
+<!-- 		                   	 ,  B.MNRCOM_DIV_CODE -->
+<!-- 		                   	 ,  UF_GET_SYS020TB(B.MNRCOM_DIV_CODE) AS MNRCOM_DIV_CODE_NM -->
+<!-- 		                   	 ,  B.FUSE_DEPT_CD -->
+<!-- 		                   	 ,  (SELECT DEPT_NM FROM SCO.V_AI_ORG WHERE DEPT_CD = B.FUSE_DEPT_CD) AS FUSE_DEPT_CD_NM -->
+<!-- 		              FROM -->
+<!-- 		                 SUF.SUF010TB A, -->
+<!-- 		                 SUF.SUF050TB B, -->
+<!-- 		                 SCO.V_AI_ORG C -->
+<!-- 		              WHERE  -->
+<!-- 		              	  A.ABO_YN IS NULL           폐기일자 NULL -->
+<!-- 		              AND A.SINBUN_CODE = 'UD340001' 학부생만 -->
+<!-- 		              AND A.SUBJECT_CD = B.SUBJECT_CD -->
+<!-- 	                  AND B.YEAR BETWEEN TO_CHAR(SYSDATE - (INTERVAL '5' YEAR), 'YYYY') AND TO_CHAR(SYSDATE, 'YYYY') -->
+<!-- 	                  AND B.COMDIV_CODE IN ('UE010098', 'UE010021', 'UE010022', 'UE010024', 'UE010011', 'UE010012') -->
+<!-- 	                  AND B.DEPT_CD = C.DEPT_CD -->
+<!-- 	                  AND C.COLG_CD IN ('301000', '309000', '310000', '308000') -->
+<!-- 	                  AND C.USE_FG = 'Y' -->
+<!-- 	                  AND ((C.ORG_LVL = '4')  OR (C.ORG_LVL = '3' AND C.CATEGORY != '학부')) -->
+
+
+						SELECT
+		                     A.SUBJECT_CD || '_' || CASE WHEN C.ORG_LVL = '3' THEN C.DEPT_CD ELSE C.UP_DEPT_CD END  || '_' || A.YEAR || '_' || A.GRADE || '_' || A.SMT AS DOC_ID,
+		                     A.SUBJECT_CD,
+		                     (SELECT UF_GET_SUBJECT_CODESET(A.SUBJECT_CD) FROM dual)            AS SUBJECT_NM,
+		                     (SELECT SUBJECT_ENM FROM SUF010TB WHERE SUBJECT_CD = A.SUBJECT_CD) AS SUBJECT_ENM,
+		                     C.COLG_CD                                                                               AS COLG_CD,
+		                     C.COLG_NM                                                                               AS COLG_NM,
+		                     CASE WHEN C.ORG_LVL = '3' THEN C.DEPT_CD ELSE C.UP_DEPT_CD END                          AS DEPT_CD,
+		                     CASE WHEN C.ORG_LVL = '3' THEN C.DEPT_NM ELSE DEPT_CDNM(C.UP_DEPT_CD) END               AS DEPT_NM,
+		                     CASE
+		                         WHEN (SELECT CATEGORY FROM SCO.V_AI_ORG WHERE DEPT_CD = C.UP_DEPT_CD) = '학과' THEN UP_DEPT_CD
+		                         ELSE C.DEPT_CD END                                                                  AS MAJOR_CD,
+		                     CASE
+		                         WHEN (SELECT CATEGORY FROM SCO.V_AI_ORG WHERE DEPT_CD = C.UP_DEPT_CD) = '학과'
+		                             THEN DEPT_CDNM(C.UP_DEPT_CD)
+		                         ELSE DEPT_CDNM(C.DEPT_CD) END                                                       AS MAJOR_NM,
+		                     A.YEAR,
+		                     A.GRADE AS COM_GRADE,
+		                     A.SMT,
+		                     UF_GET_SYS020TB(A.SMT)                                                                  AS SMT_NM,
+		                     ROUND(A.WTIME_NUM)                                                                      AS WTIME_NUM,
+		                     ROUND(A.PTIME_NUM)                                                                      AS PTIME_NUM,
+		                     A.CDT_NUM,
+		                     A.COMDIV_CODE,
+		                     UF_GET_SYS020TB(A.COMDIV_CODE)                                                          AS COMDIV_CODE_NM,
+		                     A.MNRCOM_DIV_CODE,
+		                     UF_GET_SYS020TB(A.MNRCOM_DIV_CODE)                                                      AS MNRCOM_DIV_CODE_NM
+		              FROM SUF.SUF100TB A,
+		                   SCO.V_AI_ORG C
+		              WHERE A.ABO_YN = 'N'
+		                AND A.SINBUN_CODE = 'UD340001'
+			            AND A.COMDIV_CODE IN ('UE010098', 'UE010021', 'UE010022', 'UE010024', 'UE010011', 'UE010012','UE010031')
+		                AND A.DEPT_CD = C.DEPT_CD
+		                AND C.COLG_CD IN ('301000', '309000', '310000', '308000')
+			            AND C.USE_FG = 'Y'
+			            AND ((C.ORG_LVL = '4')  OR (C.ORG_LVL = '3' AND C.CATEGORY != '학부'))
+		                AND SMT IN ('GH0210','GH0220')
+					)
+		SELECT
+			*
+		FROM 
+			CURR
+		WHERE 
+			 (SUBJECT_CD, YEAR, DEPT_CD) IN (SELECT SUBJECT_CD, MAX(YEAR), DEPT_CD FROM CURR GROUP BY SUBJECT_CD, DEPT_CD) <!-- 중복된 데이터는 가장 최근 년도만 가져온다 -->
+		<if test='KEYWORD != null and !KEYWORD.equals("")'>
+         AND (
+         	     TRIM(SUBJECT_NM) LIKE '%' || TRIM(#{KEYWORD}) || '%' 
+              OR TRIM(LOWER(SUBJECT_ENM)) LIKE '%' || TRIM(LOWER(#{KEYWORD}))  ||'%'
+              )
+         </if>
+         <if test='SEL_MJ_RANGE != null and !SEL_MJ_RANGE.equals("")'>    
+		 AND (
+		 	     COLG_CD = #{SEL_MJ_RANGE} 
+		 	  OR DEPT_CD = #{SEL_MJ_RANGE} 
+		 	  OR MAJOR_CD = #{SEL_MJ_RANGE}
+		 	  )
+		 </if>
+		 <if test='!CHK_SB_FG_LIST.isEmpty()'>
+		 AND COMDIV_CODE IN  
+		 	<foreach collection="CHK_SB_FG_LIST" item="chkSbFg" index="index" separator="," open="(" close=")">
+				#{chkSbFg}
+			</foreach>		
+		 </if>		
+            <!-- 찜목록 용 리스트 -->
+		 <if test='DOC_ID_LIST != null'>
+		  AND DOC_ID IN  
+		 	<foreach collection="DOC_ID_LIST" item="docId" index="index" separator="," open="(" close=")">
+				#{docId}
+			</foreach>		
+		 </if> 		  
+
+	</select>
+
+	<select id="getProfList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT EMP_NO,  
+		       EMP_NM,  
+		       TRIM(EMP_CNM) AS EMP_CNM,  
+		       TRIM(EMP_ENM) AS EMP_ENM,  
+		       NOW_DEPT_CD AS DEPT_CD,  
+		       (SELECT V_TEA_EMAIL FROM KFORU2018.V_TAD_TE_TEA_DEPT WHERE V_TEA_SN = (SELECT MAX(V_TEA_SN) FROM V_TAD_TE_TEA_DEPT WHERE V_TEA_EMPNO = EMP_NO)) AS EMAIL,
+		       UF_GET_ORG_CODESET('D', NOW_DEPT_CD) AS DEPT_NM,  
+		       (SELECT COLG_CD FROM SCO.V_AI_ORG ORG WHERE ORG.DEPT_CD = NOW_DEPT_CD) AS COLG_CD,  
+		       UF_GET_ORG_CODESET('B', NOW_DEPT_CD) AS COLG_NM,  
+		       NOW_JOBG_CD AS JOBG_CD,  
+		       (SELECT JOBG_NM FROM APS.APS920TB WHERE JOBG_CD = NOW_JOBG_CD) AS JOBG_NM,  
+		       RTI_FL  
+		FROM APS.APS010TB  
+		WHERE EMP_GB_CODE NOT IN ('PS011', 'PS016')  
+		  AND NOW_JOBG_CD NOT IN ('12050501', '12030201', '12060101', '12090801', '12030101', '12060201', '12050202', '12040601', '12010101', '12050502', '12050201')
+<!-- 		  박사후연구원, 교육연구사, 조교, 비전임산학협력중점교원, 교육연구관, 계약조교, 전임연구원(무기계약직), 겸임교원, 총장, 초빙연구원, 전임연구원 제외 -->
+		  AND RTI_FL = 0
+		  <if test='KEYWORD != null and !KEYWORD.equals("")'>  
+		  AND EMP_NM LIKE '%'||#{KEYWORD}||'%'
+		  </if>
+		  <if test='DEPT_CD != null and !DEPT_CD.equals("")'>
+		  AND NOW_DEPT_CD = #{DEPT_CD}
+		  </if>	  
+	</select>
+
+	<!-- AI시스템에서 최종 승인시 전공코드 채번을 위한 전송(신청정보 - 마스터) -->
+	<insert id="sendStudPlanToAHS010TB" parameterType="java.util.HashMap">
+	    INSERT INTO AHS010TB (
+	        SDM_CD, REVSN_NO, APLY_STUDENT_NO, APLY_STUDENT_NM, APLY_YEAR, APLY_STM,
+	        SDM_KOR_NM, SDM_ENG_NM, AWD_DEGR_KOR_NM, AWD_DEGR_ENG_NM, SBJT_DGN_RNG_FG,
+	        GUID_PROF_STAFF_NO, CNSLT_PROF, CONC_JOB_KOR, CONC_JOB_ENG, CONC_STUD_FLD_KOR,
+	        CONC_STUD_FLD_ENG, DMND_BASE_LRN_ABTY_KOR, DMND_BASE_LRN_ABTY_ENG, ETC_CTNT,
+	        IDEAL_STU_KOR, IDEAL_STU_ENG, APLY_RESN_KOR, APLY_RESN_ENG, CPTN_PLAN_KOR,
+	        CPTN_PLAN_ENG, CHG_CTNT, SDM_CHG_RESN, APLY_FG, STATUS, CNSLT_APLY_DT,
+	        CNSLT_CLS_DT, APLDOC_SUBM_DT, GUID_PROF_TRET_DT, EDU_CENTER_JUDG_DT,
+	        EDU_CENTER_JUDG_OPIN, DEPART_JUDG_DT, DEPART_JUDG_OPIN, AFFAIR_COMMITTEE_JUDG_DT,
+	        AFFAIR_COMMITTEE_JUDG_OPIN, SDM_DEPT_CD, RJT_DT, RJT_RESN, USE_YN,
+	        APLDOC_SUBM_INF_TRNSM_DT, SUST_ACCP_INF_RECP_DT, HDOFCE_ACCP_INF_TRNSM_DT,
+	        HDOFCE_ACCP_INF_RECP_DT, ISDELETE, REGI_ID, REGI_DATE, REGI_IP, LAST_MODI_ID,
+	        LAST_MODI_DATE, LAST_MODI_IP, CNSLT_PROF_NM, SBJT_DGN_RNG_FG_NM, GUID_PROF_STAFF_NM
+	    ) VALUES (
+	        #{SDM_CD}, #{REVSN_NO}, #{APLY_STUDENT_NO}, #{APLY_STUDENT_NM}, #{APLY_YEAR}, #{APLY_STM},
+	        #{SDM_KOR_NM}, #{SDM_ENG_NM}, #{AWD_DEGR_KOR_NM}, #{AWD_DEGR_ENG_NM}, #{SBJT_DGN_RNG_FG},
+	        #{GUID_PROF_STAFF_NO}, #{CNSLT_PROF}, #{CONC_JOB_KOR}, #{CONC_JOB_ENG}, #{CONC_STUD_FLD_KOR},
+	        #{CONC_STUD_FLD_ENG}, #{DMND_BASE_LRN_ABTY_KOR}, #{DMND_BASE_LRN_ABTY_ENG}, #{ETC_CTNT},
+	        #{IDEAL_STU_KOR}, #{IDEAL_STU_ENG}, #{APLY_RESN_KOR}, #{APLY_RESN_ENG}, #{CPTN_PLAN_KOR},
+	        #{CPTN_PLAN_ENG}, #{CHG_CTNT}, #{SDM_CHG_RESN}, #{APLY_FG}, #{STATUS}, #{CNSLT_APLY_DT},
+	        #{CNSLT_CLS_DT}, #{APLDOC_SUBM_DT}, #{GUID_PROF_TRET_DT}, #{EDU_CENTER_JUDG_DT},
+	        #{EDU_CENTER_JUDG_OPIN}, #{DEPART_JUDG_DT}, #{DEPART_JUDG_OPIN}, #{AFFAIR_COMMITTEE_JUDG_DT},
+	        #{AFFAIR_COMMITTEE_JUDG_OPIN}, #{SDM_DEPT_CD}, #{RJT_DT}, #{RJT_RESN}, #{USE_YN},
+	        #{APLDOC_SUBM_INF_TRNSM_DT}, #{SUST_ACCP_INF_RECP_DT}, #{HDOFCE_ACCP_INF_TRNSM_DT},
+	        #{HDOFCE_ACCP_INF_RECP_DT}, #{ISDELETE}, #{REGI_ID}, #{REGI_DATE}, #{REGI_IP}, #{LAST_MODI_ID},
+	        #{LAST_MODI_DATE}, #{LAST_MODI_IP}, #{CNSLT_PROF_NM}, #{SBJT_DGN_RNG_FG_NM}, #{GUID_PROF_STAFF_NM}
+	    )
+	</insert>
+	
+	<!-- AI시스템에서 최종 승인시 전공코드 채번을 위한 전송(교육과정) -->	
+	<insert id="sendStudPlanToAHS020TB" parameterType="java.util.HashMap">
+	    INSERT INTO AHS020TB (
+		    YEAR, SMT, DEPT_CD, COM_GRADE, SUBJECT_CD, SINBUN_CODE, COMDIV_CODE,
+		    DEG_GB_CODE, MNRCOM_DIV_CODE, CDT_NUM, WTIME_NUM, PTIME_NUM,
+		    SISU, 
+		    COM_CNT, 
+		    SELECT_NO, CREATE_UID, CREATE_IP,
+		    JOB_UID, JOB_IP, JOB_PRG_ID, FUSE_DEPT_CD, FUSE_DOMAIN_CD, MAJOR_GB_CODE
+		) VALUES (
+		    #{YEAR}, #{SMT}, #{DEPT_CD}, #{COM_GRADE}, #{SUBJECT_CD}, 'UD340001', #{COMDIV_CODE},
+		    'GD010001, NULL, #{CDT_NUM}, #{WTIME_NUM}, #{PTIME_NUM},
+		    (SELECT SISU FROM SUF.SUF050TB WHERE SUBJECT_CD = #{SUBJECT_CD} AND YEAR = #{YEAR}), 
+		    (SELECT COM_CNT FROM SUF.SUF050TB WHERE SUBJECT_CD = #{SUBJECT_CD} AND YEAR = #{YEAR}),
+		     NULL, 'AISYSTEM', 'AISYSTEM',
+		    NULL, NULL, NULL, '000000', NULL, 'UE360005'
+		)
+	</insert>	
+	
+	<!-- 학생설계전공 연계(전공코드가 채번된 학생설계전공 가져오기) -->
+	<select id="getConfirmedStudPlan" parameterType="java.util.List" resultType="dataMap">
+	    SELECT
+	        SDM_CD,
+	        REVSN_NO,
+	        SDM_DEPT_CD
+	    FROM AIHAKSA24.AHS010TB
+	    WHERE (SDM_CD, REVSN_NO) IN
+	    <foreach item="item" collection="list" open="(" separator="," close=")">
+	        (#{item.SDM_CD}, #{item.REVSN_NO})
+	    </foreach>
+	    AND SDM_DEPT_CD IS NOT NULL
+	</select>
+	
+
+
+</mapper>            

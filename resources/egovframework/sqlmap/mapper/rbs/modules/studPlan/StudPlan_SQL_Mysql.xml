@@ -1,0 +1,958 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.studPlan.studPlanMapper">
+
+	<select id="getCollegeList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		COLG_CD AS DEPT_CD	, COLG_NM AS DEPT_NM
+			FROM 		DEPT_INFO
+			WHERE 		ISDELETE = '0'
+			AND DEPT_LEVEL = '2'	
+			ORDER BY 	COLG_CD
+			
+	</select>
+	
+	<select id="getDepartList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		DEPT_CD, DEPT_NM
+			FROM 		DEPT_INFO
+			WHERE 		ISDELETE = '0'
+			AND DEPT_LEVEL = '3'
+			<if test='UNIV != null and !UNIV.equals("")'>
+			AND UP_CD = #{UNIV}
+			</if>
+			ORDER BY 	COLG_CD, DEPT_CD
+			
+	</select>
+	
+	<select id="getMajorList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		DEPT_CD, DEPT_NM
+			FROM 		DEPT_INFO
+			WHERE		ISDELETE = '0'
+			AND DEPT_LEVEL = '4'
+			<if test='DEPART != null and !DEPART.equals("")'>
+			AND 		UP_CD = #{DEPART}
+			</if>
+			ORDER BY 	DEPT_CD ASC
+	</select>
+	
+	
+
+	
+	<select id="getNextSdmCd" parameterType="java.lang.String" resultType="java.lang.String">
+			SELECT
+		    IFNULL(
+		        (SELECT MAX(SDM_CD) + 1 FROM uni_sdm_aply_infmt WHERE APLY_STUDENT_NO = #{APLY_STUDENT_NO}),
+		        CONCAT(#{APLY_STUDENT_NO},'001')
+		    ) AS result
+	</select>
+	
+	<insert id="insertStudInfmt" parameterType="java.util.HashMap">
+       INSERT INTO uni_sdm_aply_infmt (
+            <choose>
+		   	<when test='STATUS.equals("20") or STATUS == "20"'>
+		    CNSLT_APLY_DT,
+		   	</when>
+		    <when test='STATUS.equals("30") or STATUS == "30"'>
+		    APLDOC_SUBM_DT,
+		    </when>		    	
+		    </choose>
+            SDM_CD, 		 			REVSN_NO,				APLY_RESN_KOR,		  APLY_STUDENT_NO,	
+            SBJT_DGN_RNG_FG_NM,			CPTN_PLAN_KOR,   		ETC_CTNT,	 	      CNSLT_PROF_NM,   		
+            CONC_STUD_FLD_KOR,			CNSLT_PROF,      		SDM_KOR_NM,	      	  SDM_ENG_NM,      		
+            AWD_DEGR_ENG_NM,			AWD_DEGR_KOR_NM, 		SBJT_DGN_RNG_FG,	  IDEAL_STU_KOR,   		
+            DMND_BASE_LRN_ABTY_KOR,  	CONC_JOB_KOR,    		REGI_ID,			  STATUS,			         		
+            REGI_DATE,					REGI_IP,				APLY_YEAR,			  APLY_STM,
+            GUID_PROF_STAFF_NO,			GUID_PROF_STAFF_NM,		APLY_STUDENT_NM		
+        ) VALUES (
+            <choose>
+		   	<when test='STATUS.equals("20") or STATUS == "20"'>
+		    DATE_FORMAT(NOW(), '%Y%m%d'),
+		   	</when>
+		    <when test='STATUS.equals("30") or STATUS == "30"'>
+		    DATE_FORMAT(NOW(), '%Y%m%d'),
+		    </when>		    	
+		    </choose>
+            #{SDM_CD},					#{REVSN_NO},			#{APLY_RESN_KOR}, 	  #{APLY_STUDENT_NO},			
+            #{SBJT_DGN_RNG_FG_NM},		#{CPTN_PLAN_KOR}, 		#{ETC_CTNT},		  #{CNSLT_PROF_NM},		
+            #{CONC_STUD_FLD_KOR},		#{CNSLT_PROF},			#{SDM_KOR_NM},		  #{SDM_ENG_NM},		
+            #{AWD_DEGR_ENG_NM},			#{AWD_DEGR_KOR_NM},		#{SBJT_DGN_RNG_FG},	  #{IDEAL_STU_KOR},		
+            #{DMND_BASE_LRN_ABTY_KOR},	#{CONC_JOB_KOR},		#{APLY_STUDENT_NO},	  #{STATUS},	
+            NOW(),						#{REGI_IP},				YEAR(NOW()),		  FN_GET_CURRENT_STM(NOW()),
+            #{GUID_PROF_STAFF_NO},		#{GUID_PROF_STAFF_NM}, 	#{APLY_STUDENT_NM}
+            
+        )
+	</insert>	
+	
+	<update id="updateStudInfmt" parameterType="java.util.HashMap">
+		UPDATE 
+			uni_sdm_aply_infmt
+		SET 
+		    APLY_RESN_KOR = #{APLY_RESN_KOR}, 	
+		    SBJT_DGN_RNG_FG_NM = #{SBJT_DGN_RNG_FG_NM}, 	
+		    CPTN_PLAN_KOR = #{CPTN_PLAN_KOR}, 	
+		    ETC_CTNT = #{ETC_CTNT}, 	
+		    CNSLT_PROF_NM = #{CNSLT_PROF_NM}, 	
+		    CONC_STUD_FLD_KOR = #{CONC_STUD_FLD_KOR}, 	
+		    CNSLT_PROF = #{CNSLT_PROF}, 	
+		    SDM_KOR_NM = #{SDM_KOR_NM}, 	
+		    SDM_ENG_NM = #{SDM_ENG_NM}, 	
+		    AWD_DEGR_ENG_NM = #{AWD_DEGR_ENG_NM}, 	
+		    AWD_DEGR_KOR_NM = #{AWD_DEGR_KOR_NM}, 	
+		    SBJT_DGN_RNG_FG = #{SBJT_DGN_RNG_FG}, 	
+		    IDEAL_STU_KOR = #{IDEAL_STU_KOR}, 	
+		    DMND_BASE_LRN_ABTY_KOR = #{DMND_BASE_LRN_ABTY_KOR}, 	
+		    CONC_JOB_KOR = #{CONC_JOB_KOR}, 	
+		    REGI_ID = #{APLY_STUDENT_NO}, 	
+		    STATUS = #{STATUS}, 	
+		    <choose>
+		    	<when test='STATUS.equals("20") or STATUS == "20"'>
+		    		CNSLT_APLY_DT = DATE_FORMAT(NOW(), '%Y%m%d'),
+		    		CNSLT_CLS_DT = NULL,
+		    		RJT_DT = NULL,
+		    		RJT_RESN = NULL,
+		    		GUID_PROF_TRET_DT = NULL,
+		    	</when>
+		    	<when test='STATUS.equals("30") or STATUS == "30"'>
+		    		APLDOC_SUBM_DT = DATE_FORMAT(NOW(), '%Y%m%d'),
+		    		RJT_DT = NULL,
+		    		RJT_RESN = NULL,
+		    		GUID_PROF_TRET_DT = NULL,
+		    	</when>		    	
+		    </choose>
+		    REGI_DATE = NOW(), 	
+		    REGI_IP = #{REGI_IP}, 	
+		    APLY_YEAR = YEAR(NOW()), 	
+		    APLY_STM = FN_GET_CURRENT_STM(NOW()), 	
+		    GUID_PROF_STAFF_NO = #{GUID_PROF_STAFF_NO}, 	
+		    GUID_PROF_STAFF_NM = #{GUID_PROF_STAFF_NM}
+		WHERE 
+		    SDM_CD = #{SDM_CD} 
+		AND REVSN_NO = #{REVSN_NO}
+	</update>
+	
+	<delete id="deleteStudSbjt" parameterType="java.util.HashMap">
+		DELETE 
+		FROM 
+			uni_sdm_sbjt_infmt
+		WHERE 
+			SDM_CD 	 = #{SDM_CD}
+		AND REVSN_NO = #{REVSN_NO}		
+	</delete>
+	
+	<insert id="insertStudSbjt" parameterType="java.util.HashMap">
+	    INSERT INTO uni_sdm_sbjt_infmt (
+	        SDM_CD,				REVSN_NO,		SBJT_SEQ,		ORG_CODE,
+	        COLG_CD,			COLG_NM,		MAJOR_CD,		COMDIV_CODE_NM, 
+	        MAJOR_NM,			COMDIV_CODE,	ORG_COMDIV_CODE,
+	        SUBJECT_CD,			SUBJECT_NM,		SUBJECT_ENM,	COM_GRADE,
+	        COM_GRADE_NM,		YEAR,			SMT,			SMT_NM,
+	        CDT_NUM,			WTIME_NUM,		PTIME_NUM,		LAST_MODI_ID,
+	        LAST_MODI_IP,		LAST_MODI_DATE, DEPT_CD,		DEPT_NM
+	    ) VALUES (
+	        #{SDM_CD},			#{REVSN_NO},	#{SBJT_SEQ},	#{ORG_CODE},
+	        #{COLG_CD},			#{COLG_NM},		#{MAJOR_CD},	#{COMDIV_CODE_NM},
+	        #{MAJOR_NM},		#{COMDIV_CODE},	#{ORG_COMDIV_CODE},
+	        #{SUBJECT_CD},		#{SUBJECT_NM},	#{SUBJECT_ENM},	#{COM_GRADE},
+	        #{COM_GRADE_NM},	#{YEAR},		#{SMT},			#{SMT_NM},
+	        #{CDT_NUM},			#{WTIME_NUM},	#{PTIME_NUM},	#{LAST_MODI_ID},
+	        #{LAST_MODI_IP},	NOW(),			#{DEPT_CD},		#{DEPT_NM}
+	    )
+	</insert>
+	
+	<delete id="deleteCnsltProf" parameterType="java.util.HashMap">
+		DELETE 
+		FROM 
+			uni_sdm_cnslt_infmt
+		WHERE 
+			SDM_CD 	 = #{SDM_CD}
+		AND REVSN_NO = #{REVSN_NO}		
+	</delete>	
+		
+	<insert id="insertCnsltProf" parameterType="java.util.HashMap">
+	    INSERT INTO uni_sdm_cnslt_infmt (
+	        SDM_CD,		REVSN_NO,		CNSLT_PROF_STAFF_NO,	CNSLT_PROF_STAFF_NM,
+	        REGI_IP,	REGI_ID,		REGI_DATE
+	    ) VALUES (
+	        #{SDM_CD},	#{REVSN_NO},	#{CNSLT_PROF_STAFF_NO},	#{CNSLT_PROF_STAFF_NM},
+	        #{REGI_IP},	#{REGI_ID},		NOW()		
+	    )  
+	</insert>	
+	
+	<select id="getMyList" parameterType="java.lang.String" resultType="dataMap">
+		SELECT 
+			 (SELECT SUM(CDT_NUM) FROM UNI_SDM_SBJT_INFMT B WHERE B.SDM_CD = A.SDM_CD AND B.REVSN_NO = A.REVSN_NO) AS TOTAL_CDT_NUM
+		   , (SELECT COM_INF_NM FROM uni_sdm_com_progress WHERE COM_CD = A.STATUS) AS COM_INF_NM	
+		   , (SELECT MAX(CNSLT_PROF_STAFF_NM) FROM UNI_SDM_CNSLT_INFMT B WHERE B.SDM_CD = A.SDM_CD AND B.REVSN_NO = A.REVSN_NO) AS CNSLT_ONE_NM
+           , (SELECT COUNT(*) FROM UNI_SDM_CNSLT_INFMT B WHERE B.SDM_CD = A.SDM_CD AND B.REVSN_NO = A.REVSN_NO) AS CNSLT_CNT
+           , FN_SDM_CHG_CHECK(A.SDM_CD, A.REVSN_NO) AS IS_CHG_YN
+		   , A.*
+		   , (SELECT COM_INF_NM from uni_sdm_com_progress  where COM_CD = A.STATUS) AS STATUS_INF_NM
+		FROM 
+			uni_sdm_aply_infmt A
+		WHERE 
+			APLY_STUDENT_NO = #{studentNo}
+		AND USE_YN = 'Y'
+	</select>
+	
+	<select id="getMySbjtList" parameterType="java.lang.String" resultType="dataMap">
+		SELECT 
+			* 
+		FROM
+		(
+			SELECT 
+				SDM_CD
+			  , REVSN_NO
+			  , MAJOR_NM
+			  , RANK() OVER (PARTITION BY SDM_CD, REVSN_NO ORDER BY SUM(CDT_NUM) DESC, MAJOR_NM) AS CDT_NUM_RANK 
+			FROM 
+				uni_sdm_sbjt_infmt
+			WHERE 
+				(SDM_CD, REVSN_NO) IN (SELECT SDM_CD, REVSN_NO FROM uni_sdm_aply_infmt WHERE APLY_STUDENT_NO = #{studentNo} AND USE_YN = 'Y')
+			GROUP BY 
+				SDM_CD, REVSN_NO, MAJOR_NM
+            UNION ALL            
+			SELECT
+				SDM_CD
+			  , REVSN_NO
+			  , CHG_MAJOR_NM
+			  , RANK() OVER (PARTITION BY SDM_CD, REVSN_NO ORDER BY SUM(CHG_CDT_NUM) DESC, CHG_MAJOR_NM) AS CDT_NUM_RANK
+			FROM
+				uni_sdm_sbjt_infmt_chg <!-- 변경테이블 -->
+			WHERE
+				(SDM_CD, REVSN_NO) IN (SELECT SDM_CD, REVSN_NO FROM uni_sdm_aply_infmt WHERE APLY_STUDENT_NO = #{studentNo} AND USE_YN = 'Y')
+			GROUP BY
+				SDM_CD, REVSN_NO, MAJOR_NM				
+		) BASE
+		ORDER BY BASE.SDM_CD, BASE.REVSN_NO, BASE.CDT_NUM_RANK
+	</select>
+		
+	<select id="getStudPlanList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+		SELECT 
+			 (SELECT SUM(CDT_NUM) FROM UNI_SDM_SBJT_INFMT B WHERE B.SDM_CD = A.SDM_CD AND B.REVSN_NO = A.REVSN_NO) AS TOTAL_CDT_NUM
+		   , COUNT(*) OVER () AS TOTAL_COUNT		
+		   , (SELECT COM_INF_NM from uni_sdm_com_progress  where COM_CD = A.STATUS) AS STATUS_INF_NM	
+		   , A.*
+		FROM 
+			uni_sdm_aply_infmt A
+		WHERE 
+			USE_YN = 'Y'
+		AND STATUS = 100
+		AND SDM_DEPT_CD IS NOT NULL
+		<if test='MAJOR_CD != null and !MAJOR_CD.equals("")'>
+        AND #{MAJOR_CD} IN (SELECT MAJOR_CD FROM uni_sdm_sbjt_infmt WHERE SDM_CD = A.SDM_CD AND REVSN_NO = A.REVSN_NO GROUP BY MAJOR_CD)
+        </if>
+		<if test='YEAR != null and !YEAR.equals("")'>
+        AND APLY_YEAR = #{YEAR}
+        </if>		
+        <include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="getStudPlanListCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT 
+			 COUNT(*)
+		FROM 
+			uni_sdm_aply_infmt A
+		WHERE 
+			USE_YN = 'Y'
+		AND STATUS = 100
+		AND SDM_DEPT_CD IS NOT NULL
+		<if test='MAJOR_CD != null and !MAJOR_CD.equals("")'>
+        AND #{MAJOR_CD} IN (SELECT MAJOR_CD FROM uni_sdm_sbjt_infmt WHERE SDM_CD = A.SDM_CD AND REVSN_NO = A.REVSN_NO GROUP BY MAJOR_CD)
+        </if>
+		<if test='YEAR != null and !YEAR.equals("")'>
+        AND APLY_YEAR = #{YEAR}
+        </if>
+	</select>
+	
+	<select id="getStudPlanSbjtList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			* 
+		FROM
+		(	
+			SELECT 
+				SDM_CD
+			  , REVSN_NO
+			  , MAJOR_NM
+			  , RANK() OVER (PARTITION BY SDM_CD, REVSN_NO ORDER BY SUM(CDT_NUM) DESC, MAJOR_NM) AS CDT_NUM_RANK
+			FROM 
+				uni_sdm_sbjt_infmt
+			WHERE 
+				(SDM_CD, REVSN_NO) IN (SELECT SDM_CD, REVSN_NO FROM uni_sdm_aply_infmt WHERE USE_YN = 'Y' AND STATUS = 100)
+			GROUP BY 
+				SDM_CD, REVSN_NO, MAJOR_NM
+		) BASE
+		WHERE 1=1
+		<if test='SDM_CD != null and !SDM_CD.equals("") and REVSN_NO != null and !REVSN_NO.equals("")'>
+			AND SDM_CD = #{SDM_CD}
+			AND REVSN_NO = #{REVSN_NO}
+		</if>		
+		ORDER BY BASE.SDM_CD, BASE.REVSN_NO, BASE.CDT_NUM_RANK			
+				
+	</select>
+	
+	<select id="getStudPlanMajorList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT
+		    B.MAJOR_CD,
+		    B.MAJOR_NM
+		FROM
+			uni_sdm_aply_infmt A,
+			uni_sdm_sbjt_infmt B
+		WHERE
+			A.USE_YN = 'Y'
+		AND A.STATUS = 100
+		AND A.SDM_CD = B.SDM_CD
+		AND A.REVSN_NO = B.REVSN_NO
+		GROUP BY B.MAJOR_CD, B.MAJOR_NM
+	</select>	
+
+	<select id="getStudInfmt" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT
+			FN_GET_MAJOR_NM_LIST(A.SDM_CD,A.REVSN_NO, 1) AS FIRST_MAJOR
+       		,FN_GET_MAJOR_NM_LIST(A.SDM_CD,A.REVSN_NO, 2) AS OTHER_MAJOR
+			,FN_SDM_CHG_CHECK(A.SDM_CD, A.REVSN_NO) AS IS_CHG_YN 
+			, (SELECT COM_INF_NM from uni_sdm_com_progress  where COM_CD = A.STATUS) AS STATUS_INF_NM
+			,A.*
+		FROM 
+			uni_sdm_aply_infmt A
+		WHERE 
+			SDM_CD = #{SDM_CD}
+		AND REVSN_NO = #{REVSN_NO}
+		AND USE_YN = 'Y'
+	</select>	
+	
+	<select id="getStudSbjt" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			CONCAT(A.SUBJECT_CD,'_',A.MAJOR_CD,'_',A.YEAR,'_',A.COM_GRADE,'_',A.SMT) AS DOC_ID,
+			A.*
+		FROM 
+			uni_sdm_sbjt_infmt A
+		WHERE 
+			SDM_CD = #{SDM_CD}
+		AND REVSN_NO = #{REVSN_NO}
+		ORDER BY COMDIV_CODE, MAJOR_CD, COM_GRADE ASC
+	</select>	
+	
+	<select id="getCnslt" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			*
+		FROM 
+			uni_sdm_cnslt_infmt
+		WHERE 
+			SDM_CD = #{SDM_CD}
+		AND REVSN_NO = #{REVSN_NO}
+		<if test='MEMBER_ID != null and !MEMBER_ID.equals("")'>
+			AND CNSLT_PROF_STAFF_NO = #{MEMBER_ID}
+		</if>
+		ORDER BY CNSLT_CMPTL_DT
+	</select>	
+	
+	<insert id="insertNotiMsg">
+		<selectKey keyProperty="maxSeq" resultType="int" order="BEFORE">
+			SELECT NVL(MAX(NOTI_MSG_NO)+1, 0) FROM UNI_NOTI_MSG
+		</selectKey> 
+		INSERT INTO UNI_NOTI_MSG
+		(
+			NOTI_MSG_NO, 	MEMBER_NO,
+			SDM_CD,			REVSN_NO,
+			NOTI_TTL,		NOTI_MSG, 	
+			NOTI_FR_DT,		NOTI_TO_DT,	
+			REGI_ID,		REGI_DATE,	REGI_IP
+			
+		) 
+		<foreach collection="list" item="item" separator="UNION ALL" index="index">
+			SELECT
+				#{maxSeq} + #{index},	#{item.NO}, 
+				#{item.SDM_CD},			#{item.REVSN_NO},
+				#{item.TTL}, 			#{item.MSG}, 
+				#{item.FR_DT}, 			#{item.TO_DT}, 
+				#{item.NO}, 			NOW(), 				#{item.IP} 
+			FROM DUAL
+
+   		</foreach>
+	</insert>	
+	
+	<update id="updateStatus" parameterType="java.util.HashMap">
+		UPDATE 
+			uni_sdm_aply_infmt
+		SET 
+			APLY_STM = FN_GET_CURRENT_STM(NOW()),
+		    STATUS = #{STATUS},
+		    LAST_MODI_IP = #{LAST_MODI_IP},
+		    LAST_MODI_ID = #{LAST_MODI_ID},
+		    LAST_MODI_DATE = NOW(),
+		    <!-- 상담마감에 대한 CASE WHEN -->
+		    <if test='STATUS.equals("20")'>
+		    CNSLT_CLS_DT = NULL,
+		    </if>
+		    <if test='!STATUS.equals("20")'>
+	    	CNSLT_CLS_DT = CASE
+		        WHEN (SELECT STATUS FROM uni_sdm_aply_infmt WHERE SDM_CD = #{SDM_CD} AND REVSN_NO = #{REVSN_NO}) = 20 THEN DATE_FORMAT(NOW(), '%Y%m%d')
+		        ELSE CNSLT_CLS_DT
+		    END		    
+		    </if>
+		WHERE 
+		    SDM_CD = #{SDM_CD} 
+		AND REVSN_NO = #{REVSN_NO}
+	</update>
+	
+	<update id="changeStud" parameterType="java.util.HashMap" statementType="CALLABLE">
+	    { CALL PRC_SDM_COPY_WHEN_CHG(
+	        #{SDM_CD, jdbcType=VARCHAR},
+	        #{REVSN_NO, jdbcType=INTEGER},
+	        #{REGI_ID, jdbcType=VARCHAR},
+	        #{REGI_IP, jdbcType=VARCHAR},
+	        #{o_RTN_MSG, mode=OUT, jdbcType=VARCHAR},
+	        #{o_SDM_CD, mode=OUT, jdbcType=VARCHAR},
+	        #{o_REVSN_NO, mode=OUT, jdbcType=INTEGER}
+	    ) }
+	</update>
+	
+	<select id="getStudChgSbjt" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			CONCAT(A.CHG_SUBJECT_CD,'_',A.CHG_MAJOR_CD,'_',A.CHG_YEAR,'_',A.CHG_COM_GRADE,'_',A.CHG_SMT) AS CHG_DOC_ID,
+			A.*
+		FROM 
+			uni_sdm_sbjt_infmt_chg A
+		WHERE 
+			SDM_CD = #{SDM_CD}
+		AND REVSN_NO = #{REVSN_NO}
+		ORDER BY CHG_COMDIV_CODE, CHG_MAJOR_CD, CHG_COM_GRADE ASC
+	</select>	
+	
+	<delete id="deleteChgStudSbjt" parameterType="java.util.HashMap">
+		DELETE 
+		FROM 
+			uni_sdm_sbjt_infmt_chg
+		WHERE 
+			SDM_CD 	 = #{SDM_CD}
+		AND REVSN_NO = #{REVSN_NO}		
+	</delete>	
+	
+	<insert id="insertChgStudSbjt" parameterType="java.util.HashMap">
+	   INSERT INTO uni_sdm_sbjt_infmt_chg (
+	        SDM_CD,				REVSN_NO,				SBJT_SEQ,				ORG_CODE,
+	        COLG_CD,			COLG_NM,				MAJOR_CD,
+	        MAJOR_NM,			COMDIV_CODE,			COMDIV_CODE_NM,
+	        ORG_COMDIV_CODE,	SUBJECT_CD,				SUBJECT_NM,				SUBJECT_ENM,
+	        COM_GRADE,			COM_GRADE_NM,			YEAR,					SMT,
+	        SMT_NM,				CDT_NUM,				WTIME_NUM,				PTIME_NUM,
+	        CHG_RESN,			CHG_ORG_CODE,			CHG_COLG_CD,			CHG_COLG_NM,
+	        CHG_MAJOR_CD,		CHG_MAJOR_NM,			CHG_FG,
+	        CHG_COMDIV_CODE,	CHG_COMDIV_CODE_NM,		CHG_ORG_COMDIV_CODE,	CHG_SUBJECT_CD,
+	        CHG_SUBJECT_NM,		CHG_SUBJECT_ENM,		CHG_COM_GRADE,			CHG_COM_GRADE_NM,
+	        CHG_YEAR,			CHG_SMT,				CHG_SMT_NM,				CHG_CDT_NUM,
+	        CHG_WTIME_NUM,		CHG_PTIME_NUM,			LAST_MODI_ID,			LAST_MODI_IP,
+	        LAST_MODI_DATE,		DEPT_CD,				DEPT_NM,				CHG_DEPT_CD,	
+	        CHG_DEPT_NM
+	    ) VALUES (
+	        #{SDM_CD},			#{REVSN_NO},			#{SBJT_SEQ},			#{ORG_CODE},
+	        #{COLG_CD},			#{COLG_NM},				#{MAJOR_CD},
+	        #{MAJOR_NM},		#{COMDIV_CODE},			#{COMDIV_CODE_NM},
+	        #{ORG_COMDIV_CODE},	#{SUBJECT_CD},			#{SUBJECT_NM},			#{SUBJECT_ENM},
+	        #{COM_GRADE},		#{COM_GRADE_NM},		#{YEAR},				#{SMT},
+	        #{SMT_NM},			#{CDT_NUM},				#{WTIME_NUM},			#{PTIME_NUM},
+	        #{CHG_RESN},		#{CHG_ORG_CODE},		#{CHG_COLG_CD},			#{CHG_COLG_NM},
+	        #{CHG_MAJOR_CD},	#{CHG_MAJOR_NM},		#{CHG_FG},
+	        #{CHG_COMDIV_CODE},	#{CHG_COMDIV_CODE_NM},	#{CHG_ORG_COMDIV_CODE},	#{CHG_SUBJECT_CD},
+	        #{CHG_SUBJECT_NM},	#{CHG_SUBJECT_ENM},		#{CHG_COM_GRADE},		#{CHG_COM_GRADE_NM},
+	        #{CHG_YEAR},		#{CHG_SMT},				#{CHG_SMT_NM},			#{CHG_CDT_NUM},
+	        #{CHG_WTIME_NUM},	#{CHG_PTIME_NUM},		#{LAST_MODI_ID},		#{LAST_MODI_IP},
+	        NOW(),				#{DEPT_CD},				#{DEPT_NM},				#{CHG_DEPT_CD},	
+	        #{CHG_DEPT_NM}
+	    )
+	</insert>
+	
+	<update id="updateChgStudInfmt" parameterType="java.util.HashMap">
+		UPDATE 
+			uni_sdm_aply_infmt
+		SET 
+			APLY_STM = FN_GET_CURRENT_STM(NOW()),
+		    SDM_CHG_RESN = #{SDM_CHG_RESN},
+		   	<if test='STATUS.equals("20")'>
+		    CNSLT_CLS_DT = NULL,
+		    </if>
+		    <if test='!STATUS.equals("20")'>
+	    	CNSLT_CLS_DT = CASE
+		        WHEN (SELECT STATUS FROM uni_sdm_aply_infmt WHERE SDM_CD = #{SDM_CD} AND REVSN_NO = #{REVSN_NO}) = 20 THEN DATE_FORMAT(NOW(), '%Y%m%d')
+		        ELSE CNSLT_CLS_DT
+		    END	,	    
+		    </if>
+		    GUID_PROF_STAFF_NO = #{GUID_PROF_STAFF_NO},
+		    GUID_PROF_STAFF_NM = #{GUID_PROF_STAFF_NM},
+		    CNSLT_PROF = #{CNSLT_PROF},
+		    CNSLT_PROF_NM = #{CNSLT_PROF_NM},
+		    LAST_MODI_IP = #{LAST_MODI_IP},
+		    LAST_MODI_ID = #{LAST_MODI_ID},
+		    LAST_MODI_DATE = NOW(),
+		    STATUS = #{STATUS}
+		WHERE 
+		    SDM_CD = #{SDM_CD} 
+		AND REVSN_NO = #{REVSN_NO}
+	</update>
+	
+	<select id="getNotiMsg" parameterType="java.lang.String" resultType="dataMap">
+		SELECT
+			A.*
+		FROM
+			UNI_NOTI_MSG A
+		WHERE 
+			A.MEMBER_NO = #{MEMBER_NO}
+		AND A.ISDELETE = 0
+		AND A.NOTI_TO_DT &gt;= NOW()
+		ORDER BY A.CNF_YN ASC, A.NOTI_MSG_NO DESC
+	</select>	
+	
+	<update id="notiMsgCnf">
+		UPDATE 
+			UNI_NOTI_MSG 
+		SET 
+			CNF_YN = 'Y'
+			, LAST_MODI_ID = #{MEMBER_ID}
+			, LAST_MODI_DATE = NOW()
+			, LAST_MODI_IP = #{REGI_IP}
+		WHERE 1=1
+			AND NOTI_MSG_NO = #{NOTI_MSG_NO}
+	</update>	
+	
+	<update id="notiMsgDel">
+		UPDATE 
+			UNI_NOTI_MSG 
+		SET 
+			ISDELETE = 1
+			, LAST_MODI_ID = #{MEMBER_ID}
+			, LAST_MODI_DATE = NOW()
+			, LAST_MODI_IP = #{REGI_IP}
+		WHERE 1=1
+			AND NOTI_MSG_NO = #{NOTI_MSG_NO}
+	</update>	
+	
+		
+	<!-- 메인(교수) : 학생설계전공 탭 별 카운트 --> 
+	<select id="getAllTabCnt" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			'RA' AS TYPE,
+			COUNT(*) AS COUNT
+		FROM (
+		    SELECT 1
+		    FROM uni_sdm_aply_infmt A
+		    WHERE USE_YN = 'Y'
+		      AND STATUS = '30'
+		      AND GUID_PROF_STAFF_NO = #{MEMBER_ID}
+		    ORDER BY IF(GUID_PROF_TRET_DT IS NULL, 0, 1) ASC
+		) AS RA_RESULT
+		UNION ALL
+		SELECT 
+			'RC' AS TYPE, 
+			COUNT(*) AS COUNT
+		FROM (
+		    SELECT 1
+		    FROM uni_sdm_aply_infmt A
+		    WHERE USE_YN = 'Y'
+		      AND STATUS = '20'
+		      AND CNSLT_CLS_DT IS NULL
+		      AND CNSLT_PROF LIKE CONCAT('%',#{MEMBER_ID},'%')
+		      AND (SDM_CD, REVSN_NO) IN (
+		          SELECT SDM_CD, REVSN_NO
+		          FROM uni_sdm_cnslt_infmt
+		          WHERE CNSLT_PROF_STAFF_NO = #{MEMBER_ID}
+		            AND CNSLT_CMPTL_DT IS NULL
+		      )
+		) AS RC_RESULT
+		UNION ALL
+		SELECT 
+			'AC' AS TYPE, 
+			COUNT(*) AS COUNT
+		FROM (
+		    WITH CURR AS (
+		        SELECT
+		            (SELECT GROUP_CONCAT(DISTINCT BASE.DEPT_CD ORDER BY BASE.DEPT_CD) AS DEPT_CD_LIST
+		             FROM (
+		                 SELECT SDM_CD, REVSN_NO, DEPT_CD, RANK() OVER (PARTITION BY SDM_CD, REVSN_NO ORDER BY SUM(CDT_NUM) DESC, DEPT_CD) AS CDT_NUM_RANK
+		                 FROM uni_sdm_sbjt_infmt
+		                 GROUP BY SDM_CD, REVSN_NO, DEPT_CD
+		             ) BASE
+		             WHERE BASE.SDM_CD = A.SDM_CD
+		               AND BASE.REVSN_NO = A.REVSN_NO
+		             GROUP BY BASE.SDM_CD, BASE.REVSN_NO
+		             ORDER BY BASE.SDM_CD, BASE.REVSN_NO
+		            ) AS DEPT_LIST,
+		            A.*
+		        FROM uni_sdm_aply_infmt A
+		        WHERE USE_YN = 'Y'
+		          AND STATUS = '20'
+		          AND CNSLT_CLS_DT IS NULL
+		    )
+		    SELECT 1
+		    FROM CURR
+		    WHERE DEPT_LIST LIKE CONCAT('%',#{MEMBER_DEPT_CD},'%')
+		    AND (SELECT COUNT(*) FROM uni_sdm_cnslt_infmt WHERE CNSLT_PROF_STAFF_NO = #{MEMBER_ID} AND SDM_CD = CURR.SDM_CD AND REVSN_NO = CURR.REVSN_NO) = 0
+		) AS AC_RESULT
+		UNION ALL
+		SELECT 
+			'WC' AS TYPE, 
+			COUNT(*) AS COUNT
+		FROM (
+		    SELECT 1
+		    FROM uni_sdm_aply_infmt A
+		    WHERE USE_YN = 'Y'
+		      AND STATUS = '20'
+		      AND CNSLT_CLS_DT IS NULL
+		      AND (SDM_CD, REVSN_NO) IN (
+		          SELECT SDM_CD, REVSN_NO
+		          FROM uni_sdm_cnslt_infmt
+		          WHERE CNSLT_PROF_STAFF_NO = #{MEMBER_ID}
+		            AND CNSLT_CMPTL_DT IS NULL
+		      )
+		) AS WC_RESULT
+		UNION ALL
+		SELECT 
+			'CC' AS TYPE, 
+			COUNT(*) AS COUNT
+		FROM (
+		    SELECT 1
+		    FROM uni_sdm_aply_infmt A
+		    WHERE USE_YN = 'Y'
+		      AND (SDM_CD, REVSN_NO) IN (
+		          SELECT SDM_CD, REVSN_NO
+		          FROM uni_sdm_cnslt_infmt
+		          WHERE CNSLT_PROF_STAFF_NO = #{MEMBER_ID}
+		            AND CNSLT_CMPTL_DT IS NOT NULL
+		      )
+		) AS CC_RESULT
+
+	</select>	
+	
+	<!-- 메인(교수) : 승인요청 --> 
+	<select id="getRAList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			FN_GET_MAJOR_NM_LIST(A.SDM_CD,A.REVSN_NO, 1) AS FIRST_MAJOR,
+       		FN_GET_MAJOR_NM_LIST(A.SDM_CD,A.REVSN_NO, 2) AS OTHER_MAJOR,
+       		(SELECT SUM(CDT_NUM) FROM uni_sdm_sbjt_infmt WHERE SDM_CD = A.SDM_CD AND REVSN_NO = A.REVSN_NO) AS TOTAL_CDT_NUM,
+       		(SELECT COM_INF_NM from uni_sdm_com_progress  where COM_CD = A.STATUS) AS STATUS_INF_NM,
+			A.* 
+		FROM 
+			uni_sdm_aply_infmt A
+		WHERE 
+			USE_YN = 'Y'
+		AND STATUS = '30'
+		AND GUID_PROF_STAFF_NO = #{MEMBER_ID}
+		ORDER BY IF(CONCAT(GUID_PROF_TRET_DT,RJT_DT) IS NULL, 0, 1) ASC
+	</select>
+	
+	<!-- 메인(교수) : 상담요청 --> 
+	<select id="getRCList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			FN_GET_MAJOR_NM_LIST(A.SDM_CD,A.REVSN_NO, 1) AS FIRST_MAJOR,
+       		FN_GET_MAJOR_NM_LIST(A.SDM_CD,A.REVSN_NO, 2) AS OTHER_MAJOR,
+       		(SELECT SUM(CDT_NUM) FROM uni_sdm_sbjt_infmt WHERE SDM_CD = A.SDM_CD AND REVSN_NO = A.REVSN_NO) AS TOTAL_CDT_NUM,
+       		(SELECT COM_INF_NM from uni_sdm_com_progress  where COM_CD = A.STATUS) AS STATUS_INF_NM,
+			A.* 
+		FROM 
+			uni_sdm_aply_infmt A
+		WHERE 
+			USE_YN = 'Y'
+		AND STATUS = '20'
+		AND CNSLT_CLS_DT IS NULL
+		AND CNSLT_PROF LIKE CONCAT('%',#{MEMBER_ID},'%')
+		AND (SDM_CD, REVSN_NO) IN (SELECT 
+										SDM_CD, 
+										REVSN_NO 
+									FROM 
+										uni_sdm_cnslt_infmt 
+									WHERE 
+										CNSLT_PROF_STAFF_NO = #{MEMBER_ID} 
+									AND CNSLT_CMPTL_DT IS NULL)
+	</select>
+	
+	<!-- 메인(교수) : 참여가능상담 --> 
+	<select id="getACList" parameterType="java.util.HashMap" resultType="dataMap">
+		WITH CURR AS
+				(SELECT
+				    (SELECT
+				             GROUP_CONCAT(DISTINCT BASE.DEPT_CD ORDER BY BASE.DEPT_CD) AS DEPT_CD_LIST
+				        FROM
+				            (
+				                SELECT
+				                    SDM_CD,
+				                    REVSN_NO,
+				                    DEPT_CD,
+				                    RANK() OVER (PARTITION BY SDM_CD, REVSN_NO ORDER BY SUM(CDT_NUM) DESC, DEPT_CD) AS CDT_NUM_RANK
+				                FROM
+				                    uni_sdm_sbjt_infmt
+				                GROUP BY
+				                    SDM_CD, REVSN_NO, DEPT_CD
+				            ) BASE
+				        WHERE
+				            BASE.SDM_CD = A.SDM_CD
+				            AND BASE.REVSN_NO = A.REVSN_NO
+				        GROUP BY
+				            BASE.SDM_CD,
+				            BASE.REVSN_NO
+				        ORDER BY
+				            BASE.SDM_CD,
+				            BASE.REVSN_NO
+				    ) AS  DEPT_LIST,
+					FN_GET_MAJOR_NM_LIST(A.SDM_CD,A.REVSN_NO, 1) AS FIRST_MAJOR,
+		       		FN_GET_MAJOR_NM_LIST(A.SDM_CD,A.REVSN_NO, 2) AS OTHER_MAJOR,
+		       		(SELECT SUM(CDT_NUM) FROM uni_sdm_sbjt_infmt WHERE SDM_CD = A.SDM_CD AND REVSN_NO = A.REVSN_NO) AS TOTAL_CDT_NUM,
+		       		(SELECT COM_INF_NM from uni_sdm_com_progress  where COM_CD = A.STATUS) AS STATUS_INF_NM,
+				    A.*
+				FROM 
+					uni_sdm_aply_infmt A
+				WHERE 
+					USE_YN = 'Y'
+				AND STATUS = '20'
+				AND CNSLT_CLS_DT IS NULL)
+		SELECT 
+			* 
+		FROM 
+			CURR
+		WHERE 
+			DEPT_LIST LIKE CONCAT('%',#{MEMBER_DEPT_CD},'%')
+		AND (SELECT COUNT(*) FROM uni_sdm_cnslt_infmt WHERE CNSLT_PROF_STAFF_NO = #{MEMBER_ID} AND SDM_CD = CURR.SDM_CD AND REVSN_NO = CURR.REVSN_NO) = 0
+	</select>
+	
+	<!-- 메인(교수) : 상담진행 --> 
+	<select id="getWCList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			FN_GET_MAJOR_NM_LIST(A.SDM_CD,A.REVSN_NO, 1) AS FIRST_MAJOR,
+       		FN_GET_MAJOR_NM_LIST(A.SDM_CD,A.REVSN_NO, 2) AS OTHER_MAJOR,
+       		(SELECT SUM(CDT_NUM) FROM uni_sdm_sbjt_infmt WHERE SDM_CD = A.SDM_CD AND REVSN_NO = A.REVSN_NO) AS TOTAL_CDT_NUM,
+       		(SELECT COM_INF_NM from uni_sdm_com_progress  where COM_CD = A.STATUS) AS STATUS_INF_NM,
+			A.* 
+		FROM 
+			uni_sdm_aply_infmt A
+		WHERE 
+			USE_YN = 'Y'
+		AND STATUS = '20'
+		AND CNSLT_CLS_DT IS NULL
+		AND (SDM_CD, REVSN_NO) IN (SELECT SDM_CD, REVSN_NO FROM uni_sdm_cnslt_infmt where CNSLT_PROF_STAFF_NO = #{MEMBER_ID} AND CNSLT_CMPTL_DT IS NULL)
+	</select>
+	
+	<!-- 메인(교수) : 상담완료 --> 
+	<select id="getCCList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			FN_GET_MAJOR_NM_LIST(A.SDM_CD,A.REVSN_NO, 1) AS FIRST_MAJOR,
+       		FN_GET_MAJOR_NM_LIST(A.SDM_CD,A.REVSN_NO, 2) AS OTHER_MAJOR,
+       		(SELECT SUM(CDT_NUM) FROM uni_sdm_sbjt_infmt WHERE SDM_CD = A.SDM_CD AND REVSN_NO = A.REVSN_NO) AS TOTAL_CDT_NUM,
+       		(SELECT COM_INF_NM from uni_sdm_com_progress  where COM_CD = A.STATUS) AS STATUS_INF_NM,
+			A.* 
+		FROM 
+			uni_sdm_aply_infmt A
+		WHERE 
+			USE_YN = 'Y'
+		AND (SDM_CD, REVSN_NO) IN (SELECT SDM_CD, REVSN_NO FROM uni_sdm_cnslt_infmt where CNSLT_PROF_STAFF_NO = #{MEMBER_ID} AND CNSLT_CMPTL_DT IS NOT NULL)
+	</select>
+		
+	<!-- 승인요청(교수) : 승인 --> 	
+	<update id="profApprove" parameterType="java.util.HashMap">
+		UPDATE 
+			uni_sdm_aply_infmt
+		SET 	
+			EDU_CENTER_JUDG_DT = NULL,
+		    EDU_CENTER_JUDG_OPIN = NULL,
+		    DEPART_JUDG_DT = NULL,
+		    DEPART_JUDG_OPIN = NULL,
+		    AFFAIR_COMMITTEE_JUDG_DT = NULL,
+		    AFFAIR_COMMITTEE_JUDG_OPIN = NULL,			
+			GUID_PROF_TRET_DT = DATE_FORMAT(NOW(), '%Y%m%d'),
+		    LAST_MODI_IP = #{LAST_MODI_IP},
+		    LAST_MODI_ID = #{LAST_MODI_ID},
+		    LAST_MODI_DATE = NOW(),
+		    STATUS = #{STATUS}
+		WHERE 
+		    SDM_CD = #{SDM_CD} 
+		AND REVSN_NO = #{REVSN_NO}
+	</update>
+	
+	<!-- 승인요청(교수) : 반려 --> 	
+	<update id="profReject" parameterType="java.util.HashMap">
+		UPDATE 
+			uni_sdm_aply_infmt
+		SET 
+<!-- 			EDU_CENTER_JUDG_DT = NULL, -->
+<!-- 		    EDU_CENTER_JUDG_OPIN = NULL, -->
+<!-- 		    DEPART_JUDG_DT = NULL, -->
+<!-- 		    DEPART_JUDG_OPIN = NULL, -->
+<!-- 		    AFFAIR_COMMITTEE_JUDG_DT = NULL, -->
+<!-- 		    AFFAIR_COMMITTEE_JUDG_OPIN = NULL,				 -->
+		    RJT_RESN = #{RJT_RESN},
+		    RJT_DT = DATE_FORMAT(NOW(), '%Y%m%d'),
+		    LAST_MODI_IP = #{LAST_MODI_IP},
+		    LAST_MODI_ID = #{LAST_MODI_ID},
+		    LAST_MODI_DATE = NOW(),
+		    STATUS = #{STATUS}
+		WHERE 
+		    SDM_CD = #{SDM_CD} 
+		AND REVSN_NO = #{REVSN_NO}
+	</update>
+		
+	<!-- 상담(교수) : 임시저장, 완료, 방문요청--> 	
+	<update id="updateProfCnslt" parameterType="java.util.HashMap">
+		UPDATE 
+			uni_sdm_cnslt_infmt
+		SET 
+			<if test='ACTION == "TEMPSAVE" or ACTION.equals("TEMPSAVE") or ACTION == "COMPLETE" or ACTION.equals("COMPLETE")'>
+			    SBJT_CNST_ADV_OPIN = #{SBJT_CNST_ADV_OPIN},
+			    SBJT_CNST_ADV_DT = DATE_FORMAT(NOW(), '%Y%m%d'),
+			    MJ_NM_ADV_OPIN = #{MJ_NM_ADV_OPIN},
+			    MJ_NM_ADV_DT = DATE_FORMAT(NOW(), '%Y%m%d'),
+			    AWD_DEGR_NM_ADV_OPIN = #{AWD_DEGR_NM_ADV_OPIN},
+			    AWD_DEGR_NM_ADV_DT = DATE_FORMAT(NOW(), '%Y%m%d'),
+		    </if>
+		    <if test='ACTION == "MEET" or ACTION.equals("MEET")'>
+			    MEET_CNSLT_ADV_OPIN = #{MEET_CNSLT_ADV_OPIN},
+			    MEET_CNSLT_ADV_DT = DATE_FORMAT(NOW(), '%Y%m%d'),
+		    </if>
+		    <if test='ACTION == "COMPLETE" or ACTION.equals("COMPLETE") or ACTION == "MEET" or ACTION.equals("MEET")'>
+		    	CNSLT_CMPTL_DT = DATE_FORMAT(NOW(), '%Y%m%d'),
+		    </if>
+		    LAST_MODI_ID = #{LAST_MODI_ID},
+		    LAST_MODI_DATE = NOW()
+		WHERE 
+		    SDM_CD = #{SDM_CD} 
+		AND REVSN_NO = #{REVSN_NO}
+		AND CNSLT_PROF_STAFF_NO = #{LAST_MODI_ID}
+	</update>	
+	
+	<!-- 상담(교수) : 접수--> 	
+	<insert id="insertProfCnslt" parameterType="java.util.HashMap">
+	    INSERT INTO uni_sdm_cnslt_infmt (
+	        SDM_CD,					REVSN_NO,		CNSLT_PROF_STAFF_NO,		CNSLT_PROF_STAFF_NM,
+	        REGI_ID,				REGI_DATE,		REGI_IP		
+	    ) VALUES (
+	        #{SDM_CD},				#{REVSN_NO},	#{CNSLT_PROF_STAFF_NO},		#{CNSLT_PROF_STAFF_NM},
+	        #{CNSLT_PROF_STAFF_NO},	NOW(),			#{LAST_MODI_IP}	
+	    )
+	</insert>	
+	
+	<!-- 상담(교수) : 접수취소--> 	
+	<delete id="deleteProfCnslt" parameterType="java.util.HashMap">
+		DELETE 
+		FROM 
+			uni_sdm_cnslt_infmt
+		WHERE 
+			SDM_CD 	 = #{SDM_CD}
+		AND REVSN_NO = #{REVSN_NO}	
+		AND CNSLT_PROF_STAFF_NO = #{CNSLT_PROF_STAFF_NO}	
+	</delete>
+	
+	<!-- 유사도 보기 -->
+	<select id="getSimilityMj" parameterType="java.util.HashMap" resultType="dataMap">
+	    WITH baseline AS (
+	        SELECT 
+	            #{SUBJECTLIST[0].SUBJECT_CD} AS SUBJECT_CD, 
+	            #{SUBJECTLIST[0].MAJOR_CD} AS MAJOR_CD, 
+	            #{SUBJECTLIST[0].YEAR} AS YEAR, 
+	            #{SUBJECTLIST[0].COM_GRADE} AS COM_GRADE, 
+	            #{SUBJECTLIST[0].SMT} AS SMT
+	        FROM 
+	            dual
+	        <foreach collection="SUBJECTLIST" item="subject" index="index" separator="UNION ALL" open="UNION ALL">
+	        SELECT 
+	            #{subject.SUBJECT_CD} AS SUBJECT_CD, 
+	            #{subject.MAJOR_CD} AS MAJOR_CD, 
+	            #{subject.YEAR} AS YEAR, 
+	            #{subject.COM_GRADE} AS COM_GRADE, 
+	            #{subject.SMT} AS SMT
+	        FROM 
+	            dual
+	        </foreach>
+	    ),
+	    all_versions AS (
+	        SELECT 
+	            SDM_CD, 
+	            REVSN_NO, 
+	            SUBJECT_CD, 
+	            MAJOR_CD, 
+	            YEAR, 
+	            COM_GRADE, 
+	            SMT
+	        FROM 
+	            (SELECT A.* FROM uni_sdm_sbjt_infmt A, uni_sdm_aply_infmt B 
+	             WHERE A.SDM_CD = B.SDM_CD AND A.REVSN_NO = B.REVSN_NO 
+	             AND B.USE_YN = 'Y' AND B.STATUS = '100' AND B.SDM_DEPT_CD IS NOT NULL) AS CONFIRMED
+	    ),
+	    baseline_count AS (
+	        SELECT 
+	            COUNT(*) AS total_baseline_count
+	        FROM 
+	            baseline
+	    ),
+	    matches AS (
+	        SELECT 
+	            av.SDM_CD AS comparison_sdm_cd,
+	            av.REVSN_NO AS comparison_revsn_no,
+	            COUNT(*) AS match_count
+	        FROM 
+	            baseline b
+	        JOIN 
+	            all_versions av 
+	        ON 
+	            b.SUBJECT_CD = av.SUBJECT_CD AND 
+	            b.MAJOR_CD = av.MAJOR_CD AND 
+	            b.YEAR = av.YEAR AND 
+	            b.COM_GRADE = av.COM_GRADE AND 
+	            b.SMT = av.SMT
+	        GROUP BY 
+	            av.SDM_CD, av.REVSN_NO
+	    ),
+	    similarity AS (
+	        SELECT 
+	            comparison_sdm_cd,
+	            comparison_revsn_no,
+	            (match_count * 100.0 / bc.total_baseline_count) AS similarity_percentage
+	        FROM 
+	            matches m
+	        CROSS JOIN 
+	            baseline_count bc
+	    )
+	    SELECT 
+		    (SELECT SDM_KOR_NM FROM uni_sdm_aply_infmt WHERE SDM_CD = comparison_sdm_cd AND REVSN_NO = comparison_revsn_no) as SDM_KOR_NM,
+		    similarity_percentage AS RATE
+	    FROM 
+	        similarity
+	    ORDER BY 
+	        similarity_percentage DESC
+	    LIMIT 1
+	</select>	
+	
+	<delete id="deleteBookmarkBySdmCd" parameterType="java.lang.String">
+		DELETE 
+		FROM 
+			uni_pers_bookmark
+		WHERE 
+			DOC_ID = #{sdmCd}	
+	</delete>	
+	
+			
+	<select id="getNotConfirmedStudPlan" resultType="dataMap">
+		SELECT 
+			SDM_CD,
+			REVSN_NO 
+		FROM 
+			UNI_SDM_APLY_INFMT
+		WHERE 
+			SDM_DEPT_CD IS NULL
+		AND STATUS = 100
+	</select>	
+	
+	<update id="updateNotConfirmedStudPlan" parameterType="java.util.HashMap">
+		UPDATE 
+			uni_sdm_aply_infmt
+		SET 
+		   	SDM_DEPT_CD = #{SDM_DEPT_CD},
+		   	LAST_MODI_ID = 'BATCH',
+		   	LAST_MODI_DATE = NOW(),
+		   	LAST_MODI_IP = NULL
+		WHERE 
+		    SDM_CD = #{SDM_CD} 
+		AND REVSN_NO = #{REVSN_NO}
+		AND SDM_DEPT_CD IS NULL
+		AND STATUS = '100'
+	</update>
+	
+	
+	
+</mapper>            

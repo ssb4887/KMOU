@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mart.modules.basket.basketOraMapper">
+	<sql id="BSK_TABLE_NAME">UNI_TLSN_APLY_BSK</sql>
+	
+	<select id="getCurInfo" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT YEAR, SMT
+			FROM (
+			    SELECT YEAR, SMT, FR_DT,
+			           ROW_NUMBER() OVER (ORDER BY FR_DT DESC) AS rn
+			    FROM SCO.SYS080TB
+			    WHERE HAK_DESC LIKE '%수강편람%'
+			    AND SMT IN ('GH0210','GH0220')
+			    AND FR_DT <![CDATA[<]]>  TO_CHAR(SYSDATE, 'YYYYMMDD')
+			    AND SINBUN_CODE = 'UD340001'
+			) BASE
+			WHERE rn = 1
+	</select>
+
+	<select id="selectMyTmCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT count(*) FROM INU_UNI.SCOR400
+		WHERE STUNO = #{stuno}
+	</select>
+	
+	<select id="selectEqualTmAvgHpCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT 
+			count(*)
+		FROM 
+		(SELECT 
+			STUNO
+			,SUM(ACQ_HP) AS ACQ_HP
+			,(SELECT count(*) FROM INU_UNI.SCOR400 B WHERE A.STUNO = B.STUNO) AS count
+		FROM INU_UNI.SCOR400 A
+		WHERE HG_MJ_CD = #{hgMjCd} GROUP BY STUNO)
+		WHERE count = #{count}
+	</select>
+	
+	<select id="selectEqualTmAvgHp" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT 
+			sum(ACQ_HP)
+		FROM 
+		(SELECT 
+			STUNO
+			,SUM(ACQ_HP) AS ACQ_HP
+			,(SELECT count(*) FROM INU_UNI.SCOR400 B WHERE A.STUNO = B.STUNO) AS count
+		FROM INU_UNI.SCOR400 A
+		WHERE HG_MJ_CD = #{hgMjCd} GROUP BY STUNO)
+		WHERE count = #{count}
+	</select>
+	
+	<!-- 마이페이지 장바구니 상세정보-->
+	<select id="getMyBasketView" parameterType="String" resultType="dataMap">
+			 WITH NOW_YEAR_SMT AS (
+			    SELECT YEAR, SMT
+			    FROM (
+			        SELECT YEAR, SMT, FR_DT,
+			               ROW_NUMBER() OVER (ORDER BY FR_DT DESC) AS rn
+			        FROM SCO.SYS080TB
+			        WHERE HAK_DESC LIKE '%수강편람%'
+			        AND SMT IN ('GH0210','GH0220')
+			        AND FR_DT &lt; TO_CHAR(SYSDATE, 'YYYYMMDD')
+			        AND SINBUN_CODE = 'UD340001'
+			    ) BASE
+			    WHERE rn = 1
+			),
+			CURR AS (
+				SELECT  UF_SUF_SUBJECT_NM(A.SUBJECT_CD,1) AS SUBJECT_NM,
+                          UF_SUF_SUBJECT_NM(A.SUBJECT_CD,2)  AS SUBJECT_ENM,
+                          A.SUBJECT_CD,
+                          A.YEAR,
+                          A.SMT,
+                          A.SISU,
+                          A.EMP_NO,
+                          A.DIVCLS,
+                          UF_APS_EMPNO_NM(A.EMP_NO) AS EMP_NM,
+                          A.STUDENT_CNT,
+                          B.WTIME_NUM,
+                          B.PTIME_NUM,
+                          B.COM_GRADE,
+                          B.COMDIV_CODE,
+                          C.SUBJ_DESC_KOR,
+                          C.SUBJ_DESC_ENG,
+                          D.DEPT_NM,
+                          D.DEPT_CD,
+                          D.COLG_NM,
+                          D.CATEGORY,
+                          UF_GET_SYS020TB(B.SMT)                              AS SMT_NAME,
+                          UF_GET_SYS020TB(B.COMDIV_CODE)                      AS COMDIV_CODE_NAME,
+                          NVL(UF_SUG_MATRIX2(A.YEAR, A.SMT, #{subjectCd}, A.DIVCLS),' ') AS ROOM_TIME,
+                          B.CDT_NUM                                            AS CDT_NUM
+                 FROM     SUF.SUF110TB A
+                          JOIN 
+                          	SUF.SUF050TB B ON A.SUBJECT_CD = B.SUBJECT_CD AND A.SMT = B.SMT AND A.YEAR = B.YEAR
+					      LEFT JOIN 
+					      	SUF.SUF080TB C ON A.SUBJECT_CD = C.SUBJECT_CD AND A.SMT = C.SMT AND B.YEAR = C.YEAR AND B.DEPT_CD = C.DEPT_CD
+					      JOIN 
+					      	SCO.V_AI_ORG D ON B.DEPT_CD = D.DEPT_CD
+                 WHERE    A.SUBJECT_CD       = #{subjectCd}
+                 AND      A.SMT  	         = #{smt}
+                 AND      A.YEAR             = #{year}
+                 AND      D.DEPT_CD          = #{deptCd}
+                 AND      A.DIVCLS           = #{divcls}
+                 AND      A.EMP_NO           = #{empNo}
+                 ORDER BY A.YEAR DESC)
+		SELECT 
+			* 
+		FROM 
+			CURR, 
+			NOW_YEAR_SMT
+		WHERE 
+			CURR.YEAR = NOW_YEAR_SMT.YEAR
+		AND CURR.SMT = NOW_YEAR_SMT.SMT <!-- 현재학기, 연도의 데이터만 가져온다 -->
+	</select>		
+	
+	<!-- 예비수강 신청 현황 조회 -->
+	<select id="getPreApplSbjt" parameterType="String" resultType="dataMap">
+		WITH NOW AS (SELECT YEAR, SMT
+		FROM (
+		    SELECT YEAR, SMT, FR_DT,
+		           ROW_NUMBER() OVER (ORDER BY FR_DT DESC) AS rn
+		    FROM SCO.SYS080TB
+		    WHERE HAK_DESC LIKE '%수강편람%'
+		    AND SMT IN ('GH0210','GH0220')
+		    AND FR_DT &lt; TO_CHAR(SYSDATE, 'YYYYMMDD')
+		    AND SINBUN_CODE = 'UD340001'
+		) BASE
+		WHERE rn = 1),
+		CURR AS (
+		select
+		    base.YEAR,
+		                     base.SMT,
+		                     (SELECT UF_GET_COMMON_CODESET(base.SMT) FROM dual)                    AS SMT_NM,
+		                     base.TRY_DEPT_CD														AS DEPT_CD,
+		                     (SELECT UF_GET_ORG_CODESET('B', base.TRY_DEPT_CD) FROM dual)              AS COLG_NM,
+		                     (SELECT UF_GET_ORG_CODESET('D', base.TRY_DEPT_CD) FROM dual)              AS DEPT_NM,
+		                     base.TRY_GRADE																AS COM_GRADE,
+		                     base.SUBJECT_CD,
+		                     (SELECT UF_GET_SUBJECT_CODESET(base.SUBJECT_CD) FROM dual)            AS SUBJECT_NM,
+		                     (SELECT SUBJECT_ENM FROM SUF010TB WHERE SUBJECT_CD = base.SUBJECT_CD) AS SUBJECT_ENM,
+		                     base.COMDIV_CODE,
+		                     (SELECT UF_GET_COMMON_CODESET(base.COMDIV_CODE) FROM dual)            AS COMDIV_NM,
+		                     base.CDT_NUM,
+		                     base.EMP_NO,
+		                     UF_APS_EMPNO_NM(base.EMP_NO)                            AS EMP_NM,
+		                     base.DIVCLS                                            AS DIVCLS,
+		                     base.ORD												AS ORD
+		    from SUG.SUG025TB base
+		WHERE STUDENT_NO = #{STUDENT_NO})
+		SELECT
+		    CURR.*
+		FROM
+		    CURR,
+		    NOW
+		WHERE
+		    CURR.YEAR = NOW.YEAR
+		AND CURR.SMT = NOW.SMT
+		ORDER BY CURR.ORD
+	</select>
+
+
+	<!-- 하..안쓰는거는 좀 지우지.... 개헷갈리네 -->
+	<!-- 신청학점 및 평점 정보 -->
+	<select id="getMrksList" parameterType="String" resultType="dataMap">
+		SELECT 
+			stuno
+			,(AVG_MRKS * APLY_HP) AS tempData
+			,AVG_MRKS
+			,APLY_HP
+		FROM INU_UNI.SCOR400
+		WHERE STUNO = #{stuno}
+
+	</select>
+	
+	<!-- 부전공 & 복수전공 체크 -->
+	<select id="getMajorChk" parameterType="String" resultType="dataMap">
+		SELECT 
+			sr.APLY_YY
+			,sr.APLY_TM_GBN
+			,sr.HG_MJ_CD
+			,(SELECT s.DEPT_NM FROM INU_ADM.STAF010 s WHERE sr.HG_MJ_CD = s.DEPT_CD) AS DEPT_NM
+		FROM INU_UNI.SREG305 sr
+		WHERE sr.STUNO = #{stuno} AND sr.MJ_GBN = #{mjGbn}
+
+	</select>
+	
+	<!-- 부전공 & 복수전공 과목 이수구분별 성적 -->
+	<select id="getMajorCptnHpList" parameterType="String" resultType="dataMap">
+		
+		SELECT 
+			KOR_CD_NM ,CMMN_CD, SUM(HP) as HP, HG_MJ_CD
+		FROM (
+			SELECT 
+				HP
+				,(SELECT b.KOR_CD_NM FROM INU_COM.BSNS011 b, INU_UNI.COUR160 c WHERE b.CMMN_CD= c.CPTN_GBN AND s.DEPT_CLSF_CD = c.DEPT_CLSF_CD AND s.YY = c.YY AND s.TM_GBN = c.TM_GBN AND s.HAKSU_NO = c.HAKSU_NO AND b.RPST_CD='UC003') AS KOR_CD_NM
+				,(SELECT b.CMMN_CD FROM INU_COM.BSNS011 b, INU_UNI.COUR160 c WHERE b.CMMN_CD= c.CPTN_GBN AND s.DEPT_CLSF_CD = c.DEPT_CLSF_CD AND s.YY = c.YY AND s.TM_GBN = c.TM_GBN AND s.HAKSU_NO = c.HAKSU_NO AND b.RPST_CD='UC003') AS CMMN_CD
+				,(SELECT c.HG_MJ_CD FROM INU_UNI.COUR160 c WHERE s.DEPT_CLSF_CD = c.DEPT_CLSF_CD AND s.YY = c.YY AND s.TM_GBN = c.TM_GBN AND s.HAKSU_NO = c.HAKSU_NO) AS HG_MJ_CD
+			FROM INU_UNI.SCOR300 s WHERE stuno =  #{stuno}  and CPTN_GBN =  #{cptnGbn} ANd MRKS_GRD_GBN != 'F'
+		) GROUP BY KOR_CD_NM, CMMN_CD, HG_MJ_CD
+	</select>
+	
+	<!-- 학기별 이수 현황 -->
+	<select id="getTermHpList" parameterType="String" resultType="dataMap">
+		SELECT 
+			SC_CD
+			,(SELECT SC_NM FROM INU_UNI.COUR001 i WHERE i.SC_CD= s.SC_CD ) AS KOR_SC_CD
+			,(SELECT DEPT_NM FROM INU_UNI.COUR160 i, INU_ADM.STAF010 ss WHERE i.HG_MJ_CD = ss.DEPT_CD AND i.DEPT_CLSF_CD = s.DEPT_CLSF_CD AND i.YY = s.YY AND i.TM_GBN = s.TM_GBN  AND i.HAKSU_NO = s.HAKSU_NO AND i.SC_CD= s.SC_CD ) AS DEPT_NM
+			,(SELECT b.KOR_CD_NM FROM INU_COM.BSNS011 b WHERE b.CMMN_CD= s.CPTN_GBN AND b.RPST_CD='UC003') AS KOR_CPTN_GBN
+			,HP
+			,CASE WHEN MRKS_GRD_GBN != 'F' THEN '이수' ELSE '미이수' END AS KOR_MRKS_GRD_GBN 
+			,CASE WHEN MRKS_GRD_GBN != 'F' THEN HP ELSE 0 END AS HP2
+		FROM INU_UNI.SCOR300 s WHERE stuno = #{stuno}  AND YY= #{yy} AND TM_GBN = #{tmGbn}
+
+	</select>
+	
+	<!-- 입학년도  정보 -->
+	
+	<select id="getEntrYearInfo" parameterType="String" resultType="dataMap">
+		SELECT 
+			ENTR_YY
+			,ENTR_TM_GBN
+		FROM INU_UNI.SREG111 s WHERE stuno = #{stuno} 
+
+	</select>
+	
+	<select id="getGrdtHpInfoOra" parameterType="String" resultType="dataMap">
+		SELECT 
+			ENTR_YY 
+			,ENTR_TM_GBN 
+			,CORS_GBN 
+			,HG_MJ_CD
+			,GRDT_CPTN_GBN
+			,MIN_ACQ_HP 
+		FROM INU_UNI.GRDT103 g 
+		WHERE CORS_GBN = 0 
+		AND ENTR_TM_GBN = #{entrTmGbn}
+		AND ENTR_YY = #{entrYy}
+		AND HG_MJ_CD =#{hgMjCd}
+
+	</select>
+	
+	<select id="getGrdtMjHpInfoOra" parameterType="String" resultType="dataMap">
+		SELECT 
+			ENTR_YY 
+			,ENTR_TM_GBN 
+			,CORS_GBN 
+			,HG_MJ_CD
+			,MJ_ACQ_HP
+			,MULT_MJ_ACQ_HP
+			,CONN_MJ_ACQ_HP
+			,MI_ACQ_HP
+		FROM INU_UNI.GRDT102 g
+		WHERE CORS_GBN = 0 
+		AND ENTR_TM_GBN = #{entrTmGbn}
+		AND ENTR_YY = #{entrYy}
+		AND HG_MJ_CD =#{hgMjCd}
+
+	</select>
+	
+	<select id="getCptnFld101Sum" parameterType="String" resultType="dataMap">
+		SELECT 
+			nvl(sum(HP),0) as HP
+		FROM INU_UNI.SCOR300 
+		WHERE stuno = #{stuno} 
+		AND CPTN_FLD_GBN ='101'
+		AND MRKS_GRD_GBN != 'F'
+
+	</select>
+	
+	<select id="getCptnFld111to7Count" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT 
+			count(*)
+		FROM
+		(SELECT 
+			CPTN_FLD_GBN
+		FROM INU_UNI.SCOR300 
+		WHERE stuno = #{stuno} 
+		AND CPTN_FLD_GBN IN ('111', '112', '113', '114', '115', '116', '117')
+		AND MRKS_GRD_GBN != 'F' GROUP BY CPTN_FLD_GBN)
+	</select>
+	
+	<select id="getCptn21Count" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT 
+			count(*)
+		FROM INU_UNI.SCOR300 
+		WHERE stuno = #{stuno} 
+		AND CPTN_GBN ='21'
+		AND MRKS_GRD_GBN != 'F'
+
+	</select>
+	
+
+</mapper>
+

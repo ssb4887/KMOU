@@ -1,0 +1,48 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd       
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	<bean id="jobDetailBean" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="rbs.egovframework.web.scheduling.MemberJob" />
+		<property name="applicationContextJobDataKey" value="applicationContext"/>
+    	<property name="durability" value="true" />
+	</bean>
+	
+	<bean id="majorDetailBean" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="rbs.egovframework.web.scheduling.MajorSave" />
+		<property name="applicationContextJobDataKey" value="applicationContext"/>
+    	<property name="durability" value="true" />
+	</bean>
+	
+	<!-- 학생설계전공 인터페이스 -->
+	<bean id="stdInfDetailBean" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+	    <property name="jobClass" value="rbs.egovframework.web.scheduling.StudConfirmInterface" />
+	    <property name="applicationContextJobDataKey" value="applicationContext"/>
+	    <property name="durability" value="true" />
+	</bean>
+
+	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="jobDetailBean" />
+		<property name="cronExpression" value="0 0 6 * * ?" />
+	</bean>
+	
+	<bean id="cronTrigger2" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="majorDetailBean" />
+		<property name="cronExpression" value="0 00 23 * * ?" />
+	</bean>
+	
+	<!-- 학생설계전공 인터페이스 -->
+	<bean id="cronTrigger3" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="stdInfDetailBean" />
+	    <property name="cronExpression" value="0 59 23 * * ?" />
+<!-- 		<property name="cronExpression" value="0/10 * * * * ?" /> -->
+	</bean>
+	
+	<bean id="scheduler" class="rbs.egovframework.web.scheduling.SchedulerFactoryBeanWidthShutdownDelay">
+		<property name="triggers">
+			<list>
+				<ref bean="cronTrigger" />
+				<ref bean="cronTrigger2" />
+				<ref bean="cronTrigger3" />
+			</list>
+		</property> 
+	</bean>
+</beans>

@@ -1,0 +1,169 @@
+{
+	"item_info":{
+		"items":{
+			"subject":{
+				"column_id":"SUBJECT"
+				, "item_name":"제목"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "maximum":200
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "img":{
+				"column_id":"IMG"
+				, "item_name":"이미지"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":6
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+				, "isimage":1
+				, "use_file_ext":1
+				, "dset_file_ext":"gif,jpg,jpeg,png"
+			}, "dspPage":{
+				"column_id":"DSP_PAGE"
+				, "item_name":"게시 위치"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"DSP_PAGE"
+				, "default_value":"1"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "linkUrl":{
+				"column_id":"LINK_URL"
+				, "item_name":"링크경로"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "maximum":200
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "linkTarget":{
+				"column_id":"LINK_TARGET"
+				, "item_name":"링크타겟"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":2
+				, "master_code":"LINK_TARGET"
+				, "default_value":"1"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "dspDate":{
+				"column_id":"DSP_DATE"
+				, "item_name":"게시기간"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":15
+				, "object_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "stop":{
+				"column_id":"ISSTOP"
+				, "item_name":"진행상태"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"ISSTOP"
+				, "default_value":"0"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "orderIdx":{
+				"column_id":"ORDER_IDX"
+				, "item_name":"순서"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":2
+				, "item_type":1
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}
+		}, "list_order":[
+			"subject"
+			, "dspDate"
+			, "dspPage"
+			, "img"
+			, "orderIdx"
+		], "write_order":[
+			"subject"
+			, "img"
+			, "linkUrl"
+			, "linkTarget"
+			, "dspDate"
+			, "dspPage"
+			, "stop"
+			, "orderIdx"
+		]
+		, "writeproc_order":[
+			"subject"
+			, "img"
+			, "linkUrl"
+			, "linkTarget"
+			, "dspDate"
+			, "dspPage"
+			, "stop"
+			, "orderIdx"
+		]
+		, "modify_order":[
+			"subject"
+			, "img"
+			, "linkUrl"
+			, "linkTarget"
+			, "dspDate"
+			, "dspPage"
+			, "stop"
+			, "orderIdx"
+		]
+		, "modifyproc_order":[
+			"subject"
+			, "img"
+			, "linkUrl"
+			, "linkTarget"
+			, "dspDate"
+			, "dspPage"
+			, "stop"
+			, "orderIdx"
+		]
+		, "list_search":{
+			"key":{
+				"items":{
+					"dspDate":{
+						"column_id":"DSP_DATE"
+						, "item_name":"게시기간"
+						, "format_type":15
+						, "object_type":0
+					}, "subject":{
+						"column_id":"SUBJECT"
+						, "item_name":"제목"
+						, "format_type":0
+						, "object_type":0
+						, "style_width":200
+
+					}
+				}
+			}, "searchForm_order":[
+				"dspDate"
+				, "subject"
+			], "search_order":[
+				"dspDate"
+				, "subject"
+			]
+		}
+	}
+}

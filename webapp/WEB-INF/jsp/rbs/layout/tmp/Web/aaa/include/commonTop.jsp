@@ -1,0 +1,12 @@
+<%@ include file="../../../../../include/commonTop.jsp"%>
+<spring:message var="layoutTRPath" code="Globals.layout.resource.path"/>
+<c:set var="siteJsPath" value="${jsPath}"/>
+<c:set var="siteCssPath" value="${cssPath}"/>
+<c:set var="siteImgPath" value="${imgPath}"/>
+<c:set var="layoutRPath" value="${layoutTRPath}/${siteInfo.site_type}/tmp/${siteInfo.layout_tmp}"/>
+<c:set var="layoutJsPath" value="${layoutRPath}/js"/>
+<c:set var="layoutCssPath" value="${layoutRPath}/css"/>
+<c:set var="layoutImgPath" value="${layoutRPath}/images"/>
+<c:set var="themeRPath" value="${layoutTRPath}/${siteInfo.site_type}/themes/${siteInfo.layout_theme}"/>
+<c:set var="themeCssPath" value="${themeRPath}/css"/>
+<c:set var="themeImgPath" value="${themeRPath}/images"/>

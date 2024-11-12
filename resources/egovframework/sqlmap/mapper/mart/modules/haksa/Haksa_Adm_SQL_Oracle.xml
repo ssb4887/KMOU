@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	1. IDX, UNI_PROF_INFMT, SUBJECT, IDX, 테이블명 등 변경해서 사용
+	2. 그 외 필요에 따라 쿼리 수정하여 사용 
+-->
+<mapper namespace="mart.modules.haksa.haksaAdmMapper">
+	<!-- 테이블명 -->
+	<sql id="HAKSA_TABLE_NAME"><trim>SUD.SUD010TB</trim></sql>
+	
+	<!-- KEY가 INT인 경우 -->
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(IDX), 0)</trim> + 1 MAXID
+		FROM 
+		SUD010TB A
+	</select>
+	
+	<!-- KEY가 STRING인 경우 - KEY형식에 맞게 변경하여 사용 
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT <include refid="rbs.commonDBMSMapper.currentDateYYYYMM"/> || LPAD(TO_NUMBER(SUBSTR(NVL(MAX(A.IDX), <include refid="rbs.commonDBMSMapper.currentDateYYYYMM"/> || '0'), 7)) + 1, 4, '0') MAXID
+		FROM 
+		UNI_PROF_INFMT A 
+		WHERE A.IDX LIKE <include refid="rbs.commonDBMSMapper.currentDateYYYYMM"/> || '%'
+	</select>
+	-->
+	<!-- 수정/삭제 권한 : 등록자 -->
+    <!-- 목록 수정/삭제 권한 조건 쿼리 -->
+	<sql id="editAuthListQuery">
+		<if test="AUTH_MEMBER_IDX != null">
+		, CASE WHEN A.REGI_IDX = #{AUTH_MEMBER_IDX} THEN '1' ELSE '0' END AS AUTH_MNG
+		</if>
+	</sql>
+	
+    <!-- 수정/삭제 권한 조건 쿼리 -->	
+	<sql id="editAuthWhereQuery">
+		<if test="AUTH_MEMBER_IDX != null">
+		AND A.REGI_IDX = #{AUTH_MEMBER_IDX} 
+		</if>
+	</sql>
+	
+	<select id="getHaksaList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT
+			A.*	, SCO.DEPT_CDNM(A.COLL_CD) AS R_COLG_NM, SCO.DEPT_CDNM(A.DEPT_CD) AS R_DEPT_NM, SCO.DEPT_CDNM(A.MAJOR_CD) AS R_MAJOR_NM
+			 FROM SUD010TB A
+			 <choose>
+			 <when test='SEARCH_TEXT == null or SEARCH_TEXT.equals("")'>
+			 	WHERE 1=2
+			 </when>
+			 <otherwise>
+			 	WHERE (NM||STUDENT_NO) LIKE '%'||#{SEARCH_TEXT}||'%'
+			 </otherwise>
+			 </choose>
+			<if test='SEARCH_RANGE != null and !SEARCH_RANGE.equals("")'>
+				AND (COLL_CD = #{SEARCH_RANGE} OR DEPT_CD = #{SEARCH_RANGE} OR MAJOR_CD = #{SEARCH_RANGE})
+			</if>
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="getHaksaListCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+			SELECT COUNT(*) FROM SUD010TB A
+			 <choose>
+			 <when test='SEARCH_TEXT == null or SEARCH_TEXT.equals("")'>
+			 	WHERE 1=2
+			 </when>
+			 <otherwise>
+			 	WHERE (NM||STUDENT_NO) LIKE '%'||#{SEARCH_TEXT}||'%'
+			 </otherwise>
+			 </choose>
+			<if test='SEARCH_RANGE != null and !SEARCH_RANGE.equals("")'>
+				AND (COLL_CD = #{SEARCH_RANGE} OR DEPT_CD = #{SEARCH_RANGE} OR MAJOR_CD = #{SEARCH_RANGE})
+			</if>
+	</select>
+	
+	<select id="getHaksaModify" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			A.*,
+			(SELECT DEPT_KOR_NM FROM COM.CMMN050 WHERE DEPT_CD = A.POSI_DEPT_CD) DEPT_KOR_NM,
+			(SELECT KOR_NM FROM COM.CMMN081 WHERE CMMN_CD = A.HOOF_FG) AS HOOF_FG_KOR
+			<include refid="editAuthListQuery"/>
+		FROM 
+		UNI_PROF_INFMT A 
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<update id="updateHaksa" parameterType="java.util.HashMap">
+		UPDATE UNI_PROF_INFMT A SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			A.*
+			<include refid="editAuthListQuery"/>
+		FROM 
+		UNI_PROF_INFMT A 
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<select id="selectFileList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			<foreach collection="columnList" item="columnItem" index="i" separator=",">
+				${columnItem}
+			</foreach>
+			FROM 
+			UNI_PROF_INFMT A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<select id="selectFileView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.${columnItem}_SAVED_NAME, A.${columnItem}_ORIGIN_NAME
+			FROM 
+			UNI_PROF_INFMT A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<update id="updateFileDown" parameterType="java.util.HashMap">
+		UPDATE <include refid="HAKSA_TABLE_NAME"/> SET ${FILE_COLUMN}_DCNT = ${FILE_COLUMN}_DCNT + 1 
+		WHERE IDX = #{KEY_IDX}
+	</update>
+	
+	<select id="authCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+		UNI_PROF_INFMT A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<include refid="editAuthWhereQuery"/>
+	</select>
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+		A.* 
+		FROM 
+		UNI_PROF_INFMT A 
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<include refid="editAuthWhereQuery"/>
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO UNI_PROF_INFMT (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE UNI_PROF_INFMT SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.IDX, SUBJECT, A.LAST_MODI_NAME, A.LAST_MODI_ID, A.REGI_DATE, A.LAST_MODI_DATE 
+			FROM 
+			UNI_PROF_INFMT A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+			ORDER BY IDX
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+		UNI_PROF_INFMT A
+		<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+	</select>
+	
+	<update id="delete" parameterType="java.util.HashMap">
+		UPDATE UNI_PROF_INFMT SET ISDELETE = '1', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="restore" parameterType="java.util.HashMap">
+		UPDATE UNI_PROF_INFMT SET ISDELETE = '0', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM UNI_PROF_INFMT  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	
+</mapper>            

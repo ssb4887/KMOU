@@ -1,0 +1,125 @@
+- 전공정보
+
+CREATE TABLE `major_info` (
+  `YEAR` varchar(4) NOT NULL COMMENT '년도',
+  `MAJOR_CD` varchar(15) NOT NULL COMMENT '전공코드',
+  `COLG_CD` varchar(15) DEFAULT NULL COMMENT '대학코드',
+  `DEPT_CD` varchar(15) DEFAULT NULL COMMENT '학부/학과코드',
+  `MAJOR_NM_KOR` varchar(200) DEFAULT NULL COMMENT '전공명한글',
+  `MAJOR_NM_ENG` varchar(200) DEFAULT NULL COMMENT '전공명영문',
+  `ORD` int(11) DEFAULT NULL COMMENT '순서',
+  `USE_FG` char(1) DEFAULT NULL COMMENT '사용구분',
+  `MAJOR_INTRO` text DEFAULT NULL COMMENT '전공소개',
+  `GRDT_AF_CARR` text DEFAULT NULL COMMENT '졸업후진로',
+  `RESPR_CFM_YN` char(1) DEFAULT 'N' COMMENT '담당자확인여부',
+  `FUSI_MJ_FG` varchar(8) DEFAULT NULL COMMENT '융합전공구분',
+  `ISDELETE` char(1) DEFAULT '0' COMMENT '삭제여부',
+  `REGI_ID` varchar(50) DEFAULT NULL COMMENT '등록자ID',
+  `REGI_DATE` datetime DEFAULT current_timestamp() COMMENT '등록일자',
+  `REGI_IP` varchar(20) DEFAULT NULL COMMENT '등록IP',
+  `LAST_MODI_ID` varchar(50) DEFAULT NULL COMMENT '최종수정자ID',
+  `LAST_MODI_DATE` datetime DEFAULT NULL COMMENT '최종수정일자',
+  `LAST_MODI_IP` varchar(20) DEFAULT NULL COMMENT '최종수정IP',
+  PRIMARY KEY (`YEAR`,`MAJOR_CD`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='전공정보';
+
+
+
+
+
+- 전공능력 및 인재상
+
+CREATE TABLE `major_abty_info` (
+  `YEAR` varchar(4) NOT NULL COMMENT '년도',
+  `MAJOR_CD` varchar(15) NOT NULL COMMENT '전공코드',
+  `ORD` int(11) NOT NULL COMMENT '순서',
+  `FIELD` varchar(300) DEFAULT NULL COMMENT '진출분야',
+  `MAJOR_ABTY` varchar(1000) DEFAULT NULL COMMENT '전공능력',
+  `MAJOR_ABTY_DEFN` text DEFAULT NULL COMMENT '전공능력정의',
+  `ISDELETE` char(1) DEFAULT '0' COMMENT '삭제여부',
+  `REGI_ID` varchar(50) DEFAULT NULL COMMENT '등록자ID',
+  `REGI_DATE` datetime DEFAULT current_timestamp() COMMENT '등록일자',
+  `REGI_IP` varchar(20) DEFAULT NULL COMMENT '등록IP',
+  `LAST_MODI_ID` varchar(50) DEFAULT NULL COMMENT '최종수정자ID',
+  `LAST_MODI_DATE` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '최종수정일자',
+  `LAST_MODI_IP` varchar(20) DEFAULT NULL COMMENT '최종수정IP',
+  PRIMARY KEY (`YEAR`,`MAJOR_CD`,`ORD`),
+  CONSTRAINT `MAJOR_ABTY_INFO_FK01` FOREIGN KEY (`YEAR`, `MAJOR_CD`) REFERENCES `major_info` (`YEAR`, `MAJOR_CD`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='전공별전공능력';
+
+
+
+
+- 교육과정
+
+
+CREATE TABLE `major_edu_cour_info` (
+  `YEAR` varchar(4) NOT NULL COMMENT '년도',
+  `MAJOR_CD` varchar(15) NOT NULL COMMENT '전공코드',
+  `SUBJECT_NO` varchar(6) NOT NULL COMMENT '교과목코드',
+  `FIELD` varchar(300) NOT NULL COMMENT '진출분야',
+  `GRADE` varchar(8) DEFAULT NULL COMMENT '학년구분',
+  `SMT` varchar(8) DEFAULT NULL COMMENT '학기코드',
+  `SUBJECT_NM_KOR` varchar(100) DEFAULT NULL COMMENT '교과목명한글',
+  `SUBJECT_NM_ENG` varchar(100) DEFAULT NULL COMMENT '교과목명영문',
+  `SINBUN_CODE` varchar(8) DEFAULT NULL COMMENT '교과구분(신분구분코드)',
+  `ORD` int(11) DEFAULT NULL COMMENT '순서',
+  `CDT_NUM` decimal(5,2) DEFAULT NULL COMMENT '학점',
+  `WTIME_NUM` decimal(4,1) DEFAULT NULL COMMENT '이론시간',
+  `PTIME_NUM` decimal(4,1) DEFAULT NULL COMMENT '실습시간',
+  `ISDELETE` char(1) DEFAULT '0' COMMENT '삭제여부',
+  `REGI_ID` varchar(50) DEFAULT NULL COMMENT '등록자ID',
+  `REGI_DATE` datetime DEFAULT current_timestamp() COMMENT '등록일자',
+  `REGI_IP` varchar(20) DEFAULT NULL COMMENT '등록IP',
+  `LAST_MODI_ID` varchar(50) DEFAULT NULL COMMENT '최종수정자ID',
+  `LAST_MODI_DATE` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '최종수정일자',
+  `LAST_MODI_IP` varchar(20) DEFAULT NULL COMMENT '최종수정IP',
+  PRIMARY KEY (`YEAR`,`MAJOR_CD`,`SUBJECT_NO`,`FIELD`),
+  CONSTRAINT `MAJOR_EDU_COUR_INFO_FK01` FOREIGN KEY (`YEAR`, `MAJOR_CD`) REFERENCES `major_info` (`YEAR`, `MAJOR_CD`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='전공별교육과정';
+
+
+
+
+- 자격증
+
+CREATE TABLE `major_license_info` (
+  `YEAR` varchar(4) NOT NULL COMMENT '년도',
+  `MAJOR_CD` varchar(15) NOT NULL COMMENT '전공코드',
+  `FIELD` varchar(300) NOT NULL COMMENT '진출분야',
+  `LICENSE_NM` varchar(100) NOT NULL COMMENT '자격증명',
+  `ORD` int(11) DEFAULT NULL COMMENT '순서',
+  `ISDELETE` char(1) DEFAULT '0' COMMENT '삭제여부',
+  `REGI_ID` varchar(50) DEFAULT NULL COMMENT '등록자ID',
+  `REGI_DATE` datetime DEFAULT current_timestamp() COMMENT '등록일자',
+  `REGI_IP` varchar(20) DEFAULT NULL COMMENT '등록IP',
+  `LAST_MODI_ID` varchar(50) DEFAULT NULL COMMENT '최종수정자ID',
+  `LAST_MODI_DATE` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '최종수정일자',
+  `LAST_MODI_IP` varchar(20) DEFAULT NULL COMMENT '최종수정IP',
+  PRIMARY KEY (`YEAR`,`MAJOR_CD`,`FIELD`,`LICENSE_NM`),
+  CONSTRAINT `MAJOR_LICENSE_INFO_FK01` FOREIGN KEY (`YEAR`, `MAJOR_CD`) REFERENCES `major_info` (`YEAR`, `MAJOR_CD`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='전공별자격증';
+
+
+
+
+- 비교과
+
+CREATE TABLE `major_nonsbjt_info` (
+  `YEAR` varchar(4) NOT NULL COMMENT '년도',
+  `MAJOR_CD` varchar(15) NOT NULL COMMENT '전공코드',
+  `IDX` varchar(6) NOT NULL COMMENT '비교과 프로그램 고유값',
+  `FIELD` varchar(300) NOT NULL COMMENT '진출분야',
+  `NON_SBJT_NM` varchar(100) DEFAULT NULL COMMENT '비교과 프로그램명',
+  `ORD` int(11) DEFAULT NULL COMMENT '순서',
+  `ISDELETE` char(1) DEFAULT '0' COMMENT '삭제여부',
+  `REGI_ID` varchar(50) DEFAULT NULL COMMENT '등록자ID',
+  `REGI_DATE` datetime DEFAULT current_timestamp() COMMENT '등록일자',
+  `REGI_IP` varchar(20) DEFAULT NULL COMMENT '등록IP',
+  `LAST_MODI_ID` varchar(50) DEFAULT NULL COMMENT '최종수정자ID',
+  `LAST_MODI_DATE` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '최종수정일자',
+  `LAST_MODI_IP` varchar(20) DEFAULT NULL COMMENT '최종수정IP',
+  PRIMARY KEY (`YEAR`,`MAJOR_CD`,`IDX`,`FIELD`),
+  CONSTRAINT `MAJOR_NON_SBJT_INFO_FK01` FOREIGN KEY (`YEAR`, `MAJOR_CD`) REFERENCES `major_info` (`YEAR`, `MAJOR_CD`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='전공별추천비교과';
+

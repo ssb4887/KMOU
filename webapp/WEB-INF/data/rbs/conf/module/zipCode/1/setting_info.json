@@ -1,0 +1,9 @@
+{
+	"setting_info": {
+		"list_title":"우편번호 검색 목록"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+		, "page_name":"page"
+	}
+}

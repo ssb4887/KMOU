@@ -1,0 +1,267 @@
+{
+	"excelLog_item_info":{
+		"list_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+					"id":{
+						"column_id":"REGI_ID"
+						, "item_name":"아이디"
+					}, "name":{
+						"column_id":"REGI_NAME"
+						, "item_name":"성명"
+					}
+				}, "select_order":[
+					"id"
+					, "name"
+				]
+			}, "key":{
+				"items":{
+					"statsType":{
+						"item_name":"검색옵션"
+						, "format_type":0
+						, "object_type":5
+						, "master_code":"STATS_MTYPE"
+						, "default_value":"3"
+					}, "statsDate":{
+						"item_name":"검색일자"
+						, "column_id":"REGI_DATE"
+						, "format_type":5
+						, "object_type":0
+						, "date_type":1
+					}
+				}
+			}, "searchForm_order":[
+				"statsType"
+				, "statsDate"
+				, "keyField"
+			], "search_order":[
+				"statsDate"
+				, "keyField"
+			], "searchAddOptn_order":[
+				"statsType"
+			]
+		}
+	}, "fileLog_item_info":{
+		"list_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+					"id":{
+						"column_id":"REGI_ID"
+						, "item_name":"아이디"
+					}, "name":{
+						"column_id":"REGI_NAME"
+						, "item_name":"성명"
+					}
+				}, "select_order":[
+					"id"
+					, "name"
+				]
+			}, "key":{
+				"items":{
+					"statsType":{
+						"item_name":"검색옵션"
+						, "format_type":0
+						, "object_type":5
+						, "master_code":"STATS_MTYPE"
+						, "default_value":"3"
+					}, "statsDate":{
+						"item_name":"검색일자"
+						, "column_id":"REGI_DATE"
+						, "format_type":5
+						, "object_type":0
+						, "date_type":1
+					}
+				}
+			}, "searchForm_order":[
+				"statsType"
+				, "statsDate"
+				, "keyField"
+			], "search_order":[
+				"statsDate"
+				, "keyField"
+			], "searchAddOptn_order":[
+				"statsType"
+			]
+		}
+	}, "mngLog_item_info":{
+		"list_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+					"id":{
+						"column_id":"ACCESS_ID"
+						, "item_name":"아이디"
+					}, "name":{
+						"column_id":"ACCESS_NAME"
+						, "item_name":"성명"
+					}
+				}, "select_order":[
+					"id"
+					, "name"
+				]
+			}, "key":{
+				"items":{
+					"statsType":{
+						"item_name":"검색옵션"
+						, "format_type":0
+						, "object_type":5
+						, "master_code":"STATS_MTYPE"
+						, "default_value":"3"
+					}, "statsDate":{
+						"item_name":"검색일자"
+						, "column_id":"ACCESS_DATE"
+						, "format_type":5
+						, "object_type":0
+						, "date_type":1
+					}
+				}
+			}, "searchForm_order":[
+				"statsType"
+				, "statsDate"
+				, "keyField"
+			], "search_order":[
+				"statsDate"
+				, "keyField"
+			], "searchAddOptn_order":[
+				"statsType"
+			]
+		}
+	}, "authLog_item_info":{
+		"list_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+					"id":{
+						"column_id":"REGI_ID"
+						, "item_name":"아이디"
+					}, "name":{
+						"column_id":"REGI_NAME"
+						, "item_name":"성명"
+					}
+				}, "select_order":[
+					"id"
+					, "name"
+				]
+			}, "key":{
+				"items":{
+					"statsType":{
+						"item_name":"검색옵션"
+						, "format_type":0
+						, "object_type":5
+						, "master_code":"STATS_MTYPE"
+						, "default_value":"3"
+					}, "statsDate":{
+						"item_name":"검색일자"
+						, "column_id":"REGI_DATE"
+						, "format_type":5
+						, "object_type":0
+						, "date_type":1
+					}
+				}
+			}, "searchForm_order":[
+				"statsType"
+				, "statsDate"
+				, "keyField"
+			], "search_order":[
+				"statsDate"
+				, "keyField"
+			], "searchAddOptn_order":[
+				"statsType"
+			]
+		}
+	}, "snsLog_item_info":{
+		"list_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+					"id":{
+						"column_id":"REGI_ID"
+						, "item_name":"아이디"
+					}, "name":{
+						"column_id":"REGI_NAME"
+						, "item_name":"성명"
+					}
+				}, "select_order":[
+					"id"
+					, "name"
+				]
+			}, "key":{
+				"items":{
+					"statsType":{
+						"item_name":"검색옵션"
+						, "format_type":0
+						, "object_type":5
+						, "master_code":"STATS_MTYPE"
+						, "default_value":"3"
+					}, "statsDate":{
+						"item_name":"검색일자"
+						, "column_id":"REGI_DATE"
+						, "format_type":5
+						, "object_type":0
+						, "date_type":1
+					}
+				}
+			}, "searchForm_order":[
+				"statsType"
+				, "statsDate"
+				, "keyField"
+			], "search_order":[
+				"statsDate"
+				, "keyField"
+			], "searchAddOptn_order":[
+				"statsType"
+			]
+		}
+	}, "mlLog_item_info":{
+		"list_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+					"id":{
+						"column_id":"MEMBER_ID"
+						, "item_name":"아이디"
+					}, "name":{
+						"column_id":"MEMBER_NAME"
+						, "item_name":"성명"
+					}
+				}, "select_order":[
+					"id"
+					, "name"
+				]
+			}, "key":{
+				"items":{
+					"statsType":{
+						"item_name":"검색옵션"
+						, "format_type":0
+						, "object_type":5
+						, "master_code":"STATS_MTYPE"
+						, "default_value":"3"
+					}, "statsDate":{
+						"item_name":"검색일자"
+						, "column_id":"REGI_DATE"
+						, "format_type":5
+						, "object_type":0
+						, "date_type":1
+					}
+				}
+			}, "searchForm_order":[
+				"statsType"
+				, "statsDate"
+				, "keyField"
+			], "search_order":[
+				"statsDate"
+				, "keyField"
+			], "searchAddOptn_order":[
+				"statsType"
+			]
+		}
+	}
+}

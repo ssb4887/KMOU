@@ -1,0 +1,8 @@
+{
+	"banner":{
+		"banner01":{"isuse":1,"limit_number":20},"banner02":{"isuse":0,"limit_number":20}
+	}, "popup":{
+		"isuse":1
+		,"limit_number":5
+	}
+}

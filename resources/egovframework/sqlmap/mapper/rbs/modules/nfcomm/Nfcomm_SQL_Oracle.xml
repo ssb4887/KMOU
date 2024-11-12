@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.nfcomm.nfcommMapper">
+
+	<sql id="NFCOMM_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />NFCOMM_${fnIdx}_INFO</trim></sql>
+	<sql id="NFCOMMAPPL_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />NFCOMM_${fnIdx}_APPL_INFO</trim></sql>
+	<sql id="NFCOMMMEMO_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />NFCOMM_${fnIdx}_MEMO_INFO</trim></sql>
+	<sql id="OPTION_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG"/>OPTION_INFO</trim></sql>
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.*,
+			TO_CHAR(TO_DATE(A.APPL_DATE11,'YYYY-MM-DD'),'DY') AS APPLDAY1, 
+			TO_CHAR(TO_DATE(A.APPL_DATE21,'YYYY-MM-DD'),'DY') AS APPLDAY2 
+			FROM 
+			<include refid="NFCOMM_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<bind name="defaultOrderStr" value="'A.NF_CODE DESC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="getMemoList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="NFCOMMMEMO_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="getApplView" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="NFCOMMAPPL_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(NF_CODE), 0)</trim> + 1 MAXID
+		FROM 
+			<include refid="NFCOMM_TABLE_NAME"/> A
+	</select>
+	
+	<select id="nextIdMemo" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(MEM_IDX), 0)</trim> + 1 MAXID
+		FROM 
+			<include refid="NFCOMMMEMO_TABLE_NAME"/> A
+	</select>
+	
+	<select id="nextIdAppl" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(APPL_IDX), 0)</trim> + 1 MAXID
+		FROM 
+			<include refid="NFCOMMAPPL_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="NFCOMM_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*
+			FROM 
+			<include refid="NFCOMM_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<update id="updateViews" parameterType="java.util.HashMap">
+		UPDATE <include refid="NFCOMM_TABLE_NAME"/> SET VIEWS = VIEWS + 1 
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="NFCOMM_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="NFCOMM_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<insert id="insertMemo" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="NFCOMMMEMO_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<insert id="insertAppl" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="NFCOMMAPPL_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<select id="getApplnm" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM
+			<include refid="NFCOMMAPPL_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="getApplCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="NFCOMMAPPL_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			AND A.REGI_IDX = #{REGI_IDX}
+	</select>
+	
+	<select id="selectDuplicateCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="NFCOMM_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="NFCOMM_TABLE_NAME"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="updateAppl" parameterType="java.util.HashMap">
+		UPDATE <include refid="NFCOMMAPPL_TABLE_NAME"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="applCntUpdate" parameterType="java.util.HashMap">
+		UPDATE <include refid="NFCOMM_TABLE_NAME"/> SET APPL_CNT = ${applnm}
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+            A.*			 
+			FROM 
+			<include refid="NFCOMM_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+			<bind name="defaultOrderStr" value="'A.HIS_IDX DESC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="NFCOMM_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/> 
+	</select>
+	
+	<update id="delete" parameterType="java.util.HashMap">
+		UPDATE <include refid="NFCOMM_TABLE_NAME"/> SET ISDELETE = '1', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	
+	
+	<update id="restore" parameterType="java.util.HashMap">
+		UPDATE <include refid="NFCOMM_TABLE_NAME"/> SET ISDELETE = '0', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<delete id="appldelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="NFCOMMAPPL_TABLE_NAME"/>  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	
+	<delete id="memodelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="NFCOMMMEMO_TABLE_NAME"/>  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="NFCOMM_TABLE_NAME"/>  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	
+	<select id="deleteFileList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			<foreach collection="columnList" item="columnItem" index="i" separator=",">
+				${columnItem}
+			</foreach>
+			FROM 
+			<include refid="NFCOMM_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+	</select>
+</mapper>            

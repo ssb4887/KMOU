@@ -1,0 +1,24 @@
+@charset "utf-8";
+
+/* BUTTON */
+.btnTypeA {width:66px; height:30px; font-weight:bold; color:#ffffff !important; line-height:30px; text-align:center; text-decoration:none !important; border:0px; background:#006dba;}
+.btnTypeAL {width:140px; height:40px; font-weight:bold; color:#ffffff !important; line-height:40px; text-align:center; text-decoration:none !important; border:0px; background:#006dba;}
+.btnTypeB {width:66px; height:30px; font-weight:bold; color:#ffffff !important; line-height:30px; text-align:center; text-decoration:none !important; border:0px; background:#5d5d5d;}
+.btnTypeBL {width:140px; height:40px; font-weight:bold; color:#ffffff !important; line-height:40px; text-align:center; text-decoration:none !important; border:0px; background:#5d5d5d;}
+.btnTypeC {/*padding-right:22px;*/ font-weight:bold; color:#3e3e3e !important; text-decoration:none !important; background:url(../images/button/bg_type_b.gif) no-repeat 100% 0;}
+.btnTypeC span {display:block; height:37px; padding:0 20px; line-height:37px; background:url(../images/button/bg_type_b.gif) no-repeat 0 0;}
+.btnTypeD {width:151px; height:30px; font-weight:bold; color:#3e3e3e !important; line-height:30px; text-align:center; text-decoration:none !important; border:0px; background:#fff;}
+.btnTypeD span {padding-right:15px; background:url(../images/common/bul_arrow_blue.gif) no-repeat 100% 14px;}
+.btnTypeE {padding:0 9px 0 10px; font-size:11px; font-weight:bold; color:#fff !important; line-height:25px; text-decoration:none !important; background:url(../images/button/bg_type_e.gif) repeat-x 0 0; border:0px;}
+.btnTypeF {padding:0 9px 0 10px; font-size:11px; font-weight:bold; color:#fff !important; line-height:25px; text-decoration:none !important; background:url(../images/button/bg_type_f.gif) repeat-x 0 0; border:0px;}
+.btnTypeG {padding:0 9px 0 10px; font-size:11px; font-weight:bold; color:#fff !important; line-height:25px; text-decoration:none !important; background:url(../images/button/bg_type_g.gif) repeat-x 0 0; border:0px;}
+.btnTypeH {padding:0 9px 0 10px; font-size:11px; font-weight:bold; color:#fff !important; line-height:25px; text-decoration:none !important; background:url(../images/button/bg_type_h.gif) repeat-x 0 0; border:0px;}
+.btnTypeHL {height:30px; line-height:30px; padding:0 9px 0 10px; font-size:11px; font-weight:bold; color:#fff !important;  text-decoration:none !important; background:url(../images/button/bg_type_h.gif) repeat 0 0; border:0px;}
+.btnTypeI {padding:0 9px 0 10px; font-size:11px; font-weight:bold; color:#fff !important; line-height:25px; text-decoration:none !important; background:url(../images/button/bg_type_i.gif) repeat-x 0 0; border:0px;}
+.btnTypeJ {padding:0 9px 0 10px; font-size:11px; font-weight:bold; color:#fff !important; line-height:25px; text-decoration:none !important; background:url(../images/button/bg_type_j.gif) repeat-x 0 0; border:0px;}
+.btnTypeK {width:121px; height:42px; padding-right:10px; font-weight:bold; color:#fff !important; line-height:42px; text-align:center; text-decoration:none !important; border-bottom:1px solid #005491; background:#006dba url(../images/common/bul_arrow_white.gif) no-repeat 98px 17px;}
+.btnTypeL {width:131px; height:42px; font-weight:bold; color:#fff !important; line-height:42px; text-align:center; text-decoration:none !important; border-bottom:1px solid #696969; background:#808080;}
+.btnTypeM {padding:0 9px 0 10px; font-size:11px; font-weight:bold; color:#fff !important; line-height:25px; text-decoration:none !important; border:0px; background:#5d5d5d;}
+.btnTypeN {padding:0 9px 0 10px; font-size:11px; font-weight:bold; color:#fff !important; line-height:25px; text-decoration:none !important; background:url(../images/button/bg_type_f.gif) repeat-x 0 0; border:0px;}
+.btnTypeAM {padding:0 9px 0 10px; font-size:11px; font-weight:bold; color:#fff !important; line-height:25px; text-decoration:none !important; border:0px; background:#006dba;}
+.btnTypeAS {margin:1px 0; width:80px; height:25px; font-size:11px; font-weight:bold; color:#fff !important; line-height:25px; text-align:center; text-decoration:none !important; background:#006dba; border:0px;}

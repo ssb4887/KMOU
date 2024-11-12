@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	1. [KEY_IDX_COLUMN], [<include refid="SAMPLE_TABLE_NAME"/>], [목록에 사용할 컬럼], [기본정렬쿼리], 테이블명 등 변경해서 사용
+	2. 그 외 필요에 따라 쿼리 수정하여 사용 
+-->
+<mapper namespace="rbs.modules.sample.sampleMapper">
+	<!-- 테이블명 -->
+	<sql id="SAMPLE_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG"/>SAMPLE_${fnIdx}_INFO</trim></sql>
+	
+	<!-- KEY가 INT인 경우 -->
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX([KEY_IDX_COLUMN]), 0)</trim> + 1 MAXID
+		FROM 
+		[<include refid="SAMPLE_TABLE_NAME"/>] A
+	</select>
+	
+	<!-- KEY가 STRING인 경우 - KEY형식에 맞게 변경하여 사용 
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT CONCAT(<include refid="rbs.commonDBMSMapper.currentDateYYYYMM"/>, LPAD(CONVERT(RIGHT(IFNULL(MAX(A.[KEY_IDX_COLUMN]), '0'), 6) + 1, CHAR(6)), 6, '0')) MAXID
+		FROM 
+		[<include refid="SAMPLE_TABLE_NAME"/>] A 
+		WHERE A.[KEY_IDX_COLUMN] LIKE CONCAT(<include refid="rbs.commonDBMSMapper.currentDateYYYYMM"/>, '%')
+	</select>
+	-->
+	<!-- 수정/삭제 권한 : 등록자 -->
+    <!-- 목록 수정/삭제 권한 조건 쿼리 -->
+	<sql id="editAuthListQuery">
+		<if test="AUTH_MEMBER_IDX != null">
+		, CASE WHEN A.REGI_IDX = #{AUTH_MEMBER_IDX} THEN '1' ELSE '0' END AS AUTH_MNG
+		</if>
+	</sql>
+	
+    <!-- 수정/삭제 권한 조건 쿼리 -->	
+	<sql id="editAuthWhereQuery">
+		<if test="AUTH_MEMBER_IDX != null">
+		AND A.REGI_IDX = #{AUTH_MEMBER_IDX} 
+		</if>
+	</sql>
+	
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.[KEY_IDX_COLUMN], [목록에 사용할 컬럼], A.REGI_DATE
+			<include refid="editAuthListQuery"/>
+			FROM 
+			[<include refid="SAMPLE_TABLE_NAME"/>] A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<choose>
+				<when test="dsetOrderField == null">
+					<bind name="defaultOrderStr" value="'[기본정렬쿼리]'"/>
+				</when>
+				<otherwise>
+					<bind name="defaultOrderStr" value="_parameter.get('dsetOrderField')"/>
+				</otherwise>
+			</choose>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			[<include refid="SAMPLE_TABLE_NAME"/>] A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			A.*
+			<include refid="editAuthListQuery"/>
+		FROM 
+		[<include refid="SAMPLE_TABLE_NAME"/>] A 
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<select id="selectFileList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			<foreach collection="columnList" item="columnItem" index="i" separator=",">
+				${columnItem}
+			</foreach>
+			FROM 
+			[<include refid="SAMPLE_TABLE_NAME"/>] A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<select id="selectFileView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.${columnItem}_SAVED_NAME, A.${columnItem}_ORIGIN_NAME
+			FROM 
+			[<include refid="SAMPLE_TABLE_NAME"/>] A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<update id="updateFileDown" parameterType="java.util.HashMap">
+		UPDATE <include refid="SAMPLE_TABLE_NAME"/> SET ${FILE_COLUMN}_DCNT = ${FILE_COLUMN}_DCNT + 1 
+		WHERE [KEY_IDX_COLUMN] = #{KEY_IDX}
+	</update>
+	
+	<select id="authCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+		[<include refid="SAMPLE_TABLE_NAME"/>] A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<include refid="editAuthWhereQuery"/>
+	</select>
+	
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+		A.* 
+		FROM 
+		[<include refid="SAMPLE_TABLE_NAME"/>] A 
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<include refid="editAuthWhereQuery"/>
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO [<include refid="SAMPLE_TABLE_NAME"/>] (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE [<include refid="SAMPLE_TABLE_NAME"/>] SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.[KEY_IDX_COLUMN], [목록에 사용할 컬럼], A.LAST_MODI_NAME, A.LAST_MODI_ID, A.REGI_DATE, A.LAST_MODI_DATE 
+			FROM 
+			[<include refid="SAMPLE_TABLE_NAME"/>] A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+			ORDER BY [기본정렬쿼리]
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+		[<include refid="SAMPLE_TABLE_NAME"/>] A
+		<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+	</select>
+	
+	<update id="delete" parameterType="java.util.HashMap">
+		UPDATE [<include refid="SAMPLE_TABLE_NAME"/>] SET ISDELETE = '1', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="restore" parameterType="java.util.HashMap">
+		UPDATE [<include refid="SAMPLE_TABLE_NAME"/>] SET ISDELETE = '0', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM [<include refid="SAMPLE_TABLE_NAME"/>]  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	
+</mapper>            

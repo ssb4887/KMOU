@@ -1,0 +1,170 @@
+{
+	"banner_item_info":{
+		"items":{
+			"isUse":{
+				"item_id":"isUse"
+				,"column_id":"ISUSE"
+				,"item_name":"사용"
+				,"item_name_ko":"사용"
+				,"object_type":14
+				,"item_type":"1"
+				,"default_value":"0"
+			},"limitNumber":{
+				"item_id":"limitNumber"
+				,"column_id":"LIMIT_NUMBER"
+				,"item_name":"출력수"
+				,"item_name_ko":"출력수"
+				,"item_type":"1"
+				,"object_type":0
+				,"maximum":4
+				,"next_text":"개"
+			}
+		}, "write_order":[
+			"isUse"
+			,"limitNumber"
+		]
+		, "writeproc_order":[
+			"isUse"
+			,"limitNumber"
+		]
+		, "modify_order":[
+			"isUse"
+			,"limitNumber"
+		]
+		, "modifyproc_order":[
+			"isUse"
+			,"limitNumber"
+		]
+	},"popup_item_info":{
+		"items":{
+			"isUse":{
+				"item_id":"isUse"
+				,"column_id":"ISUSE"
+				,"item_name":"사용"
+				,"item_name_ko":"사용"
+				,"object_type":14
+				,"item_type":"1"
+				,"default_value":"0"
+			},"limitNumber":{
+				"item_id":"limitNumber"
+				,"column_id":"LIMIT_NUMBER"
+				,"item_name":"출력수"
+				,"item_name_ko":"출력수"
+				,"item_type":"1"
+				,"object_type":0
+				,"maximum":4
+				,"next_text":"개"
+			}
+		}, "write_order":[
+			"isUse"
+			,"limitNumber"
+		]
+		, "writeproc_order":[
+			"isUse"
+			,"limitNumber"
+		]
+		, "modify_order":[
+			"isUse"
+			,"limitNumber"
+		]
+		, "modifyproc_order":[
+			"isUse"
+			,"limitNumber"
+		]
+	},"board_item_info":{
+		"items":{
+			"menuIdx":{
+				"item_id":"menuIdx"
+				,"column_id":"MENU_IDX"
+				,"item_name":"메뉴"
+				,"item_name_ko":"메뉴"
+				,"object_type":8
+				,"name_item_id":"menuName"
+				,"default_value":"0"
+				,"onclick":"fn_boardMenuSearchForm(this)"
+			},"isContents":{
+				"item_id":"isContents"
+				,"column_id":"ISCONTENTS"
+				,"item_name":"내용"
+				,"item_name_ko":"내용"
+				,"object_type":14
+				,"item_type":"1"
+				,"default_value":"0"
+			},"isListImg":{
+				"item_id":"isListImg"
+				,"column_id":"ISLISTIMG"
+				,"item_name":"대표이미지"
+				,"item_name_ko":"대표이미지"
+				,"object_type":14
+				,"item_type":"1"
+				,"default_value":"0"
+			},"limitNumber":{
+				"item_id":"limitNumber"
+				,"column_id":"LIMIT_NUMBER"
+				,"item_name":"출력수"
+				,"item_name_ko":"출력수"
+				,"item_type":"1"
+				,"object_type":0
+				,"maximum":4
+				,"next_text":"개"
+			},"cateListCode":{
+				"item_id":"cateListCode"
+				,"column_id":"CATE_LIST_CODE"
+				,"item_name":"분류"
+				,"item_name_ko":"분류"
+				,"object_type":2
+			}
+		}, "write_order":[
+			"menuIdx"
+			,"isContents"
+			,"isListImg"
+			,"limitNumber"
+			,"cateListCode"
+		]
+		, "writeproc_order":[
+			"menuIdx"
+			,"isContents"
+			,"isListImg"
+			,"limitNumber"
+			,"cateListCode"
+		]
+		, "modify_order":[
+			"menuIdx"
+			,"isContents"
+			,"isListImg"
+			,"limitNumber"
+			,"cateListCode"
+		]
+		, "modifyproc_order":[
+			"menuIdx"
+			,"isContents"
+			,"isListImg"
+			,"limitNumber"
+			,"cateListCode"
+		]
+	},"contents_item_info":{
+		"items":{
+			"menuIdx":{
+				"item_id":"menuIdx"
+				,"column_id":"MENU_IDX"
+				,"item_name":"메뉴"
+				,"item_name_ko":"메뉴"
+				,"object_type":8
+				,"name_item_id":"menuName"
+				,"default_value":"0"
+				,"onclick":"fn_contentsMenuSearchForm(this)"
+			}
+		}, "write_order":[
+			"menuIdx"
+		]
+		, "writeproc_order":[
+			"menuIdx"
+		]
+		, "modify_order":[
+			"menuIdx"
+		]
+		, "modifyproc_order":[
+			"menuIdx"
+		]
+	}
+}

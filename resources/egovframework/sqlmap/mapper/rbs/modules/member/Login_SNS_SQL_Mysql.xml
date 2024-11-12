@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.sns.modules.member.loginMapper">
+
+	<resultMap id="loginVO" type="rbs.egovframework.LoginVO" >
+		<id property="memberIdx" column="MEMBER_IDX" />	
+		<id property="memberId" column="MEMBER_ID"/>
+		<id property="memberPwd" column="MEMBER_PWD"/>
+		<id property="memberName" column="MEMBER_NAME"/>
+		<id property="memberEmail" column="MEMBER_EMAIL"/>
+		<id property="usertypeIdx" column="USERTYPE_IDX"/>
+		<id property="departIdx" column="DEPART_IDX"/>
+		<id property="departIdxs" column="DEPART_IDXS"/>
+		<id property="pwdModiIntv" column="PWD_MODI_INTV"/>
+		<id property="pwdModiIntv2" column="PWD_MODI_INTV2"/>
+		<id property="pwdModiType" column="PWD_MODI_TYPE"/>
+		<id property="loginFail" column="LOGIN_FAIL"/>
+		<id property="snsType" column="SNS_TYPE"/>
+		<id property="snsId" column="SNS_ID"/>
+	</resultMap>
+	
+	<!-- SNS_ID와 일치하는 정보 OR EMAIL중복확인 -->
+	<select id="login" parameterType="java.util.HashMap" resultMap="loginVO">
+			SELECT 
+			A.MEMBER_IDX
+			, A.MEMBER_ID
+			, A.MEMBER_PWD
+			, A.MEMBER_NAME
+			, A.MEMBER_EMAIL
+			, A.USERTYPE_IDX
+			, A.DEPART_IDX
+			, FN_RBS_DEPART_DN_PATH_IDXS(',', A.DEPART_IDX) DEPART_IDXS
+			, TIMESTAMPDIFF(MONTH, A.PWD_MODI_DATE, DATE_ADD(NOW(), INTERVAL -3 MONTH)) PWD_MODI_INTV
+			, TIMESTAMPDIFF(MONTH, A.PWD_MODI_DATE2, DATE_ADD(NOW(), INTERVAL -1 MONTH)) PWD_MODI_INTV2
+			, A.PWD_MODI_TYPE
+			, A.LOGIN_FAIL
+			, A.SNS_TYPE
+			, A.SNS_ID
+			FROM 
+			<include refid="rbs.modules.member.memberTotMapper.MEMBER_TABLE_NAME"/> A 
+			WHERE A.ISDELETE = '0'
+			AND A.MEMBER_STATE = '1'
+			AND (A.SNS_TYPE = #{snsType} AND A.SNS_ID = #{snsId} OR A.MEMBER_EMAIL = #{snsEmail})
+			<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</select>
+</mapper>            

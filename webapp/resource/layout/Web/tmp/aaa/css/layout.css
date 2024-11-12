@@ -1,0 +1,115 @@
+@charset "utf-8";
+
+#mainWrapper {float:left; width:100%;height:499px; border-top:2px solid #005cbf; z-index:1 !important; }
+#wrapper {float:left; width:100%;}
+
+#headerWrap {margin:0 auto; width:100%;}
+
+#util .utilWrap {width:990px; margin:0 auto; height:25px; padding-top:14px; text-align:right;}
+
+#util .utilWrap .fontOption {float:right; margin-top:20px;}
+#util .utilWrap .fontOption ul {overflow:hidden;}
+#util .utilWrap .fontOption ul li {float:left;}
+
+#util .utilWrap .utilBtn {float:right; height:25px; margin-left:5px;}
+
+#util .utilWrap .utilBtn .fn_login {display:inline-block; width:73px; height:25px; line-height:25px; font-size:11px; padding-left:20px; text-align:center;}
+#util .utilWrap .utilBtn .fn_join {display:inline-block; width:73px; height:25px; line-height:25px; font-size:11px; padding-left:20px; text-align:center;}
+
+#util .search {float:right; top:0px; right:0; width:245px;} 
+#util .search .inputTxt {float:left; width:197px; margin-left:5px; right:0; height:23px; padding-right:0; line-height:24px;}
+#util .search .btnSearch {float:left;}
+
+#header {position:relative; margin:0 auto; width:990px; height:78px; z-index:10000; background:#FFF;}
+#header h1 {float:left; margin-top:-2px; padding-left:10px;}
+
+/* 전체메뉴 */
+.allMenu {}
+.allMenu .inner {position:relative; width:990px; height:276px; margin:0 auto; padding-top:30px; z-index:0;}
+.allMenu .inner > ul {overflow:hidden;padding-left:35px;}
+.allMenu .inner > ul > li {float:left; width:150px; padding-left:35px;}
+.allMenu .inner > ul > li > h3 {margin-bottom:19px;}
+.allMenu .inner > ul > li > h3, 
+.allMenu .inner > ul > li > h3 > a {font-size:18px; font-weight:600; line-height:20px;}
+.allMenu .inner > ul > li > ul {}
+.allMenu .inner > ul > li > ul > li {margin-top:10px;}
+.allMenu .inner > ul > li > ul > li:first-child {margin-top:0;}
+.allMenu .inner > ul > li > ul > li > a {font-size:13px; }
+
+/* gnb */
+#gnbWrap {position:absolute; top:30px; right:5px;}
+#gnbWrap #gnb {}
+#gnbWrap #gnb > li {float:left; margin-left:50px;}
+#gnbWrap #gnb > li:first-child {margin-left:0;}
+#gnbWrap #gnb > li > span {height:49px;}
+#gnbWrap #gnb > li > span > a {font-size:18px; font-weight:600; line-height:17px; letter-spacing:-0.03em; *letter-spacing:-0.08em; text-decoration:none;}
+#gnbWrap #gnb > li.on > span {display:block; height:49px;}
+#gnbWrap #gnb > li.gov30 > span {margin-top:-7px;}
+
+#gnbWrap #gnb .fontOption li {float:left;}
+ 
+/* gnb 2depth */
+.depth2Wrap {display:none; position:absolute; top:49px; left:-20px; width:175px; padding-top:20px;}
+.depth2Wrap .inner {overflow:hidden; padding-bottom:10px; }
+.depth2Wrap .menuWrap {float:right; width:175px; margin-left:16px; padding-bottom:15px;}
+.depth2Wrap .menuWrap .depth2 {overflow:hidden;}
+.depth2Wrap .menuWrap .depth2 > li {float:left; width:160px; margin-top:20px; padding:5px 5px 3px 18px;}
+.depth2Wrap .menuWrap .depth2 > li > a {font-size:14px; padding-left:8px;  font-weight:600; line-height:16px; text-decoration:none;}
+.depth2Wrap .menuWrap .depth2 > li > .depth3 {margin-top:10px; padding-bottom:6px;}
+.depth2Wrap .menuWrap .depth2 > li > .depth3 > li {margin-top:8px;}
+.depth2Wrap .menuWrap .depth2 > li > .depth3 > li:first-child {margin-top:0;}
+.depth2Wrap .menuWrap .depth2 > li > .depth3 > li > a {padding-left:15px; font-size:12px; text-decoration:none;}
+
+.depth2Wrap.sub01 {margin-left:-57px;}
+.depth2Wrap.sub03 {margin-left:82px;}
+.depth2Wrap.sub04 {margin-left:182px;}
+.depth2Wrap.sub06 {width:997px; margin-left:-425px;}
+
+
+
+#container {position:relative; top:30px;} 
+#contentsWrap {overflow:hidden; width:990px; margin:0 auto;}
+
+#lnbWrap {float:left; width:197px; padding-bottom:80px;}
+#lnbWrap h2 {position:absolute; top:10px; width:197px; text-align:center; font-size:26px; font-weight:bold; letter-spacing:-0.03em;}
+#lnbWrap .lnb { padding-top:60px; margin-bottom:30px;}
+#lnbWrap .lnb > li > a {display:block; height:43px; padding-left:32px; font-size:15px;font-weight:bold; line-height:42px;}
+#lnbWrap .lnb > li.on > a {font-weight:bold;}
+#lnbWrap .lnb > li > a:hover {font-weight:bold;}
+
+#lnbWrap .lnb > li > .depth3 {display:none; padding:17px 0 21px 25px;}
+#lnbWrap .lnb > li > .depth3 > ul {}
+#lnbWrap .lnb > li > .depth3 > ul > li {margin-top:12px;}
+#lnbWrap .lnb > li > .depth3 > ul > li:first-child {margin-top:0;}
+#lnbWrap .lnb > li > .depth3 > ul > li > a {display:block; padding-left:12px; font-size:13px;}
+#lnbWrap .lnb > li > .depth3 > ul > li.on > a, #lnbWrap .lnb > li > .depth3 > ul > li > a:hover {font-weight:bold;}
+#lnbWrap .lnb > li.on > .depth3 {display:block;}
+#lnbWrap .lnbBanner h3{height:30px; padding-top:15px; padding-left:45px; font-size:16px; font-weight:800;  line-height:16px; letter-spacing:-0.03em; }
+#lnbWrap .lnbBanner .sel {padding:3px;margin-bottom:5px; font-size:14px; color:#545454; font-weight:600;}
+#lnbWrap .lnbBanner .inputTxt{ border:0; width:145px; padding:6px; }
+#lnbWrap .lnbBanner .box {width:195px; margin:0 auto; margin-bottom:5px;line-height:22px; }
+#lnbWrap .lnbBanner .viewer {width:197px; text-align:center; height:67px;}
+#lnbWrap .lnbBanner .viewer a {padding:3px;margin-top:25px;}
+
+
+#content {float:right; position:relative; width:750px; min-height:400px; padding:0px 0 200px; font-size:13px;}
+#content h3 { font-weight:bold; font-size:36px;  letter-spacing:-0.03em; line-height:70px;}
+#content .iconWrap {position:absolute; top:50px; right:10px; overflow:hidden;}
+#content .iconWrap a {float:left; margin-left:3px;}
+#content .location {position:absolute; top:70px; left:0;}
+#content .location .home {*position:relative; *top:4px; text-indent: -9999px; width:12px; height:10px;}
+#content .location .arrow {margin:0 6px;}
+#content .location .now {font-weight:bold;}
+
+#footerWrap {height:140px; margin-top:10px; width:100%;}
+#footer {position:relative; width:990px; margin:0 auto;padding-top:15px; }
+#footer .btnSns {position:absolute; bottom:0px; right:35px;}
+#footer .btnSns2 {position:absolute; bottom:0px; right:10px;}
+#footer .ftLogo {position:absolute;left:20px; top:25px; }
+
+#footer .ftMenu {height:15px;}
+#footer .ftMenu li {float:left; padding-right:10px;padding-left:10px; }
+#footer .ftMenu li:first-child {margin-left:240px;padding-left:0px;}
+#footer .ftMenu li a {font-size:11px; font-weight:bold; line-height:37px;}
+#footer address {margin-left:240px; margin-top:25px;line-height:18px;}
+#footer .copyright {margin-left:240px; }

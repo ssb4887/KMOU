@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.commonDBMSMapper">
+	<sql id="UPDATE_ADD_SET">
+		<if test="dataList != null">
+			<foreach collection="dataList" item="dataItem" index="i">
+				<if test="dataItem != null">
+					, ${dataItem.columnId} = 
+					<choose>
+						<when test="@com.woowonsoft.egovframework.util.MybatisUtil@isEmpty(dataItem.columnValue)">NULL</when>
+						<when test="dataItem.columnFlag == 1">${dataItem.columnValue}</when>
+						<when test="dataItem.columnFlag == 2">'${dataItem.columnValue}'</when>
+						<otherwise>#{dataItem.columnValue}<if test="dataItem.columnClob == 1">:CLOB</if></otherwise>
+					</choose>
+				</if>
+			</foreach>
+		</if>
+	</sql>
+	<sql id="INC_WHERE_COLUMNIDS">
+		<foreach collection="searchItem.columnIds" item="columnId" index="i" separator=" || " open="(" close=")">
+			${columnId}
+		</foreach>
+	</sql>
+	
+	<sql id="searchMaxDateYYYY-MM-DDHH24:MI:SS">
+		<bind name="smaxDateValue" value="searchItem.columnValue + ' 23:59:59'"/>
+		TO_DATE(#{smaxDateValue}, 'YYYY-MM-DD HH24:MI:SS')
+	</sql>
+	<sql id="searchMinDateYYYY-MM-DDHH24:MI:SS">
+		<bind name="sminDateValue" value="searchItem.columnValue + ' 00:00:00'"/>
+		TO_DATE(#{sminDateValue}, 'YYYY-MM-DD HH24:MI:SS')
+	</sql>
+	<sql id="dataDateYYYY-MM-DD">TO_CHAR(${dateColumnId}, 'YYYY-MM-DD')</sql>
+	<sql id="nullFn">NVL</sql>
+	<sql id="currentDate">SYSDATE</sql>
+	<sql id="currentDateYYYY-MM-DDHH24MI">TO_CHAR(<include refid="rbs.commonDBMSMapper.currentDate"/>, 'YYYY-MM-DDHH24MI')</sql>
+	<sql id="currentDateYYYY-MM-DD">TO_CHAR(<include refid="rbs.commonDBMSMapper.currentDate"/>, 'YYYY-MM-DD')</sql>
+	<sql id="currentDateYYYY">TO_CHAR(<include refid="rbs.commonDBMSMapper.currentDate"/>, 'YYYY')</sql>
+	<sql id="currentDateMM">TO_CHAR(<include refid="rbs.commonDBMSMapper.currentDate"/>, 'MM')</sql>
+	<sql id="currentDateDD">TO_CHAR(<include refid="rbs.commonDBMSMapper.currentDate"/>, 'DD')</sql>
+	<sql id="currentDateHH24">TO_CHAR(<include refid="rbs.commonDBMSMapper.currentDate"/>, 'HH24')</sql>
+	<sql id="PAGING_TOP"><if test="lastIndex != null and lastIndex > 0">SELECT * FROM ( SELECT rownum rn, TB.* FROM (</if></sql>
+	<sql id="PAGING_BOTTOM"><if test="lastIndex != null and lastIndex > 0">) TB ) WHERE rn BETWEEN #{firstIndex} + 1 AND #{lastIndex}</if></sql>
+</mapper>

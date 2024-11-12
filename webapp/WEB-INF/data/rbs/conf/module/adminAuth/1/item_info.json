@@ -1,0 +1,193 @@
+{
+	"item_info":{
+		"items":{
+			"authName":{
+				"item_id":"authName"
+				,"column_id":"AUTH_NAME"
+				,"item_name":"권한명"
+				,"item_name_ko":"권한명"
+				,"item_name_en":"authName"
+				,"required_write":1
+				,"required_modify":1
+				,"format_type":0
+				,"object_type":0
+				,"object_style":"width:500px;"
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"maximum":100
+			},"remarks":{
+				"item_id":"remarks"
+				,"column_id":"REMARKS"
+				,"item_name":"비고"
+				,"item_name_ko":"비고"
+				,"item_name_en":"remarks"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":1
+				,"maximum":1000
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			}, "mbrUtp":{
+				"item_name":"사용자유형"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":2
+				, "option_type":1
+				, "master_code":"adm"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "mbrGrp":{
+				"item_name":"사용자그룹"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":11
+				, "option_type":2
+				, "onclick":"fn_mbrGrpListSearchForm(this)"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "mbrDpt":{
+				"item_name":"사용자부서"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":11
+				, "option_type":3
+				, "onclick":"fn_mbrDptListSearchForm(this)"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "mbrMbr":{
+				"item_name":"사용자회원"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":11
+				, "option_type":8
+				, "onclick":"fn_mbrMbrListSearchForm(this)"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}
+
+		}, "list_order":[
+			"authName"
+			,"remarks"
+		], "write_order":[
+			"authName"
+			,"remarks"
+			,"mbrUtp"
+			,"mbrGrp"
+			,"mbrDpt"
+			,"mbrMbr"
+		]
+		, "writeproc_order":[
+			"authName"
+			,"remarks"
+		]
+		, "modify_order":[
+			"authName"
+			,"remarks"
+			,"mbrUtp"
+			,"mbrGrp"
+			,"mbrDpt"
+			,"mbrMbr"
+		]
+		, "modifyproc_order":[
+			"authName"
+			,"remarks"
+		]
+		, "list_search":{
+			"key":{
+				"items":{
+					"authName":{
+						"column_id":"AUTH_NAME"
+						, "item_name":"권한명"
+						, "format_type":0
+						, "object_type":0
+						, "style_width":200
+
+					}
+				}
+			}, "searchForm_order":[
+				"authName"
+			], "search_order":[
+				"authName"
+			]
+		}
+	}, "menu_item_info":{
+		"items":{
+			"menuUtp":{
+				"item_id":"menuUtp"
+				,"column_id":"USERTYPE_IDX"
+				,"item_name":"등급지정"
+				,"item_name_ko":"등급지정"
+				,"item_name_en":"등급지정"
+				,"format_type":0
+				,"object_type":2
+				,"option_type":1
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			}
+			,"menuGrp":{
+				"item_id":"menuGrp"
+				,"column_id":"GROUP_IDXS"
+				,"item_name":"그룹지정"
+				,"item_name_ko":"그룹지정"
+				,"item_name_en":"그룹지정"
+				,"format_type":0
+				, "object_type":11
+				, "option_type":2
+				, "onclick":"fn_mbrGrpListSearchForm(this)"
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			}
+			,"menuDpt":{
+				"item_id":"menuDpt"
+				,"column_id":"DEPART_IDXS"
+				,"item_name":"부서지정"
+				,"item_name_ko":"부서지정"
+				,"item_name_en":"부서지정"
+				,"format_type":0
+				, "object_type":11
+				, "option_type":3
+				, "onclick":"fn_mbrDptListSearchForm(this)"
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			}
+			,"menuMbr":{
+				"item_id":"menuMbr"
+				,"column_id":"MEMBER_IDXS"
+				,"item_name":"사용자지정"
+				,"item_name_ko":"사용자지정"
+				,"item_name_en":"사용자지정"
+				,"format_type":0
+				, "object_type":11
+				, "option_type":8
+				, "onclick":"fn_mbrMbrListSearchForm(this)"
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			}
+		},"modify_order":[
+			"menuUtp"
+			,"menuGrp"
+			,"menuDpt"
+			,"menuMbr"
+		],"modifyproc_order":[
+			"menuUtp"
+			,"menuGrp"
+			,"menuDpt"
+			,"menuMbr"
+		]
+	}
+}

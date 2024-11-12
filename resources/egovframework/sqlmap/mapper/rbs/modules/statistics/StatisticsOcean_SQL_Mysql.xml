@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="rbs.modules.statistics.statisticsOceanMapper">
+
+	<select id="getNonSbjtName" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			TITLE AS NM,
+			#{CNT} AS CNT,
+			#{PER} AS PER
+		FROM 
+			im_eco_program_table
+		WHERE IDX = #{DOC_ID}
+	</select>
+
+
+</mapper>            

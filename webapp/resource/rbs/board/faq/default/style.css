@@ -1,0 +1,10 @@
+@charset "utf-8";
+@import url('../../common.css');
+
+/* faq 게시판 */
+#cms_board_article .fn_faq_list{clear:both;margin:10px 0 20px;border-top:#66747e 2px solid;}
+#cms_board_article .fn_faq_list dl{background:#f9f9f9;border-bottom:1px solid #d2d2d2;}
+#cms_board_article .fn_faq_list dt{padding:10px 10px 10px 30px;background:#fff url(./images/icon_q.gif) 10px 14px no-repeat;}
+#cms_board_article .fn_faq_list dd{padding:10px 10px 10px 30px;background:#f9f9f9 url(./images/icon_a.gif) 10px 14px no-repeat;border-top:1px dotted #ccc}
+#cms_board_article .faqList .btnMore{display:block;width:80px;height:20px;margin-top:21px;padding:0 14px 0 8px;background:#66747e url(./images/tiny.gif) 87px -294px no-repeat;color:#fff;font-size:11px;line-height:21px;cursor:pointer;}
+

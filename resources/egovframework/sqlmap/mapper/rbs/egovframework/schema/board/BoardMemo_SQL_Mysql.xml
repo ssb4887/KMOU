@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.egovframework.schema.board.memo.schemaMapper">
+	
+	<update id="allDropTable" parameterType="java.util.HashMap">
+		CALL PRC_BOARD_MEMO_DROP_TABLE(#{fnIdx}) 
+	</update>
+	<update id="allCreateTable" parameterType="java.util.HashMap">
+		CALL PRC_BOARD_MEMO_CREATE_TABLE(#{fnIdx}, #{fnName}) 
+	</update>
+</mapper>            

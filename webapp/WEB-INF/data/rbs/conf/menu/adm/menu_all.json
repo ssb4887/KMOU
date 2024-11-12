@@ -1,0 +1,455 @@
+{
+	"site_info": {
+		"site_copyright": "",
+		"local_path": "/RBISADM",
+		"include_bottom": "/include/bottom.jsp",
+		"include_top": "/include/top.jsp",
+		"locale_lang": "ko",
+		"site_id": "RBISADM",
+		"site_name": "통합관리 시스템",
+		"site_title": "해양대학교",
+		"usertype_idx": 0,
+		"version": 1
+	},
+	"menus": {
+		"menu1": {
+			"menu_idx": 1,
+			"menu_name": "메인",
+			"menu_link": "/RBISADM/dashboard/dashboard.do?mId=1",
+			"include_top": "/include/main_top.jsp",
+			"include_bottom": "/include/main_bottom.jsp",
+			"isdelete": 0,
+			"ishidden": 0,
+			"usertype_idx": 10
+		},
+		"menu3": {
+			"menu_idx": 3,
+			"menu_name": "로그인",
+			"menu_link": "/RBISADM/login/login.do?mId=3",
+			"module_id": "login",
+			"conf_module": "member",
+			"fn_idx": 1,
+			"usertype_idx": 0,
+			"include_top": "/include/login_top.jsp",
+			"include_bottom": "/include/login_bottom.jsp"
+		},
+		"menu4": {
+			"menu_idx": 4,
+			"menu_name": "로그아웃",
+			"menu_link": "/RBISADM/logout/logout.do?mId=4",
+			"module_id": "login",
+			"conf_module": "member",
+			"fn_idx": 1,
+			"usertype_idx": 0
+		},
+		"menu5": {
+			"menu_idx": 5,
+			"menu_name": "내정보수정",
+			"menu_link": "/RBISADM/memberAn/myInfo.do?mId=5",
+			"module_id": "memberAn",
+			"conf_module": "member",
+			"fn_idx": 1,
+			"usertype_idx": 45
+		},
+		"menu30": {
+			"menu_idx": 30,
+			"menu_name": "사이트선택",
+			"menu_link": "/RBISADM/website/selectProc.do?mId=30",
+			"module_id": "website",
+			"fn_idx": 1,
+			"usertype_idx": 45
+		},
+		"menu10": {
+			"menu_idx": 10,
+			"menu_name": "메뉴관리",
+			"menu_link": "/RBISADM/menuContents/main.do?mId=10",
+			"module_id": "menuContents",
+			"usertype_idx": 45
+		},
+		"menu32": {
+			"menu_idx": 32,
+			"menu_name": "사이트 관리",
+			"menu_link": "/RBISADM/website/manage.do?mId=46",
+			"usertype_idx": 49,
+			"flag5": "1"
+		},
+		"menu46": {
+			"menu_idx": 46,
+			"menu_name": "운영정보",
+			"menu_link": "/RBISADM/website/manage.do?mId=46",
+			"module_id": "websiteMng",
+			"conf_module": "website",
+			"fn_idx": 1,
+			"usertype_idx": 45,
+			"an_ishidden" : "1"
+		},
+		"menu43": {
+			"menu_idx": 43,
+			"menu_name": "배너관리",
+			"menu_link": "/RBISADM/banner/list.do?mId=43",
+			"module_id": "banner",
+			"usertype_idx": 45
+		},
+		"menu31": {
+			"menu_idx": 31,
+			"menu_name": "시스템관리",
+			"menu_link": "/RBISADM/menu/setting.do?mId=42",
+			"usertype_idx": 49,
+			"flag5": "1"
+		},
+		"menu42": {
+			"menu_idx": 42,
+			"menu_name": "메뉴 관리",
+			"menu_link": "/RBISADM/menu/setting.do?mId=42",
+			"module_id": "menu",
+			"fn_idx": 1,
+			"usertype_idx": 45
+		},
+		"menu35": {
+			"menu_idx": 35,
+			"menu_name": "기능관리",
+			"menu_link": "/RBISADM/moduleFn/list.do?mId=50",
+			"usertype_idx": 49,
+			"an_ishidden" : "1"
+		},
+		"menu50": {
+			"menu_idx": 50,
+			"menu_name": "기능등록관리",
+			"menu_link": "/RBISADM/moduleFn/list.do?mId=50",
+			"module_id": "moduleFn",
+			"conf_module": "module",
+			"cont_smodule": "fn",
+			"fn_idx": 1,
+			"usertype_idx": 49
+		},
+		"menu51": {
+			"menu_idx": 51,
+			"menu_name": "기능권한관리",
+			"menu_link": "/RBISADM/moduleAuth/list.do?mId=51",
+			"module_id": "moduleAuth",
+			"conf_module": "module",
+			"cont_smodule": "auth",
+			"fn_idx": 1,
+			"usertype_idx": 49
+		},
+		"menu52": {
+			"menu_idx": 52,
+			"menu_name": "기능코드관리",
+			"menu_link": "/RBISADM/code/list.do?mId=52",
+			"module_id": "code",
+			"fn_idx": 1,
+			"attr_flag": 1,
+			"module_auth": 1,
+			"usertype_idx": 45
+		},
+		"menu53": {
+			"menu_idx": 53,
+			"menu_name": "기능분류관리",
+			"menu_link": "/RBISADM/itemClass/list.do?mId=53",
+			"module_id": "itemClass",
+			"fn_idx": 1,
+			"usertype_idx": 49
+		},
+		"menu54": {
+			"menu_idx": 54,
+			"menu_name": "사용자관리",
+			"menu_link": "/RBISADM/member/list.do?mId=54",
+			"module_id": "member",
+			"is_hidden": 1,
+			"fn_idx": 1,
+			"usertype_idx": 49
+		},
+		"menu55": {
+			"menu_idx": 55,
+			"menu_name": "관리자권한 관리",
+			"menu_link": "/RBISADM/memberAn/list.do?mId=55",
+			"module_id": "memberAn",
+			"conf_module": "member",
+			"fn_idx": 1,
+			"usertype_idx": 49,
+			"an_ishidden" : "1"
+		},
+		"menu56": {
+			"menu_idx": 56,
+			"menu_name": "사용자유형관리",
+			"menu_link": "/RBISADM/usertype/list.do?mId=56",
+			"module_id": "usertype",
+			"conf_module": "member",
+			"fn_idx": 1,
+			"usertype_idx": 49,
+			"an_ishidden" : "1"
+		},
+		"menu57": {
+			"menu_idx": 57,
+			"menu_name": "사용자그룹관리",
+			"menu_link": "/RBISADM/group/list.do?mId=57",
+			"module_id": "group",
+			"conf_module": "member",
+			"fn_idx": 1,
+			"usertype_idx": 49,
+			"an_ishidden" : "1"
+		},
+		"menu58": {
+			"menu_idx": 58,
+			"menu_name": "사용자부서관리",
+			"menu_link": "/RBISADM/depart/list.do?mId=58",
+			"module_id": "depart",
+			"conf_module": "member",
+			"fn_idx": 1,
+			"usertype_idx": 49,
+			"an_ishidden" : "1"
+		},
+		"menu65": {
+			"menu_idx": 65,
+			"menu_name": "관리자통계",
+			"menu_link": "/RBISADM/stats/admSiteList.do?mId=66",
+			"usertype_idx": 45
+		},
+		"menu66": {
+			"menu_idx": 66,
+			"menu_name": "방문수",
+			"menu_link": "/RBISADM/stats/admSiteList.do?mId=66",
+			"module_id": "contactSite",
+			"conf_module": "contact",
+			"fn_idx": 1,
+			"usertype_idx": 45
+		},
+		"menu67": {
+			"menu_idx": 67,
+			"menu_name": "페이지뷰",
+			"menu_link": "/RBISADM/stats/admPageList.do?mId=67",
+			"module_id": "contactPage",
+			"conf_module": "contact",
+			"fn_idx": 1,
+			"usertype_idx": 45
+		},
+		"menu68": {
+			"menu_idx": 68,
+			"menu_name": "방문당 페이지뷰",
+			"menu_link": "/RBISADM/stats/admSitePageList.do?mId=68",
+			"module_id": "contactSitePage",
+			"conf_module": "contact",
+			"fn_idx": 1,
+			"usertype_idx": 45
+		},
+		"menu69": {
+			"menu_idx": 69,
+			"menu_name": "메뉴별 접속자수",
+			"menu_link": "/RBISADM/stats/admMenuList.do?mId=69",
+			"module_id": "contactMenu",
+			"conf_module": "contact",
+			"fn_idx": 1,
+			"usertype_idx": 45
+		},
+		"menu70": {
+			"menu_idx": 70,
+			"menu_name": "현재접속자",
+			"menu_link": "/RBISADM/stats/admUserList.do?mId=70",
+			"module_id": "contactUser",
+			"fn_idx": 1,
+			"usertype_idx": 45
+		},
+		"menu77": {
+			"menu_idx": 77,
+			"menu_name": "접속로그",
+			"menu_link": "/RBISADM/log/mlLogList.do?mId=77",
+			"module_id": "mlLog",
+			"conf_module": "log",
+			"fn_idx": 1,
+			"usertype_idx": 45
+		},
+		"menu38": {
+			"menu_idx": 38,
+			"menu_name": "환경설정",
+			"menu_link": "/RBISADM/code/list.do?mId=59",
+			"usertype_idx": 45,
+			"an_ishidden" : "1"
+		},
+		"menu59": {
+			"menu_idx": 59,
+			"menu_name": "기초코드관리",
+			"menu_link": "/RBISADM/code/list.do?mId=59",
+			"module_id": "code",
+			"fn_idx": 1,
+			"usertype_idx": 45
+		},
+		"menu60": {
+			"menu_idx": 60,
+			"menu_name": "관리시스템 권한관리",
+			"menu_link": "/RBISADM/adminAuth/list.do?mId=60",
+			"module_id": "adminAuth",
+			"fn_idx": 1,
+			"usertype_idx": 50,
+			"menu_idx3": 60,
+			"menu_name3": "관리시스템 권한관리",
+			"menu_level": 3,
+			"menu_idx2": 38,
+			"menu_name2": "환경설정",
+			"menu_idx1": 1,
+			"menu_name1": "메인"
+		},
+		"menu33": {
+			"menu_idx": 33,
+			"menu_name": "사이트통계",
+			"menu_link": "/RBISADM/stats/siteList.do?mId=61",
+			"usertype_idx": 45,
+			"flag5": "1"
+		},
+		"menu34": {
+			"menu_idx": 34,
+			"menu_name": "콘텐츠관리",
+			"menu_link": "/RBISADM/contents/list.do?mId=34",
+			"module_id": "contents",
+			"fn_idx": 1,
+			"usertype_idx": 45
+		},
+		"menu37": {
+			"menu_idx": 37,
+			"menu_name": "사이트관리",
+			"menu_link": "/RBISADM/website/manage.do?mId=46",
+			"module_id": "website",
+			"fn_idx": 1,
+			"usertype_idx": 49,
+			"menu_idx2": 37,
+			"menu_name2": "사이트관리",
+			"menu_level": 2
+		},
+		"menu47": {
+			"menu_idx": 47,
+			"menu_name": "메뉴만족도",
+			"menu_link": "/RBISADM/stats/pointList.do?mId=47",
+			"module_id": "menuPoint",
+			"conf_module": "menu",
+			"fn_idx": 1,
+			"usertype_idx": 45,
+			"mauth_manager_closed": 1
+		},
+		"menu48": {
+			"menu_idx": 48,
+			"menu_name": "사용자 접속자수",
+			"menu_link": "/RBISADM/stats/siteList.do?mId=61",
+			"usertype_idx": 45
+		},
+		"menu49": {
+			"menu_idx": 49,
+			"menu_name": "현재접속자",
+			"menu_link": "/RBISADM/stats/userList.do?mId=49",
+			"module_id": "contactUser",
+			"fn_idx": 1,
+			"usertype_idx": 45
+		},
+		"menu61": {
+			"menu_idx": 61,
+			"menu_name": "방문수",
+			"menu_link": "/RBISADM/stats/siteList.do?mId=61",
+			"module_id": "contactSite",
+			"conf_module": "contact",
+			"fn_idx": 1,
+			"usertype_idx": 45
+		},
+		"menu62": {
+			"menu_idx": 62,
+			"menu_name": "페이지뷰",
+			"menu_link": "/RBISADM/stats/pageList.do?mId=62",
+			"module_id": "contactPage",
+			"conf_module": "contact",
+			"fn_idx": 1,
+			"usertype_idx": 45
+		},
+		"menu63": {
+			"menu_idx": 63,
+			"menu_name": "방문당 페이지뷰",
+			"menu_link": "/RBISADM/stats/sitePageList.do?mId=63",
+			"module_id": "contactSitePage",
+			"conf_module": "contact",
+			"fn_idx": 1,
+			"usertype_idx": 45
+		},
+		"menu64": {
+			"menu_idx": 64,
+			"menu_name": "메뉴별 접속자수",
+			"menu_link": "/RBISADM/stats/menuList.do?mId=64",
+			"module_id": "contactMenu",
+			"conf_module": "contact",
+			"fn_idx": 1,
+			"usertype_idx": 45
+		}
+	},
+	"menu-list": [
+		{
+			"menu_idx": 1,
+			"menu-list": [
+				{
+					"menu_idx": 10
+				},
+				{
+					"menu_idx": 31,
+					"menu-list": [
+						{
+							"menu_idx": 32,
+							"menu-list": [
+								{
+									"menu_idx": 45
+								},
+								{
+									"menu_idx": 46
+								}
+							]
+						},
+						{
+							"menu_idx": 44
+						},						
+						{
+							"menu_idx": 42
+						},
+						{
+							"menu_idx": 36,
+							"menu-list": [
+								{
+									"menu_idx": 55
+								},
+								{
+									"menu_idx": 56
+								},
+								{
+									"menu_idx": 57
+								},
+								{
+									"menu_idx": 58
+								}
+							]
+						},						
+						{
+							"menu_idx": 35,
+							"menu-list": [
+								{
+									"menu_idx": 50
+								},
+								{
+									"menu_idx": 51
+								},
+								{
+									"menu_idx": 52
+								},
+								{
+									"menu_idx": 53
+								}
+							]
+						},
+						{
+							"menu_idx": 38,
+							"menu-list": [
+								{
+									"menu_idx": 59
+								},
+								{
+									"menu_idx": 60
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

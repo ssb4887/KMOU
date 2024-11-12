@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+						http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="rbs.dataSource"/>
+	</bean>
+	  
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+	   <tx:attributes>	 
+	       <tx:method name="*" propagation="REQUIRED" rollback-for="Exception"/>
+	   </tx:attributes>
+	</tx:advice>
+	
+	<bean id="martTxManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="martdb.dataSource"/>
+	</bean>
+	  
+	<tx:advice id="martTxAdvice" transaction-manager="martTxManager">
+	   <tx:attributes>	 
+	       <tx:method name="*" propagation="REQUIRED" rollback-for="Exception"/>
+	   </tx:attributes>
+	</tx:advice>
+	
+	<!-- 개발 -->
+	<bean id="martDevTxManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="martdbDev.dataSource"/>
+	</bean>
+	  
+	<tx:advice id="martDevTxAdvice" transaction-manager="martDevTxManager">
+	   <tx:attributes>	 
+	       <tx:method name="*" propagation="REQUIRED" rollback-for="Exception"/>
+	   </tx:attributes>
+	</tx:advice>
+	
+	<bean id="oceanTxManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="oceandb.dataSource"/>
+	</bean>
+	  
+	<tx:advice id="oceanTxAdvice" transaction-manager="oceanTxManager">
+	   <tx:attributes>	 
+	       <tx:method name="*" propagation="REQUIRED" rollback-for="Exception"/>
+	   </tx:attributes>
+	</tx:advice>
+    
+	<aop:config>
+		<aop:pointcut id="requiredTx" expression="execution(* egovframework.com..*Impl.*(..)) or 
+												  execution(* com.woowonsoft..service..*Impl.*(..)) or
+												  execution(* rbs.egovframework.schema.service.BoardServiceImpl.*(..)) or
+												  execution(* rbs.egovframework.service.CodeServiceImpl.*(..)) or
+												  execution(* rbs.egovframework.service.WebsiteServiceImpl.*(..)) or
+												  execution(* rbs.modules..service..*Impl.*(..)) or
+												  execution(* rbs.adm..service..*Impl.*(..)) or
+												  execution(* rbs.usr..service..*Impl.*(..)) or
+												  execution(* egovframework.rte.fdl.excel.impl.*Impl.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="requiredTx" />
+		<aop:advisor advice-ref="martTxAdvice" pointcut-ref="requiredTx" />
+		<aop:advisor advice-ref="martDevTxAdvice" pointcut-ref="requiredTx" />
+		<aop:advisor advice-ref="oceanTxAdvice" pointcut-ref="requiredTx" />
+	</aop:config>
+
+</beans>

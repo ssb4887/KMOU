@@ -1,0 +1,1906 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+			"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mart.main.mainDataOracleMapper">
+
+	<!-- 로그인(종합정보시스템 로그인 Function) -->
+	<select id="loginTis" parameterType="java.util.HashMap" resultType="java.lang.String">
+<!-- 	운영 반영시 무조건 주석 교체!!!!! -->
+<!-- 		SELECT	SUD.AI_LOGIN(#{id}, #{pwd}) -->
+		SELECT 'Y'
+		FROM 	dual
+	</select>
+
+	<!-- 교육과정 -->
+	<select id="selectMyCurriculum" parameterType="java.util.HashMap" resultType="dataMap">
+		WITH APY_YEAR AS(
+			SELECT 		'''' || APY_YEAR || '''' AS APY_YEAR
+			FROM 		SUI070TB
+			WHERE 	    STUDENT_NO = #{STUDENT_NO}
+			GROUP BY 	APY_YEAR
+		)
+		SELECT LISTAGG(APY_YEAR, ', ') WITHIN GROUP (ORDER BY APY_YEAR DESC) AS APY_YEARS
+		FROM APY_YEAR
+<!-- 		WITH CURR AS ( -->
+<!-- 			SELECT 		STUDENT_NO,    -->
+<!-- 					    APY_DEPT_CD, -->
+<!-- 					    APY_MAJOR_CD, -->
+<!-- 					    APY_YEAR   -->
+<!-- 			FROM 		SUI070TB -->
+<!-- 			WHERE 	    STUDENT_NO = #{STUDENT_NO} -->
+<!-- 		) -->
+<!-- 		SELECT DISTINCT A.YEAR AS YEAR -->
+<!-- 					    , A.SMT AS SMT -->
+<!-- 					    , (SELECT UF_GET_SMT_CODESET(A.SMT) FROM dual) AS SMT_NM -->
+<!-- 					    , A.DEPT_CD AS DEPT_CD -->
+<!-- 					    , (SELECT UF_GET_ORG_CODESET('D', A.DEPT_CD) FROM dual) AS DEPT_NM -->
+<!-- 					    , A.COM_GRADE AS COM_GRADE -->
+<!-- 					    , A.SUBJECT_CD AS SUBJECT_CD -->
+<!-- 					    , B.SUBJECT_NM AS SUBJECT_NM -->
+<!-- 					    , A.COMDIV_CODE AS COMDIV_CODE -->
+<!-- 					    , (SELECT UF_GET_COMMON_CODESET(A.COMDIV_CODE) FROM dual) AS COMDIV_NM -->
+<!-- 					    , A.MNRCOM_DIV_CODE AS MNRCOM_DIV_CODE -->
+<!-- 					    , (SELECT UF_GET_COMMON_CODESET(A.MNRCOM_DIV_CODE) FROM dual) AS MNRCOM_DIV_NM -->
+<!-- 					    , A.SINBUN_CODE AS SINBUN_CODE -->
+<!-- 					    , (SELECT UF_GET_COMMON_CODESET(A.SINBUN_CODE) FROM dual) AS SINBUN_NM -->
+<!-- 					    , A.CDT_NUM AS CDT_NUM -->
+<!-- 					    , A.WTIME_NUM AS WTIME_NUM -->
+<!-- 					    , A.PTIME_NUM AS PTIME_NUM -->
+<!-- 					    , A.SISU AS SISU -->
+<!-- 					    , A.COM_CNT AS COM_CNT -->
+<!-- 		FROM 			SUF050TB A, -->
+<!-- 			      		SUF010TB B, -->
+<!-- 			      		CURR -->
+<!-- 		WHERE   		A.SUBJECT_CD = B.SUBJECT_CD(+) -->
+<!-- 			     		AND A.YEAR = CURR.APY_YEAR -->
+<!-- 						AND A.DEPT_CD IN (CURR.APY_MAJOR_CD, CURR.APY_DEPT_CD)  -->
+<!-- 			     		AND A.SINBUN_CODE = 'UD340001' -->
+<!-- 		ORDER BY 		A.DEPT_CD -->
+<!-- 						, A.COM_GRADE -->
+<!-- 						, A.SMT -->
+<!-- 						, A.COMDIV_CODE -->
+<!-- 						, A.SUBJECT_CD -->
+	</select>
+
+	<!-- 메인 : 학생정보 : 기본정보 -->
+	<select id="selectMyInfo" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 				A.STUDENT_NO 						AS STUDENT_NO
+						    , A.NM                      		AS NM
+						    , A.ENM 							AS ENM
+						    , A.COLL_CD                 		AS COLL_CD
+						    , DEPT_CDNM(A.COLL_CD)    			AS COLL_NM
+						    , B.BU_CD                   		AS BU_CD
+			        		<!-- , DECODE(A.SINBUN_CODE , 'UD340001', B.BU_NM, UF_APS_EMPNO_NM(A.EMP_NO,1))  AS BU_NM -->
+							<!-- 20150707 공동지도교수 추가  -> 20200213 대학원 지도교수 교기 학부부전공란에서 분리해서 별도 구성 -->
+							<!-- 20200504 부전공란에 대학원의 경우 융합전공 표기 -->
+						    , DECODE(A.SINBUN_CODE , 'UD340001', B.BU_NM, 'UD340011', B.FUSE_NM)  									AS BU_NM
+						    , UF_APS_EMPNO_NM(A.EMP_NO,1) || NVL2(A.JOINT_EMP_NO, ',' ||UF_APS_EMPNO_NM(A.JOINT_EMP_NO,1) || '(공동지도교수)',NULL) AS PROF_NM
+						    , A.DEG_GB_CODE                     AS DEG_GB_CODE
+						    , COMMON_CDNM(A.DEG_GB_CODE)    	AS DEG_NM
+						    , A.HAKJUK_ST_CODE                  AS HAKJUK_ST_CODE
+						    , COMMON_CDNM(A.HAKJUK_ST_CODE) 	AS HAKJUK_ST_NM
+						    , A.DEPT_CD                         AS DEPT_CD
+						    , DEPT_CDNM(A.DEPT_CD)          	AS DEPT_NM
+						    , B.BOK_CD                          AS BOK_CD 
+							<!-- , DECODE(A.SINBUN_CODE , 'UD340001',B.BOK_NM, A.PRSBJ_CDT) AS BOK_NM -->
+						    , DECODE(A.SINBUN_CODE , 'UD340001',B.BOK_NM)            												AS BOK_NM
+						    , DECODE(A.SINBUN_CODE , 'UD340001',B.FUSE_NM, A.PRSBJ_CDT) 											AS PRSBJ_CDT
+						    , DECODE(A.SINBUN_CODE , 'UD340001',B.LINK_NM, COMMON_CDNM(A.SUF_STS_CODE)) 							AS SUF_STS_NM
+						    , A.GRADE                           AS GRADE
+						    , A.CLASS_CODE                      AS CLASS_CODE
+						    , (SELECT UF_GET_COMMON_CODESET(A.CLASS_CODE) FROM dual) AS CLASS_NM
+						    , UF_SUD_ISU_SMT(A.STUDENT_NO)      AS ISU_SMT
+						    , A.MAJOR_CD                        AS MAJOR_CD
+						    , DEPT_CDNM(A.MAJOR_CD)         	AS MAJOR_NM
+						    , CASE WHEN C.STUDENT_NO IS NOT NULL THEN '신청' ELSE '' END  											AS TEACH_YN2
+						    , DECODE(A.SINBUN_CODE , 'UD340001', DECODE( C.STUDENT_NO, NULL,'', '신청'), A.SUK_CDT) 				AS TEACH_YN
+						    , CASE WHEN C.STUDENT_NO IS NOT NULL THEN 'Y' ELSE 'N' END 												AS TEACH_CD
+						    , CASE WHEN (A.SINBUN_CODE = 'UD340001' AND D.STUDENT_NO IS NOT NULL)  
+						             	OR (A.SINBUN_CODE = 'UD340011' AND E.GRAD_STUDENT_NO IS NOT NULL) THEN '신청' ELSE '' END 	AS DEGLINK_YN
+						    , A.SINBUN_CODE                     AS SINBUN_CODE
+						    , (SELECT UF_GET_COMMON_CODESET(A.SINBUN_CODE) FROM dual) AS SINBUN_NM
+						    , A.ENT_TP_CD                       AS ENT_TP_CD
+						    , (SELECT UF_GET_COMMON_CODESET(A.ENT_TP_CD) FROM dual) AS ENT_TP_NM
+						    , A.ENT_CODE                        AS ENT_CODE
+						    , (SELECT UF_GET_COMMON_CODESET(A.ENT_CODE) FROM dual) AS ENT_NM
+						    , A.SEX                             AS SEX
+						    , A.CHG_TP_CD                       AS CHG_TP_CD
+						    , (SELECT UF_GET_COMMON_CODESET(A.CHG_TP_CD) FROM dual) AS CHG_TP_NM
+						    , A.CHG_DT                          AS CHG_DT
+						    , A.ENT_DT                          AS ENT_DT
+						    , A.ENT_YEAR                        AS ENT_YEAR
+						    , A.ENT_SMT                         AS ENT_SMT
+						    , (SELECT UF_GET_SMT_CODESET(A.ENT_SMT) FROM dual) AS ENT_SMT_NM
+						    , A.CLASS_GRADE                 	AS CLASS_GRADE
+						    , A.NATION_CODE                 	AS NATION_CODE
+						    , (SELECT UF_GET_COMMON_CODESET(A.NATION_CODE) FROM dual) AS NATION_NM
+						    , A.ENT_GRADE                    	AS ENT_GRADE
+						    , A.GRADE_CODE                 		AS GRADE_CODE
+						    , (SELECT UF_GET_COMMON_CODESET(A.GRADE_CODE) FROM dual) AS GRADE_NM
+			    			, A.STU_CODE                      	AS STU_CODE --2017.05.01 PARKSY ADD
+			    			, (SELECT UF_GET_COMMON_CODESET(A.STU_CODE) FROM dual) AS STU_NM
+							<!-- 20210914 PARKSY 연계,융합전공 부서코드와 신청년도 추가 -->
+						    , B.FUSE_CD                      	AS FUSE_CD
+		                    , B.FUSE_NM                         AS FUSE_NM
+						    , B.FUSE_APY_YEAR                 	AS FUSE_APY_YEAR
+						    , B.LINK_CD                       	AS LINK_CD
+		     		        , B.LINK_NM                         AS LINK_NM
+						    , B.LINK_APY_YEAR                 	AS LINK_APY_YEAR
+						    , CASE WHEN F.STUDENT_NO IS NOT NULL THEN '신청' ELSE '' END	AS MDG_YN
+						    <!-- LDG ADD --> 
+						    , A.EMAIL							AS EMAIL
+						    , A.HP_NO							AS HP_NO
+							, F.MICRODEGREE_CD                  AS MICRODEGREE_CD
+		                    , F.MICRODEGREE_NM                  AS MICRODEGREE_NM
+		FROM SUD010TB A
+		LEFT OUTER JOIN 
+		(  
+			SELECT 			STUDENT_NO
+		                  	, MAX(DECODE(DUP_MAJ_GB, '1', DEPT_CD, '')) BOK_CD
+						    , MAX(DECODE(DUP_MAJ_GB, '2', DEPT_CD, '')) BU_CD
+						    , MAX(DECODE(DUP_MAJ_GB, '3', DEPT_CD, '')) FUSE_CD
+						    , MAX(DECODE(DUP_MAJ_GB, '4', DEPT_CD, '')) LINK_CD
+						    , MAX(DECODE(DUP_MAJ_GB, '1', DEPT_CDNM(DEPT_CD),'')) BOK_NM
+						    , MAX(DECODE(DUP_MAJ_GB, '2', DEPT_CDNM(DEPT_CD),'')) BU_NM
+						    , MAX(DECODE(DUP_MAJ_GB, '3', DEPT_CDNM(DEPT_CD),'')) FUSE_NM
+						    , MAX(DECODE(DUP_MAJ_GB, '4', DEPT_CDNM(DEPT_CD),'')) LINK_NM
+		              		, MAX(DECODE(DUP_MAJ_GB, '3', FUSE_APY_YEAR, '')) FUSE_APY_YEAR <!-- 20210914 PARKSY 연계,융합전공 신청년도 추가 -->
+		              		, MAX(DECODE(DUP_MAJ_GB, '4', FUSE_APY_YEAR, '')) LINK_APY_YEAR <!-- 20210914 PARKSY 연계,융합전공 신청년도 추가 -->
+			FROM 			SUD120TB
+		    WHERE  			CANCEL_DT IS NULL
+		    GROUP BY 		STUDENT_NO
+		) B 				ON A.STUDENT_NO = B.STUDENT_NO 
+		LEFT OUTER JOIN 	SUK040TB C 
+							ON A.STUDENT_NO = C.STUDENT_NO AND C.RSG_DT IS NULL        
+		LEFT OUTER JOIN 	SUD180TB D 
+							ON A.STUDENT_NO = D.STUDENT_NO AND D.RSG_DT IS NULL
+		LEFT OUTER JOIN 	SUD180TB E 
+							ON A.STUDENT_NO = E.GRAD_STUDENT_NO AND E.RSG_DT IS NULL
+		<!-- 20230104 마이크로디그리과정 추가 -->          
+		LEFT OUTER JOIN (
+            SELECT  STUDENT_NO,
+                    LISTAGG(SUD290.MICRODEGREE_CD, ',') WITHIN GROUP (ORDER BY SUD290.MICRODEGREE_CD) AS MICRODEGREE_CD,
+                    LISTAGG(SUD280.MICRODEGREE_NM, ',') WITHIN GROUP (ORDER BY SUD290.MICRODEGREE_CD) AS MICRODEGREE_NM,
+                    MAX(CASE WHEN SUD290.STUDENT_NO IS NOT NULL THEN '신청' ELSE '' END) AS MDG_YN
+            FROM SUD290TB SUD290
+            JOIN SUD280TB SUD280 ON SUD290.MICRODEGREE_CD = SUD280.MICRODEGREE_CD
+            WHERE SUD290.CANCEL_DT IS NULL AND SUD290.ALLOC_CODE = 'UD610002'
+            GROUP BY SUD290.STUDENT_NO
+        ) F ON A.STUDENT_NO = F.STUDENT_NO
+		WHERE  	A.STUDENT_NO = #{STUDENT_NO}
+	</select>
+	
+	<!-- 메인 : 학생정보 : 졸업기준 학점(일반) -->
+	<select id="selectMyGoalCDT" parameterType="java.util.HashMap" resultType="dataMap">
+		WITH STD_INFO AS
+		(
+			SELECT 		MAX(C.STUDENT_NO) AS STUDENT_NO
+						, MAX(C.DEG_GB_CODE) AS DEG_GB_CODE
+						, MAX(C.ENT_YEAR) AS ENT_YEAR
+						, MAX(C.ENT_SMT) AS ENT_SMT
+						, MAX(A.APY_DEPT_CD) AS DEPT_CD
+						, MAX(A.APY_MAJOR_CD) AS MAJOR_CD
+			FROM 		SUI070TB A
+			LEFT JOIN	SUD010TB C
+						ON A.STUDENT_NO = C.STUDENT_NO 
+			WHERE 		A.STUDENT_NO = #{STUDENT_NO}
+			           	AND A.APY_GRADE||A.APY_SMT = 
+			           	(	
+			           		SELECT 	MAX(B.APY_GRADE||B.APY_SMT)
+			                FROM 	SUI070TB B
+			                WHERE 	B.STUDENT_NO = #{STUDENT_NO}
+			                        AND B.APY_DEPT_CD IS NOT NULL
+						)
+		)
+		SELECT 		'학과' AS S_FLAG
+					,NVL(BASE.TOT_CDT,0) AS GRADUATE_CDT
+		FROM 		SUI020TB BASE
+					, STD_INFO TARGET
+		WHERE 		BASE.ENT_YEAR = TARGET.ENT_YEAR
+		           	AND BASE.ENT_SMT = TARGET.ENT_SMT
+		           	AND BASE.DEG_GB_CODE = TARGET.DEG_GB_CODE
+		           	AND BASE.DEPT_CD = TARGET.DEPT_CD
+		UNION ALL
+		SELECT 		'전공' AS S_FLAG
+					, NVL(BASE.TOT_CDT,0) AS GRADUATE_CDT
+		FROM 		SUI020TB BASE
+					, STD_INFO TARGET
+		WHERE 		BASE.ENT_YEAR =  TARGET.ENT_YEAR
+		           	AND BASE.ENT_SMT = TARGET.ENT_SMT
+		           	AND BASE.DEG_GB_CODE = TARGET.DEG_GB_CODE
+		           	AND BASE.DEPT_CD = TARGET.MAJOR_CD
+
+
+	</select>
+	
+	<!-- 메인 : 학생정보 : 졸업기준 학점(편입) -->
+	<select id="selectTransferMyGoalCDT" parameterType="java.util.HashMap" resultType="dataMap">
+		WITH STD_INFO AS
+		(
+			SELECT 	STUDENT_NO
+					, DEG_GB_CODE
+					, ENT_YEAR
+					, ENT_SMT
+					, DEPT_CD
+					, MAJOR_CD
+			FROM	SUD010TB
+			WHERE 	STUDENT_NO = #{STUDENT_NO}
+		)
+		SELECT 		'학과' AS S_FLAG
+					,NVL(BASE.TOT_CDT,0) AS GRADUATE_CDT
+		FROM 		SUI020TB BASE
+					, STD_INFO TARGET
+		WHERE 		BASE.ENT_YEAR = TARGET.ENT_YEAR
+		           	AND BASE.ENT_SMT = TARGET.ENT_SMT
+		           	AND BASE.DEG_GB_CODE = TARGET.DEG_GB_CODE
+		           	AND BASE.DEPT_CD = TARGET.DEPT_CD
+		UNION ALL
+		SELECT 		'전공' AS S_FLAG
+					, NVL(BASE.TOT_CDT,0) AS GRADUATE_CDT
+		FROM 		SUI020TB BASE
+					, STD_INFO TARGET
+		WHERE 		BASE.ENT_YEAR =  TARGET.ENT_YEAR
+		           	AND BASE.ENT_SMT = TARGET.ENT_SMT
+		           	AND BASE.DEG_GB_CODE = TARGET.DEG_GB_CODE
+		           	AND BASE.DEPT_CD = TARGET.MAJOR_CD
+	</select>
+	
+	<!-- 메인 : 학생정보 : 나의 취득학점 -->
+	<select id="selectMyCDT" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 		STUDENT_NO	
+					, SUM(CDT_NUM) CUM_CDT
+		<choose>
+		<when test="HAKJUK_ST == 'UD030005'.toString()">
+		FROM		SUH.SUH120TB
+		</when>
+		<otherwise>
+		FROM		SUH.SUH020TB
+		</otherwise>
+		</choose>
+		WHERE 		STUDENT_NO = #{STUDENT_NO}
+					AND (CONV_MAG IS NULL OR CONV_MAG NOT LIKE 'F%')
+<!-- 					AND (CONV_MAG NOT LIKE 'F%')  -->
+					<!--  AND CONV_MAG <![CDATA[<>]]> 'PS' -->
+		GROUP BY 	STUDENT_NO
+	</select>
+	
+	<!-- 메인 : 학생정보 : 나의 평균성적 -->
+	<select id="selectMyGPA" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT		 S_FLAG
+				     , DECODE(GRADE, 0, '전체', GRADE) AS GRADE
+				     , YEAR
+				     , SMT
+				     , SMT_CODE
+				     , REQ_CDT
+				     , GAIN_CDT
+				     , TOT_GPA
+				     , GPA_AVG
+				     , SMT_TEMP
+				     , STUDENT_NO
+				     , OUT_COLL_CODE
+				     , OUT_COLL_NM
+				     , DEPT_RANK
+				     , WARN_YN
+				     , TO_CHAR(TOTAL_PERCENT, 'FM990.0') AS TOTAL_PERCENT
+				     , DGTIME_NUM
+		FROM 
+		(   
+					SELECT		'N' AS S_FLAG
+						        , 0 AS GRADE
+						        , '' AS YEAR
+						        , '' AS SMT
+						        , '' AS SMT_CODE
+						        , T040.TOT_REQ_CDT AS REQ_CDT
+						        , T040.TOT_GAIN_CDT AS GAIN_CDT
+						        , (T040.TOT_GPA + D.P_SUM_CDT_NUM) AS TOT_GPA
+						        , CASE
+						            WHEN TO_CHAR(ROUND(T040.TOT_GPA_AVG, 2)) != 0 AND TO_CHAR(ROUND(D.P_AVG_CDT_NUM,2)) != 0  THEN
+						                TO_CHAR(ROUND(T040.TOT_GPA_AVG, 2) + ROUND(D.P_AVG_CDT_NUM, 2) / 2 )
+						            WHEN TO_CHAR(ROUND(T040.TOT_GPA_AVG, 2)) = 0 AND TO_CHAR(ROUND(D.P_AVG_CDT_NUM,2)) != 0 THEN
+						                TO_CHAR(ROUND(D.P_AVG_CDT_NUM,2))
+						            WHEN TO_CHAR(ROUND(T040.TOT_GPA_AVG, 2)) != 0 AND TO_CHAR(ROUND(D.P_AVG_CDT_NUM,2)) = 0 THEN
+						                TO_CHAR(ROUND(T040.TOT_GPA_AVG,2))
+						            END AS GPA_AVG
+						        , '' AS SMT_TEMP
+						        , T040.STUDENT_NO AS STUDENT_NO
+						        , '' AS OUT_COLL_CODE
+						        , '' AS OUT_COLL_NM
+						        , T040.GRAD_DEPT_RANK ||DECODE(NVL(T040.GRAD_DEPT_RANK,0),0,'',' / ')|| T040.GRAD_DEPT_MCNT AS DEPT_RANK
+						        , '' AS WARN_YN
+						        , CASE WHEN C.STUDENT_NO IS NOT NULL THEN NULL ELSE H080.SCR END AS TOTAL_PERCENT
+						        , '' AS DGTIME_NUM
+				    FROM 		SUH040TB T040
+				    			, SUH080TB H080
+				    			, (
+				      				SELECT A.STUDENT_NO
+				       				FROM 
+				           			(
+				           				SELECT STUDENT_NO, COUNT(*) AS CNT
+							            FROM SUH020TB
+							            WHERE STUDENT_NO = #{STUDENT_NO}
+							            GROUP BY STUDENT_NO
+							        ) A,
+				           			(
+				           				SELECT STUDENT_NO, COUNT(*) AS CNT
+							            FROM SUH020TB
+							            WHERE STUDENT_NO = #{STUDENT_NO}
+							            AND CONV_MAG = 'PS'
+							            GROUP BY STUDENT_NO
+							        ) B
+									WHERE A.STUDENT_NO = B.STUDENT_NO AND A.CNT = B.CNT
+				       			) C,
+				                (
+				                	SELECT
+                                        NVL(MAX(SUM(CDT_NUM)), 0) AS P_SUM_CDT_NUM,
+                                        NVL(MAX(AVG(CDT_NUM)), 0) AS P_AVG_CDT_NUM,
+                                        NVL(MAX(STUDENT_NO), #{STUDENT_NO}) AS STUDENT_NO
+                                    FROM SUH023TB
+                                    WHERE STUDENT_NO = #{STUDENT_NO}
+                                    GROUP BY STUDENT_NO
+                                ) D
+				    WHERE 		T040.STUDENT_NO = #{STUDENT_NO}
+							    AND T040.STUDENT_NO = C.STUDENT_NO(+)
+							    AND T040.STUDENT_NO = D.STUDENT_NO(+)
+							    AND TRIM(TO_CHAR(ROUND (NVL(T040.TOT_GPA_AVG,0), 2),'0.00'))  BETWEEN H080.FR_GPA AND H080.TO_GPA
+					UNION ALL
+					SELECT		'N' AS S_FLAG
+						        , 0 AS GRADE
+						        , '' AS YEAR
+						        , '' AS SMT
+						        , '' AS SMT_CODE
+						        , T040.TOT_REQ_CDT AS REQ_CDT
+						        , T040.TOT_GAIN_CDT AS GAIN_CDT
+						        , T040.TOT_GPA AS TOT_GPA
+						        , TO_CHAR(ROUND(T040.TOT_GPA_AVG, 2)) AS GPA_AVG
+						        , '' AS SMT_TEMP
+						        , T040.STUDENT_NO AS STUDENT_NO
+						        , '' AS OUT_COLL_CODE
+						        , '' AS OUT_COLL_NM
+						        , T040.GRAD_DEPT_RANK ||DECODE(NVL(T040.GRAD_DEPT_RANK,0),0,'',' / ')|| T040.GRAD_DEPT_MCNT AS DEPT_RANK
+						        , '' AS WARN_YN
+						        , CASE WHEN C.STUDENT_NO IS NOT NULL THEN NULL ELSE H080.SCR END AS TOTAL_PERCENT
+						        , '' AS DGTIME_NUM
+				    FROM 		SUH140TB T040
+				    			, SUH080TB H080
+				    			, (
+				      				SELECT A.STUDENT_NO
+				       				FROM 
+				           			(
+				           				SELECT STUDENT_NO, COUNT(*) AS CNT
+							            FROM SUH120TB
+							            WHERE STUDENT_NO = #{STUDENT_NO}
+							            GROUP BY STUDENT_NO
+							        ) A,
+				           			(
+				           				SELECT STUDENT_NO, COUNT(*) AS CNT
+							            FROM SUH120TB
+							            WHERE STUDENT_NO = #{STUDENT_NO} AND CONV_MAG = 'PS'
+							            GROUP BY STUDENT_NO
+							        ) B
+									WHERE A.STUDENT_NO = B.STUDENT_NO AND A.CNT = B.CNT
+								) C
+				    WHERE 		T040.STUDENT_NO = #{STUDENT_NO}
+				    			AND T040.STUDENT_NO = C.STUDENT_NO(+)
+				    			AND TRIM(TO_CHAR(ROUND (NVL(T040.TOT_GPA_AVG,0), 2),'0.00'))  BETWEEN H080.FR_GPA AND H080.TO_GPA
+					UNION ALL
+					SELECT		'N' AS S_FLAG
+							    , 0 AS GRADE
+							    , '' AS YEAR
+							    , '' AS SMT
+							    , '' AS SMT_CODE
+							    , T040.TOT_REQ_CDT AS REQ_CDT
+							    , T040.TOT_GAIN_CDT AS GAIN_CDT
+							    , T040.TOT_GPA AS TOT_GPA
+							    , TO_CHAR(ROUND(T040.TOT_GPA_AVG, 2)) AS GPA_AVG
+							    , '' AS SMT_TEMP
+							    , T040.STUDENT_NO AS STUDENT_NO
+							    , '' AS OUT_COLL_CODE
+							    , '' AS OUT_COLL_NM
+							    , T040.GRAD_DEPT_RANK ||DECODE(NVL(T040.GRAD_DEPT_RANK,0),0,'',' / ')|| T040.GRAD_DEPT_MCNT AS DEPT_RANK
+							    , '' AS WARN_YN
+							    , 0 TOTAL_PERCENT
+							    , '' AS DGTIME_NUM
+					FROM 		SUH240TB T040
+					WHERE 		STUDENT_NO = #{STUDENT_NO}
+								AND NOT EXISTS (SELECT STUDENT_NO FROM SUH040TB H040 WHERE H040.STUDENT_NO = T040.STUDENT_NO)
+					UNION ALL
+					SELECT 		'N' AS S_FLAG
+						        , A.GRADE AS GRADE
+						        , A.YEAR AS YEAR
+						        , (SELECT UF_GET_SMT_CODESET(A.SMT) FROM dual) AS SMT
+						        , A.SMT AS SMT_CODE
+						        , A.REQ_CDT AS REQ_CDT
+						        , A.GAIN_CDT AS GAIN_CDT
+						        , CASE WHEN A.TOT_GPA = 0 AND A.SMT = 'GH0205' THEN (SELECT SUM(CDT_NUM) FROM SUH023TB WHERE STUDENT_NO = #{STUDENT_NO}) ELSE A.TOT_GPA END AS TOT_GPA
+						        , CASE WHEN TO_CHAR(ROUND(A.GPA_AVG,2)) = '0' AND A.SMT = 'GH0205' THEN (TO_CHAR(ROUND((SELECT AVG(CDT_NUM) FROM SUH023TB WHERE STUDENT_NO = #{STUDENT_NO})))) ELSE TO_CHAR(ROUND(A.GPA_AVG,2)) END AS GPA_AVG
+						        , A.SMT AS SMT_TEMP
+						        , A.STUDENT_NO AS STUDENT_NO
+						        , A.OUT_COLL_CODE AS OUT_COLL_CODE
+						        , B.NM AS OUT_COLL_NM
+						        , A.DEPT_RANK ||DECODE(NVL(A.DEPT_RANK,0),0,'',' / ')|| A.DEPT_MCNT AS DEPT_RANK
+						        , DECODE( A.WARN_YN, 'Y','학사경고','') AS WARN_YN
+						        , CASE WHEN C.STUDENT_NO IS NOT NULL THEN NULL ELSE H080.SCR END AS TOTAL_PERCENT
+						        , '' AS DGTIME_NUM
+		  			FROM 		SUH030TB A
+		  						, SYS020TB B
+		  						, SUH080TB H080
+		  						, (
+									SELECT A.YEAR, A.SMT, A.STUDENT_NO
+		       						FROM 
+		           					(
+		           						SELECT YEAR, SMT, STUDENT_NO, COUNT(*) AS CNT
+							            FROM SUH020TB
+							            WHERE STUDENT_NO = #{STUDENT_NO}
+							            GROUP BY YEAR, SMT, STUDENT_NO
+							        ) A,
+		           					(
+		           						SELECT YEAR, SMT, STUDENT_NO, COUNT(*) AS CNT
+							            FROM SUH020TB
+							            WHERE STUDENT_NO = #{STUDENT_NO} AND CONV_MAG = 'PS'
+							            GROUP BY YEAR, SMT, STUDENT_NO
+							        ) B
+		       						WHERE A.YEAR = B.YEAR AND A.SMT = B.SMT AND A.STUDENT_NO = B.STUDENT_NO AND A.CNT = B.CNT
+		       					) C
+		 			WHERE 		A.STUDENT_NO = #{STUDENT_NO}
+							    AND A.OUT_COLL_CODE = B.CODE
+							    AND A.YEAR = C.YEAR(+)
+							    AND A.SMT = C.SMT(+)
+							    AND A.STUDENT_NO = C.STUDENT_NO(+)
+		   						AND TRIM(TO_CHAR(ROUND (NVL(A.GPA_AVG,0), 2),'0.00')) BETWEEN H080.FR_GPA AND H080.TO_GPA
+					UNION ALL
+					SELECT 		'N' AS S_FLAG
+						        , A.GRADE AS GRADE
+						        , A.YEAR AS YEAR
+						        , (SELECT UF_GET_SMT_CODESET(A.SMT) FROM dual) AS SMT
+						        , A.SMT AS SMT_CODE
+						        , A.REQ_CDT AS REQ_CDT
+						        , A.GAIN_CDT AS GAIN_CDT
+						        , A.TOT_GPA AS TOT_GPA
+						        , TO_CHAR(ROUND(A.GPA_AVG,2)) AS GPA_AVG
+						        , A.SMT AS SMT_TEMP
+						        , A.STUDENT_NO AS STUDENT_NO
+						        , A.OUT_COLL_CODE AS OUT_COLL_CODE
+						        , B.NM AS OUT_COLL_NM
+						        , A.DEPT_RANK ||DECODE(NVL(A.DEPT_RANK,0),0,'',' / ')|| A.DEPT_MCNT AS DEPT_RANK
+						        , DECODE( A.WARN_YN, 'Y','학사경고','') AS WARN_YN
+						        , CASE WHEN C.STUDENT_NO IS NOT NULL THEN NULL ELSE H080.SCR END AS TOTAL_PERCENT
+						        , '' AS DGTIME_NUM
+		  			FROM 		SUH130TB A
+		  						, SYS020TB B
+		  						, SUH080TB H080
+		  						, (
+		  							SELECT A.YEAR, A.SMT, A.STUDENT_NO
+		       						FROM 
+									(
+										SELECT YEAR, SMT, STUDENT_NO, COUNT(*) AS CNT
+							            FROM SUH120TB
+							            WHERE STUDENT_NO = #{STUDENT_NO}
+							            GROUP BY YEAR, SMT, STUDENT_NO
+							        ) A,
+		           					(
+		           						SELECT YEAR, SMT, STUDENT_NO, COUNT(*) AS CNT
+							            FROM SUH120TB
+							            WHERE STUDENT_NO = #{STUDENT_NO} AND CONV_MAG = 'PS'
+							            GROUP BY YEAR, SMT, STUDENT_NO
+							        ) B
+							       WHERE A.YEAR = B.YEAR AND A.SMT = B.SMT AND A.STUDENT_NO = B.STUDENT_NO AND A.CNT = B.CNT
+								) C
+		 			WHERE 		A.STUDENT_NO = #{STUDENT_NO}
+		   						AND A.OUT_COLL_CODE = B.CODE
+							    AND A.YEAR = C.YEAR(+)
+							    AND A.SMT = C.SMT(+)
+							    AND A.STUDENT_NO = C.STUDENT_NO(+)
+							    AND TRIM(TO_CHAR(ROUND (NVL(A.GPA_AVG,0), 2),'0.00')) BETWEEN H080.FR_GPA AND H080.TO_GPA
+					UNION ALL
+					SELECT 		'N' AS S_FLAG
+						        , A.GRADE AS GRADE
+						        , A.YEAR AS YEAR
+						        , (SELECT UF_GET_SMT_CODESET(A.SMT) FROM dual) AS SMT
+						        , A.SMT AS SMT_CODE
+						        , A.REQ_CDT AS REQ_CDT
+						        , A.GAIN_CDT AS GAIN_CDT
+						        , A.TOT_GPA AS TOT_GPA
+						        , TO_CHAR(A.GPA_AVG) AS GPA_AVG
+						        , A.SMT AS SMT_TEMP
+						        , A.STUDENT_NO AS STUDENT_NO
+						        , A.OUT_COLL_CODE AS OUT_COLL_CODE
+						        , B.NM AS OUT_COLL_NM
+						        , A.DEPT_RANK ||DECODE(NVL(A.DEPT_RANK,0),0,'',' / ')|| A.DEPT_MCNT AS DEPT_RANK
+						        , DECODE( A.WARN_YN, 'Y','학사경고','') AS WARN_YN
+						        , 0 TOTAL_PERCENT
+						        , TO_CHAR(A.DGTIME_NUM) AS DGTIME_NUM
+		  			FROM 		SUH230TB A
+		  						, SYS020TB B
+		 			WHERE 		A.STUDENT_NO = #{STUDENT_NO}
+		   						AND A.OUT_COLL_CODE = B.CODE
+		   						AND NOT EXISTS (SELECT STUDENT_NO FROM SUH030TB H WHERE H.STUDENT_NO = A.STUDENT_NO)
+					ORDER BY 	YEAR DESC, SMT_CODE DESC
+		)
+	</select>
+	
+	<!-- 메인 : 학생정보 : 학점 상세 -->
+	<select id="selectMyCdtDetail" parameterType="java.util.HashMap" resultType="dataMap">
+<!-- 		SELECT 		STUDENT_NO							 -->
+<!-- 					, COMDIV_NM							 -->
+<!-- 					, ROUND(SUM(GPA)/COUNT(GPA), 1) AS CDT_CNT	 -->
+<!-- 		<choose>	 -->
+<!-- 		<when test="HAKJUK_ST == 'UD030005'.toString()"> -->
+<!-- 		FROM		SUH.SUH120TB -->
+<!-- 		</when> -->
+<!-- 		<otherwise> -->
+<!-- 		FROM		SUH.SUH020TB -->
+<!-- 		</otherwise> -->
+<!-- 		</choose> -->
+<!-- 		WHERE 		STUDENT_NO = #{STUDENT_NO} -->
+<!-- 					AND (CONV_MAG IS NULL OR CONV_MAG NOT LIKE 'F%') -->
+<!-- 					AND CONV_MAG != 'PS' -->
+<!-- 		GROUP BY	STUDENT_NO  -->
+<!-- 					, COMDIV_CODE -->
+<!-- 					, COMDIV_NM -->
+<!-- 		ORDER BY 	COMDIV_CODE -->
+
+			SELECT STUDENT_NO ,COMDIV_NM, (SUM(CDT_CNT)/COUNT(CDT_CNT)) AS CDT_CNT FROM (SELECT STUDENT_NO
+			                    , COMDIV_NM
+			                    , ROUND(SUM(GPA) / COUNT(GPA), 1) AS CDT_CNT
+			               FROM 												    
+			               <choose>
+								<when test="HAKJUK_ST == 'UD030005'.toString()">
+									SUH.SUH120TB
+								</when>
+								<otherwise>
+									SUH.SUH020TB
+								</otherwise>
+							</choose>
+			               WHERE STUDENT_NO = #{STUDENT_NO}
+			                 AND (CONV_MAG IS NULL OR CONV_MAG NOT LIKE 'F%')
+			                 AND CONV_MAG != 'PS'
+			               GROUP BY STUDENT_NO
+			                      , COMDIV_CODE
+			                      , COMDIV_NM
+<!-- 편입생 인정학점은 평균에서 제외 처리 -->			                      
+<!-- 			               UNION ALL -->
+<!-- 			               SELECT STUDENT_NO -->
+<!-- 			                    , (SELECT NM FROM SCO.SYS020TB WHERE CODE = COMDIV_CODE) AS COMDIV_NM -->
+<!-- 			                    , ROUND(SUM(CDT_NUM) / COUNT(CDT_NUM), 1)                AS CDT_CNT -->
+<!-- 			               FROM SUH.SUH023TB -->
+<!-- 			               WHERE STUDENT_NO = #{STUDENT_NO} -->
+<!-- 			                 AND CDT_NUM IS NOT NULL -->
+<!-- 			               GROUP BY STUDENT_NO -->
+<!-- 			                      , COMDIV_CODE -->
+			                      )
+			GROUP BY STUDENT_NO, COMDIV_NM
+			ORDER BY 	COMDIV_NM
+	</select>
+	
+	<!-- 메인 : 학생정보 : 장학내역 -->
+	<select id="selectMyScholAmt" parameterType="java.util.HashMap" resultType="dataMap">
+		WITH ALL_YEARS AS (
+			SELECT 		YEAR 								
+						, STUDENT_NO													
+			FROM 		SUB.V_AI_SCHOL
+			WHERE 		STUDENT_NO = #{STUDENT_NO}
+			GROUP BY 	STUDENT_NO 
+						, YEAR
+			ORDER BY 	YEAR
+		),
+		ALL_SMT AS (
+		  	SELECT 		'1학기' AS SMT_NM FROM dual
+		  	UNION
+		  	SELECT 		'2학기' AS SMT_NM FROM dual
+		)
+		SELECT			ALL_YEARS.YEAR,
+					  	ALL_YEARS.STUDENT_NO,
+					 	ALL_SMT.SMT_NM,
+					  	nvl(SUM(TARGET.SCHOL_AMT), 0) AS SCHOL_AMT
+		FROM			ALL_YEARS
+		CROSS JOIN 		ALL_SMT
+		LEFT JOIN		SUB.V_AI_SCHOL TARGET
+						ON ALL_YEARS.YEAR = TARGET.YEAR 
+						AND ALL_SMT.SMT_NM = TARGET.SMT_NM 
+						AND ALL_YEARS.STUDENT_NO = TARGET.STUDENT_NO
+		GROUP BY 		ALL_YEARS.YEAR
+						, ALL_YEARS.STUDENT_NO
+						, ALL_SMT.SMT_NM 
+		ORDER BY		ALL_YEARS.YEAR
+						, ALL_SMT.SMT_NM
+	</select>
+	
+	<!-- 메인 : 학생정보 : 전공필수현황 -->
+	<select id="selectMyMajorReq" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 		'이수' AS S_FLAG
+					, A.STUDENT_NO AS STUDENT_NO
+					, A.CURI_GB AS CURI_GB
+					, A.CURI_SUBJECT_CD AS CURI_SUBJECT_CD
+					, E.SUBJECT_NM AS CURI_SUBJECT_NM
+					, A.CURI_COMDIV_CODE AS CURI_COMDIV_CODE
+					, (SELECT UF_GET_COMMON_CODESET(A.CURI_COMDIV_CODE) FROM dual) AS CURI_COMDIV_NM
+					, E.CDT_NUM
+					, A.ISU_YEAR AS ISU_YEAR
+					, A.ISU_SMT_CODE AS ISU_SMT_CODE
+					, (SELECT UF_GET_SMT_CODESET(A.ISU_SMT_CODE) FROM dual) AS ISU_SMT_NM
+					, A.ISU_SUBJECT_CD AS ISU_SUBJECT_CD
+					, F.SUBJECT_NM AS ISU_SUBJECT_NM
+					, A.ISU_COMDIV_CODE AS ISU_COMDIV_CODE
+					, (SELECT UF_GET_COMMON_CODESET(A.ISU_COMDIV_CODE) FROM dual) AS ISU_COMDIV_NM
+					, A.APY_YEAR
+					, A.APY_SMT_CODE
+					, (SELECT UF_GET_SMT_CODESET(A.APY_SMT_CODE) FROM dual) AS APY_SMT_NM
+					, A.APY_GRADE
+		FROM 		SUG060TB A
+		   			, SUF010TB E
+		    		, SUF010TB F
+		WHERE 		A.CURI_SUBJECT_CD = E.SUBJECT_CD
+				    AND A.ISU_SUBJECT_CD = F.SUBJECT_CD(+)
+				    AND A.STUDENT_NO = #{STUDENT_NO}
+				    AND A.JOB_GB IN ('1','3') <!-- 학생용 : 1, 조교용 : 3 -->
+				    AND A.ISU_SUBJECT_CD IS NOT NULL
+		UNION 
+		SELECT 		'미이수' AS S_FLAG
+					, A.STUDENT_NO AS STUDENT_NO
+					, A.CURI_GB AS CURI_GB
+					, A.CURI_SUBJECT_CD AS CURI_SUBJECT_CD
+					, E.SUBJECT_NM AS CURI_SUBJECT_NM
+					, A.CURI_COMDIV_CODE AS CURI_COMDIV_CODE
+					, (SELECT UF_GET_COMMON_CODESET(A.CURI_COMDIV_CODE) FROM dual) AS CURI_COMDIV_NM
+					, E.CDT_NUM
+					, A.ISU_YEAR AS ISU_YEAR
+					, A.ISU_SMT_CODE AS ISU_SMT_CODE
+					, (SELECT UF_GET_SMT_CODESET(A.ISU_SMT_CODE) FROM dual) AS ISU_SMT_NM
+					, A.ISU_SUBJECT_CD AS ISU_SUBJECT_CD
+					, F.SUBJECT_NM AS ISU_SUBJECT_NM
+					, A.ISU_COMDIV_CODE AS ISU_COMDIV_CODE
+					, (SELECT UF_GET_COMMON_CODESET(A.ISU_COMDIV_CODE) FROM dual) AS ISU_COMDIV_NM
+					, A.APY_YEAR
+					, A.APY_SMT_CODE
+					, (SELECT UF_GET_SMT_CODESET(A.APY_SMT_CODE) FROM dual) AS APY_SMT_NM
+					, A.APY_GRADE
+		FROM 		SUG060TB A
+		    		, SUF010TB E
+		    		, SUF010TB F
+		WHERE 		A.CURI_SUBJECT_CD = E.SUBJECT_CD
+				    AND A.ISU_SUBJECT_CD = F.SUBJECT_CD(+)
+				    AND A.STUDENT_NO = #{STUDENT_NO}
+				    AND A.JOB_GB IN ('1','3') <!-- 학생용 : 1, 조교용 : 3 -->
+				    AND A.ISU_SUBJECT_CD IS NULL
+		ORDER BY 	APY_GRADE DESC , APY_SMT_NM DESC
+	</select>
+	
+	<!-- 메인 : 학생정보 : 교양필수현황 체크 --> 
+	<select id="selectChkMinorReq" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT count(*) FROM DUT.DUT125TB
+		WHERE STUDENT_NO = #{STUDENT_NO}
+	</select>
+	
+	<!-- 메인 : 학생정보 : 교양필수현황 --> 
+	<select id="selectMyMinorReq" parameterType="java.util.HashMap" resultType="dataMap">
+<!-- 		SELECT DISTINCT  -->
+<!-- 						CASE WHEN (TARGET3.CONV_MAG IS NULL OR TARGET3.CONV_MAG LIKE 'F%') THEN '미이수' ELSE '이수' END AS S_FLAG -->
+<!-- 						, TARGET2.STUDENT_NO -->
+<!-- 					    , BASE.SMT AS SMT -->
+<!-- 					    , (SELECT UF_GET_SMT_CODESET(BASE.SMT) FROM dual) AS SMT_NM -->
+<!-- 					    , BASE.COM_GRADE AS COM_GRADE -->
+<!-- 					    , BASE.SUBJECT_CD AS SUBJECT_CD -->
+<!-- 					    , TARGET.SUBJECT_NM AS SUBJECT_NM -->
+<!-- 					    , BASE.COMDIV_CODE AS COMDIV_CODE -->
+<!-- 					    , BASE.CDT_NUM AS CDT_NUM -->
+<!-- 					    , BASE.COM_CNT AS COM_CNT -->
+<!-- 					    , TARGET3.CDT_NUM -->
+<!-- 						, TARGET3.SCR -->
+<!-- 						, TARGET3.CONV_MAG -->
+<!-- 		FROM 			SUF050TB BASE -->
+<!-- 		LEFT JOIN 		SUF010TB TARGET -->
+<!-- 						ON BASE.SUBJECT_CD = TARGET.SUBJECT_CD -->
+<!-- 		INNER JOIN 		( -->
+<!-- 							SELECT STUDENT_NO, APY_YEAR, APY_DEPT_CD, APY_MAJOR_CD -->
+<!-- 							FROM SUI070TB -->
+<!-- 							WHERE STUDENT_NO = #{STUDENT_NO}  -->
+<!-- 		                ) TARGET2 -->
+<!-- 		                ON BASE.YEAR = TARGET2.APY_YEAR  -->
+<!-- 		                AND BASE.DEPT_CD IN (TARGET2.APY_DEPT_CD, TARGET2.APY_MAJOR_CD) -->
+<!-- 		LEFT JOIN 		SUG010TB TARGET3 -->
+<!-- 						ON BASE.SMT = TARGET3.SMT -->
+<!-- 						AND TARGET.SUBJECT_CD = TARGET3.SUBJECT_CD -->
+<!-- 						AND TARGET2.STUDENT_NO = TARGET3.STUDENT_NO -->
+<!-- 		WHERE   		BASE.SINBUN_CODE = 'UD340001' -->
+<!-- 						AND BASE.COMDIV_CODE = 'UE010011' -->
+<!-- 		ORDER BY 		BASE.COM_GRADE, BASE.SMT --> 
+		
+		WITH H020 AS
+		(
+			SELECT 			'1' AS GUBUN
+		            		, GRADE
+				            , SMT
+				            , YEAR
+				            , H020.SUBJECT_CD AS SUBJECT_CD
+				            , H020.CDT_NUM AS CDT_NUM
+				            , H020.COMDIV_CODE AS COMDIV_CODE
+				            , H020.GRAD_COMDIV_CODE AS GRAD_COMDIV_CODE
+				            , H020.GRAD2_COMDIV_CODE AS GRAD2_COMDIV_CODE
+			FROM 			SUH020TB H020
+		    WHERE 			STUDENT_NO = #{STUDENT_NO}
+		       				AND DEL_CODE IS NULL
+		       				AND ( 
+		       					DECODE(
+		       						SMT,'GH0204',NVL(TRIM(CONV_MAG),'A')
+		                    		,'GH0205',NVL(TRIM(CONV_MAG),'A')
+				                    ,'GH0206',NVL(TRIM(CONV_MAG),'A')
+				                    ,'GH0207',NVL(TRIM(CONV_MAG),'A')
+				                    ,'GH0208',NVL(TRIM(CONV_MAG),'A')
+				                    ,'GH0209',NVL(TRIM(CONV_MAG),'A')
+				                    , NVL(TRIM(CONV_MAG),'F')
+								)  NOT IN ('F','F0','I') 
+							)     
+		        			AND NOT EXISTS (
+		        				SELECT 1
+		                        FROM SUG020TB G020, SUG010TB G010
+		                        WHERE 1=1
+									AND G020.YEAR = G010.YEAR
+		                            AND G020.SMT = G010.SMT
+		                            AND G020.STUDENT_NO = G010.STUDENT_NO
+		                            AND G020.SUBJECT_CD = G010.SUBJECT_CD
+		                            AND G020.DIVCLS = G010.DIVCLS
+		                            AND NOT EXISTS (
+										SELECT 	1
+		                                FROM 	SUH020TB H
+		                                WHERE 	H.STUDENT_NO = #{STUDENT_NO} 
+		                                		AND H.YEAR = G020.YEAR 
+		                                		AND H.SMT = G020.SMT
+									)
+		                          	AND G010.TABS_DIV IS NULL
+		                           	AND NVL(G010.ABO_YN,'N') = 'N'
+		                           	AND G020.STUDENT_NO = H020.STUDENT_NO
+		                           	AND G020.RE_YEAR = H020.YEAR
+		                           	AND G020.RE_SMT = H020.SMT
+		                           	AND G020.RE_SUBJECT_CD = H020.SUBJECT_CD
+							)
+		    UNION ALL
+		    SELECT 			'0' AS GUBUN
+		             		, (SELECT GRADE FROM SUD010TB D010 WHERE D010.STUDENT_NO = G010.STUDENT_NO) AS GRADE
+				            , SMT
+				            , YEAR
+				            , G010.SUBJECT_CD AS SUBJECT_CD
+				            , G010.CDT_NUM
+				            , G010.COMDIV_CODE AS COMDIV_CODE
+				            , G010.GRAD_COMDIV_CODE AS GRAD_COMDIV_CODE
+				            , G010.GRAD2_COMDIV_CODE AS GRAD2_COMDIV_CODE            
+			FROM 			SUG010TB G010
+			WHERE 			STUDENT_NO = #{STUDENT_NO} AND NVL(ABO_YN,'N') = 'N' AND TABS_DIV IS NULL
+		       				AND NOT EXISTS (
+		       					SELECT 	1
+								FROM 	SUH020TB H
+								WHERE 	H.STUDENT_NO = #{STUDENT_NO} 
+										AND H.YEAR = G010.YEAR 
+										AND H.SMT = G010.SMT
+							)
+		)
+		SELECT DISTINCT		CASE WHEN S_GRADE IS NOT NULL THEN '이수' ELSE '미이수' END S_FLAG
+							, LRG_DOMAIN_CODE
+					        , (SELECT UF_GET_COMMON_CODESET(LRG_DOMAIN_CODE) FROM dual) AS LRG_DOMAIN_NM
+					        , SML_GROUP_CODE
+					        , (SELECT UF_GET_COMMON_CODESET(SML_GROUP_CODE) FROM dual) AS SML_GROUP_NM
+					        , SML_GROUP_VIEW
+					        , (SELECT UF_GET_COMMON_CODESET(SML_GROUP_VIEW) FROM dual) AS SML_GROUP_VIEW_NM
+					        , COMDIV_CODE
+					        , (SELECT UF_GET_COMMON_CODESET(COMDIV_CODE) FROM dual) AS COMDIV_NM
+					        , SUBJECT_CD
+					        , SUBJECT_NM
+					        , CDT_NUM
+					        , CDT_NUM_ALL
+		        			, CASE WHEN F_GUBUN = '졸업대체' 
+		        				THEN CASE WHEN SUBJECT_NUM IN (1,2) THEN S_GRADE END 
+		        				ELSE CASE WHEN SUBJECT_NUM = 1 THEN S_GRADE END END S_GRADE    
+					        , CASE WHEN F_GUBUN = '졸업대체' 
+					        	THEN CASE WHEN SUBJECT_NUM IN (1,2) THEN S_SMT END 
+					        	ELSE CASE WHEN SUBJECT_NUM = 1 THEN S_SMT END END S_SMT      
+					        , (SELECT UF_GET_SMT_CODESET(S_SMT) FROM dual) S_SMT_NM   
+					        , CASE WHEN F_GUBUN = '졸업대체' 
+					        	THEN CASE WHEN SUBJECT_NUM IN (1,2) THEN S_YEAR END 
+					        	ELSE CASE WHEN SUBJECT_NUM = 1 THEN S_YEAR END END S_YEAR          
+					        , CASE WHEN F_GUBUN = '졸업대체' 
+					        	THEN CASE WHEN SUBJECT_NUM IN (1,2) THEN S_SUBJECT_CD END 
+					        	ELSE CASE WHEN SUBJECT_NUM = 1 THEN S_SUBJECT_CD END END S_SUBJECT_CD         
+					        , CASE WHEN F_GUBUN = '졸업대체' 
+					        	THEN CASE WHEN SUBJECT_NUM IN (1,2) THEN S_SUBJECT_NM END 
+					        	ELSE CASE WHEN SUBJECT_NUM = 1 THEN S_SUBJECT_NM END END S_SUBJECT_NM   
+					        , CASE WHEN F_GUBUN = '졸업대체' 
+					        	THEN CASE WHEN SUBJECT_NUM IN (1) THEN S_CDT_NUM END 
+					        	ELSE CASE WHEN SUBJECT_NUM = 1 THEN S_CDT_NUM END END S_CDT_NUM      
+					        , CASE WHEN F_GUBUN = '졸업대체' 
+					        	THEN CASE WHEN SUBJECT_NUM IN (1,2) THEN F_GUBUN END 
+					        	ELSE CASE WHEN SUBJECT_NUM = 1 THEN F_GUBUN END END F_GUBUN  
+					        , CASE WHEN F_GUBUN = '졸업대체' 
+					        	THEN CASE WHEN S_SUBJECT_CD IS NULL THEN NULL WHEN SUBJECT_NUM IN (1,2) THEN SUBJECT_NUM ELSE NULL END 
+					        	ELSE CASE WHEN S_SUBJECT_CD IS NULL THEN NULL WHEN SUBJECT_NUM = 1 THEN SUBJECT_NUM ELSE NULL END END SUBJECT_NUM 
+					        , CASE WHEN F_GUBUN = '졸업대체' 
+					        	THEN CASE WHEN SUBJECT_NUM IN (1,2) THEN G_GUBUN END
+								ELSE CASE WHEN SUBJECT_NUM = 1 THEN G_GUBUN END END G_GUBUN    
+					        , CASE WHEN F_GUBUN = '졸업대체' 
+					        	THEN CASE WHEN SUBJECT_NUM IN (1,2) THEN H_COMDIV_CODE END
+					            ELSE CASE WHEN SUBJECT_NUM = 1 THEN H_COMDIV_CODE END END H_COMDIV_CODE  
+					        , (SELECT UF_GET_COMMON_CODESET(H_COMDIV_CODE) FROM dual) H_COMDIV_NM
+					        , CASE WHEN F_GUBUN = '졸업대체' 
+					        	THEN CASE WHEN SUBJECT_NUM IN (1,2) THEN GRAD_COMDIV_CODE END
+					            ELSE CASE WHEN SUBJECT_NUM = 1 THEN GRAD_COMDIV_CODE END END GRAD_COMDIV_CODE                      
+		FROM 
+		(
+		    SELECT 			T120.LRG_DOMAIN_CODE AS LRG_DOMAIN_CODE
+				            , T120.SML_GROUP_CODE AS SML_GROUP_CODE
+				            , CASE WHEN T120.YEAR = '2018' AND T120.DEPT_CD = '301140' AND T120.LRG_DOMAIN_CODE = 'DT110003' AND T120.SML_GROUP_CODE = 'DT120008' 
+				            	THEN 'DT120006' 
+				            	ELSE T120.SML_GROUP_CODE END SML_GROUP_VIEW
+				            , T120.COMDIV_CODE AS COMDIV_CODE
+				            , T120.SUBJECT_CD AS SUBJECT_CD
+				            , (SELECT UF_GET_SUBJECT_CODESET(T120.SUBJECT_CD) FROM dual) AS SUBJECT_NM
+				            , F010.CDT_NUM AS CDT_NUM
+				            , F010.CDT_NUM || '(' || F010.WTIME_NUM || '/' || F010.PTIME_NUM || ')' AS CDT_NUM_ALL
+				            , T120.REMARK AS REMARK     
+				            , T110.DEPT_NOTI AS DEPT_NOTI
+				            , DECODE(
+				            	T110.SUB_GROUP_CD, NULL ,DECODE(
+				            		T120.DETAIL_GROUP_CD, NULL, DECODE(
+				            			T120.COMDIV_CODE,'UE010011', T120.SUBJECT_CD, T110.SML_GROUP_CODE
+				            		),T120.DETAIL_GROUP_CD
+				            	),T110.SUB_GROUP_CD
+				            ) AS DETAIL_GROUP_CD
+				            , T120.DETAIL_GROUP_CNT AS DETAIL_GROUP_CNT
+				            , T120.DETAIL_GROUP_CDT AS DETAIL_GROUP_CDT
+				            , T120.DETAIL_GROUP_CDT_VIEW AS DETAIL_GROUP_CDT_VIEW
+				            , COALESCE(I080.GRADE,F030_STD.GRADE,H020.GRADE,F040.GRADE,F030_ALL.GRADE) AS S_GRADE
+				            , COALESCE(I080.SMT, F030_STD.SMT,H020.SMT,F040.SMT,F030_ALL.SMT) AS S_SMT
+				            , COALESCE(I080.YEAR,F030_STD.YEAR,H020.YEAR,F040.YEAR,F030_ALL.YEAR) AS S_YEAR
+				            , COALESCE(I080.SUBJECT_CD,F030_STD.SUBJECT_CD,H020.SUBJECT_CD,F040.SUBJECT_CD,F030_ALL.SUBJECT_CD) AS S_SUBJECT_CD
+				            , (SELECT SUBJECT_NM FROM SUF010TB F WHERE F.SUBJECT_CD = COALESCE(I080.SUBJECT_CD, F030_STD.SUBJECT_CD,H020.SUBJECT_CD,F040.SUBJECT_CD,F030_ALL.SUBJECT_CD)) AS S_SUBJECT_NM
+				            , COALESCE(I080.CDT_NUM,F030_STD.CDT_NUM,H020.CDT_NUM,F040.CDT_NUM,F030_ALL.CDT_NUM) AS S_CDT_NUM
+				            , COALESCE(I080.I080_REMARK,F030_STD.F030_REMARK,NVL2(H020.SUBJECT_CD,' ',NULL),F040.F040_REMARK,F030_ALL.F030_REMARK) AS F_GUBUN
+				            , ROW_NUMBER()OVER(
+				            	PARTITION BY 	COALESCE(I080.SUBJECT_CD,F030_STD.SUBJECT_CD,H020.SUBJECT_CD,F040.SUBJECT_CD,F030_ALL.SUBJECT_CD)
+								ORDER BY 		NVL2(I080.SUBJECT_CD,1,2)
+												, NVL2(F030_STD.SUBJECT_CD,1,2)
+												, CASE WHEN T120.SUBJECT_CD = H020.SUBJECT_CD THEN 1 ELSE 2 END
+												, NVL2(F040.SUBJECT_CD,1,2)
+												, NVL2(F030_ALL.SUBJECT_CD,1,2)
+												, F010.CDT_NUM DESC
+												, F010.SUBJECT_CD
+							) AS SUBJECT_NUM   
+				            , COALESCE(I080.GUBUN,F030_STD.GUBUN,H020.GUBUN,F040.GUBUN,F030_ALL.GUBUN) AS G_GUBUN
+				            , COALESCE(I080.COMDIV_CODE,F030_STD.COMDIV_CODE,H020.COMDIV_CODE, F040.COMDIV_CODE,F030_ALL.COMDIV_CODE) AS H_COMDIV_CODE
+				            , COALESCE(I080.GRAD_COMDIV_CODE,F030_STD.GRAD_COMDIV_CODE,H020.GRAD_COMDIV_CODE, F040.GRAD_COMDIV_CODE,F030_STD.GRAD_COMDIV_CODE) AS GRAD_COMDIV_CODE
+			FROM 			DUT120TB T120
+							, DUT110TB T110
+							, SUF.SUF010TB F010
+							, H020
+		    				,(
+		      					SELECT DISTINCT GRADE
+								                , SMT
+								                , YEAR
+								                , SUBJECT_CD
+								                , CDT_NUM
+								                , '중복금지' AS F040_REMARK
+								                , F040_SUBJECT_CD
+								                , GUBUN
+								                , COMDIV_CODE
+								                , GRAD_COMDIV_CODE
+		       					FROM 
+		      					(
+		            				SELECT 		A.GRADE AS GRADE
+							                    , A.SMT AS SMT
+							                    , A.YEAR AS YEAR
+							                    , A.SUBJECT_CD AS SUBJECT_CD
+							                    , A.CDT_NUM AS CDT_NUM
+							                    , B.SUBJECT_CD AS F040_SUBJECT_CD
+							                    , A.GUBUN
+							                    , A.COMDIV_CODE
+							                    , A.GRAD_COMDIV_CODE
+		              				FROM 		SUF040TB B
+		            							,(
+									                SELECT 		GRADE
+										                        , SMT
+										                        , YEAR
+										                        , H020.SUBJECT_CD AS SUBJECT_CD
+										                        , H020.CDT_NUM AS CDT_NUM
+										                        , C.BELONG_NO AS BELONG_NO
+										                        , NVL(H020.GUBUN,'0') AS GUBUN
+										                        , H020.COMDIV_CODE
+										                        , H020.GRAD_COMDIV_CODE
+													FROM 		H020
+																, SUF040TB C
+									               WHERE 		H020.SUBJECT_CD = C.SUBJECT_CD
+									                      		AND H020.YEAR || SUBSTR(H020.SMT,1,5) BETWEEN PROH_FR_YEAR||SUBSTR(PROH_FR_SMT,1,5) AND NVL(PROH_TO_YEAR,'9999')|| SUBSTR(NVL(PROH_FR_SMT,'GH0299'),1,5)
+									                      		AND EXISTS (SELECT 1 FROM SUF010TB F WHERE F.SUBJECT_CD = C.SUBJECT_CD AND F.SINBUN_CODE = 'UD340001') 
+												) A
+		            				WHERE 		B.BELONG_NO = A.BELONG_NO
+		              							AND B.SUBJECT_CD <![CDATA[<>]]> A.SUBJECT_CD
+								                AND A.YEAR || SUBSTR(A.SMT,1,5) BETWEEN PROH_FR_YEAR|| SUBSTR(PROH_FR_SMT,1,5) AND NVL(PROH_TO_YEAR,'9999')|| SUBSTR(NVL(PROH_FR_SMT,'GH0299'),1,5)
+								                AND EXISTS (SELECT 1 FROM SUF010TB F WHERE F.SUBJECT_CD = B.SUBJECT_CD AND F.SINBUN_CODE = 'UD340001') 
+		        				)
+		    				) F040
+		    				,( 
+		    					SELECT DISTINCT GRADE
+									            , SMT
+									            , YEAR
+								                , SUBJECT_CD
+								                , CDT_NUM
+								                , '대체' AS F030_REMARK
+								                , F030_SUBJECT_CD
+								                , F030_STUDENT_NO
+								                , GUBUN
+								                , COMDIV_CODE
+								                , GRAD_COMDIV_CODE
+		           				FROM 
+						        (
+						            SELECT		 H020.GRADE AS GRADE
+						                        , H020.SMT AS SMT
+						                        , H020.YEAR AS YEAR
+						                        , H020.SUBJECT_CD AS SUBJECT_CD
+						                        , H020.CDT_NUM AS CDT_NUM
+						                        , D.EXC_SUBJECT_CD AS F030_SUBJECT_CD
+						                        , D.STUDENT_NO AS F030_STUDENT_NO
+						                        , NVL(H020.GUBUN,'0') AS GUBUN
+						                        , H020.COMDIV_CODE
+						                        , H020.GRAD_COMDIV_CODE
+									FROM 		SUF030TB D
+												, H020
+						            WHERE 		D.SUBJECT_CD = H020.SUBJECT_CD
+						            			<if test="APY_YEAR != null and APY_YEAR != ''">
+						            			AND EXC_EXT_YEAR IN (${APY_YEAR})
+						            			</if>
+							                    AND DEPT_CD IN ('000000',#{DEPT_CD},#{MAJOR_CD})
+							                    AND STUDENT_NO = '00000000'
+							                    AND H020.YEAR||SUBSTR(H020.SMT,1,5) BETWEEN D.EXC_FR_YEAR||SUBSTR(EXC_FR_SMT,1,5) AND NVL(EXC_TO_YEAR,'9999')||SUBSTR(NVL(EXC_TO_SMT,'GH0299'),1,5)
+						        )
+		    				) F030_ALL    
+		    				,( 
+		         				SELECT DISTINCT GRADE
+								                , SMT
+								                , YEAR
+								                , SUBJECT_CD
+								                , CDT_NUM
+								                , '대체' AS F030_REMARK
+								                , F030_SUBJECT_CD
+								                , F030_STUDENT_NO
+								                , GUBUN
+								                , COMDIV_CODE
+								                , GRAD_COMDIV_CODE
+		           				FROM 
+		        				(
+		         					SELECT 		H020.GRADE AS GRADE
+							                    , H020.SMT AS SMT
+							                    , H020.YEAR AS YEAR
+							                    , H020.SUBJECT_CD AS SUBJECT_CD
+							                    , H020.CDT_NUM AS CDT_NUM
+							                    , D.EXC_SUBJECT_CD AS F030_SUBJECT_CD
+							                    , D.STUDENT_NO AS F030_STUDENT_NO
+							                    , NVL(H020.GUBUN,'0') AS GUBUN
+							                    , H020.COMDIV_CODE
+							                    , H020.GRAD_COMDIV_CODE          
+		              				FROM 		SUF030TB D, H020
+		            				WHERE		D.SUBJECT_CD = H020.SUBJECT_CD
+		            							<if test="APY_YEAR != null and APY_YEAR != ''">
+								                AND EXC_EXT_YEAR IN (${APY_YEAR})
+								                </if>
+								                AND STUDENT_NO = #{STUDENT_NO}
+								                AND H020.YEAR||SUBSTR(H020.SMT,1,5) BETWEEN D.EXC_FR_YEAR||SUBSTR(EXC_FR_SMT,1,5) AND NVL(EXC_TO_YEAR,'9999')||SUBSTR(NVL(EXC_TO_SMT,'GH0299'),1,5)
+		        				)
+		    				) F030_STD  
+		    				,(
+		    					SELECT DISTINCT H020.GRADE AS GRADE
+									            , H020.SMT AS SMT
+									            , H020.YEAR AS YEAR
+									            , H020.SUBJECT_CD AS SUBJECT_CD
+									            , H020.CDT_NUM AS CDT_NUM
+									            , '졸업대체' AS I080_REMARK
+									            , E.SUBJECT_CD AS I080_SUBJECT_CD
+									            , NVL(H020.GUBUN,'0') AS GUBUN
+									            , H020.COMDIV_CODE
+									            , H020.GRAD_COMDIV_CODE
+		      					FROM 			SUI080TB E, H020
+		    					WHERE 			E.AFT_SUBJECT_CD = H020.SUBJECT_CD
+										        AND E.STUDENT_NO = #{STUDENT_NO}
+										        AND E.EXEC_GB = '01'
+		    				) I080
+			WHERE 			1=1
+							<if test="APY_YEAR != null and APY_YEAR != ''">
+					        AND T120.YEAR IN (${APY_YEAR})
+					        </if>
+					        AND T120.YEAR = T110.YEAR
+					        AND T120.DEPT_CD = T110.DEPT_CD
+					        AND T120.LRG_DOMAIN_CODE = T110.LRG_DOMAIN_CODE
+					        AND T120.SML_GROUP_CODE = T110.SML_GROUP_CODE
+					        AND T120.SUBJECT_CD = F010.SUBJECT_CD
+					        AND T120.SUBJECT_CD = H020.SUBJECT_CD(+)
+					        AND T120.SUBJECT_CD = F040.F040_SUBJECT_CD(+)
+					        AND T120.SUBJECT_CD = F030_STD.F030_SUBJECT_CD(+)
+					        AND T120.SUBJECT_CD = F030_ALL.F030_SUBJECT_CD(+)
+					        AND T120.SUBJECT_CD = I080.I080_SUBJECT_CD(+)
+		     ORDER BY 		UF_GET_SYS020TB(T120.LRG_DOMAIN_CODE,5)
+		     				, T120.LRG_DOMAIN_CODE
+		     				, T120.SML_GROUP_CODE
+		                    , T120.COMDIV_CODE
+		                    , NVL(T120.PRT_SQ,1000)
+		                    , T120.SUBJECT_CD
+		)
+		ORDER BY		 	S_GRADE DESC
+							, S_SMT DESC
+	</select>
+	
+	<!-- 메인 : 학생정보 : 교육과정 내 교양교과목 --> 
+	<select id="selectMyCurrMinor" parameterType="java.util.HashMap" resultType="dataMap">
+		WITH CURR AS (
+			SELECT 		STUDENT_NO   
+					    , APY_DEPT_CD
+					    , APY_MAJOR_CD
+					    , APY_YEAR
+					    , APY_GRADE
+					    , APY_SMT
+			FROM 		SUI070TB
+			WHERE 	    STUDENT_NO = #{STUDENT_NO}
+						AND SUNG_APY_YEAR IS NULL
+		)
+		SELECT DISTINCT A.YEAR AS YEAR
+					    , A.SMT AS SMT
+					    , (SELECT UF_GET_SMT_CODESET(A.SMT) FROM dual) AS SMT_NM
+					    , A.DEPT_CD AS DEPT_CD
+					    , (SELECT UF_GET_ORG_CODESET('D', A.DEPT_CD) FROM dual) AS DEPT_NM
+					    , A.COM_GRADE AS COM_GRADE
+					    , A.SUBJECT_CD AS SUBJECT_CD
+					    , B.SUBJECT_NM AS SUBJECT_NM
+					    , A.COMDIV_CODE AS COMDIV_CODE
+					    , (SELECT UF_GET_COMMON_CODESET(A.COMDIV_CODE) FROM dual) AS COMDIV_NM
+					    , A.MNRCOM_DIV_CODE AS MNRCOM_DIV_CODE
+					    , (SELECT UF_GET_COMMON_CODESET(A.MNRCOM_DIV_CODE) FROM dual) AS MNRCOM_DIV_NM
+					    , A.SINBUN_CODE AS SINBUN_CODE
+					    , (SELECT UF_GET_COMMON_CODESET(A.SINBUN_CODE) FROM dual) AS SINBUN_NM
+					    , A.CDT_NUM AS CDT_NUM
+					    , A.WTIME_NUM AS WTIME_NUM
+					    , A.PTIME_NUM AS PTIME_NUM
+					    , A.SISU AS SISU
+					    , A.COM_CNT AS COM_CNT
+					    , (
+					    	SELECT 	CASE WHEN SUBJECT_CD IS NOT NULL THEN '이수' END
+					    	FROM 	SUH020TB
+					    	WHERE 	STUDENT_NO = CURR.STUDENT_NO
+					    			AND A.SUBJECT_CD = SUBJECT_CD
+					    ) AS S_FLAG
+		FROM 			SUF050TB A,
+			      		SUF010TB B,
+			      		CURR
+		WHERE   		A.SUBJECT_CD = B.SUBJECT_CD(+)
+			     		AND A.YEAR = CURR.APY_YEAR
+						AND A.DEPT_CD IN (CURR.APY_MAJOR_CD, CURR.APY_DEPT_CD) 
+			     		AND A.SINBUN_CODE = 'UD340001'
+			     		AND A.COMDIV_CODE IN ('UE010011', 'UE010012')
+			     		AND (A.COM_GRADE &gt;= CURR.APY_GRADE AND A.SMT &gt;= CURR.APY_SMT)
+		ORDER BY 		A.DEPT_CD
+						, A.COM_GRADE DESC
+						, A.SMT DESC
+						, A.COMDIV_CODE
+						, A.SUBJECT_CD
+	</select>
+	
+	<!-- 메인 : 학생정보 : 교육과정 내 교약교과목(편입생) : 교육과정(sui070) 테이블에 데이터가 없을 경우 --> 
+	<select id="selectTransferMyCurrMinor" parameterType="java.util.HashMap" resultType="dataMap">
+		WITH CURR AS (
+			SELECT 		base.STUDENT_NO  
+					    , base.DEPT_CD
+					    , base.MAJOR_CD
+					    , base.GRAD_YEAR
+					    , base.GRADE
+					    , NVL(SUBSTR(target.PRMT_SMT, 5), 'GH0210') AS SMT
+			FROM 		SUD010TB base
+			LEFT JOIN 	SUD.V_AI_STUINFO target
+						ON base.STUDENT_NO = target.STD_NO
+			WHERE 	    base.STUDENT_NO = #{STUDENT_NO}
+		)
+		SELECT DISTINCT A.YEAR AS YEAR
+					    , A.SMT AS SMT
+					    , (SELECT UF_GET_SMT_CODESET(A.SMT) FROM dual) AS SMT_NM
+					    , A.DEPT_CD AS DEPT_CD
+					    , (SELECT UF_GET_ORG_CODESET('D', A.DEPT_CD) FROM dual) AS DEPT_NM
+					    , A.COM_GRADE AS COM_GRADE
+					    , A.SUBJECT_CD AS SUBJECT_CD
+					    , B.SUBJECT_NM AS SUBJECT_NM
+					    , A.COMDIV_CODE AS COMDIV_CODE
+					    , (SELECT UF_GET_COMMON_CODESET(A.COMDIV_CODE) FROM dual) AS COMDIV_NM
+					    , A.MNRCOM_DIV_CODE AS MNRCOM_DIV_CODE
+					    , (SELECT UF_GET_COMMON_CODESET(A.MNRCOM_DIV_CODE) FROM dual) AS MNRCOM_DIV_NM
+					    , A.SINBUN_CODE AS SINBUN_CODE
+					    , (SELECT UF_GET_COMMON_CODESET(A.SINBUN_CODE) FROM dual) AS SINBUN_NM
+					    , A.CDT_NUM AS CDT_NUM
+					    , A.WTIME_NUM AS WTIME_NUM
+					    , A.PTIME_NUM AS PTIME_NUM
+					    , A.SISU AS SISU
+					    , A.COM_CNT AS COM_CNT
+		FROM 			SUF050TB A,
+			      		SUF010TB B,
+			      		CURR
+		WHERE   		A.SUBJECT_CD = B.SUBJECT_CD(+)
+			     		AND A.YEAR = CURR.GRAD_YEAR
+						AND A.DEPT_CD IN (CURR.MAJOR_CD, CURR.DEPT_CD) 
+			     		AND A.SINBUN_CODE = 'UD340001'
+			     		AND A.COMDIV_CODE IN ('UE010011', 'UE010012')
+			     		AND (A.COM_GRADE &gt;= CURR.GRADE AND A.SMT &gt;= CURR.SMT)
+		ORDER BY 		A.DEPT_CD
+						, A.COM_GRADE DESC
+						, A.SMT DESC
+						, A.COMDIV_CODE
+						, A.SUBJECT_CD
+	</select>
+	
+	<!-- 메인 : AI 추천 교과목 : 전공/교양 -->
+	<select id="selectAiMajorSubject" parameterType="java.util.List" resultType="dataMap">
+		<foreach collection="list" item="item" index="index" open="" separator="UNION ALL" close="">
+		SELECT 	YEAR
+				, ORDER_NUM
+				, METHOD_NUM
+			    , SMT 
+			    , SMT_NM
+			    , DEPT_CD
+			    , COLG_NM
+			    , DEPT_NM
+			    , GRADE
+			    , SUBJECT_CD
+			    , SUBJECT_NM
+			    , SINBUN_CODE
+			    , SINBUN_NM
+			    , COMDIV_CODE
+			    , COMDIV_NM
+			    , DIVCLS
+			    , MNRCOM_DIV_CODE
+			    , MNRCOM_DIV_NM
+			    , CDT_NUM
+			    , TIME_NUM
+			    , SUBJ_DESC
+			    , METHOD
+			    , LECPLN_OPEN_FL
+			    , PYENGGA_TP_CD
+			    , PYENGGA_TP_NM
+			    , FLAG_MY_DEPT
+			    , RETAKE_AVAILABLE_YN
+		FROM (
+			SELECT		base.YEAR
+						, ${item.ORDER} AS ORDER_NUM
+						, ${item.METHOD} AS METHOD_NUM
+						, base.SMT AS SMT
+						, (SELECT UF_GET_COMMON_CODESET(base.SMT) FROM dual) AS SMT_NM
+						, base.DEPT_CD AS DEPT_CD
+						, (SELECT UF_GET_ORG_CODESET('B', base.DEPT_CD) FROM dual) AS COLG_NM
+						, (SELECT UF_GET_ORG_CODESET('D', base.DEPT_CD) FROM dual) AS DEPT_NM
+						, base.GRADE AS GRADE
+			 			, base.SUBJECT_CD AS SUBJECT_CD
+						, (SELECT UF_GET_SUBJECT_CODESET(base.SUBJECT_CD) FROM dual) AS SUBJECT_NM
+						, base.SINBUN_CODE AS SINBUN_CODE
+						, (SELECT UF_GET_COMMON_CODESET(base.SINBUN_CODE) FROM dual) AS SINBUN_NM
+						, base.COMDIV_CODE AS COMDIV_CODE
+						, (SELECT UF_GET_COMMON_CODESET(base.COMDIV_CODE) FROM dual) AS COMDIV_NM
+						, base.DIVCLS AS DIVCLS
+						, base.MNRCOM_DIV_CODE AS MNRCOM_DIV_CODE
+						, (SELECT UF_GET_COMMON_CODESET(base.MNRCOM_DIV_CODE) FROM dual) AS MNRCOM_DIV_NM
+						, base.CDT_NUM AS CDT_NUM
+						, (base.WTIME_NUM || '/' || base.PTIME_NUM) AS TIME_NUM
+						, base.SUBJ_DESC
+						, base.METHOD
+						, base.LECPLN_OPEN_FL
+						, base.PYENGGA_TP_CD 
+						, (SELECT UF_GET_COMMON_CODESET(base.PYENGGA_TP_CD) FROM dual) AS PYENGGA_TP_NM
+						, CASE WHEN (base.DEPT_CD IN (#{item.DEPT_CD}, #{item.MAJOR_CD})) THEN 'Y' ELSE 'N' END AS FLAG_MY_DEPT						
+						, COALESCE(retake_chk.RETAKE_AVAILABLE_YN, 'N') AS RETAKE_AVAILABLE_YN
+			FROM 		SUF100TB base
+						LEFT JOIN ( SELECT
+						            SUBJECT_CD,
+						            CASE
+						                WHEN SUM(CASE WHEN CONV_MAG IN ('C', 'C+', 'C-', 'D', 'D+', 'D-', 'F') THEN 1 ELSE 0 END) > 0
+						                 AND SUM(CASE WHEN CONV_MAG NOT IN ('C', 'C+', 'C-', 'D', 'D+', 'D-', 'F') THEN 1 ELSE 0 END) = 0
+						                 AND NOT EXISTS (
+						                     SELECT 1
+						                     FROM SUF.SUF040TB s1
+						                     JOIN SUF.SUF040TB s2 ON s1.BELONG_NO = s2.BELONG_NO
+						                     WHERE s1.SUBJECT_CD = my.SUBJECT_CD
+						                       AND s2.SUBJECT_CD IN (
+						                           SELECT SUBJECT_CD
+						                           FROM <choose>
+															<when test="item.HAKJUK_ST == 'UD030005'.toString()">
+																SUH.SUH120TB
+															</when>
+															<otherwise>
+																SUH.SUH020TB
+															</otherwise>
+														</choose>
+						                           WHERE STUDENT_NO = #{item.STUDENT_NO}
+						                             AND CONV_MAG NOT IN ('C', 'C+', 'C-', 'D', 'D+', 'D-', 'F')
+						                       )
+						                       AND s1.SUBJECT_CD != s2.SUBJECT_CD
+						                 )
+						                THEN 'Y'
+						                ELSE 'N'
+						            END AS RETAKE_AVAILABLE_YN
+						        FROM <choose>
+										<when test="item.HAKJUK_ST == 'UD030005'.toString()">
+											SUH.SUH120TB
+										</when>
+										<otherwise>
+											SUH.SUH020TB
+										</otherwise>
+									</choose> my
+						        WHERE STUDENT_NO = #{item.STUDENT_NO}
+						        GROUP BY SUBJECT_CD
+						) retake_chk ON base.SUBJECT_CD = retake_chk.SUBJECT_CD <!-- 재수강했을 경우를 대비해 모든 로우가 조건(NULL이 아니고, C~F)에 맞을때만 재수강여부를 Y로 뱉어낸다 -->
+			WHERE 		base.YEAR = #{item.YEAR}
+						AND base.SMT = #{item.SMT}
+						AND base.SUBJECT_CD = #{item.SUBJECT_CD}
+						AND base.ABO_YN = 'N' <!-- 폐강 제외 -->
+			ORDER BY 	METHOD_NUM
+						, ORDER_NUM
+						, FLAG_MY_DEPT DESC
+						, SMT
+						, DEPT_CD
+						, GRADE 
+						, SUBJECT_CD
+						, SINBUN_CODE
+						, COMDIV_CODE
+						, DIVCLS
+		 ) T
+		 WHERE ROWNUM &lt; 2 <!-- SELECT 마지막 라인, ORDER BT 첫번째 라인과 연결 : 나의 소속학과의 과목이 있으면 첫번째로 -->
+		 </foreach>
+	</select>
+	
+	<!-- 메인 : 학사일정 --> 
+	<select id="selectAcademicCalendar" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 		SCDUL_CD 
+					, SCDUL_NM
+					, BEGIN_DTM 
+					, END_DTM
+		FROM 		SCO.V_SCHD
+		WHERE 		(BEGIN_DTM LIKE #{BASE_YMD}||'%') OR (END_DTM LIKE #{BASE_YMD}||'%')
+		ORDER BY	BEGIN_DTM
+					, SCDUL_CD
+	</select>
+
+	<!-- 마이페이지 : 성적정보 : 소요학점조회 --> 
+	<select id="selectMyReqCDT" parameterType="java.util.HashMap" resultType="dataMap">
+		WITH INFO AS (
+		    SELECT
+	             NVL(SUD030.AFT_COLL_CD,SUD010.COLL_CD) AS COLL_CD
+	           , NVL(NVL(SUD030.AFT_MAJOR_CD,SUD030.AFT_DEPT_CD),NVL(SUI070.APY_MAJOR_CD,SUI070.APY_DEPT_CD)) AS DEPT_CD
+	           , SUD010.STUDENT_NO
+	           , NVL(SUD030.YEAR,SUI070.APY_YEAR) AS ENT_YEAR
+	           , SUI070.SMT AS ENT_SMT
+	           , SUD010.SINBUN_CODE
+		    FROM
+		        SUD.SUD010TB SUD010, <!-- 학적 마스터 -->
+		        (SELECT
+		            *
+		         FROM (
+	                    SELECT * FROM SUD.SUD030TB A <!-- 학적 학적변동내역 -->
+	                    WHERE CHG_CD IN ('UD300001', 'UD280001', 'UD290001') <!--전공변경, 소속일괄변경, 전공재배정 체크(전학, 전과(부)는 변경대학,학부학과,전공이 비어있어서 제외) -->
+	                    AND STUDENT_NO = #{STUDENT_NO}
+	                    ORDER BY CHG_SQ DESC)
+		        WHERE ROWNUM = 1
+		        ) SUD030,
+		        (SELECT
+                      APY_YEAR,
+                      APY_DEPT_CD,
+                      APY_MAJOR_CD,
+                      SMT
+                    FROM (
+                      SELECT
+                        APY_YEAR,
+                        APY_DEPT_CD,
+                        APY_MAJOR_CD,
+                        SMT,
+                        ROW_NUMBER() OVER (ORDER BY APY_YEAR DESC, SMT DESC) AS rn
+                      FROM
+                        SUI.SUI070TB SUI070
+                      WHERE
+                        SUI070.STUDENT_NO = #{STUDENT_NO}
+                    ) ranked_data
+                    WHERE
+                      rn = 1) SUI070
+		    WHERE SUD010.STUDENT_NO = #{STUDENT_NO}
+		    AND SUD010.STUDENT_NO = SUD030.STUDENT_NO(+)
+		),
+		BASE AS (
+		    SELECT
+                M.COMDIV_CODE
+               , (SELECT UF_GET_SYS020TB(M.COMDIV_CODE) FROM DUAL) AS COMDIV_NM
+               , SUM(F.CDT_NUM) AS CDT
+            FROM SUF.SUF070TB F <!-- 수업관리 교육과정편제관리 -->
+                ,(SELECT
+					COMDIV_CODE
+                   FROM SUF.SUF060TB <!--수업관리 교육과정편제 교과구분체계관리 (교육과정편제관리 테이블에서 학생에 해당되는 교육과정만 조회하기 위함 )-->
+                   JOIN INFO
+                      ON SUF060TB.YEAR = INFO.ENT_YEAR
+                       AND SUF060TB.SINBUN_CODE = INFO.SINBUN_CODE
+                  GROUP BY COMDIV_CODE
+                ) M,
+                INFO
+             WHERE F.YEAR = INFO.ENT_YEAR
+               AND F.SINBUN_CODE = INFO.SINBUN_CODE
+               AND F.DEPT_CD = INFO.DEPT_CD
+               AND F.COLL_CD = INFO.COLL_CD
+               AND M.COMDIV_CODE = F.COMDIV_CODE
+            GROUP BY M.COMDIV_CODE
+		),
+		TAKING AS (
+		    SELECT SUG010.COMDIV_CODE, SUM(SUG010.CDT_NUM) AS CDT_NUM
+		    FROM SUG.SUG010TB SUG010 <!-- 수강관리 수강신청 -->
+		    JOIN INFO ON SUG010.STUDENT_NO = INFO.STUDENT_NO
+		    WHERE SUG010.SUBJECT_CD NOT IN (SELECT SUBJECT_CD FROM 
+												    <choose>
+														<when test="HAKJUK_ST == 'UD030005'.toString()">
+															SUH.SUH120TB
+														</when>
+														<otherwise>
+															SUH.SUH020TB
+														</otherwise>
+													</choose>
+ 											WHERE STUDENT_NO = INFO.STUDENT_NO) <!-- 성적관리 과목별성적에 있는 행은 뺀다(이수한 상태) -->
+		    GROUP BY SUG010.COMDIV_CODE
+		),
+        DONE AS (
+            SELECT
+                COMDIV_CODE,
+                SUM(CDT_NUM) AS CDT_NUM
+            FROM 
+            <choose>
+				<when test="HAKJUK_ST == 'UD030005'.toString()">
+					SUH.SUH120TB 
+				</when>
+				<otherwise>
+					SUH.SUH020TB 
+				</otherwise>
+			</choose> BASE
+            JOIN INFO ON BASE.STUDENT_NO = INFO.STUDENT_NO
+            WHERE (CONV_MAG IS NULL OR CONV_MAG NOT LIKE 'F%')
+            GROUP BY COMDIV_CODE
+        ),
+        RESULT AS (
+            SELECT
+                COALESCE(BASE.COMDIV_CODE, DONE.COMDIV_CODE, TAKING.COMDIV_CODE) AS GUBUN_CODE,
+                (SELECT NM FROM SCO.SYS020TB WHERE CODE = COALESCE(BASE.COMDIV_CODE, DONE.COMDIV_CODE, TAKING.COMDIV_CODE)) AS GUBUN,
+                NVL(TO_CHAR(BASE.CDT), '0') AS BASE_CDT,
+                NVL(TO_CHAR(DONE.CDT_NUM), '0') AS DONE_CDT,
+                NVL(TO_CHAR(TAKING.CDT_NUM), '0') AS TAKING_CDT
+            FROM
+                BASE
+                FULL OUTER JOIN DONE ON BASE.COMDIV_CODE = DONE.COMDIV_CODE
+                FULL OUTER JOIN TAKING ON COALESCE(BASE.COMDIV_CODE, DONE.COMDIV_CODE) = TAKING.COMDIV_CODE
+        )
+        <!-- 전체 행 추가 -->
+		SELECT * FROM (
+            SELECT
+                'ALL' AS GUBUN_CODE,
+                '전체' AS GUBUN,
+                NVL(TO_CHAR(SUM(TO_NUMBER(BASE_CDT))), '0') AS BASE_CDT,
+                NVL(TO_CHAR(SUM(TO_NUMBER(DONE_CDT))), '0') AS DONE_CDT,
+                NVL(TO_CHAR(SUM(TO_NUMBER(TAKING_CDT))), '0') AS TAKING_CDT
+            FROM RESULT
+            UNION ALL
+            SELECT
+                GUBUN_CODE,
+                GUBUN,
+                BASE_CDT,
+                DONE_CDT,
+                TAKING_CDT
+            FROM RESULT
+            )
+	    ORDER BY
+        CASE
+            WHEN GUBUN_CODE = 'ALL'      THEN 1
+            WHEN GUBUN_CODE = 'UE010011' THEN 2  <!-- 교양필수 -->
+            WHEN GUBUN_CODE = 'UE010012' THEN 3  <!-- 교양선택 -->
+            WHEN GUBUN_CODE = 'UE010024' THEN 4  <!-- 전공기초 -->
+            WHEN GUBUN_CODE = 'UE010021' THEN 5  <!-- 전공필수 -->
+            WHEN GUBUN_CODE = 'UE010022' THEN 6  <!-- 전공선택 -->
+            ELSE 6                               <!-- 기타 항목 -->
+        END
+	</select>
+	
+	<!-- 마이페이지 : 성적정보 : 누적성적조회 --> 
+	<select id="selectMyCumCDT" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT		 S_FLAG
+				     , DECODE(GRADE, 0, '전체', GRADE) AS GRADE
+				     , YEAR
+				     , SMT
+				     , SMT_CODE
+				     , REQ_CDT
+				     , GAIN_CDT
+				     , TOT_GPA
+				     , GPA_AVG
+				     , SMT_TEMP
+				     , STUDENT_NO
+				     , OUT_COLL_CODE
+				     , OUT_COLL_NM
+				     , DEPT_RANK
+				     , WARN_YN
+				     , TO_CHAR(TOTAL_PERCENT, 'FM990.0') AS TOTAL_PERCENT
+				     , DGTIME_NUM
+		FROM 
+		(   
+					SELECT		'N' AS S_FLAG
+						        , 0 AS GRADE
+						        , '' AS YEAR
+						        , '' AS SMT
+						        , '' AS SMT_CODE
+						        , T040.TOT_REQ_CDT AS REQ_CDT
+						        , T040.TOT_GAIN_CDT AS GAIN_CDT
+						        , T040.TOT_GPA AS TOT_GPA
+						        , TO_CHAR(ROUND(T040.TOT_GPA_AVG, 2)) AS GPA_AVG
+						        , '' AS SMT_TEMP
+						        , T040.STUDENT_NO AS STUDENT_NO
+						        , '' AS OUT_COLL_CODE
+						        , '' AS OUT_COLL_NM
+						        , T040.GRAD_DEPT_RANK ||DECODE(NVL(T040.GRAD_DEPT_RANK,0),0,'',' / ')|| T040.GRAD_DEPT_MCNT AS DEPT_RANK
+						        , '' AS WARN_YN
+						        , CASE WHEN C.STUDENT_NO IS NOT NULL THEN NULL ELSE H080.SCR END AS TOTAL_PERCENT
+						        , '' AS DGTIME_NUM
+				    FROM 		SUH040TB T040
+				    			, SUH080TB H080
+				    			, (
+				      				SELECT A.STUDENT_NO
+				       				FROM 
+				           			(
+				           				SELECT STUDENT_NO, COUNT(*) AS CNT
+							            FROM SUH020TB
+							            WHERE STUDENT_NO = #{STUDENT_NO}
+							            GROUP BY STUDENT_NO
+							        ) A,
+				           			(
+				           				SELECT STUDENT_NO, COUNT(*) AS CNT
+							            FROM SUH020TB
+							            WHERE STUDENT_NO = #{STUDENT_NO}
+							            AND CONV_MAG = 'PS'
+							            GROUP BY STUDENT_NO
+							        ) B
+									WHERE A.STUDENT_NO = B.STUDENT_NO AND A.CNT = B.CNT
+				       			) C
+				    WHERE 		T040.STUDENT_NO = #{STUDENT_NO}
+							    AND T040.STUDENT_NO = C.STUDENT_NO(+)
+							    AND TRIM(TO_CHAR(ROUND (NVL(T040.TOT_GPA_AVG,0), 2),'0.00'))  BETWEEN H080.FR_GPA AND H080.TO_GPA
+					UNION ALL
+					SELECT		'N' AS S_FLAG
+						        , 0 AS GRADE
+						        , '' AS YEAR
+						        , '' AS SMT
+						        , '' AS SMT_CODE
+						        , T040.TOT_REQ_CDT AS REQ_CDT
+						        , T040.TOT_GAIN_CDT AS GAIN_CDT
+						        , T040.TOT_GPA AS TOT_GPA
+						        , TO_CHAR(ROUND(T040.TOT_GPA_AVG, 2)) AS GPA_AVG
+						        , '' AS SMT_TEMP
+						        , T040.STUDENT_NO AS STUDENT_NO
+						        , '' AS OUT_COLL_CODE
+						        , '' AS OUT_COLL_NM
+						        , T040.GRAD_DEPT_RANK ||DECODE(NVL(T040.GRAD_DEPT_RANK,0),0,'',' / ')|| T040.GRAD_DEPT_MCNT AS DEPT_RANK
+						        , '' AS WARN_YN
+						        , CASE WHEN C.STUDENT_NO IS NOT NULL THEN NULL ELSE H080.SCR END AS TOTAL_PERCENT
+						        , '' AS DGTIME_NUM
+				    FROM 		SUH140TB T040
+				    			, SUH080TB H080
+				    			, (
+				      				SELECT A.STUDENT_NO
+				       				FROM 
+				           			(
+				           				SELECT STUDENT_NO, COUNT(*) AS CNT
+							            FROM SUH120TB
+							            WHERE STUDENT_NO = #{STUDENT_NO}
+							            GROUP BY STUDENT_NO
+							        ) A,
+				           			(
+				           				SELECT STUDENT_NO, COUNT(*) AS CNT
+							            FROM SUH120TB
+							            WHERE STUDENT_NO = #{STUDENT_NO}
+							            AND CONV_MAG = 'PS'
+							            GROUP BY STUDENT_NO
+							        ) B
+									WHERE A.STUDENT_NO = B.STUDENT_NO AND A.CNT = B.CNT
+								) C
+				    WHERE 		T040.STUDENT_NO = #{STUDENT_NO}
+				    			AND T040.STUDENT_NO = C.STUDENT_NO(+)
+				    			AND TRIM(TO_CHAR(ROUND (NVL(T040.TOT_GPA_AVG,0), 2),'0.00'))  BETWEEN H080.FR_GPA AND H080.TO_GPA
+					UNION ALL
+					SELECT		'N' AS S_FLAG
+							    , 0 AS GRADE
+							    , '' AS YEAR
+							    , '' AS SMT
+							    , '' AS SMT_CODE
+							    , T040.TOT_REQ_CDT AS REQ_CDT
+							    , T040.TOT_GAIN_CDT AS GAIN_CDT
+							    , T040.TOT_GPA AS TOT_GPA
+							    , TO_CHAR(ROUND(T040.TOT_GPA_AVG, 2)) AS GPA_AVG
+							    , '' AS SMT_TEMP
+							    , T040.STUDENT_NO AS STUDENT_NO
+							    , '' AS OUT_COLL_CODE
+							    , '' AS OUT_COLL_NM
+							    , T040.GRAD_DEPT_RANK ||DECODE(NVL(T040.GRAD_DEPT_RANK,0),0,'',' / ')|| T040.GRAD_DEPT_MCNT AS DEPT_RANK
+							    , '' AS WARN_YN
+							    , 0 TOTAL_PERCENT
+							    , '' AS DGTIME_NUM
+					FROM 		SUH240TB T040
+					WHERE 		STUDENT_NO = #{STUDENT_NO}
+								AND NOT EXISTS (SELECT STUDENT_NO FROM SUH040TB H040 WHERE H040.STUDENT_NO = T040.STUDENT_NO)
+					UNION ALL
+					SELECT 		'N' AS S_FLAG
+						        , A.GRADE AS GRADE
+						        , A.YEAR AS YEAR
+						        , (SELECT UF_GET_SMT_CODESET(A.SMT) FROM dual) AS SMT
+						        , A.SMT AS SMT_CODE
+						        , A.REQ_CDT AS REQ_CDT
+						        , A.GAIN_CDT AS GAIN_CDT
+						        , A.TOT_GPA AS TOT_GPA
+						        , TO_CHAR(ROUND(A.GPA_AVG,2)) AS GPA_AVG
+						        , A.SMT AS SMT_TEMP
+						        , A.STUDENT_NO AS STUDENT_NO
+						        , A.OUT_COLL_CODE AS OUT_COLL_CODE
+						        , B.NM AS OUT_COLL_NM
+						        , A.DEPT_RANK ||DECODE(NVL(A.DEPT_RANK,0),0,'',' / ')|| A.DEPT_MCNT AS DEPT_RANK
+						        , DECODE( A.WARN_YN, 'Y','학사경고','') AS WARN_YN
+						        , CASE WHEN C.STUDENT_NO IS NOT NULL THEN NULL ELSE H080.SCR END AS TOTAL_PERCENT
+						        , '' AS DGTIME_NUM
+		  			FROM 		SUH030TB A
+		  						, SYS020TB B
+		  						, SUH080TB H080
+		  						, (
+									SELECT A.YEAR, A.SMT, A.STUDENT_NO
+		       						FROM 
+		           					(
+		           						SELECT YEAR, SMT, STUDENT_NO, COUNT(*) AS CNT
+							            FROM SUH020TB
+							            WHERE STUDENT_NO = #{STUDENT_NO}
+							            GROUP BY YEAR, SMT, STUDENT_NO
+							        ) A,
+		           					(
+		           						SELECT YEAR, SMT, STUDENT_NO, COUNT(*) AS CNT
+							            FROM SUH020TB
+							            WHERE STUDENT_NO = #{STUDENT_NO}
+							            AND CONV_MAG = 'PS'
+							            GROUP BY YEAR, SMT, STUDENT_NO
+							        ) B
+		       						WHERE A.YEAR = B.YEAR AND A.SMT = B.SMT AND A.STUDENT_NO = B.STUDENT_NO AND A.CNT = B.CNT
+		       					) C
+		 			WHERE 		A.STUDENT_NO = #{STUDENT_NO}
+							    AND A.OUT_COLL_CODE = B.CODE
+							    AND A.YEAR = C.YEAR(+)
+							    AND A.SMT = C.SMT(+)
+							    AND A.STUDENT_NO = C.STUDENT_NO(+)
+		   						AND TRIM(TO_CHAR(ROUND (NVL(A.GPA_AVG,0), 2),'0.00')) BETWEEN H080.FR_GPA AND H080.TO_GPA
+					UNION ALL
+					SELECT 		'N' AS S_FLAG
+						        , A.GRADE AS GRADE
+						        , A.YEAR AS YEAR
+						        , (SELECT UF_GET_SMT_CODESET(A.SMT) FROM dual) AS SMT
+						        , A.SMT AS SMT_CODE
+						        , A.REQ_CDT AS REQ_CDT
+						        , A.GAIN_CDT AS GAIN_CDT
+						        , A.TOT_GPA AS TOT_GPA
+						        , TO_CHAR(ROUND(A.GPA_AVG,2)) AS GPA_AVG
+						        , A.SMT AS SMT_TEMP
+						        , A.STUDENT_NO AS STUDENT_NO
+						        , A.OUT_COLL_CODE AS OUT_COLL_CODE
+						        , B.NM AS OUT_COLL_NM
+						        , A.DEPT_RANK ||DECODE(NVL(A.DEPT_RANK,0),0,'',' / ')|| A.DEPT_MCNT AS DEPT_RANK
+						        , DECODE( A.WARN_YN, 'Y','학사경고','') AS WARN_YN
+						        , CASE WHEN C.STUDENT_NO IS NOT NULL THEN NULL ELSE H080.SCR END AS TOTAL_PERCENT
+						        , '' AS DGTIME_NUM
+		  			FROM 		SUH130TB A
+		  						, SYS020TB B
+		  						, SUH080TB H080
+		  						, (
+		  							SELECT A.YEAR, A.SMT, A.STUDENT_NO
+		       						FROM 
+									(
+										SELECT YEAR, SMT, STUDENT_NO, COUNT(*) AS CNT
+							            FROM SUH120TB
+							            WHERE STUDENT_NO = #{STUDENT_NO}
+							            GROUP BY YEAR, SMT, STUDENT_NO
+							        ) A,
+		           					(
+		           						SELECT YEAR, SMT, STUDENT_NO, COUNT(*) AS CNT
+							            FROM SUH120TB
+							            WHERE STUDENT_NO = #{STUDENT_NO}
+							            AND CONV_MAG = 'PS'
+							            GROUP BY YEAR, SMT, STUDENT_NO
+							        ) B
+							       WHERE A.YEAR = B.YEAR AND A.SMT = B.SMT AND A.STUDENT_NO = B.STUDENT_NO AND A.CNT = B.CNT
+								) C
+		 			WHERE 		A.STUDENT_NO = #{STUDENT_NO}
+		   						AND A.OUT_COLL_CODE = B.CODE
+							    AND A.YEAR = C.YEAR(+)
+							    AND A.SMT = C.SMT(+)
+							    AND A.STUDENT_NO = C.STUDENT_NO(+)
+							    AND TRIM(TO_CHAR(ROUND (NVL(A.GPA_AVG,0), 2),'0.00')) BETWEEN H080.FR_GPA AND H080.TO_GPA
+					UNION ALL
+					SELECT 		'N' AS S_FLAG
+						        , A.GRADE AS GRADE
+						        , A.YEAR AS YEAR
+						        , (SELECT UF_GET_SMT_CODESET(A.SMT) FROM dual) AS SMT
+						        , A.SMT AS SMT_CODE
+						        , A.REQ_CDT AS REQ_CDT
+						        , A.GAIN_CDT AS GAIN_CDT
+						        , A.TOT_GPA AS TOT_GPA
+						        , TO_CHAR(A.GPA_AVG) AS GPA_AVG
+						        , A.SMT AS SMT_TEMP
+						        , A.STUDENT_NO AS STUDENT_NO
+						        , A.OUT_COLL_CODE AS OUT_COLL_CODE
+						        , B.NM AS OUT_COLL_NM
+						        , A.DEPT_RANK ||DECODE(NVL(A.DEPT_RANK,0),0,'',' / ')|| A.DEPT_MCNT AS DEPT_RANK
+						        , DECODE( A.WARN_YN, 'Y','학사경고','') AS WARN_YN
+						        , 0 TOTAL_PERCENT
+						        , TO_CHAR(A.DGTIME_NUM) AS DGTIME_NUM
+		  			FROM 		SUH230TB A
+		  						, SYS020TB B
+		 			WHERE 		A.STUDENT_NO = #{STUDENT_NO}
+		   						AND A.OUT_COLL_CODE = B.CODE
+		   						AND NOT EXISTS (SELECT STUDENT_NO FROM SUH030TB H WHERE H.STUDENT_NO = A.STUDENT_NO)
+					ORDER BY 	YEAR DESC, SMT DESC
+		)
+	</select>
+	
+	<select id="selectMyGradReq" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 		DISTINCT
+			    	target.CERT_FIELD_CODE,
+			    	UF_GET_COMMON_CODESET(target.CERT_FIELD_CODE) AS FIELD,
+			    	target.CERT_DOMAIN_CODE,
+			    	UF_GET_COMMON_CODESET(target.CERT_DOMAIN_CODE) AS DOMAIN,
+			    	base.ISU_DESC,
+			    	DECODE(base.PASS_YN, 'Y', '인증', '미인증') AS PASS_YN,
+		    		base.REQ_DT
+		FROM		SUI300TB target
+		LEFT JOIN	SUI310TB base 
+					ON base.CERT_DOMAIN_CODE = target.CERT_DOMAIN_CODE
+					AND base.STUDENT_NO = #{STUDENT_NO}
+		WHERE		target.ENT_YEAR = SUBSTR(#{STUDENT_NO}, 1, 4)
+				    AND target.DEPT_CD IN (#{DEPT_CD}, #{MAJOR_CD})
+				    AND (base.STUDENT_NO IS NULL OR base.STUDENT_NO = #{STUDENT_NO})
+		ORDER BY CERT_FIELD_CODE
+	</select>
+	
+	<!-- 마이페이지 : 성적정보 : 과목별성적조회 --> 
+	<select id="selectMySubjectCDT" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 		YEAR
+					, STUDENT_NO
+					, (SELECT DISTINCT SUD010.NM FROM SUD.SUD010TB SUD010 WHERE SUD010.STUDENT_NO = st.STUDENT_NO) AS NM
+					, GRADE
+					, DEPT_CD
+					, (SELECT UF_GET_ORG_CODESET('D', DEPT_CD) FROM dual) AS DEPT_NM
+					, MAJOR_CD
+					, (SELECT UF_GET_ORG_CODESET('D', MAJOR_CD) FROM dual) AS MAJOR_NM
+					, SMT
+					, (SELECT UF_GET_SMT_CODESET(SMT) FROM dual) AS SMT_NM 
+					, SUBJECT_CD
+					, SUBJECT_NM
+					, COMDIV_NM
+					, CLASS_CODE
+					, (SELECT UF_GET_COMMON_CODESET(CLASS_CODE) FROM dual) AS CLASS_NM
+					, CDT_NUM
+					, CONV_MAG
+					, SCR
+					, GPA
+					, SUF_DEPT
+					, (SELECT UF_GET_ORG_CODESET('D', SUF_DEPT) FROM dual) AS SUF_DEPT_NM
+					, EMP_NO
+					, EMP_NM
+					, REMARK
+		<choose>
+		<when test="HAKJUK_ST == 'UD030005'.toString()">
+		FROM		SUH.SUH120TB st
+		</when>
+		<otherwise>
+		FROM		SUH.SUH020TB st
+		</otherwise>
+		</choose>
+		WHERE 		STUDENT_NO = #{STUDENT_NO}
+		ORDER BY 	YEAR DESC, SMT_NM DESC
+	</select>
+	
+	<!-- 마이페이지 : 학적변동내역 --> 
+	<select id="selectMyRecordHistory" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 			A.GRADE AS GRADE
+				        , A.YEAR AS YEAR
+				        , (SELECT UF_GET_SMT_CODESET(A.SMT) FROM dual) AS SMT
+				        , A.CHG_CD AS CHG_CD
+				        , (SELECT UF_GET_COMMON_CODESET(A.CHG_CD) FROM dual) AS CHG_NM
+				        , A.CHG_DT AS CHG_DT
+				        , A.REQ_DT AS REQ_DT
+				        , A.CANCEL_DT AS CANCEL_DT
+		FROM 			SUD030TB A
+		WHERE 			A.STUDENT_NO = #{STUDENT_NO}
+		UNION ALL 
+		SELECT 			NULL AS GRADE
+			        	, B.YEAR AS YEAR
+			        	, (SELECT UF_GET_SMT_CODESET(B.SMT) FROM dual) AS SMT
+			        	, A.UPD_GB AS CHG_CD
+			        	, DECODE(A.UPD_GB,1,'성명변경 : ','주민번호변경 : ')|| A.BFR_DESC ||' --> '|| A.AFT_DESC AS CHG_NM
+			       		, A.UPD_DT AS CHG_DT
+			       		, A.UPD_DT AS REQ_DT
+			       		, ''       AS CANCEL_DT
+		FROM 			SUD080TB A 
+		LEFT OUTER JOIN SYS080TB B 
+						ON B.SINBUN_CODE = 'UD340001'
+		                AND A.UPD_DT BETWEEN B.FR_DT AND B.TO_DT
+		                AND B.DIV_CODE = 'SY010022'
+		                AND B.PT_CODE  = 'SY020029'
+		WHERE 			A.STUDENT_NO = #{STUDENT_NO}
+		ORDER BY 		YEAR DESC, SMT, CHG_DT DESC
+	</select>
+	
+	<resultMap id="loginVO" type="rbs.egovframework.LoginVO" >
+	    <id property="memberIdx" column="MEMBER_IDX" />    
+	    <id property="memberId" column="MEMBER_ID"/>
+	    <id property="memberIdOrg" column="MEMBER_ID"/>
+	    <id property="memberPwd" column="MEMBER_PWD"/>
+	    <id property="memberName" column="MEMBER_NAME"/>
+	    <id property="memberNameOrg" column="MEMBER_NAME"/>
+	    <id property="collCd" column="COLL_CD"/>
+	    <id property="collNm" column="COLL_NM"/>
+	    <id property="deptCd" column="DEPT_CD"/>
+	    <id property="deptNm" column="DEPT_NM"/>
+	    <id property="majorCd" column="MAJOR_CD"/>
+	    <id property="majorNm" column="MAJOR_NM"/>
+	    <id property="grade" column="GRADE"/>	    
+	    <id property="type" column="TYPE"/>
+	    <id property="typeNm" column="TYPE_NM"/>
+	    <id property="usertypeIdx" column="USERTYPE_IDX"/>
+	    <id property="usertypeNm" column="USERTYPE_NM"/>
+	</resultMap>
+	
+	<!-- 메인 : 권한조회 --> 
+	<select id="setUser" parameterType="java.util.HashMap" resultMap="loginVO">
+	    WITH CURR AS(
+					SELECT
+					      A.STUDENT_NO                                                      	AS MEMBER_IDX
+					    , A.STUDENT_NO                                                      	AS MEMBER_ID
+					    , A.NM                                                              	AS MEMBER_NAME
+					    , NULL                                                              	AS MEMBER_PWD
+			            , A.COLL_CD                 		                                	AS COLL_CD
+			            , DEPT_CDNM(A.COLL_CD)    			                                	AS COLL_NM
+						, A.DEPT_CD                                                         	AS DEPT_CD
+						, DEPT_CDNM(A.DEPT_CD)          	                                	AS DEPT_NM
+			            , A.MAJOR_CD                                                        	AS MAJOR_CD
+			            , DEPT_CDNM(A.MAJOR_CD)         	                                	AS MAJOR_NM
+					    , GRADE                                                                 AS GRADE
+			            , A.SINBUN_CODE                                                     	AS TYPE
+			            , (SELECT UF_GET_COMMON_CODESET(A.SINBUN_CODE) FROM dual)   			AS TYPE_NM
+					    , 5                                                                 	AS USERTYPE_IDX
+					    , '학생'                                                         	    	AS USERTYPE_NM
+				    FROM
+					    SUD010TB A
+			        UNION ALL
+					SELECT
+			             EMP_NO                                                                     AS MEMBER_IDX
+			            ,EMP_NO                                                                     AS MEMBER_ID
+					    ,EMP_NM                                                                     AS MEMBER_NAME
+					    ,NULL                                                                       AS MEMBER_PWD
+					    ,(SELECT COLG_CD FROM SCO.V_AI_ORG ORG WHERE ORG.DEPT_CD = NOW_DEPT_CD)     AS COLL_CD
+					    ,UF_GET_ORG_CODESET('B', NOW_DEPT_CD)                       				AS COLL_NM
+					    ,NOW_DEPT_CD                                                                AS DEPT_CD
+					    ,UF_GET_ORG_CODESET('D', NOW_DEPT_CD)                       				AS DEPT_NM
+					    ,NVL(NOW_MAJOR_CD,NOW_DEPT_CD)                                              AS MAJOR_CD
+					    ,UF_GET_ORG_CODESET('D', NVL(NOW_MAJOR_CD,NOW_DEPT_CD))    					AS MAJOR_NM
+					    ,NULL                                                                       AS GRADE
+			            ,NOW_JOBG_CD                                                                AS TYPE
+			            ,(SELECT JOBG_NM FROM APS.APS920TB WHERE JOBG_CD = NOW_JOBG_CD)             AS TYPE_NM
+					    ,45                                                                         AS USERTYPE_IDX
+					    ,'교수'                                                                     	AS USERTYPE_NM
+					FROM APS.APS010TB
+					WHERE EMP_GB_CODE IN ('PS012', 'PS013','PS014')
+					  AND NOW_JOBG_CD NOT IN ('12050501', '12030201', '12060101', '12090801', '12030101', '12060201', '12050202', '12040601', '12010101', '12050502', '12050201')
+					  AND RTI_FL = 0
+<!-- 			        UNION ALL -->
+<!-- 					SELECT -->
+<!-- 			             EMP_NO                                                                     AS MEMBER_IDX -->
+<!-- 			            ,EMP_NO                                                                     AS MEMBER_ID -->
+<!-- 					    ,EMP_NM                                                                     AS MEMBER_NAME -->
+<!-- 					    ,NULL                                                                       AS MEMBER_PWD -->
+<!-- 					    ,(SELECT COLG_CD FROM SCO.V_AI_ORG ORG WHERE ORG.DEPT_CD = NOW_DEPT_CD)     AS COLL_CD -->
+<!-- 					    ,UF_GET_ORG_CODESET('B', NOW_DEPT_CD)                       				AS COLL_NM -->
+<!-- 					    ,NOW_DEPT_CD                                                                AS DEPT_CD -->
+<!-- 					    ,UF_GET_ORG_CODESET('D', NOW_DEPT_CD)                       				AS DEPT_NM -->
+<!-- 					    ,NVL(NOW_MAJOR_CD,NOW_DEPT_CD)                                              AS MAJOR_CD -->
+<!-- 					    ,UF_GET_ORG_CODESET('D', NVL(NOW_MAJOR_CD,NOW_DEPT_CD))     				AS MAJOR_NM -->
+<!-- 					    ,NULL                                                                       AS GRADE -->
+<!-- 			            ,NOW_JOBG_CD                                                                AS TYPE -->
+<!-- 			            ,(SELECT JOBG_NM FROM APS.APS920TB WHERE JOBG_CD = NOW_JOBG_CD)             AS TYPE_NM -->
+<!-- 					    ,46                                                                         AS USERTYPE_IDX -->
+<!-- 					    ,'조교'                                                                     	AS USERTYPE_NM -->
+<!-- 					FROM APS.APS010TB -->
+<!-- 					WHERE EMP_GB_CODE = 'PS012' -->
+<!-- 					  AND NOW_JOBG_CD = '12060101' -->
+<!-- 					  AND RTI_FL = 0 -->
+					UNION ALL
+					SELECT
+			             EMP_NO                                                                         AS MEMBER_IDX
+			            ,EMP_NO                                                                         AS MEMBER_ID
+					    ,EMP_NM                                                                         AS MEMBER_NAME
+					    ,NULL                                                                           AS MEMBER_PWD
+					    ,(SELECT COLG_CD FROM SCO.V_AI_ORG ORG WHERE ORG.DEPT_CD = NOW_DEPT_CD)         AS COLL_CD
+					    ,UF_GET_ORG_CODESET('B', NOW_DEPT_CD)                   						AS COLL_NM
+					    ,NOW_DEPT_CD                                                                    AS DEPT_CD
+					    ,UF_GET_ORG_CODESET('D', NOW_DEPT_CD)                   						AS DEPT_NM
+					    ,NVL(NOW_MAJOR_CD,NOW_DEPT_CD)                                                  AS MAJOR_CD
+					    ,UF_GET_ORG_CODESET('D', NVL(NOW_MAJOR_CD,NOW_DEPT_CD)) 						AS MAJOR_NM
+					    ,NULL                                                                       AS GRADE
+			            ,NOW_JOBG_CD                                                                    AS TYPE
+			            ,(SELECT JOBG_NM FROM APS.APS920TB WHERE JOBG_CD = NOW_JOBG_CD)                 AS TYPE_NM
+					    ,47                                                                             AS USERTYPE_IDX
+					    ,'직원'                                                            	            AS USERTYPE_NM
+					FROM APS.APS010TB
+					WHERE EMP_NO NOT IN (SELECT EMP_NO
+	                                    FROM APS.APS010TB
+	                                    WHERE EMP_GB_CODE IN ('PS012', 'PS013', 'PS014')
+	                                      AND NOW_JOBG_CD NOT IN
+	                                          ('12050501', '12030201', '12060101', '12090801', '12030101', '12060201',
+	                                           '12050202', '12040601', '12010101', '12050502', '12050201')
+	                                      AND RTI_FL = 0) <!-- 교수 제외 교원 -->	                                      
+<!-- 			        UNION ALL -->
+<!-- 					SELECT -->
+<!-- 			             EMP_NO                                                                         AS MEMBER_IDX -->
+<!-- 			            ,EMP_NO                                                                         AS MEMBER_ID -->
+<!-- 					    ,EMP_NM                                                                         AS MEMBER_NAME -->
+<!-- 					    ,NULL                                                                           AS MEMBER_PWD -->
+<!-- 					    ,(SELECT COLG_CD FROM SCO.V_AI_ORG ORG WHERE ORG.DEPT_CD = NOW_DEPT_CD)         AS COLL_CD -->
+<!-- 					    ,UF_GET_ORG_CODESET('B', NOW_DEPT_CD)                   		AS COLL_NM -->
+<!-- 					    ,NOW_DEPT_CD                                                                    AS DEPT_CD -->
+<!-- 					    ,UF_GET_ORG_CODESET('D', NOW_DEPT_CD)                   		AS DEPT_NM -->
+<!-- 					    ,NVL(NOW_MAJOR_CD,NOW_DEPT_CD)                                                  AS MAJOR_CD -->
+<!-- 					    ,UF_GET_ORG_CODESET('D', NVL(NOW_MAJOR_CD,NOW_DEPT_CD)) 		AS MAJOR_NM -->
+<!-- 					    ,NULL                                                                       AS GRADE -->
+<!-- 			            ,NOW_JOBG_CD                                                                    AS TYPE -->
+<!-- 			            ,(SELECT JOBG_NM FROM APS.APS920TB WHERE JOBG_CD = NOW_JOBG_CD)                 AS TYPE_NM -->
+<!-- 					    ,47                                                                             AS USERTYPE_IDX -->
+<!-- 					    ,'직원(창의융합교육센터)'                                                       		AS USERTYPE_NM -->
+<!-- 					FROM APS.APS010TB -->
+<!-- 					WHERE NOW_DEPT_CD = '456000' -->
+<!-- 					AND RTI_FL = 0 -->
+			        UNION ALL
+					SELECT
+			             'kmouadmin'                                                                    AS MEMBER_IDX
+			            ,'kmouadmin'                                                                    AS MEMBER_ID
+					    ,'kmouadmin'                                                                    AS MEMBER_NAME
+					    ,NULL                                                                           AS MEMBER_PWD
+					    ,NULL                                                                           AS COLL_CD
+					    ,NULL                   		                                                AS COLL_NM
+					    ,NULL                                                                           AS DEPT_CD
+					    ,NULL                   		                                                AS DEPT_NM
+					    ,NULL                                                                           AS MAJOR_CD
+					    ,NULL 		                                                                    AS MAJOR_NM
+					    ,NULL                                                                       AS GRADE
+			            ,NULL                                                                           AS TYPE
+			            ,NULL                                                                           AS TYPE_NM
+					    ,50                                                                             AS USERTYPE_IDX
+					    ,'최고관리자'                                                            	    	AS USERTYPE_NM
+					FROM DUAL				
+			)
+	    SELECT 
+	    	* 
+	    FROM 
+	    	CURR
+	    WHERE 
+	    	MEMBER_ID = #{MEMBER_ID}
+	    <if test="MEMBER_ID != 'kmouadmin' or MEMBER_PWD != 'kmouadmin'">
+<!-- 	    개발용 임시주석... 운영 반영시 주석 해제!!! -->
+<!-- 	    AND SUD.AI_LOGIN(#{MEMBER_ID}, #{MEMBER_PWD}) = 'Y' -->
+	    AND 'Y' = 'Y'
+	    </if>
+	</select>
+	
+	<!-- 메인(교수) : 취업률 --> 
+	<select id="selectEmploymentRate" parameterType="java.util.HashMap" resultType="dataMap">
+		WITH CURR AS (
+					SELECT
+				    	 (SELECT DEPT_CDNM(COLL_CD) FROM SUD010TB WHERE STUDENT_NO = A.STUDENT_NO)  AS COLL_NM
+				       , A.*
+					FROM
+						DUL.DUL060TB A
+					WHERE 
+						YEAR = TO_CHAR(SYSDATE,'YYYY')
+					AND EMP_GB_CODE NOT IN ('DL050009', 'DL050011', 'DL050099')
+					)
+		SELECT 
+			  COLL_NM 
+			, COUNT(COLL_NM) AS COLL_CNT
+		FROM 
+			CURR
+		GROUP BY COLL_NM
+	</select>
+</mapper>

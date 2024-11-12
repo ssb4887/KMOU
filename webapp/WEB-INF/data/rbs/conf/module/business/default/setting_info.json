@@ -1,0 +1,13 @@
+{
+	"setting_info":{
+		"design":"default"
+		,"dset_list_block":0
+		,"dset_list_count":0
+		,"dset_file_totalsize":0
+		,"dset_simg_width":0
+		,"dset_simg_height":0
+		,"list_title":"사업구조 목록"
+		,"input_title":"사업구조 등록"
+		,"deleteList_title":"사업구조 삭제목록"
+	}
+}

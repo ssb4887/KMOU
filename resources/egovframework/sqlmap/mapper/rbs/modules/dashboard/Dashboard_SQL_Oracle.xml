@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.dashboard.dashboardMapper">
+
+	<!-- 배너 -->
+	<select id="bannerList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.BNN_IDX, A.SUBJECT, A.IMG_SAVED_NAME, A.IMG_TEXT, A.LINK_URL, A.LINK_TARGET 
+			FROM 
+			<include refid="rbs.modules.banner.bannerMapper.BANNER_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			AND A.ISSTOP = '0' 
+			<![CDATA[AND ((A.DSP_DATE1 IS NULL OR (A.DSP_DATE1 IS NOT NULL AND A.DSP_DATE1 <= ]]><include refid="rbs.commonDBMSMapper.currentDateYYYY-MM-DD"/><![CDATA[)) AND (A.DSP_DATE2 IS NULL OR (A.DSP_DATE2 IS NOT NULL AND A.DSP_DATE2 >= ]]><include refid="rbs.commonDBMSMapper.currentDateYYYY-MM-DD"/><![CDATA[)))]]> 
+			AND A.DSP_PAGE = #{itemMasterCode} 
+			ORDER BY A.ORDER_IDX ASC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+
+	<!-- 팝업 -->
+	<select id="popupList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.POP_IDX, A.SUBJECT, A.IMG_SAVED_NAME, A.IMG_TEXT, 
+			A.POP_TYPE, A.LINK_URL, A.LINK_TARGET, A.POP_TOP, A.POP_LEFT, A.POP_WIDTH, A.POP_HEIGHT 
+			FROM 
+			<include refid="rbs.modules.popup.popupMapper.POPUP_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			AND A.ISSTOP = '0' 
+			<![CDATA[AND ((A.DSP_DATE11 IS NULL OR (A.DSP_DATE11 IS NOT NULL AND A.DSP_DATE11 || A.DSP_DATE12 || A.DSP_DATE13 <= ]]><include refid="rbs.commonDBMSMapper.currentDateYYYY-MM-DDHH24MI"/><![CDATA[)) AND (A.DSP_DATE21 IS NULL OR (A.DSP_DATE21 IS NOT NULL AND A.DSP_DATE21 || A.DSP_DATE22 || A.DSP_DATE23 >= ]]><include refid="rbs.commonDBMSMapper.currentDateYYYY-MM-DDHH24MI"/><![CDATA[)))]]> 
+			ORDER BY A.POP_IDX DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	
+	<!-- 게시판 -->
+	<select id="boardList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT A.BRD_IDX, A.NAME, A.SUBJECT, 
+			<if test="useContents">A.CONTENTS, </if>
+			<if test="useListimg">A.LISTIMG_SAVED_NAME, A.LISTIMG_TEXT, </if>
+			<if test="useFile">T_FILE.FILE_SAVED_NAME, T_FILE.FILE_TEXT, </if>
+			<choose>
+				<when test="cateColumnId">${cateColumnId}</when>
+				<otherwise>NULL</otherwise>
+			</choose>
+			CATE_CODE, A.REGI_DATE 
+			FROM 
+			<include refid="rbs.modules.board.boardMapper.BORD_TABLE_NAME"/> A 
+			<if test="useFile">
+			LEFT OUTER JOIN <include refid="rbs.modules.board.boardFileMapper.FILE_TABLE_NAME"/> T_FILE 
+			ON T_FILE.BRD_IDX = A.BRD_IDX AND T_FILE.ITEM_ID = 'file' AND T_FILE.ORDER_IDX = 1
+			</if>
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<if test="useDldate"><include refid="rbs.modules.board.boardMapper.SELECT_DLDATE_WHERE"/></if>
+			<if test="useQna">AND A.RE_LEVEL = 1 </if>
+			<bind name="defaultOrderStr" value="'A.PNT_IDX DESC, A.RE_STEP'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<!-- 게시판 : 한줄형 -->
+	<select id="memoboardList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT A.MEM_IDX, A.NAME, A.CONTENTS, A.REGI_DATE 
+			FROM 
+			<include refid="rbs.modules.board.boardMemoMapper.MEMO_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<if test="useDldate"><include refid="rbs.modules.board.boardMapper.SELECT_DLDATE_WHERE"/></if>
+			<bind name="defaultOrderStr" value="'A.MEM_IDX DESC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<!-- 콘텐츠 -->
+	<select id="contentsView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="rbs.modules.contents.lang.contWork9Mapper.WORK_A_TABLE_NAME"/> A 
+			WHERE A.LOCALE_LANG = #{localeLang}   
+			<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</select>
+</mapper>

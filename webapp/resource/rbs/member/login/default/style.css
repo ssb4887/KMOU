@@ -1,0 +1,63 @@
+@charset "utf-8";
+@import url('../../common.css');
+
+/* 로그인 */
+#cms_member_article .loginTit {overflow:hidden; margin:40px 0 30px 110px;}
+#cms_member_article .loginTit .tit {float:left; color:#005baf; font-size:65px; line-height:50px;font-family:verdana;letter-spacing:-3.3px; }
+#cms_member_article .loginTit .txt {float:left; margin-left:25px; font-size:13px; color:#3e3e3e; line-height:18px;}
+#cms_member_article .loginWrap {padding:47px 0 55px; border-top:2px solid #0e6bc1; border-bottom:1px solid #e4e4e4; background:#fbfbfb;}
+#cms_member_article .loginWrap .snsLogin {float:left; padding-left:60px; height:100%; }
+#cms_member_article .loginWrap fieldset {overflow:hidden; margin-left:110px;}
+#cms_member_article .loginWrap .login {float:left; margin-top:15px; width: 350px;}
+#cms_member_article .loginWrap .login li {margin-top:5px;float:left;}
+#cms_member_article .loginWrap .login li:first-child {margin-top:0;}
+#cms_member_article .loginWrap .login li label {float:left; width:65px; padding-left:9px; font-size:14px; font-weight:bold; color:#3e3e3e; line-height:32px; background:url(./images/dot.gif) no-repeat 0 center;}
+#cms_member_article .loginWrap .login li .inputTxt {float:left; width:260px; height:32px; line-height:32px;}
+#cms_member_article .loginWrap .btnLogin {float:left; margin-top:15px; margin-left:7px;}
+#cms_member_article .loginWrap .btnLogin {width:140px; height:74px; font-weight:bold; color:#ffffff !important; line-height:74px; font-size:16px; text-align:center; text-decoration:none !important; border:1px solid #0066ae; background:#006dba;}
+#cms_member_article .loginWrap .login li .inputTxt2 {border:1px solid #dbdbdb; margin-right:2px; width:330px; height:32px; line-height:32px;}
+#cms_member_article .loginWrap .login li .inputTxt3 {border:1px solid #dbdbdb; margin-right:2px; width:90px; height:32px; line-height:32px;}
+#cms_member_article .findJoin {padding:38px 0 40px 227px; border-bottom:1px solid #e4e4e4;}
+#cms_member_article .findJoin li {margin-top:7px;}
+#cms_member_article .findJoin li:first-child {margin-top:0;}
+#cms_member_article .findJoin li span {margin-left:10px; padding-left:0px; }
+#cms_member_article .btnTypeK {width:150px; height:25px;  font-size:11px; font-weight:bold; color:#fff !important; line-height:25px;text-align:center;text-decoration:none !important;border:1px solid #004888; background:#005AAB;}
+
+/*
+커스텀추가_240719
+#cms_member_article {display: flex; justify-content: center;padding:19vh 0;}
+#cms_member_article .loginTit .txt {float: left;margin-left: 0; padding-top: 11px; font-size: 13px;color: #3e3e3e; line-height: 18px;}
+#cms_member_article .loginWrap {padding: 0; border-top: 0; border-bottom: 0; background: #FFF;}
+#cms_member_article .loginWrap .btnLogin {margin-left: 65px; width: 260px;height: 46px;padding-top: 4px; line-height: 20px;}
+#cms_member_article .loginWrap .login li .inputTxt {padding: 0 10px; border-radius: 6px;border: 1px solid #dedede;}
+#cms_member_article .loginTit, #cms_member_article .loginWrap {max-width: 500px;}
+#cms_member_article .loginWrap fieldset {overflow: hidden;margin-left: 0 !important;}
+#cms_member_article .loginTit {margin: 0 !important;padding-top: 31px;}
+#cms_member_article .loginWrap .login {position: relative;}
+#cms_member_article .loginWrap .login:before {content: "";clear: both;display: block; position: absolute; top: -75px; right: 28px;width: 67px;height: 75px;background: url(./images/img_login_character.png);}
+#cms_member_article .loginWrap fieldset {overflow: visible;}
+#cms_member_article .loginTit {position: relative;overflow: visible;}
+#cms_member_article .loginTit:before {content: '';display: block; width: 37rem; height: 37rem; background: url(./images/mbg_bx.svg) no-repeat 50% 50%; position: absolute;top: -14rem;left: -17%; margin-left: 0;z-index: -1; background-size: cover;}
+*/
+
+
+/*커스텀추가_240806*/
+.sContent.login_wrap {padding: 0;}
+.sContent.login_wrap {padding: 0;}
+.sContent.login_wrap {}
+.sContent.login_wrap #cms_member_article {display: flex; justify-content: center;  padding: 19vh 0 25vh 0; background-image: url(./images/bg_intro.png); background-size: cover;background-position: center;margin-top: -29vh;margin-bottom: -22vh;}
+.sContent.login_wrap #cms_member_article .login_article {display: flex; flex-direction: column;background: #ffffff63;border-radius: 15px; border: 1px solid #FFF;padding: 5rem;}
+.sContent.login_wrap #cms_member_article .loginTit {padding: 0; margin: 0; text-align: center; width: 100%;display: flex;flex-direction: column;}
+.sContent.login_wrap #cms_member_article .loginTit .tit {text-align: center;width: 100%;margin-bottom: 2rem;}
+.sContent.login_wrap #cms_member_article .loginTit .tit img {width: 270px;display: inline-block;}
+.sContent.login_wrap #cms_member_article .loginTit .txt {margin: 0; padding: 0;float: unset; color: #0d1762;}
+.sContent.login_wrap #cms_member_article .login_article .loginWrap {background: none;border: 0;padding: 0;}
+.sContent.login_wrap #cms_member_article .loginWrap fieldset {margin: 0;}
+.sContent.login_wrap #cms_member_article .loginWrap .login {width: 100%;float: unset;}
+.sContent.login_wrap #cms_member_article .loginWrap .login li {float: unset;display: flex; flex-direction: column;}
+.sContent.login_wrap #cms_member_article .loginWrap .login li label { float: unset; width: unset; margin: 0; padding: 0; font-size: 1.4rem;font-weight: 400;}
+.sContent.login_wrap #cms_member_article .loginWrap .login li .inputTxt { float: unset; width: 100% !important; border-radius: 5px; border: 0;padding: 0 1rem;}
+.sContent.login_wrap #cms_member_article .loginWrap .login li:first-child {}
+.sContent.login_wrap #cms_member_article .loginWrap .btnLogin {width: 100%;height: 50px;line-height: 50px;margin: 2rem 0 0 0;padding: 0;background: #1b298c; border: 0;}
+
+

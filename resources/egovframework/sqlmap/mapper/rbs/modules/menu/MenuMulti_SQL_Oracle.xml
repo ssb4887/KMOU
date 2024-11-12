@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.menu.menuMultiMapper">
+
+	<sql id="MULTI_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />MENU_MULTI_INFO</trim></sql>
+	<sql id="MULTI_A_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />MENU_A_MULTI_INFO</trim></sql>
+	<sql id="MULTI_A_LOG_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />MENU_A_LOG_MULTI_INFO</trim></sql>
+	
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.MENU_IDX, A.VER_IDX, A.SITE_ID, A.ITEM_ID, A.ITEM_KEY 
+			FROM 
+			<include refid="MULTI_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			ORDER BY A.MENU_IDX, A.ITEM_ID
+	</select>
+	<select id="selectJSONList" parameterType="java.util.HashMap" resultType="egovMap">
+			SELECT 
+			A.MENU_IDX, A.VER_IDX, A.SITE_ID, A.ITEM_ID, A.ITEM_KEY 
+			FROM 
+			<include refid="MULTI_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			ORDER BY A.MENU_IDX, A.ITEM_ID
+	</select>
+	<select id="selectJSONApplyList" parameterType="java.util.HashMap" resultType="egovMap">
+			SELECT 
+			A.MENU_IDX, A.VER_IDX, A.SITE_ID, A.ITEM_ID, A.ITEM_KEY 
+			FROM 
+			<include refid="MULTI_A_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			ORDER BY A.MENU_IDX, A.ITEM_ID
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MULTI_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*
+			FROM 
+			<include refid="MULTI_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MULTI_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, MENU_IDX, VER_IDX, SITE_ID
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, #{MENU_IDX}, #{VER_IDX}, #{SITE_ID}
+		)
+	</insert>
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="MULTI_TABLE_NAME"/> SET 
+		<include refid="rbs.commonMapper.UPDATE_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		AND MENU_IDX = #{MENU_IDX} AND VER_IDX = #{VER_IDX} AND SITE_ID = #{SITE_ID}
+	</update>
+	
+	<!-- 적용 테이블 insert -->
+	<insert id="apply" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MULTI_A_TABLE_NAME"/> (
+		MENU_IDX, VER_IDX, SITE_ID, ITEM_ID, ITEM_KEY
+		) 
+		(
+			SELECT 
+			MULTI.MENU_IDX, MULTI.VER_IDX, MULTI.SITE_ID, MULTI.ITEM_ID, MULTI.ITEM_KEY
+		 	FROM <include refid="MULTI_TABLE_NAME"/> MULTI 
+		 	INNER JOIN <include refid="rbs.modules.menu.menuMapper.MENU_TABLE_NAME"/> A ON A.ISDELETE = '0' AND MULTI.MENU_IDX = A.MENU_IDX AND MULTI.VER_IDX = A.VER_IDX AND MULTI.SITE_ID = A.SITE_ID 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		)	
+	</insert>
+	
+	<update id="applyCdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MULTI_A_TABLE_NAME"/> 
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MULTI_TABLE_NAME"/>  
+		WHERE MENU_IDX = #{MENU_IDX} AND VER_IDX = #{VER_IDX} AND SITE_ID = #{SITE_ID}
+		<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</delete>
+	
+	<select id="selectMapList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.SITE_ID || ',' || A.MENU_IDX || ',' || A.ITEM_ID ITEM_ID, A.ITEM_KEY 
+			FROM 
+			<include refid="MULTI_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			ORDER BY A.MENU_IDX, A.ITEM_ID
+	</select>
+	
+	<select id="selectApplyMapList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.SITE_ID || ',' || A.MENU_IDX || ',' || A.ITEM_ID ITEM_ID, A.ITEM_KEY 
+			FROM 
+			<include refid="MULTI_A_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			ORDER BY A.MENU_IDX, A.ITEM_ID
+	</select>
+	
+	<select id="selectApplyLogMapList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.SITE_ID || ',' || A.MENU_IDX || ',' || A.ITEM_ID ITEM_ID, A.ITEM_KEY 
+			FROM 
+			<include refid="MULTI_A_LOG_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			ORDER BY A.MENU_IDX, A.ITEM_ID
+	</select>
+	<!-- 메뉴접근권한 -->
+	<select id="selectGroupList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.MENU_IDX, A.ITEM_KEY OPTION_CODE, DT.GROUP_NAME OPTION_NAME
+			FROM 
+			<include refid="MULTI_TABLE_NAME"/> A 
+			INNER JOIN 
+	    	<choose>
+	    		<when test="${USE_LANG} == 1">
+			    	<include refid="rbs.modules.member.lang.memberGrupMapper.VIEW_GROUP_TABLE_NAME"/> DT
+			    	ON ISDELETE = '0' AND LOCALE_LANG = #{localeLang}
+	    		</when>
+	    		<otherwise>
+			    	<include refid="rbs.modules.member.memberGrupMapper.GROUP_TABLE_NAME"/> DT
+			    	ON ISDELETE = '0' 
+	    		</otherwise>
+	    	</choose>
+	    	AND A.ITEM_KEY = DT.GROUP_CODE 
+			WHERE ITEM_ID = #{itemId}
+			<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</select>
+	<select id="selectDepartList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.MENU_IDX, A.ITEM_KEY OPTION_CODE, DT.DEPART_NAME OPTION_NAME
+			FROM 
+			<include refid="MULTI_TABLE_NAME"/> A 
+			INNER JOIN 
+	    	<choose>
+	    		<when test="${USE_LANG} == 1">
+			    	<include refid="rbs.modules.member.lang.memberDprtMapper.VIEW_DEPART_TABLE_NAME"/> DT
+			    	ON ISDELETE = '0' AND LOCALE_LANG = #{localeLang}
+	    		</when>
+	    		<otherwise>
+			    	<include refid="rbs.modules.member.memberDprtMapper.DEPART_TABLE_NAME"/> DT
+			    	ON ISDELETE = '0' 
+	    		</otherwise>
+	    	</choose>
+	    	AND A.ITEM_KEY = DT.DEPART_IDX 
+			WHERE ITEM_ID = #{itemId}
+			<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</select>
+	<select id="selectMemberList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.MENU_IDX, A.ITEM_KEY OPTION_CODE, DT.MEMBER_NAME OPTION_NAME
+			FROM 
+			<include refid="MULTI_TABLE_NAME"/> A 
+			INNER JOIN <include refid="rbs.modules.member.memberTotMapper.MEMBER_TABLE_NAME"/> DT
+			    	ON ISDELETE = '0' AND A.ITEM_KEY = DT.MEMBER_IDX 
+			WHERE ITEM_ID = #{itemId} 
+			<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</select>	
+	
+</mapper>            

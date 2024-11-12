@@ -1,0 +1,8 @@
+@charset "utf-8";
+/* m.20121005. */
+@import url('default.css');
+@import url('layout_pop.css');
+@import url('contents.css');
+body{background:none;}
+.popup {padding:0 10px; font-size:13px;}
+#wrapper>div {margin:20px;}

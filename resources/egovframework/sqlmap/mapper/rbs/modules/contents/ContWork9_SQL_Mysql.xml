@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.contents.contWork9Mapper">
+    
+	<sql id="WORK_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG"/>CONTENTS_VER_9_INFO_LANG</trim></sql>
+	<sql id="WORK_A_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG"/>CONTENTS_VER_A_9_INFO_LANG</trim></sql>
+			
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="WORK_TABLE_NAME"/> A 
+			INNER JOIN <include refid="rbs.modules.contents.contVersionMapper.VERSION_TABLE_NAME"/> VER ON A.CONTENTS_CODE = VER.CONTENTS_CODE AND A.BRANCH_IDX = VER.BRANCH_IDX AND A.VER_IDX = VER.VER_IDX  
+			INNER JOIN <include refid="rbs.modules.contents.branchMapper.BRANCH_TABLE_NAME"/> BRANCH ON VER.CONTENTS_CODE = BRANCH.CONTENTS_CODE AND VER.BRANCH_IDX = BRANCH.BRANCH_IDX  
+			INNER JOIN <include refid="rbs.modules.contents.contentsMapper.CONTENTS_TABLE_NAME"/> CONT ON BRANCH.CONTENTS_CODE = CONT.CONTENTS_CODE
+			WHERE VER.ISDELETE = '0' AND BRANCH.ISDELETE = '0' AND CONT.ISDELETE = '0'   
+			<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</select>
+	
+	<select id="selectApplyView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="WORK_A_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<insert id="copyInsert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="WORK_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, LOCALE_LANG
+		) (SELECT 
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, LOCALE_LANG 
+		FROM <include refid="WORK_TABLE_NAME"></include>
+		<include refid="rbs.commonMapper.COM_SG_WHERE_LANG"/>
+        )
+	</insert>
+	
+	<insert id="allInsert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="WORK_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, LOCALE_LANG
+		) (SELECT 
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, OPTION_CODE 
+		FROM <include refid="rbs.modules.code.optionMapper.OPTION_TABLE_NAME"></include>
+        WHERE ISDELETE = '0' AND MASTER_CODE = 'LOCALE')
+	</insert>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="WORK_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+		) VALUES ( 
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+        )
+	</insert>
+	
+	<!-- 작업 테이블 update -->
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="WORK_TABLE_NAME"/> SET 
+		<include refid="rbs.commonMapper.UPDATE_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE_LANG"/>
+	</update>
+	
+	<!-- 작업 테이블 update -->
+	<insert id="apply" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="WORK_A_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, CONTENTS_CODE, BRANCH_IDX, VER_IDX, LOCALE_LANG, REGI_DATE
+		) 
+		(
+			SELECT 
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, CONTENTS_CODE, BRANCH_IDX, VER_IDX, LOCALE_LANG, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		 	FROM <include refid="WORK_TABLE_NAME"/> 
+			<include refid="rbs.commonMapper.COM_SG_WHERE_LANG"/>
+		)	
+		
+	</insert>
+	
+	<delete id="applyCdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="WORK_A_TABLE_NAME"/>  
+		<include refid="rbs.commonMapper.COM_SG_WHERE_LANG"/>
+	</delete>
+
+</mapper>            

@@ -1,0 +1,15 @@
+@charset "utf-8";
+
+@import url('default.css');
+
+#fn_loginInfo {margin:50px auto; width:500px; border:7px solid #eee; padding:30px 20px; text-align: center;}
+#fn_loginInfo h1 {font-size:20px; font-weight: bold; line-height:30px;}
+#fn_loginInfo p {font-size:15px; line-height:30px; margin:10px 0;}
+#fn_loginInfo p.btn {margin-top:20px;}
+#fn_loginInfo button {display:inline-block;vertical-align:middle;width:120px; margin:0 3px; padding:7px 0; line-height:30px; font-weight:bold; font-size:14px !important; color:#ffffff !important; text-align:center; text-decoration:none !important; background:#005AAB;}
+
+ /* Mobile Device */
+@media all and (max-width:640px){
+	#fn_loginInfo {width:90%;}
+	#fn_loginInfo button {width:85px;}
+}

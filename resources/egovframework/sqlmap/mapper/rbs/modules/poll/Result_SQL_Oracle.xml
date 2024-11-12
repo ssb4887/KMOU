@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.poll.resultMapper">
+
+	<sql id="RESULT_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />POLL_${fnIdx}_RESULT_INFO</trim></sql>
+		
+	<!-- 유형 결과 -->
+	<select id="questypeResultList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT ITEM.GROUP_QUES_IDX, <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(SUM(ITEM.POINTS), 0)</trim> POINT_SUM, QUES.CONTENTS, QUES.RESULT_CONTENTS 
+		FROM <include refid="RESULT_TABLE_NAME"/> A 
+		INNER JOIN (
+			SELECT IQUES.POLL_IDX, IQUES.QUESTION_IDX, IITEM.QUESTION_IDX GROUP_QUES_IDX, IITEM.ITEM_IDX, IITEM.POINTS
+			FROM <include refid="rbs.modules.poll.quesMapper.QUES_TABLE_NAME"/> IQUES 
+			INNER JOIN <include refid="rbs.modules.poll.itemMapper.ITEM_TABLE_NAME"/> IITEM ON IQUES.POLL_IDX = IITEM.POLL_IDX AND IITEM.QUESTION_IDX = IQUES.PAR_QUES_IDX 
+			WHERE IQUES.ISDELETE = '0' AND IQUES.PAR_QUES_IDX IS NOT NULL 
+		) ITEM ON A.POLL_IDX = ITEM.POLL_IDX AND A.QUESTION_IDX = ITEM.QUESTION_IDX AND A.ITEM_IDX = ITEM.ITEM_IDX 
+		INNER JOIN <include refid="rbs.modules.poll.quesMapper.QUES_TABLE_NAME"/> QUES ON QUES.ISDELETE = '0' AND ITEM.POLL_IDX = QUES.POLL_IDX AND ITEM.GROUP_QUES_IDX = QUES.QUESTION_IDX
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		GROUP BY GROUP_QUES_IDX 
+		ORDER BY POINT_SUM DESC
+	</select>
+	
+	<!-- 유형 결과 -->
+	<select id="questypePResultList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT QUES.QUESTION_IDX GROUP_QUES_IDX, <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(SUM(ITEM.POINTS), 0)</trim> POINT_SUM, QUES.CONTENTS, QUES.RESULT_CONTENTS 
+		FROM <include refid="RESULT_TABLE_NAME"/> A 
+		INNER JOIN <include refid="rbs.modules.poll.pitemMapper.ITEM_TABLE_NAME"/> ITEM ON A.POLL_IDX = ITEM.POLL_IDX AND A.ITEM_IDX = ITEM.ITEM_IDX 
+		INNER JOIN <include refid="rbs.modules.poll.quesMapper.QUES_TABLE_NAME"/> IQUES  ON IQUES.ISDELETE = '0' AND IQUES.PAR_QUES_IDX IS NOT NULL AND A.POLL_IDX = IQUES.POLL_IDX AND A.QUESTION_IDX = IQUES.QUESTION_IDX 
+		INNER JOIN <include refid="rbs.modules.poll.quesMapper.QUES_TABLE_NAME"/> QUES ON QUES.ISDELETE = '0' AND IQUES.POLL_IDX = QUES.POLL_IDX AND IQUES.PAR_QUES_IDX = QUES.QUESTION_IDX
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		GROUP BY QUES.QUESTION_IDX 
+		ORDER BY POINT_SUM DESC
+	</select>
+	
+	<select id="resultList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			<choose>
+				<when test="isResp">A.RESP_IDX || ',' || A.QUESTION_IDX RESP_QUESTION_IDX</when>
+				<otherwise>A.QUESTION_IDX || ',' || A.ITEM_IDX QUESTION_ITEM_IDX</otherwise>
+			</choose>
+			, A.*
+		FROM 
+		<include refid="RESULT_TABLE_NAME"/> A 
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		ORDER BY A.QUESTION_IDX, A.ITEM_IDX
+	</select>
+	
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			A.*, RESP.RESP_IDX, REGI_NAME, REGI_ID, REGI_IP 
+		FROM 
+		<include refid="RESULT_TABLE_NAME"/> A 
+		INNER JOIN <include refid="rbs.modules.poll.respMapper.RESP_TABLE_NAME"/> RESP ON A.POLL_IDX = RESP.POLL_IDX AND A.RESP_IDX = RESP.RESP_IDX
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		ORDER BY A.QUESTION_IDX, A.ITEM_IDX
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+		<include refid="RESULT_TABLE_NAME"/> A
+		INNER JOIN <include refid="rbs.modules.poll.respMapper.RESP_TABLE_NAME"/> RESP ON A.POLL_IDX = RESP.POLL_IDX AND A.RESP_IDX = RESP.RESP_IDX
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*
+			FROM 
+			<include refid="RESULT_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="RESULT_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="RESULT_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+		)
+	</insert>
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="RESULT_TABLE_NAME"/> SET 
+		<include refid="rbs.commonMapper.UPDATE_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="RESULT_TABLE_NAME"/>  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+</mapper>

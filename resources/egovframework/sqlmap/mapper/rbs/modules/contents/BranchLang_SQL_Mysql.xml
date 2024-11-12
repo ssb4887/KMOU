@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.contents.lang.branchMapper">
+    
+	<sql id="BRANCH_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG"/>CONTENTS_BRANCH_INFO_LANG</trim></sql>
+	<sql id="VIEW_BRANCH_TABLE_NAME"><trim><include refid="rbs.commonMapper.VIEW_PRE_FLAG"/>CONT_BRANCH_INFO_LANG</trim></sql>
+	
+	<select id="optionJSONList" parameterType="java.util.HashMap" resultType="egovMap">
+			SELECT 
+			A.BRANCH_IDX OPTION_CODE, A.BRANCH_NAME OPTION_NAME, A.BRANCH_TYPE OPTION_TYPE
+			FROM 
+			<include refid="VIEW_BRANCH_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+			<bind name="defaultOrderStr" value="'A.BRANCH_IDX ASC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+	</select>
+	
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		<if test="lastIndex > 0">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+		</if>
+			SELECT 
+			A.BRANCH_IDX, A.BRANCH_NAME, A.BRANCH_TYPE, A.REMARKS, A.REGI_DATE
+			FROM 
+			<include refid="VIEW_BRANCH_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+			<bind name="defaultOrderStr" value="'A.BRANCH_IDX ASC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+		<if test="lastIndex > 0">
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+		</if>
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="VIEW_BRANCH_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+	</select>
+	
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*, CONT.CONTENTS_NAME, CONT.CONTENTS_TYPE 
+			FROM 
+			<include refid="VIEW_BRANCH_TABLE_NAME"/> A 
+			INNER JOIN <include refid="rbs.modules.contents.lang.contentsMapper.VIEW_CONTENTS_TABLE_NAME"/> CONT ON A.CONTENTS_CODE = CONT.CONTENTS_CODE AND A.LOCALE_LANG = CONT.LOCALE_LANG  
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="BRANCH_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, LOCALE_LANG, LAST_MODI_DATE
+		) 
+		(
+			SELECT 
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, BRANCH_IDX, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		 	FROM <include refid="rbs.modules.contents.branchMapper.BRANCH_TABLE_NAME"/> 
+		 	WHERE ISDELETE = '0' AND MASTER_CODE = 'LOCALE'
+		)	
+		
+	</insert>
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="BRANCH_TABLE_NAME"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE_LANG"/>
+	</update>
+	 
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.BRANCH_IDX, A.BRANCH_NAME, A.BRANCH_TYPE, A.REMARKS, A.REGI_NAME,  
+			A.REGI_DATE, A.LAST_MODI_NAME, A.LAST_MODI_ID, A.LAST_MODI_DATE 
+			FROM 
+			<include refid="VIEW_BRANCH_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE_LANG"/>
+			ORDER BY A.LAST_MODI_DATE DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="VIEW_BRANCH_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE_LANG"/> 
+	</select>
+</mapper>            

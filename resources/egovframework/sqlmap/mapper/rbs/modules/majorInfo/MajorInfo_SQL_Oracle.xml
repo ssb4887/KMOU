@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	1. IDX, <include refid="MAJOR_BASICINFO_TABLE_NAME"/>, [목록에 사용할 컬럼], [기본정렬쿼리], 테이블명 등 변경해서 사용
+	2. 그 외 필요에 따라 쿼리 수정하여 사용 
+-->
+<mapper namespace="rbs.modules.majorInfo.majorInfoMapper">
+	<!-- 테이블명 -->
+	<sql id="MAJOR_BASICINFO_TABLE_NAME"><trim>MAJOR_INFO</trim></sql>
+	<sql id="MAJOR_ABTYINFO_TABLE_NAME"><trim>MAJOR_ABTY_INFO</trim></sql>
+	<sql id="MAJOR_ABTYINFO_DETAIL_TABLE_NAME"><trim>MAJOR_ABTY_DETAIL_INFO</trim></sql>
+	<sql id="MAJOR_COUR_MAJORINFO_TABLE_NAME"><trim>MAJOR_EDU_COUR_INFO</trim></sql>
+	<sql id="MAJOR_NONSBJT_TABLE_NAME"><trim>MAJOR_NONSBJT_INFO</trim></sql>
+	<sql id="MAJOR_LICENSE_TABLE_NAME"><trim>MAJOR_LICENSE_INFO</trim></sql>
+	
+	<!-- KEY가 INT인 경우 -->
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="MAJOR_BASICINFO_TABLE_NAME"/> A
+	</select>
+	
+	<!-- KEY가 STRING인 경우 - KEY형식에 맞게 변경하여 사용 
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT <include refid="rbs.commonDBMSMapper.currentDateYYYYMM"/> || LPAD(TO_NUMBER(SUBSTR(NVL(MAX(A.IDX), <include refid="rbs.commonDBMSMapper.currentDateYYYYMM"/> || '0'), 7)) + 1, 4, '0') MAXID
+		FROM 
+		<include refid="MAJOR_BASICINFO_TABLE_NAME"/> A 
+		WHERE A.IDX LIKE <include refid="rbs.commonDBMSMapper.currentDateYYYYMM"/> || '%'
+	</select>
+	-->
+	<!-- 수정/삭제 권한 : 등록자 -->
+    <!-- 목록 수정/삭제 권한 조건 쿼리 -->
+	<sql id="editAuthListQuery">
+		<if test="AUTH_MEMBER_IDX != null">
+		, CASE WHEN A.REGI_IDX = #{AUTH_MEMBER_IDX} THEN '1' ELSE '0' END AS AUTH_MNG
+		</if>
+	</sql>
+	
+    <!-- 수정/삭제 권한 조건 쿼리 -->	
+	<sql id="editAuthWhereQuery">
+		<if test="AUTH_MEMBER_IDX != null">
+		AND A.REGI_IDX = #{AUTH_MEMBER_IDX} 
+		</if>
+	</sql>
+	
+	<select id="selectCourMajorList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT YY 
+			,MJ_CD
+			,COM.SF_CMMN050_DEPTNM(MJ_CD) AS OPEN_SUST_MJ_NM
+			,COURSE_NO
+			,SPT_PSN_KOR
+			,SBJT_FG
+			,COM.SF_CMMN081_CODENM(SBJT_FG) AS SBJT_FG_NM
+			,SHYR_FG 
+			,COM.SF_CMMN081_CODENM(SHYR_FG) AS OPEN_SHYR_NM
+			,SHTM_CD
+			,COM.SF_CMMN081_CODENM(SHTM_CD) AS SHTM_NM
+			,PNT 
+			,THEO_TM_CNT 
+			,PRAC_TM_CNT
+			,SBJT_NM_KOR
+			,SBJT_NM_ENG
+		FROM UNI_BYMJ_EDU_CORS
+		WHERE 1=1
+		<if test=' YY != null and YY != "" '>
+			AND YY = #{YY}
+		</if>
+		<if test=' OPEN_SUST_MJ_CD != null and OPEN_SUST_MJ_CD != "" '>
+			AND MJ_CD = #{OPEN_SUST_MJ_CD}
+		</if>
+		<if test=' COURSE_NO != null and COURSE_NO != "" '>
+			AND COURSE_NO = #{COURSE_NO}
+		</if>
+		ORDER BY SHYR_FG, SHTM_CD, SBJT_NM_KOR
+	</select>
+	
+	<!-- 종합정보에서 교과목 조회 -->
+	<select id="selectAddMajorList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT YEAR
+		    , SMT
+		    , SCO.COMMON_CDNM(SMT) AS SMT_NM
+			, SUBJECT_CD
+			, SUF.UF_SUF_SUBJECT_NM(SUBJECT_CD) AS SUBJECT_NM
+			, DEPT_CD
+			, SCO.DEPT_CDNM(DEPT_CD) AS DEPT_NM
+			, COM_GRADE
+			, CDT_NUM
+			, WTIME_NUM
+			, PTIME_NUM
+		 FROM (SELECT A.*, SUF.UF_SUF_SUBJECT_NM(A.SUBJECT_CD) AS SUBJECT_NM FROM SUF.SUF050TB A)
+		  WHERE YEAR    = TO_CHAR(SYSDATE,'YYYY')
+		  AND DEPT_CD   = #{MAJOR_CD}
+		  <if test=' SUBJECT_NM != null and SUBJECT_NM != "" '>
+	  		AND SUBJECT_NM LIKE '%${SUBJECT_NM}%'
+		  </if>
+		  ORDER BY COM_GRADE, SUBJECT_NM
+	</select>
+	
+	<select id="selectRcmdCultList" parameterType="java.util.HashMap" resultType="dataMap">
+		 SELECT * 
+		 FROM AIEDU.UNI_BYMJ_CULT_CORS 
+		 WHERE YY        = #{YY}
+		 AND MJ_CD = #{OPEN_SUST_MJ_CD}
+		 <if test=' SBJT_NM_KOR != null and SBJT_NM_KOR != "" '>
+	  		AND SBJT_NM_KOR LIKE '%${SBJT_NM_KOR}%'
+		  </if>
+		  <if test=' EDU_CORS_CAPB_FG != null and EDU_CORS_CAPB_FG != "" '>
+	  		AND EDU_CORS_CAPB_FG = #{EDU_CORS_CAPB_FG}
+		  </if>		  
+		 ORDER BY EDU_CORS_CAPB_FG ASC, ORD ASC
+	</select>
+	
+	<select id="selectHaksaRcmdCultList" parameterType="java.util.HashMap" resultType="dataMap">
+		 SELECT *
+		FROM UNI.COUR021 c
+		WHERE YY = #{YY}	
+		<if test=' SBJT_KOR_NM != null and SBJT_KOR_NM != "" '>
+	  		AND SBJT_KOR_NM LIKE '%${SBJT_KOR_NM}%'
+		  </if>	 
+	</select>		
+	
+	
+	
+	
+	
+	<select id="selectIsCourMajorList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT * FROM UNI_BYMJ_EDU_CORS	
+		WHERE YY = #{YY}
+		 AND MJ_CD = #{OPEN_SUST_MJ_CD}
+		 AND COURSE_NO = #{COURSE_NO}
+		
+	</select>
+	
+	<select id="getFrontCourMajorList" parameterType="java.util.HashMap" resultType="dataMap">
+		 SELECT max(c11) AS c11
+				 ,max(c12) AS c12
+				 ,max(c13) AS c13
+				 ,max(c21) AS c21
+				 ,max(c22) AS c22
+				 ,max(c23) AS c23
+				 ,max(c31) AS c31
+				 ,max(c32) AS c32
+				 ,max(c33) AS c33
+				 ,max(c41) AS c41
+				 ,max(c42) AS c42
+				 ,max(c43) AS c43
+				 ,max(c51) AS c51
+				 ,max(c52) AS c52
+				 ,max(c53) AS c53
+				 ,SPT_PSN_KOR
+				 , ORDER_IDX
+				 FROM (
+				 SELECT 
+						 CASE WHEN SHYR_NM = '1학년' AND COM.SF_CMMN081_CODENM(SHTM_CD) = '1학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c11			    
+						 , CASE WHEN SHYR_NM = '1학년' AND COM.SF_CMMN081_CODENM(SHTM_CD) = '2학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c12
+						 , CASE WHEN SHYR_NM = '1학년' AND COM.SF_CMMN081_CODENM(SHTM_CD) = '전체학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c13						 
+						 , CASE WHEN SHYR_NM = '2학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '1학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c21      
+						 , CASE WHEN SHYR_NM = '2학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '2학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c22
+						 , CASE WHEN SHYR_NM = '2학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '전체학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c23						 
+						 , CASE WHEN SHYR_NM = '3학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '1학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c31
+						 , CASE WHEN SHYR_NM = '3학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '2학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c32
+						 , CASE WHEN SHYR_NM = '3학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '전체학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c33		
+						 , CASE WHEN SHYR_NM = '4학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '1학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c41				  
+						 , CASE WHEN SHYR_NM = '4학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '2학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c42
+						 , CASE WHEN SHYR_NM = '4학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '전체학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c43		
+						 , CASE WHEN SHYR_NM = '5학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '1학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c51
+						 , CASE WHEN SHYR_NM = '5학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '2학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c52
+					     , CASE WHEN SHYR_NM = '5학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '전체학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c53
+				 , B.OPTION_NAME AS SPT_PSN_KOR
+				 , B.ORDER_IDX
+				FROM (SELECT  REPLACE(TRIM(COLUMN_VALUE), '학년', '') || '학년' AS SHYR_NM,
+					          CASE WHEN COM.SF_CMMN081_CODENM(SBJT_FG) IN ('전공필수') THEN '&lt;p class="ass"&gt;' ||SBJT_NM_KOR|| '(' || PNT || ')' || '&lt;/p&gt;'
+					               WHEN COM.SF_CMMN081_CODENM(SBJT_FG) IN ('전공공통') THEN '&lt;p class="comm"&gt;' ||SBJT_NM_KOR|| '(' || PNT || ')' || '&lt;/p&gt;'
+					                      ELSE '&lt;p&gt;' || SBJT_NM_KOR || '(' || PNT || ')' || '&lt;/p&gt;' END AS SBJT_NM_KOR
+					           , SBJT_FG 
+					           , SHTM_CD
+					           , SPT_PSN_KOR
+				      FROM  AIEDU.UNI_BYMJ_EDU_CORS A,
+				           TABLE(CAST(MULTISET(
+				                      SELECT REGEXP_SUBSTR(COM.SF_CMMN081_CODENM(SHYR_FG), '[^,]+', 1, LEVEL)
+				                      FROM DUAL
+				                      CONNECT BY REGEXP_SUBSTR(COM.SF_CMMN081_CODENM(SHYR_FG), '[^,]+', 1, LEVEL) IS NOT NULL
+				                   ) AS SYS.ODCIVARCHAR2LIST)) 
+					  WHERE YY = #{YY} AND MJ_CD = #{MJ_CD}
+					 ) A
+					 , AIEDU.RBS_OPTION_INFO B
+			     WHERE A.SPT_PSN_KOR = B.OPTION_CODE (+)
+				   AND 'SPT_PSN_CD' = MASTER_CODE (+) 
+					GROUP BY SHYR_NM , COM.SF_CMMN081_CODENM(SHTM_CD) , OPTION_NAME , ORDER_IDX , SPT_PSN_KOR )
+		    	GROUP BY SPT_PSN_KOR, ORDER_IDX 
+		    	ORDER BY ORDER_IDX ASC
+	</select>
+	
+	<select id="getMicroMajorList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			A.*
+		FROM 
+			VIEW_UNI_MCM A
+		WHERE
+			 SUST_CD = #{MJ_CD}
+		AND USE_YN = '1'
+			
+<!-- 			SUST_CD = 'P04005001044' -->
+	</select>
+		
+	<select id="getMicroMajorSubjectList" parameterType="java.util.HashMap" resultType="dataMap">
+	 SELECT max(c11) AS c11
+				 ,max(c12) AS c12
+				 ,max(c13) AS c13
+				 ,max(c21) AS c21
+				 ,max(c22) AS c22
+				 ,max(c23) AS c23
+				 ,max(c31) AS c31
+				 ,max(c32) AS c32
+				 ,max(c33) AS c33
+				 ,max(c41) AS c41
+				 ,max(c42) AS c42
+				 ,max(c43) AS c43
+				 ,max(c51) AS c51
+				 ,max(c52) AS c52
+				 ,max(c53) AS c53
+				 ,MCM_KOR_NM
+				 FROM (
+					 SELECT 
+						 CASE WHEN SHYR_NM = '1학년' AND COM.SF_CMMN081_CODENM(SHTM_CD) = '1학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c11			    
+						 , CASE WHEN SHYR_NM = '1학년' AND COM.SF_CMMN081_CODENM(SHTM_CD) = '2학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c12
+						 , CASE WHEN SHYR_NM = '1학년' AND COM.SF_CMMN081_CODENM(SHTM_CD) = '전체학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c13						 
+						 , CASE WHEN SHYR_NM = '2학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '1학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c21      
+						 , CASE WHEN SHYR_NM = '2학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '2학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c22
+						 , CASE WHEN SHYR_NM = '2학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '전체학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c23						 
+						 , CASE WHEN SHYR_NM = '3학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '1학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c31
+						 , CASE WHEN SHYR_NM = '3학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '2학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c32
+						 , CASE WHEN SHYR_NM = '3학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '전체학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c33		
+						 , CASE WHEN SHYR_NM = '4학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '1학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c41				  
+						 , CASE WHEN SHYR_NM = '4학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '2학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c42
+						 , CASE WHEN SHYR_NM = '4학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '전체학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c43		
+						 , CASE WHEN SHYR_NM = '5학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '1학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c51
+						 , CASE WHEN SHYR_NM = '5학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '2학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c52
+					     , CASE WHEN SHYR_NM = '5학년'  AND COM.SF_CMMN081_CODENM(SHTM_CD) = '전체학기' THEN LISTAGG(SBJT_NM_KOR, '') WITHIN GROUP (ORDER BY SBJT_NM_KOR,SBJT_FG)ELSE '' END AS c53
+					     , MCM_KOR_NM					     
+					FROM (SELECT REPLACE(TRIM(COLUMN_VALUE), '학년', '') || '학년' AS SHYR_NM
+					           , CASE WHEN COM.SF_CMMN081_CODENM(SBJT_FG) IN ('전공필수') THEN '&lt;p class="ass"&gt;' ||SBJT_KOR_NM|| '(' || PNT || ')' || '&lt;/p&gt;'
+					           		  WHEN COM.SF_CMMN081_CODENM(SBJT_FG) IN ('전공공통') THEN '&lt;p class="comm"&gt;' ||SBJT_KOR_NM|| '(' || PNT || ')' || '&lt;/p&gt;'
+					                      ELSE '&lt;p&gt;' || SBJT_KOR_NM || '(' || PNT || ')' || '&lt;/p&gt;' END AS SBJT_NM_KOR
+					           , SBJT_FG 
+					           , SHTM_CD
+					           , MCM_KOR_NM
+					      FROM  AIEDU.VIEW_UNI_MCM_SBJT A,
+					           TABLE(CAST(MULTISET(
+					                      SELECT REGEXP_SUBSTR(COM.SF_CMMN081_CODENM(OPEN_SHYR_FG), '[^,]+', 1, LEVEL)
+					                      FROM DUAL
+					                      CONNECT BY REGEXP_SUBSTR(COM.SF_CMMN081_CODENM(OPEN_SHYR_FG), '[^,]+', 1, LEVEL) IS NOT NULL
+					                   ) AS SYS.ODCIVARCHAR2LIST)) 
+						  			WHERE MCM_CODE IN
+	                                        <foreach collection="mcmCodeList" item="mcmCode" index="index" separator="," open="(" close=")">
+	                                            #{mcmCode}
+	                                        </foreach>
+	                                      AND (DIUSE_SHTM IS NULL OR DIUSE_SHTM > TO_CHAR(SYSDATE,'YYYY.MM.DD.')) 
+	                            ) A
+	                      GROUP BY MCM_KOR_NM, SHYR_NM , SHTM_CD, SBJT_FG
+	 				) GROUP BY MCM_KOR_NM               	
+	</select>	
+	
+	<select id="selectModifyCourMajor" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			A.*
+		FROM 
+		<include refid="MAJOR_COUR_MAJORINFO_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<include refid="editAuthWhereQuery"/>
+	</select>
+	
+	<select id="selectModifyRcmdCult" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			A.*
+		FROM 
+		<include refid="MAJOR_NONSBJT_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<include refid="editAuthWhereQuery"/>
+	</select>
+
+	<select id="selectAbtyList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+				A.MJ_ABTY_KOR, A.MJ_ABTY_DEFN_KOR,
+				B.OPTION_NAME AS SPT_PSN_KOR,
+				COUNT(MJ_ABTY_KOR) OVER (PARTITION BY SPT_PSN_KOR) AS ABILITY_COUNT
+				<include refid="editAuthListQuery"/>
+			FROM UNI_BYMJ_MJ_ABTY A, AIEDU.RBS_OPTION_INFO B
+		 	WHERE A.SPT_PSN_KOR = B.OPTION_CODE (+)
+			    AND 'SPT_PSN_CD' = MASTER_CODE (+)	
+			    AND A.YY = #{YY} AND A.MJ_CD = #{MJ_CD}
+			ORDER BY B.ORDER_IDX, SPT_PSN_KOR
+	</select>
+	
+	<select id="selectAbtyCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MAJOR_ABTYINFO_TABLE_NAME"/> A
+			WHERE A.YY = #{YY} AND A.MJ_CD = #{MJ_CD}
+	</select>
+	
+	<select id="selectModifyAbty" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			A.*
+		FROM 
+		<include refid="MAJOR_ABTYINFO_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<include refid="editAuthWhereQuery"/>
+	</select>
+	
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			(SELECT DEPT_KOR_NM FROM COM.CMMN050 WHERE DEPT_CD = A.COLG_CD) COLG_NM_KOR,
+			(SELECT DEPT_KOR_NM FROM COM.CMMN050 WHERE DEPT_CD = A.FCLT_SUST_CD) FCLT_SUST_NM_KOR,
+			A.* 
+			<include refid="editAuthListQuery"/>
+			FROM 
+			<include refid="MAJOR_BASICINFO_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<if test='permSustCdList != null and permSustCdList.size != 0'>
+				AND MJ_CD IN
+               <foreach collection="permSustCdList" item="permCode" index="index" separator="," open="(" close=")">
+	               #{permCode}
+               </foreach>				
+			</if>
+			AND USE_FG = 1
+			ORDER BY YY DESC, ORD
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MAJOR_BASICINFO_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<if test='permSustCdList != null and permSustCdList.size != 0'>
+				AND MJ_CD IN
+               <foreach collection="permSustCdList" item="permCode" index="index" separator="," open="(" close=")">
+	               #{permCode}
+               </foreach>				
+			</if>
+		AND USE_FG = 1
+	</select>
+	
+
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT
+			(SELECT DEPT_KOR_NM FROM COM.CMMN050 WHERE DEPT_CD = A.COLG_CD) COLG_NM_KOR,
+			(SELECT DEPT_KOR_NM FROM COM.CMMN050 WHERE DEPT_CD = A.FCLT_SUST_CD) FCLT_SUST_NM_KOR, 
+			A.*
+			<include refid="editAuthListQuery"/>
+		FROM 
+		<include refid="MAJOR_BASICINFO_TABLE_NAME"/> A 
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<select id="selectFileList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			<foreach collection="columnList" item="columnItem" index="i" separator=",">
+				${columnItem}
+			</foreach>
+			FROM 
+			<include refid="MAJOR_BASICINFO_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<select id="selectFileView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.${columnItem}_SAVED_NAME, A.${columnItem}_ORIGIN_NAME
+			FROM 
+			<include refid="MAJOR_BASICINFO_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<update id="updateFileDown" parameterType="java.util.HashMap">
+		UPDATE <include refid="MAJOR_BASICINFO_TABLE_NAME"/> SET ${FILE_COLUMN}_DCNT = ${FILE_COLUMN}_DCNT + 1 
+		WHERE IDX = #{IDX}
+	</update>
+	
+	<select id="authCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+		<include refid="MAJOR_BASICINFO_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<include refid="editAuthWhereQuery"/>
+	</select>
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			(SELECT DEPT_KOR_NM FROM COM.CMMN050 WHERE DEPT_CD = A.COLG_CD) COLG_NM_KOR,
+			(SELECT DEPT_KOR_NM FROM COM.CMMN050 WHERE DEPT_CD = A.FCLT_SUST_CD) FCLT_SUST_NM_KOR,		
+		A.* 
+		FROM 
+		<include refid="MAJOR_BASICINFO_TABLE_NAME"/> A 
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<include refid="editAuthWhereQuery"/>
+	</select>
+	
+	<!-- 추천균형교양교과목 중복 체크 -->
+	<select id="CourCultCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(*) AS COUNT
+		FROM 
+		<include refid="MAJOR_NONSBJT_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<!-- 추천균형교양교과목 순서 가져오기 -->
+	<select id="nextOrd" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT NVL(MAX(ORD), 0) + 1 AS ORD
+		FROM 
+		<include refid="MAJOR_NONSBJT_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<insert id="insertCourCult" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJOR_NONSBJT_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, SYSDATE, SYSDATE
+		)
+	</insert>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJOR_BASICINFO_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	<insert id="insertAddMajorList" parameterType="java.util.HashMap">
+		INSERT INTO AIEDU.UNI_BYMJ_EDU_CORS
+			(YY, MJ_CD, SHTM_CD, COURSE_NO, SPT_PSN_KOR, SPT_PSN_ENG, SHYR_FG,
+			 SBJT_NM_KOR, SBJT_NM_ENG, SBJT_FG, PNT, THEO_TM_CNT, PRAC_TM_CNT, REGI_ID, REGI_DATE, REGI_IP, LAST_MODI_ID )
+			 SELECT YY, OPEN_SUST_MJ_CD, SHTM_CD, COURSE_NO, #{SPT_PSN_CD}, '', OPEN_SHYR_FG,
+			        SBJT_KOR_NM, SBJT_ENG_NM,  SBJT_FG, #{PNT}, #{THEO_TM_CNT}, #{PRAC_TM_CNT}, #{REGI_ID}, SYSDATE, #{REGI_IP}, #{LAST_MODI_ID}
+			FROM UNI.COUR020
+			  WHERE YY              = #{YY}
+			    AND OPEN_SUST_MJ_CD   = #{OPEN_SUST_MJ_CD}
+			    AND COURSE_NO   = #{COURSE_NO}    
+	</insert>
+	<insert id="insertMajor" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJOR_BASICINFO_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>	
+	
+	<insert id="insertCourMajor" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJOR_COUR_MAJORINFO_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>	
+	
+	
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="MAJOR_BASICINFO_TABLE_NAME"/> A SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="updateMajor" parameterType="java.util.HashMap">
+		UPDATE <include refid="MAJOR_BASICINFO_TABLE_NAME"/> A SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="updateCourMajor" parameterType="java.util.HashMap">
+		UPDATE <include refid="MAJOR_COUR_MAJORINFO_TABLE_NAME"/> A SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="MAJOR_BASICINFO_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+			ORDER BY A.IDX
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+		<include refid="MAJOR_BASICINFO_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+	</select>
+	
+	<update id="delete" parameterType="java.util.HashMap">
+		UPDATE <include refid="MAJOR_BASICINFO_TABLE_NAME"/> SET ISDELETE = '1', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="restore" parameterType="java.util.HashMap">
+		UPDATE <include refid="MAJOR_BASICINFO_TABLE_NAME"/> SET ISDELETE = '0', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>	
+	
+	<select id="getRegisteredYear" parameterType="java.lang.String" resultType="dataMap">
+		SELECT 
+			YY 
+		FROM 
+			UNI_MJ_INFMT
+		WHERE
+			MJ_CD = #{mjCd}
+		GROUP BY YY
+	</select>
+	
+	<delete id="deleteCourMajorList" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MAJOR_COUR_MAJORINFO_TABLE_NAME"/> A		
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	
+	<delete id="deleteRcmdCultList" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MAJOR_NONSBJT_TABLE_NAME"/> A		
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	
+	<insert id="insertMajorCour" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJOR_COUR_MAJORINFO_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>	
+	
+	<delete id="deleteMajorAbility" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MAJOR_ABTYINFO_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	
+	<insert id="insertMajorAbility" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJOR_ABTYINFO_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			<if test='REGI_DATE != null'>
+			, TO_CHAR(TO_TIMESTAMP(#{REGI_DATE},'YYYY-MM-DD HH24:MI:SS.FF'),'YY/MM/DD')
+			</if>
+			<if test='REGI_DATE == null'>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>			
+			</if>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>			
+	
+	<select id="getMjCdList" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT 
+			MJ_CD 
+		FROM 
+			<include refid="MAJOR_BASICINFO_TABLE_NAME"/>
+<!-- 		WHERE YY = #{YY} -->
+		WHERE YY = '2024'
+		<if test='MJ_CD != null and MJ_CD != ""'>
+			AND  MJ_CD = #{MJ_CD}
+		</if>
+		 <if test=' COLG_CD != null and COLG_CD != "" '>
+		 	AND  COLG_CD = #{COLG_CD}
+		</if>		
+		<if test=' FCLT_SUST_CD != null and FCLT_SUST_CD != "" '>
+			 AND FCLT_SUST_CD = #{FCLT_SUST_CD}
+		</if>				
+	</select>	
+	
+	<update id="copyMajorInfo" parameterType="java.util.HashMap">
+		BEGIN
+		<!--      현재 연도의 데이터 삭제 -->
+		    DELETE FROM UNI_MJ_INFMT WHERE YY = TO_CHAR(SYSDATE,'YYYY');
+		    DELETE FROM UNI_BYMJ_ABTY WHERE YY = TO_CHAR(SYSDATE,'YYYY');
+		    DELETE FROM UNI_BYMJ_EDU_CORS WHERE YY = TO_CHAR(SYSDATE,'YYYY');
+		
+		<!--      uni_mj_infmt 테이블에서 데이터 복사 및 YY 업데이트 -->
+		    INSERT INTO UNI_MJ_INFMT (SELECT 
+		                                TO_CHAR(SYSDATE,'YYYY'),
+		                                MJ_CD,
+		                                COLG_CD,
+		                                FCLT_SUST_CD,
+		                                MJ_NM_KOR,
+		                                MJ_NM_ENG,
+		                                ORD,
+		                                USE_FG,
+		                                MJ_INTRO_KOR,
+		                                MJ_INTRO_ENG,
+		                                GRDT_AF_CARR_KOR,
+		                                GRDT_AF_CARR_ENG,
+		                                CONC_LIC_KOR,
+		                                CONC_LIC_ENG,
+		                                IDEAL_STU_KOR,
+		                                IDEAL_STU_ENG,
+		                                ISDELETE,
+		                                #{REGI_ID},
+		                                SYSDATE,
+		                                #{REGI_IP},
+		                                #{LAST_MODI_ID},
+		                                SYSDATE,
+		                                #{LAST_MODI_IP}
+		                                FROM UNI_MJ_INFMT 
+		                              WHERE YY = #{YY}
+		                              	AND  MJ_CD IN
+		                              	<foreach collection="mjCdList" item="item" index="index" separator="," open="(" close=")">
+		                              	 #{item}
+		                              	 </foreach>
+		                              );
+		
+		<!--      uni_bymj_abty 테이블에서 데이터 복사 및 YY 업데이트 -->
+		    INSERT INTO UNI_BYMJ_MJ_ABTY (SELECT
+		    								TO_CHAR(SYSDATE,'YYYY'),
+											MJ_CD,
+											ORD,
+											SPT_PSN_KOR,
+											SPT_PSN_ENG,
+											MJ_ABTY_KOR,
+											MJ_ABTY_ENG,
+											MJ_ABTY_DEFN_KOR,
+											MJ_ABTY_DEFN_ENG,
+											ISDELETE,
+											#{REGI_ID},
+											SYSDATE,
+											#{REGI_IP},
+											#{LAST_MODI_ID},
+											SYSDATE,
+											#{LAST_MODI_IP}
+									 FROM UNI_BYMJ_MJ_ABTY
+		                              WHERE YY = #{YY}
+		                              	AND  MJ_CD IN
+		                              	<foreach collection="mjCdList" item="item" index="index" separator="," open="(" close=")">
+		                              	 #{item}
+		                              	 </foreach>
+		                              );
+		
+		<!--      uni_bymj_edu_cors 테이블에서 데이터 복사 및 YY 업데이트 -->
+		    INSERT INTO UNI_BYMJ_EDU_CORS (SELECT 
+		    								TO_CHAR(SYSDATE,'YYYY'),
+											MJ_CD,
+											COURSE_NO,
+											SPT_PSN_KOR,
+											SPT_PSN_ENG,
+											SHYR_FG,
+											SHTM_CD,
+											SBJT_NM_KOR,
+											SBJT_NM_ENG,
+											SBJT_FG,
+											ORD,
+											ISDELETE,
+											#{REGI_ID},
+											SYSDATE,
+											#{REGI_IP},
+											#{LAST_MODI_ID},
+											SYSDATE,
+											#{LAST_MODI_IP}
+		     							FROM UNI_BYMJ_EDU_CORS
+			                              WHERE YY = #{YY}
+			                              	AND  MJ_CD IN
+			                              	<foreach collection="mjCdList" item="item" index="index" separator="," open="(" close=")">
+			                              	 #{item}
+			                              	 </foreach>
+			                              );
+		
+		    COMMIT;
+		END;		
+	</update>	
+	
+	
+	<select id="getFrontRcmdCultList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT SF_CMMN081_CODENM(EDU_CORS_CAPB_FG) AS EDU_CORS_CAPB_NM
+		     , LISTAGG(SBJT_NM_KOR, ', ') WITHIN GROUP(ORDER BY ORD) AS SBJT_NM_KOR
+		FROM UNI_BYMJ_CULT_CORS
+		WHERE YY=#{YY} 
+		  AND MJ_CD =#{MJ_CD}  
+		GROUP BY EDU_CORS_CAPB_FG  
+		ORDER BY EDU_CORS_CAPB_FG 
+	</select>	
+	
+	<select id="getPermSustCdList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT MJ_CD AS PERM_SUST_CD FROM UNI_MJ_INFMT
+	    WHERE MJ_CD LIKE #{DEPT_CD} || '%'
+		UNION
+		SELECT #{DEPT_CD} AS PERM_SUST_CD FROM DUAL
+		UNION
+		SELECT A.PERM_SUST_CD 
+		FROM  UNI.COUR610 A,  COM.CMMN050 B
+		WHERE SUST_CD = #{DEPT_CD}
+		  AND A.PERM_SUST_CD = B.DEPT_CD 
+		  AND B.USE_FG = '1'
+	</select>	
+</mapper>            

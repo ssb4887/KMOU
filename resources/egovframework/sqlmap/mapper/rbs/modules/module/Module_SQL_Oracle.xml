@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.module.moduleMapper">
+
+	<sql id="MODULE_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />MODULE_INFO</trim></sql>
+	
+	<!-- 모듈관리에서 사용 -->
+	<select id="manageOptionList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.MODULE_ID OPTION_CODE, A.MODULE_NAME OPTION_NAME
+			FROM 
+			<include refid="MODULE_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			AND A.ISMANAGER = '1'
+			ORDER BY A.ORDER_IDX ASC
+	</select>
+	<!-- 모듈권한관리에서 사용 -->
+	<select id="authManageOptionList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.MODULE_ID OPTION_CODE, A.MODULE_NAME OPTION_NAME
+			FROM 
+			<include refid="MODULE_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			AND A.ISAUTHMANAGER = '1'
+			ORDER BY A.ORDER_IDX ASC
+	</select>
+	
+	<select id="manageView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.MODULE_ID, A.MODULE_NAME, A.AN_URL, A.AN_URL2, A.CONF_MODULE, A.USE_SDESIGN, A.ISDESIGNTYPE, A.ISSETMANAGER, A.ISITEMMANAGER, A.ISINPUTMANAGER
+			FROM 
+			<include refid="MODULE_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<!-- IA(정보구조)관리에서 사용 -->
+	<select id="menuOptionList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.MODULE_ID, A.MODULE_NAME, UR_URL, UR_URL2, AN_URL, AN_URL2 
+			FROM 
+			<include refid="MODULE_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			AND A.ISMENU = '1'
+			ORDER BY A.ORDER_IDX ASC
+	</select>
+	
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.VER_IDX, A.ISSERVICE, OPT_SERVICE.OPTION_NAME ISSERVICE_NAME, A.LOCAL_PATH, A.REGI_DATE
+			FROM 
+			<include refid="MODULE_TABLE_NAME"/> A 
+			LEFT OUTER JOIN (
+				<include refid="rbs.modules.code.OptionJoinMapper.optionJoinSql"/> AND MASTER_CODE = 'ISSERVICE'
+			) OPT_SERVICE 
+			ON A.ISSERVICE = OPT_SERVICE.OPTION_CODE 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			WHERE A.ISDELETE = '0'
+			ORDER BY A.ORDER_IDX ASC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MODULE_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*
+			FROM 
+			<include refid="MODULE_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="authCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MODULE_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="MODULE_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MODULE_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="MODULE_TABLE_NAME"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.VER_IDX, A.ISSERVICE, OPT_SERVICE.OPTION_NAME ISSERVICE_NAME, A.LOCAL_PATH,  
+			A.REGI_DATE, A.LAST_MODI_NAME, A.LAST_MODI_ID, A.LAST_MODI_DATE 
+			FROM 
+			<include refid="MODULE_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+			ORDER BY A.VER_IDX
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MODULE_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/> 
+	</select>
+	
+	<update id="delete" parameterType="java.util.HashMap">
+		UPDATE <include refid="MODULE_TABLE_NAME"/> SET ISDELETE = '1', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="restore" parameterType="java.util.HashMap">
+		UPDATE <include refid="MODULE_TABLE_NAME"/> SET ISDELETE = '0', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MODULE_TABLE_NAME"/>  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+</mapper>            

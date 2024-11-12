@@ -1,0 +1,20 @@
+{
+	"setting_info": {
+		"list_title":"다기능게시판"
+		, "input_title":"다기능게시판"
+		, "deleteList_title":"다기능게시판 삭제목록"
+		, "design_type":"default"
+		, "page_name":"page"
+		, "memo_page_name":"mpage"
+		, "idx_name":"brdIdx"
+		, "idx_column":"BRD_IDX"
+		, "memo_idx_name":"memIdx"
+		, "memo_idx_column":"MEM_IDX"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+		, "use_file":1
+		, "use_notice":1
+		, "use_new":1
+	}
+}

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.module.fnItemSMapper">
+
+	<sql id="ITEM_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />${MODULE_ID}_ITEM_SEARCH_INFO</trim></sql>
+	<sql id="ITEM_DEFAULT_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />${MODULE_ID}_D_I_SEARCH_INFO</trim></sql>
+	
+	<!-- 기능 적용시 검색항목에 사용 -->
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+		A.ITEM_ID, A.ITEM_NAME, A.ITEM_NAME_KO, A.ITEM_NAME_EN, A.ITEM_NAME_JA, A.ITEM_NAME_ZH, A.ITEM_NAME_FR, A.ITEM_NAME_DE, A.ITEM_NAME_ES
+		, A.COLUMN_ID, A.MASTER_CODE, A.FORMAT_TYPE, A.OBJECT_TYPE, A.START_YEAR, A.END_ADDCNT 
+		FROM 
+		<include refid="rbs.modules.module.fnItemMapper.ITEM_TABLE_NAME"/> A 
+		INNER JOIN <include refid="ITEM_TABLE_NAME"/> ST ON A.FN_IDX = ST.FN_IDX AND A.ITEM_ID = ST.ITEM_ID  
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		ORDER BY ST.ORDER_IDX ASC
+	</select>
+	
+	<!-- 입력항목 검색에 사용할 기본항목정보 -->
+	<select id="defaultSearchIList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT A.ITEM_ID OPTION_CODE, A.ITEM_NAME_${LOCALE_LANG} OPTION_NAME
+			FROM 
+			<include refid="rbs.modules.module.fnItemMapper.ITEM_TABLE_NAME"/> A 
+			LEFT OUTER JOIN <include refid="ITEM_TABLE_NAME"/> ST ON ST.SEARCH_TYPE = '1' AND A.FN_IDX = ST.FN_IDX AND A.ITEM_ID = ST.ITEM_ID
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<![CDATA[
+			AND ST.ITEM_ID IS NULL 
+			AND (
+				A.FORMAT_TYPE >= 5 AND A.FORMAT_TYPE <= 8 
+				OR
+				A.FORMAT_TYPE >= 15 AND A.FORMAT_TYPE <= 18 
+				OR
+				A.FORMAT_TYPE >= 20 AND A.FORMAT_TYPE <= 22 
+				OR
+				A.FORMAT_TYPE = 0 AND (
+					A.OBJECT_TYPE <= 5 OR A.OBJECT_TYPE = 14 OR A.OBJECT_TYPE = 22 OR A.OBJECT_TYPE = 101
+				) 
+			)
+			]]>
+			ORDER BY A.ORDER_IDX ASC
+	</select>
+	
+	<!-- 선택항목 검색에 사용할 기본항목정보 -->
+	<select id="defaultSearchSList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT A.ITEM_ID OPTION_CODE, A.ITEM_NAME_${LOCALE_LANG} OPTION_NAME
+			FROM 
+			<include refid="rbs.modules.module.fnItemMapper.ITEM_TABLE_NAME"/> A 
+			LEFT OUTER JOIN <include refid="ITEM_TABLE_NAME"/> ST ON ST.SEARCH_TYPE = '2' AND A.FN_IDX = ST.FN_IDX AND A.ITEM_ID = ST.ITEM_ID
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<![CDATA[
+			AND ST.ITEM_ID IS NULL 
+			AND (
+				A.FORMAT_TYPE = 0 AND (
+					A.OBJECT_TYPE <= 1 OR A.OBJECT_TYPE = 101
+				) 
+			)
+			]]>
+			ORDER BY A.ORDER_IDX ASC
+	</select>
+	
+	
+	<!-- 입력항목 검색에 사용할 항목정보 -->
+	<select id="searchIList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT ST.ITEM_ID OPTION_CODE, A.ITEM_NAME_${LOCALE_LANG} OPTION_NAME
+			FROM 
+			<include refid="rbs.modules.module.fnItemMapper.ITEM_TABLE_NAME"/> A 
+			INNER JOIN <include refid="ITEM_TABLE_NAME"/> ST ON ST.SEARCH_TYPE = '1' AND A.FN_IDX = ST.FN_IDX AND A.ITEM_ID = ST.ITEM_ID
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			ORDER BY ST.ORDER_IDX ASC
+	</select>
+	
+	<!-- 선택항목 검색에 사용할 항목정보 -->
+	<select id="searchSList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT ST.ITEM_ID OPTION_CODE, A.ITEM_NAME_${LOCALE_LANG} OPTION_NAME
+			FROM 
+			<include refid="rbs.modules.module.fnItemMapper.ITEM_TABLE_NAME"/> A 
+			INNER JOIN <include refid="ITEM_TABLE_NAME"/> ST ON ST.SEARCH_TYPE = '2' AND A.FN_IDX = ST.FN_IDX AND A.ITEM_ID = ST.ITEM_ID
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			ORDER BY ST.ORDER_IDX ASC
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="ITEM_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*
+			FROM 
+			<include refid="ITEM_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="authCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="ITEM_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="ITEM_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<insert id="insertInit" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="ITEM_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) (SELECT
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/> 
+			FROM <include refid="ITEM_DEFAULT_TABLE_NAME"/>
+			<if test="designType != null">
+			WHERE DESIGN_TYPE = #{designType}
+			</if>
+		)
+	</insert>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="ITEM_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="ITEM_TABLE_NAME"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.VER_IDX, A.ISSERVICE, OPT_SERVICE.OPTION_NAME ISSERVICE_NAME, A.LOCAL_PATH,  
+			A.REGI_DATE, A.LAST_MODI_NAME, A.LAST_MODI_ID, A.LAST_MODI_DATE 
+			FROM 
+			<include refid="ITEM_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+			ORDER BY A.VER_IDX
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="ITEM_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/> 
+	</select>
+	
+	<update id="delete" parameterType="java.util.HashMap">
+		UPDATE <include refid="ITEM_TABLE_NAME"/> SET ISDELETE = '1', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="restore" parameterType="java.util.HashMap">
+		UPDATE <include refid="ITEM_TABLE_NAME"/> SET ISDELETE = '0', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="ITEM_TABLE_NAME"/>  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+</mapper>            

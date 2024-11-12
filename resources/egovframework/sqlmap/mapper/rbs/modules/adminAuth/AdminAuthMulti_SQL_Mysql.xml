@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.adminAuth.adminAuthMultiMapper">
+
+	<sql id="MULTI_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />MENU_ADM_MULTI_INFO</trim></sql>
+		
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MULTI_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, MENU_IDX
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, #{MENU_IDX}
+		)
+	</insert>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MULTI_TABLE_NAME"/>  
+		WHERE MENU_IDX = #{MENU_IDX}
+		<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</delete>
+	
+</mapper>            

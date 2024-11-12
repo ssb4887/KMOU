@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.calendar.calendarMultiMapper">
+
+	<sql id="MULTI_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />CALENDAR_${fnIdx}_MULTI_INFO</trim></sql>
+	
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.CAL_IDX, A.ITEM_ID, A.ITEM_KEY 
+			FROM 
+			<include refid="MULTI_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			ORDER BY A.CAL_IDX, A.ITEM_ID
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MULTI_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*
+			FROM 
+			<include refid="MULTI_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MULTI_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, CAL_IDX
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, #{CAL_IDX}
+		)
+	</insert>
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="MULTI_TABLE_NAME"/> SET 
+		<include refid="rbs.commonMapper.UPDATE_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		AND CAL_IDX = #{CAL_IDX}
+	</update>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MULTI_TABLE_NAME"/>  
+		WHERE CAL_IDX = #{CAL_IDX}
+		<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</delete>
+</mapper>            

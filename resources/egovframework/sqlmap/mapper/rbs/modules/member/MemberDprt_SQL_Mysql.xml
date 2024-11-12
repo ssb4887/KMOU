@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.member.memberDprtMapper">
+    
+	<sql id="DEPART_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG"/>DEPART_INFO</trim></sql>
+	
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(DEPART_IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="DEPART_TABLE_NAME"/> A
+	</select>	
+	
+	<select id="optnList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT A.DEPART_IDX OPTION_CODE, A.DEPART_NAME OPTION_NAME, A.PARENT_DEPART_IDX, A.DEPART_LEVEL OPTION_LEVEL, A.ORDER_IDX
+			FROM 
+			<include refid="DEPART_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			ORDER BY A.ORDER_IDX
+	</select>
+	
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.DEPART_IDX, A.DEPART_NAME, A.PARENT_DEPART_IDX, A.DEPART_LEVEL, A.ORDER_IDX, A.REMARKS, A.REGI_DATE
+			FROM 
+			<include refid="DEPART_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			ORDER BY A.ORDER_IDX
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="searchList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			<![CDATA[
+				A.DEPART_IDX, A.DEPART_NAME, FN_RBS_DEPART_DN_PATH_NAMES('&gt;', A.DEPART_IDX) DEPART_PNAME, A.PARENT_DEPART_IDX, A.DEPART_LEVEL, A.ORDER_IDX, A.REMARKS, A.REGI_DATE
+			]]>
+			FROM 
+			<include refid="DEPART_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			ORDER BY A.ORDER_IDX
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="DEPART_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectDuplicateCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="DEPART_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectMaxOrdIdx" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(ORDER_IDX), 0)</trim>
+		FROM 
+			<include refid="DEPART_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectOrdIdx" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT ORDER_IDX
+		FROM 
+			<include refid="DEPART_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectNextOrdIdx" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(ORDER_IDX), 0)</trim>
+		FROM <include refid="DEPART_TABLE_NAME"/> A WHERE 
+        <![CDATA[ORDER_IDX >= (SELECT ORDER_IDX FROM]]> <include refid="DEPART_TABLE_NAME"/> WHERE DEPART_IDX = #{departIdx} <include refid="rbs.commonMapper.COM_LK_WHERE"/>) 
+        <![CDATA[AND ORDER_IDX < (]]>
+            SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MIN(ORDER_IDX), A.ORDER_IDX + 1)</trim> FROM <include refid="DEPART_TABLE_NAME"/> INDEPART WHERE 
+            <![CDATA[DEPART_LEVEL <= (SELECT DEPART_LEVEL FROM]]> <include refid="DEPART_TABLE_NAME"/> WHERE DEPART_IDX = #{departIdx} <include refid="rbs.commonMapper.COM_LK_WHERE"/>) 
+            <![CDATA[AND ORDER_IDX > (SELECT ORDER_IDX FROM]]> <include refid="DEPART_TABLE_NAME"/> WHERE DEPART_IDX = #{departIdx} <include refid="rbs.commonMapper.COM_LK_WHERE"/>)
+            <include refid="rbs.commonMapper.COM_LK_WHERE"/>
+        )
+        <include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</select>
+	
+	<select id="selectPrtDepartIdx" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT PARENT_DEPART_IDX
+		FROM 
+			<include refid="DEPART_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selecttDepartKeyView" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT PARENT_DEPART_IDX, DEPART_LEVEL, GROUP_DEPART_IDX, ORDER_IDX
+		FROM 
+			<include refid="DEPART_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectInChild" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1)
+		FROM DUAL WHERE #{searchDepartIdx} IN ( 
+			SELECT DEPART_IDX FROM <include refid="DEPART_TABLE_NAME"/> A
+			WHERE 
+	        <![CDATA[ORDER_IDX >= (SELECT ORDER_IDX FROM]]> <include refid="DEPART_TABLE_NAME"/> WHERE DEPART_IDX = #{departIdx} <include refid="rbs.commonMapper.COM_LK_WHERE"/>) 
+	        <![CDATA[AND ORDER_IDX < (]]>
+	            SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MIN(ORDER_IDX), A.ORDER_IDX + 1)</trim> FROM <include refid="DEPART_TABLE_NAME"/> INDEPART WHERE 
+	            <![CDATA[DEPART_LEVEL <= (SELECT DEPART_LEVEL FROM]]> <include refid="DEPART_TABLE_NAME"/> WHERE DEPART_IDX = #{departIdx} <include refid="rbs.commonMapper.COM_LK_WHERE"/>) 
+	            <![CDATA[AND ORDER_IDX > (SELECT ORDER_IDX FROM]]> <include refid="DEPART_TABLE_NAME"/> WHERE DEPART_IDX = #{departIdx} <include refid="rbs.commonMapper.COM_LK_WHERE"/>)
+	            <include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	        )
+	        <include refid="rbs.commonMapper.COM_LK_WHERE"/>
+		)
+	</select>
+	
+	<!-- 이동할 depart_idx -->
+	<select id="selectSourceList" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT DEPART_IDX
+		FROM <include refid="DEPART_TABLE_NAME"/> A 
+		WHERE 
+	        <![CDATA[ORDER_IDX >= (SELECT ORDER_IDX FROM]]> <include refid="DEPART_TABLE_NAME"/> WHERE DEPART_IDX = #{departIdx} <include refid="rbs.commonMapper.COM_LK_WHERE"/>) 
+	        <![CDATA[AND ORDER_IDX < (]]>
+	            SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MIN(ORDER_IDX), A.ORDER_IDX + 1)</trim> FROM <include refid="DEPART_TABLE_NAME"/> INDEPART WHERE 
+	            <![CDATA[DEPART_LEVEL <= (SELECT DEPART_LEVEL FROM]]> <include refid="DEPART_TABLE_NAME"/> WHERE DEPART_IDX = #{departIdx} <include refid="rbs.commonMapper.COM_LK_WHERE"/>) 
+	            <![CDATA[AND ORDER_IDX > (SELECT ORDER_IDX FROM]]> <include refid="DEPART_TABLE_NAME"/> WHERE DEPART_IDX = #{departIdx} <include refid="rbs.commonMapper.COM_LK_WHERE"/>)
+	            <include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	        )
+	        <include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</select>
+	
+	<!-- 이동할 정보 update -->
+	<update id="updateOrdIdx" parameterType="java.util.HashMap">
+		UPDATE <include refid="DEPART_TABLE_NAME"/> SET 
+		<include refid="rbs.commonMapper.UPDATE_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="DEPART_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="DEPART_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="DEPART_TABLE_NAME"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="updateTotOrdIdx" parameterType="java.util.HashMap">
+		UPDATE <include refid="DEPART_TABLE_NAME"/> SET 
+		ORDER_IDX = (SELECT SEQ_NO FROM (
+	    	SELECT AA.*, @RNUM:=@RNUM+1 SEQ_NO FROM (
+	        	SELECT @RNUM:=0, IOPT.* FROM <include refid="DEPART_TABLE_NAME"/> IOPT 
+	        	<include refid="rbs.commonMapper.COM_SG_WHERE"/> 
+	        	ORDER BY IOPT.ORDER_IDX
+	    	) AA
+		) SEQ WHERE SEQ.DEPART_IDX = <include refid="DEPART_TABLE_NAME"/>.DEPART_IDX)
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.DEPART_IDX, A.DEPART_NAME, FN_RBS_DEPART_DN_FPATH_NAMES('&gt;', A.DEPART_IDX) DEPART_PATH_NAME, A.ORDER_IDX, A.REMARKS, A.REGI_NAME,  
+			A.REGI_DATE, A.LAST_MODI_NAME, A.LAST_MODI_ID, A.LAST_MODI_DATE 
+			FROM 
+			<include refid="DEPART_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+			ORDER BY A.REGI_DATE DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="DEPART_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/> 
+	</select>
+	
+	<update id="delete" parameterType="java.util.HashMap">
+		CALL PRC_DEPART_DELETE(#{departIdx}, '1', #{modiIp}, #{modiIdx}, #{modiId}, #{modiName})
+	</update>
+	<update id="restore" parameterType="java.util.HashMap">
+		CALL PRC_DEPART_RESTORE(#{departIdx}, '0', #{modiIp}, #{modiIdx}, #{modiId}, #{modiName})
+	</update>
+	<update id="cdelete" parameterType="java.util.HashMap">
+		CALL PRC_DEPART_CDELETE(#{departIdx})
+	</update>
+
+</mapper>            

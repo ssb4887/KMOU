@@ -1,0 +1,37 @@
+@charset "utf-8";
+/* .login_wrap{min-height:calc(100vh - ((43px + 3rem) * 2) - 1px - 6rem);}
+.login_wrap h2{font-size:clamp(24px, 3vw, 32px);}
+.login_wrap h3{font-size:clamp(18px, 2vw, 20px); font-weight:600;}
+.login_wrap p{font-size:17px;}
+.input_box{max-width: 380px; width:100%;}
+.input_box h2{font-size:clamp(26px, 4vw, 28px);} */
+
+.login_wrap{background:url(../images/bg_login.png) no-repeat; background-size:cover; background-position:center center;}
+.login_wrap .input_box{max-width:460px; padding:6rem 3rem;}
+.login_wrap .input_box .input_id:before , .login_wrap .input_box .input_pw:before{content:''; display:block; background-size:contain; width:13px; height:14px; position:absolute; top:50%; left:1rem; transform:translateY(-50%); background-repeat:no-repeat;}
+.login_wrap .input_box .input_id:before{background-image:url(../images/ico_id.png);}
+.login_wrap .input_box .input_pw:before{background-image:url(../images/ico_pw.png);}
+.login_wrap .input_box .input_id input, .login_wrap .input_box .input_pw input{padding-left:calc(2rem + 10px ); min-width:280px;}
+
+
+.login_wrap .text_box{padding-left:clamp(2rem, 5vw,8rem); max-width:460px;}
+.login_wrap .text_box h2{font-size:clamp(23px, 4vw ,29px);}
+.login_wrap .text_box .ico_box{transition: all 0.5s; border-radius:1rem; }
+/* .login_wrap .text_box .ico_box:hover{ outline:1px solid #fff; background-color:rgba(255,255,255,0.1); } */
+.login_wrap .text_box .ico_box i{width:calc(23px + 1.5rem); height:calc(23px + 1.5rem);}
+.login_wrap .text_box .ico_box i img{width:100%; height:100%; display:block; object-fit: contain; padding:0.6rem;}
+
+@media screen and (max-width:991px){
+    .login_wrap .input_box{padding:6rem 2rem;}
+    .login_wrap .text_box{max-width: unset;;}
+    
+}
+
+@media screen and (max-width:767px) {
+    .login_wrap .input_box .input_id input, .login_wrap .input_box .input_pw input{min-width:unset; font-size:0.8rem;}
+    .login_wrap .input_box .find_info{font-size:0.8rem;}
+}
+
+@media screen and (max-height:735px) {
+    .login_wrap .input_box{padding-top:4rem; padding-bottom:4rem;}
+}

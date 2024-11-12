@@ -1,0 +1,29 @@
+{
+	"setting_info": {
+		"input_title":"IA(정보구조)관리"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+		, "page_name":"page"
+		, "idx_name":"menuIdx"
+		, "input_module":{
+			"version":1
+		}
+	}, 
+	"point_setting_info": {
+		"list_title":"메뉴만족도 목록"
+		,"view_title":"메뉴만족도"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":0
+		, "page_name":"page"
+		, "idx_name":"menuIdx"
+	}, 
+	"member_setting_info": {
+		"list_title":"메뉴만족도 참여자 목록"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+		, "page_name":"mpage"
+	}
+}

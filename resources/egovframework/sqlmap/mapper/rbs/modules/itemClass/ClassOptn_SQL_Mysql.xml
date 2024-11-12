@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.itemClass.optionMapper">
+    
+	<sql id="ICLASS_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG"/>ICLASS_INFO</trim></sql>
+	
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(CLASS_IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="ICLASS_TABLE_NAME"/> A 
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="optnList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.CLASS_IDX OPTION_CODE, A.CLASS_NAME OPTION_NAME, A.CLASS_LEVEL OPTION_LEVEL
+			FROM 
+			<include refid="ICLASS_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			ORDER BY A.ORDER_IDX
+	</select>
+	
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		<if test="lastIndex > 0">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+		</if>
+			SELECT 
+			A.CLASS_IDX, A.CLASS_NAME, A.PARENT_CLASS_IDX, A.CLASS_LEVEL, A.ORDER_IDX, A.REMARKS, A.REGI_DATE
+			FROM 
+			<include refid="ICLASS_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			ORDER BY A.ORDER_IDX
+		<if test="lastIndex > 0">
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+		</if>
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="ICLASS_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectDuplicateCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="ICLASS_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectMaxOrdIdx" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(ORDER_IDX), 0)</trim>
+		FROM 
+			<include refid="ICLASS_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectOrdIdx" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT ORDER_IDX
+		FROM 
+			<include refid="ICLASS_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectNextOrdIdx" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(ORDER_IDX), 0)</trim>
+		FROM <include refid="ICLASS_TABLE_NAME"/> A <include refid="rbs.commonMapper.COM_SG_WHERE"/>
+        <![CDATA[AND ORDER_IDX >= (SELECT ORDER_IDX FROM]]> <include refid="ICLASS_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND CLASS_IDX = #{classIdx}) 
+        <![CDATA[AND ORDER_IDX < (]]>
+            SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MIN(ORDER_IDX), A.ORDER_IDX + 1)</trim> FROM <include refid="ICLASS_TABLE_NAME"/> INCLASS <include refid="rbs.commonMapper.COM_SG_WHERE"/>
+            <![CDATA[AND CLASS_LEVEL <= (SELECT CLASS_LEVEL FROM]]> <include refid="ICLASS_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND CLASS_IDX = #{classIdx}) 
+            <![CDATA[AND ORDER_IDX > (SELECT ORDER_IDX FROM]]> <include refid="ICLASS_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND CLASS_IDX = #{classIdx})
+        )
+	</select>
+	<select id="selectPrtClassIdx" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT PARENT_CLASS_IDX
+		FROM 
+			<include refid="ICLASS_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectClassKeyView" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT PARENT_CLASS_IDX, CLASS_LEVEL, GROUP_CLASS_IDX, ORDER_IDX
+		FROM 
+			<include refid="ICLASS_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectInChild" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1)
+		FROM DUAL WHERE #{searchClassIdx} IN ( 
+			SELECT CLASS_IDX FROM <include refid="ICLASS_TABLE_NAME"/> A <include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	        <![CDATA[AND ORDER_IDX >= (SELECT ORDER_IDX FROM]]> <include refid="ICLASS_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND CLASS_IDX = #{classIdx}) 
+	        <![CDATA[AND ORDER_IDX < (]]>
+	            SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MIN(ORDER_IDX), A.ORDER_IDX + 1)</trim> FROM <include refid="ICLASS_TABLE_NAME"/> INCLASS <include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	            <![CDATA[AND CLASS_LEVEL <= (SELECT CLASS_LEVEL FROM]]> <include refid="ICLASS_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND CLASS_IDX = #{classIdx}) 
+	            <![CDATA[AND ORDER_IDX > (SELECT ORDER_IDX FROM]]> <include refid="ICLASS_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND CLASS_IDX = #{classIdx})
+	        )
+		)
+	</select>
+	
+	<!-- 이동할 class_idx -->
+	<select id="selectSourceList" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT CLASS_IDX
+		FROM <include refid="ICLASS_TABLE_NAME"/> A <include refid="rbs.commonMapper.COM_SG_WHERE"/>
+        <![CDATA[AND ORDER_IDX >= (SELECT ORDER_IDX FROM]]> <include refid="ICLASS_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND CLASS_IDX = #{classIdx}) 
+        <![CDATA[AND ORDER_IDX < (]]>
+            SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MIN(ORDER_IDX), A.ORDER_IDX + 1)</trim> FROM <include refid="ICLASS_TABLE_NAME"/> INCLASS <include refid="rbs.commonMapper.COM_SG_WHERE"/>
+            <![CDATA[AND CLASS_LEVEL <= (SELECT CLASS_LEVEL FROM]]> <include refid="ICLASS_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND CLASS_IDX = #{classIdx}) 
+            <![CDATA[AND ORDER_IDX > (SELECT ORDER_IDX FROM]]> <include refid="ICLASS_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND CLASS_IDX = #{classIdx})
+        )
+	</select>
+	
+	<!-- 이동할 정보 update -->
+	<update id="updateOrdIdx" parameterType="java.util.HashMap">
+		UPDATE <include refid="ICLASS_TABLE_NAME"/> SET 
+		<include refid="rbs.commonMapper.UPDATE_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="ICLASS_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="ICLASS_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="ICLASS_TABLE_NAME"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="updateTotOrdIdx" parameterType="java.util.HashMap">
+		UPDATE <include refid="ICLASS_TABLE_NAME"/> SET 
+		ORDER_IDX = (SELECT SEQ_NO FROM (
+	    	SELECT AA.*, @RNUM:=@RNUM+1 SEQ_NO FROM (
+	        	SELECT @RNUM:=0, IOPT.* FROM <include refid="ICLASS_TABLE_NAME"/> IOPT 
+	        	<include refid="rbs.commonMapper.COM_SG_WHERE"/> 
+	        	ORDER BY IOPT.ORDER_IDX
+	    	) AA
+		) SEQ WHERE SEQ.MASTER_CODE = <include refid="ICLASS_TABLE_NAME"/>.MASTER_CODE AND SEQ.CLASS_IDX = <include refid="ICLASS_TABLE_NAME"/>.CLASS_IDX)
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.CLASS_IDX, A.CLASS_NAME, FN_RBS_ICLASS_DN_FPATH_NAMES('&gt;', A.MASTER_CODE, A.CLASS_IDX) CLASS_PATH_NAME, A.ORDER_IDX, A.REMARKS, A.REGI_NAME,  
+			A.REGI_DATE, A.LAST_MODI_NAME, A.LAST_MODI_ID, A.LAST_MODI_DATE 
+			FROM 
+			<include refid="ICLASS_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+			ORDER BY A.REGI_DATE DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="ICLASS_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/> 
+	</select>
+	
+	<update id="delete" parameterType="java.util.HashMap">
+		CALL PRC_CLASS_DELETE(#{classIdx}, #{masterCode}, '1', #{modiIp}, #{modiIdx}, #{modiId}, #{modiName})
+	</update>
+	<update id="restore" parameterType="java.util.HashMap">
+		CALL PRC_CLASS_RESTORE(#{classIdx}, #{masterCode}, '0', #{modiIp}, #{modiIdx}, #{modiId}, #{modiName})
+	</update>
+	<update id="cdelete" parameterType="java.util.HashMap">
+		CALL PRC_CLASS_CDELETE(#{classIdx}, #{masterCode})
+	</update>
+
+</mapper>            

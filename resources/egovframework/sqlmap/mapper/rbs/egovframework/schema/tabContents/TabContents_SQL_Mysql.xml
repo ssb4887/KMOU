@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.egovframework.schema.tabContents.schemaMapper">
+
+	<sql id="DEFAULT_TABLE_NAME"><include refid="rbs.modules.tabContents.tabContentsMapper.TABCONT_TABLE_NAME"/></sql>
+	
+	<!-- comment -->
+	<update id="columnComment">
+		COMMENT ON COLUMN <include refid="DEFAULT_TABLE_NAME"/>.${columnName} IS '${comment}'
+	</update>
+	<!-- 컬럼 -->
+	<update id="addColumn" parameterType="java.util.HashMap">
+		CALL PRC_ADD_COLUMN('<include refid="DEFAULT_TABLE_NAME"/>', #{columnName}, #{dataType}, #{dataLength}, #{defaultValue}, #{comment}) 
+	</update>
+	<update id="modifyColumn" parameterType="java.util.HashMap">
+		CALL PRC_MODIFY_COLUMN('<include refid="DEFAULT_TABLE_NAME"/>', #{columnName}, #{dataType}, #{dataLength}, #{defaultValue}, #{comment}) 
+	</update>
+	<update id="modifyComment" parameterType="java.util.HashMap">
+		CALL PRC_MODIFY_COMMENT('<include refid="DEFAULT_TABLE_NAME"/>', #{columnName}, #{comment}) 
+	</update>
+	
+	<update id="dropColumn" parameterType="java.util.HashMap">
+		ALTER TABLE <include refid="DEFAULT_TABLE_NAME"/>
+		DROP COLUMN ${columnName}
+	</update>
+	
+	<!-- 테이블 -->
+	<update id="allDropTable" parameterType="java.util.HashMap">
+		CALL PRC_TABCONTENTS_DROP_TABLE(#{fnIdx}) 
+	</update>
+	<update id="allCreateTable" parameterType="java.util.HashMap">
+		CALL PRC_TABCONTENTS_CREATE_TABLE(#{fnIdx}, #{fnName}) 
+	</update>
+</mapper>            

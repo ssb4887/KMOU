@@ -1,0 +1,91 @@
+{
+	"item_info":{
+		"items":{
+			"design":{
+				"item_id":"design"
+				,"button_name":"검색"
+				,"column_id":"DESIGN"
+				,"format_type":"0"
+				,"item_name":"기본 템플릿"
+				,"item_name_en":"기본 템플릿"
+				,"item_name_ko":"기본 템플릿"
+				,"maximum":"50"
+				,"minimum":"0"
+				,"modify_type":"0"
+				,"object_type":"8"
+				,"option_type":"0"
+				,"onclick":"fn_designListSearchForm()"
+				,"required_modify":"0"
+				,"required_write":"0"
+				,"use_list":"1"
+				,"use_modify":"1"
+				,"use_view":"1"
+				,"use_write":"1"
+				,"write_type":0
+			}, "use_etc_setting":{
+				"item_name":"사용설정"
+				, "required_write":0
+				, "required_modify":0
+				, "default_item":1
+			}
+			,"use_file":{
+				"item_id":"use_file"
+				,"column_id":"USE_FILE"
+				,"item_name":"파일첨부"
+				,"item_name_ko":"파일첨부"
+				,"object_type":14
+				,"item_type":"1"
+				,"default_value":"0"
+			}
+			,"use_new":{
+				"item_id":"use_new"
+				,"column_id":"USE_NEW"
+				,"item_name":"새글"
+				,"item_name_ko":"새글"
+				,"object_type":14
+				,"item_type":"1"
+				,"default_value":"0"
+			}
+			,"dset_list_block":{
+				"item_id":"dset_list_block"
+				,"column_id":"DSET_LIST_BLOCK"
+				,"item_name":"페이징 수"
+				,"item_name_ko":"페이징 수"
+				,"item_type":"1"
+				,"object_type":0
+				,"maximum":"3"
+			}
+			,"dset_list_count":{
+				"item_id":"dset_list_count"
+				,"column_id":"DSET_LIST_COUNT"
+				,"item_name":"목록 수"
+				,"item_name_ko":"목록 수"
+				,"item_type":"1"
+				,"object_type":0
+				,"maximum":"3"
+			}
+		}
+		,"modify_order":[
+			"design"
+			,"use_file"
+			,"use_new"
+			,"dset_list_block"
+			,"dset_list_count"
+		]
+		,"use_item_order":[
+			"use_file"
+			,"use_new"
+		]
+		,"dset_item_order":[
+			"dset_list_block"
+			,"dset_list_count"
+		]
+		,"modifyproc_order":[
+			"design"
+			,"use_file"
+			,"use_new"
+			,"dset_list_block"
+			,"dset_list_count"
+		]
+	}
+}

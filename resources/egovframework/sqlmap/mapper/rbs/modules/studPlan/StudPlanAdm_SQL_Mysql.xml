@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.studPlan.studPlanAdmMapper">	
+	
+	<!-- 승인 --> 	
+	<update id="judgApprove" parameterType="java.util.HashMap">
+		UPDATE 
+			uni_sdm_aply_infmt
+		SET 
+			${DEPART_FG}_JUDG_DT = DATE_FORMAT(NOW(), '%Y%m%d'),
+			<if test='JUDG_OPIN != NULL and !JUDG_OPIN.equals("")'>
+			${DEPART_FG}_JUDG_OPIN = #{JUDG_OPIN},
+			</if>
+		    LAST_MODI_IP = #{LAST_MODI_IP},
+		    LAST_MODI_ID = #{LAST_MODI_ID},
+		    LAST_MODI_DATE = NOW(),
+		    STATUS = #{STATUS}
+		WHERE 
+		    SDM_CD = #{SDM_CD} 
+		AND REVSN_NO = #{REVSN_NO}
+	</update>
+		
+	<!-- 반려 --> 	
+	<update id="judgReject" parameterType="java.util.HashMap">
+		UPDATE 
+			uni_sdm_aply_infmt
+		SET 
+			${DEPART_FG}_JUDG_DT = DATE_FORMAT(NOW(), '%Y%m%d'),
+			<if test='JUDG_OPIN != NULL and !JUDG_OPIN.equals("")'>
+			${DEPART_FG}_JUDG_OPIN = #{JUDG_OPIN},
+			</if>
+		    LAST_MODI_IP = #{LAST_MODI_IP},
+		    LAST_MODI_ID = #{LAST_MODI_ID},
+		    LAST_MODI_DATE = NOW(),
+		    STATUS = #{STATUS}
+		WHERE 
+		    SDM_CD = #{SDM_CD} 
+		AND REVSN_NO = #{REVSN_NO}
+	</update>	
+	
+	<!-- 창의융합교육센터에서 심의할 학생설계전공 조회 -->	
+	<select id="getEduCenterJudgList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+		SELECT
+			(SELECT COM_INF_NM from uni_sdm_com_progress  where COM_CD = A.STATUS) AS STATUS_INF_NM,
+			A.*
+		FROM
+			uni_sdm_aply_infmt A
+		WHERE
+			A.STATUS <![CDATA[>=]]> '40'
+		AND A.STATUS != '100'			
+		AND A.USE_YN = 'Y'
+		<if test="SEARCH_RANGE != null and SEARCH_RANGE != ''">
+			AND (FN_GET_COLG_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%') OR 
+				FN_GET_DEPT_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%') OR 
+				FN_GET_MAJOR_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%')) 
+		</if>
+		ORDER BY STATUS ASC, LAST_MODI_DATE DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+		
+	<select id="getEduCenterJudgListCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			uni_sdm_aply_infmt A
+		WHERE
+			A.STATUS <![CDATA[>=]]> '40'
+		AND A.STATUS != '100'			
+		AND A.USE_YN = 'Y'
+		<if test="SEARCH_RANGE != null and SEARCH_RANGE != ''">
+			AND (FN_GET_COLG_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%') OR 
+				FN_GET_DEPT_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%') OR 
+				FN_GET_MAJOR_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%')) 
+		</if>
+	</select>	
+	
+	<!-- 학사과에서 심의할 학생설계전공 조회 -->	
+	<select id="getDepartJudgList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+		SELECT
+			(SELECT COM_INF_NM from uni_sdm_com_progress  where COM_CD = A.STATUS) AS STATUS_INF_NM,
+			A.*
+		FROM
+			uni_sdm_aply_infmt A
+		WHERE
+			A.STATUS <![CDATA[>=]]> '50'
+		AND A.STATUS != '100'			
+		AND A.USE_YN = 'Y'
+		<if test="SEARCH_RANGE != null and SEARCH_RANGE != ''">
+			AND (FN_GET_COLG_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%') OR 
+				FN_GET_DEPT_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%') OR 
+				FN_GET_MAJOR_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%')) 
+		</if>
+		ORDER BY STATUS ASC, LAST_MODI_DATE DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+		
+	<select id="getDepartJudgListCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			uni_sdm_aply_infmt A
+		WHERE
+			A.STATUS <![CDATA[>=]]> '50'
+		AND A.STATUS != '100'			
+		AND A.USE_YN = 'Y'
+		<if test="SEARCH_RANGE != null and SEARCH_RANGE != ''">
+			AND (FN_GET_COLG_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%') OR 
+				FN_GET_DEPT_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%') OR 
+				FN_GET_MAJOR_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%')) 
+		</if>
+	</select>	
+	
+	<!-- 교무회에서 심의할 학생설계전공 조회 -->	
+	<select id="getAffairCommitteeJudgList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+		SELECT
+			(SELECT COM_INF_NM from uni_sdm_com_progress  where COM_CD = A.STATUS) AS STATUS_INF_NM,
+			A.*
+		FROM
+			uni_sdm_aply_infmt A
+		WHERE
+			A.STATUS <![CDATA[>=]]> '60'
+		AND A.STATUS != '100'			
+		AND A.USE_YN = 'Y'
+		<if test="SEARCH_RANGE != null and SEARCH_RANGE != ''">
+			AND (FN_GET_COLG_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%') OR 
+				FN_GET_DEPT_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%') OR 
+				FN_GET_MAJOR_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%')) 
+		</if>
+		ORDER BY STATUS ASC, LAST_MODI_DATE DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+		
+	<select id="getAffairCommitteeJudgListCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			uni_sdm_aply_infmt A
+		WHERE
+			A.STATUS <![CDATA[>=]]> '60'
+		AND A.STATUS != '100'			
+		AND A.USE_YN = 'Y'
+		<if test="SEARCH_RANGE != null and SEARCH_RANGE != ''">
+			AND (FN_GET_COLG_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%') OR 
+				FN_GET_DEPT_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%') OR 
+				FN_GET_MAJOR_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%')) 
+		</if>
+	</select>	
+	
+	<!-- 최종수정할 학생설계전공 조회 -->	
+	<select id="getLastSupplementList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+		SELECT
+			(SELECT COM_INF_NM from uni_sdm_com_progress  where COM_CD = A.STATUS) AS STATUS_INF_NM,
+			A.*
+		FROM
+			uni_sdm_aply_infmt A
+		WHERE
+			A.STATUS <![CDATA[>=]]> '70'
+		AND A.USE_YN = 'Y'
+		<if test="SEARCH_RANGE != null and SEARCH_RANGE != ''">
+			AND (FN_GET_COLG_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%') OR 
+				FN_GET_DEPT_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%') OR 
+				FN_GET_MAJOR_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%')) 
+		</if>
+		ORDER BY STATUS ASC, LAST_MODI_DATE DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+		
+	<select id="getLastSupplementListCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			uni_sdm_aply_infmt A
+		WHERE
+			A.STATUS <![CDATA[>=]]> '70'
+		AND A.USE_YN = 'Y'
+		<if test="SEARCH_RANGE != null and SEARCH_RANGE != ''">
+			AND (FN_GET_COLG_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%') OR 
+				FN_GET_DEPT_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%') OR 
+				FN_GET_MAJOR_CD_LIST(A.SDM_CD, A.REVSN_NO) LIKE CONCAT('%',#{SEARCH_RANGE},'%')) 
+		</if>
+	</select>	
+	
+	
+	<!-- 수정보완 저장 --> 	
+	<update id="lastSupplementSave" parameterType="java.util.HashMap">
+		UPDATE 
+			uni_sdm_aply_infmt
+		SET 
+	     	SDM_KOR_NM = #{SDM_KOR_NM},
+	        SDM_ENG_NM = #{SDM_ENG_NM},
+	        AWD_DEGR_KOR_NM = #{AWD_DEGR_KOR_NM},
+	        AWD_DEGR_ENG_NM = #{AWD_DEGR_ENG_NM},
+	        IDEAL_STU_KOR = #{IDEAL_STU_KOR},
+	        CONC_JOB_KOR = #{CONC_JOB_KOR},
+	        CONC_STUD_FLD_KOR = #{CONC_STUD_FLD_KOR},
+	        DMND_BASE_LRN_ABTY_KOR = #{DMND_BASE_LRN_ABTY_KOR},
+	        CPTN_PLAN_KOR = #{CPTN_PLAN_KOR},
+	        ETC_CTNT = #{ETC_CTNT},
+	        APLY_RESN_KOR = #{APLY_RESN_KOR},
+	        LAST_MODI_IP = #{LAST_MODI_IP},
+        	LAST_MODI_ID = #{LAST_MODI_ID},
+        	LAST_MODI_DATE = NOW()
+		WHERE 
+		    SDM_CD = #{SDM_CD} 
+		AND REVSN_NO = #{REVSN_NO}
+	</update>
+	<!-- 수정보완 저장마감 --> 	
+	<update id="lastSupplementComplete" parameterType="java.util.HashMap">
+		UPDATE 
+			uni_sdm_aply_infmt
+		SET 
+	     	STATUS = #{STATUS},
+	        LAST_MODI_IP = #{LAST_MODI_IP},
+        	LAST_MODI_ID = #{LAST_MODI_ID},
+        	LAST_MODI_DATE = NOW()
+		WHERE 
+		    SDM_CD = #{SDM_CD} 
+		AND REVSN_NO = #{REVSN_NO}
+	</update>	
+		
+	<select id="getStudAplyInfmt" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT
+			*
+		FROM
+			uni_sdm_aply_infmt A
+		WHERE
+			SDM_CD = #{SDM_CD}
+		AND REVSN_NO = #{REVSN_NO}
+	</select>	
+		
+	<select id="getStudSbjtInfmt" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT
+			*
+		FROM
+			uni_sdm_sbjt_infmt A
+		WHERE
+			SDM_CD = #{SDM_CD}
+		AND REVSN_NO = #{REVSN_NO}
+	</select>	
+	
+</mapper>            

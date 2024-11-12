@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	1. [KEY_IDX_COLUMN], 테이블명 등 변경해서 사용
+	2. 그 외 필요에 따라 쿼리 수정하여 사용 
+-->
+<mapper namespace="rbs.modules.sample.sampleFileMapper">
+	<!-- 테이블명 -->
+	<sql id="FILE_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG"/>SAMPLE_${fnIdx}_FILE_INFO</trim></sql>
+	
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.[KEY_IDX_COLUMN], A.FLE_IDX, A.ITEM_ID, A.FILE_SAVED_NAME, A.FILE_ORIGIN_NAME, A.FILE_SIZE, A.FILE_TEXT 
+			FROM 
+			<include refid="FILE_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<if test="KEY_IDX > 0">AND [KEY_IDX_COLUMN] = #{KEY_IDX}</if>
+			ORDER BY A.ORDER_IDX
+	</select>
+	
+	<select id="filenameList" parameterType="java.util.HashMap" resultType="java.util.List">
+			SELECT 
+			A.FILE_SAVED_NAME
+			FROM 
+			<include refid="FILE_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<if test="KEY_IDX > 0">AND [KEY_IDX_COLUMN] = #{KEY_IDX}</if>
+	</select>
+	
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(FLE_IDX), 0)</trim> + 1 MAXID
+		FROM 
+			<include refid="FILE_TABLE_NAME"/> A
+		WHERE [KEY_IDX_COLUMN] = #{KEY_IDX}
+		<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="FILE_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectFileView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.FILE_SAVED_NAME, A.FILE_ORIGIN_NAME
+			FROM 
+			<include refid="FILE_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*
+			FROM 
+			<include refid="FILE_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<update id="updateFileDown" parameterType="java.util.HashMap">
+		UPDATE <include refid="FILE_TABLE_NAME"/> SET DWN_CNT = DWN_CNT + 1 
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		AND [KEY_IDX_COLUMN] = #{KEY_IDX}
+	</update>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="FILE_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, [KEY_IDX_COLUMN], FLE_IDX
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, #{KEY_IDX}, #{FLE_IDX}
+		)
+	</insert>
+	
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="FILE_TABLE_NAME"/> SET 
+		<include refid="rbs.commonMapper.UPDATE_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		AND [KEY_IDX_COLUMN] = #{KEY_IDX}
+	</update>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="FILE_TABLE_NAME"/>  
+		WHERE [KEY_IDX_COLUMN] = #{KEY_IDX}
+		<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</delete>
+</mapper>            

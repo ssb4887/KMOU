@@ -1,0 +1,55 @@
+@charset "utf-8";
+
+
+#cms_zipCode_article .popup-head {margin-top:20px; padding-bottom:20px;}
+#cms_zipCode_article .popup-head .title {margin-top:10px;line-height:150%;}
+#cms_zipCode_article #fn_zip_tab {display:inline-block; width:100%;border-bottom:#555 1px solid; font-size:0px;}
+#cms_zipCode_article #fn_zip_tab li{display:inline-block; font-size:13px;}
+#cms_zipCode_article #fn_zip_tab li{background-color:#fff;}
+#cms_zipCode_article #fn_zip_tab li button {font-size:13px; background-color:#fff;color:#555; padding:5px 20px;margin-left:3px;border-left:#d9d9ec 1px solid; border-top:#d9d9ec 1px solid; border-right:#d9d9ec 1px solid;}
+#cms_zipCode_article #fn_zip_tab li button.on { background-color:#0064ba; color:#FFF; font-weight:bold; margin-bottom:-1px; border:#0064ba 1px solid;}
+#cms_zipCode_article .popup-content {min-width:470px !important; margin:auto;}
+#cms_zipCode_article .popup-head p {text-align:center;}
+#cms_zipCode_article .popup-content .post-search-area dl {padding:10px;}
+#cms_zipCode_article .popup-content .post-search-area dl>dt {display:inline-block; width:70px; text-align: right; height:30px;line-height: 25px; padding-right:5px;} 
+#cms_zipCode_article .popup-content .post-search-area dl>dt.first {clear:both;} 
+#cms_zipCode_article .popup-content .post-search-area dl>dd {display:inline-block; width:140px !important; text-align: left !important;} 
+#cms_zipCode_article .popup-content .post-search-area div.submit {clear:both; width:470px !important; text-align: center;}
+
+#cms_zipCode_article .popup-content .post-search-area div.submit .btnSearch {cursor:pointer; width:100px; height:32px; font-weight:bold; font-size:13px !important; color:#ffffff !important; line-height:30px; text-align:center; text-decoration:none !important; border:1px solid #004888; background:#005AAB;}
+
+/* www.juso.go.kr 도로명주소 API */
+#cms_zipCode_article .popup-content .post-search-area.juso {text-align:center;}
+#cms_zipCode_article .popup-content .post-search-area.juso div.fn_data {display:inline-block;}
+#cms_zipCode_article .popup-content .post-search-area.juso div.submit {display:inline-block; width:auto !important;}
+
+#cms_zipCode_article .popup-content .post-search-area.juso div.submit .btnSearch {cursor:pointer; width:70px; height:27px; font-weight:bold; font-size:13px !important; color:#ffffff !important; line-height:25px; text-align:center; text-decoration:none !important; background:#005AAB;}
+
+
+#cms_zipCode_article .popup-content .post-search-result {clear:both; margin-top:10px;padding:10px 0; border-top:#d9d9ec 1px dotted;}
+
+#cms_zipCode_article input[type="text"],#cms_zipCode_article .tbWriteA input[type="file"], #cms_zipCode_article .tbWriteA textarea{border:1px solid #dbdbdb; padding:0 5px; height:25px; line-height:25px;}
+#cms_zipCode_article select {border:1px solid #dbdbdb; padding:2px; height:27px;}
+
+
+/* 목록 */
+#cms_zipCode_article .tbListA {font-size:11px; width:100%; border-top:2px solid #005AAB; border-bottom:1px solid #6b6b6b; border-collapse:collapse; border-spacing:0;  table-layout:fixed; }
+#cms_zipCode_article .tbListA thead tr th {padding:7px 0; font-size:11px; font-weight:bold; color:#3e3e3e; text-align:center; vertical-align:middle; border-bottom:1px solid #6b6b6b; background:#fbfbfb;}
+#cms_zipCode_article .tbListA tbody tr td {height:19px; padding:3px 5px; color:#3e3e3e; vertical-align:middle; border-top:1px solid #e4e4e4;}
+#cms_zipCode_article .tbListA tbody tr:first-child td {border-top:0;}
+#cms_zipCode_article .tbListA tbody.alignC tr td {text-align:center;}
+#cms_zipCode_article .tbListA tbody tr td.num {font-size:12px; color:#747474;}
+#cms_zipCode_article .tbListA tbody tr td.date {font-size:12px; color:#747474;}
+
+#cms_zipCode_article .tbListA tbody tr td.tlt {text-align:left;}
+#cms_zipCode_article .tbListA tbody tr td.tlt a {/*display:inline-block;*/display:inline !important;overflow:hidden;color:#3e3e3e;text-overflow:ellipsis;/*white-space:nowrap;*/}
+#cms_zipCode_article .tbListA tbody tr td.tlt a:hover {color:#006dba;text-decoration:none;}
+#cms_zipCode_article .tbListA tbody tr td.tlt a.notice {font-weight:bold;color:#006dba;}
+
+#cms_zipCode_article .tbListA tbody tr td.tlt img {vertical-align: middle;margin-left:5px;}
+#cms_zipCode_article .tbListA tbody tr td.tlt .fn_list_img {float:left; border: 1px solid #c9c9c9; margin-right:10px;}
+
+#cms_zipCode_article #resultData td dt, #cms_zipCode_article #resultData td dd {float:left; margin-top:1px;}
+#cms_zipCode_article #resultData td dt {clear:both; font-weight: bold; width:40px;}
+#cms_zipCode_article #resultData td dd.btn {float:right;}
+#cms_zipCode_article #resultData td dd.btn .btnTypeG {padding:0 10px 0 10px ; font-size:9px; font-weight:bold; color:#fff !important; line-height:18px; }

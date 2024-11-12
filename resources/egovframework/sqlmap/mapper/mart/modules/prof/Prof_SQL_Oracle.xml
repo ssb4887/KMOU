@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	1. IDX, RBS_PROF_1_INFO, SUBJECT, IDX, 테이블명 등 변경해서 사용
+	2. 그 외 필요에 따라 쿼리 수정하여 사용 
+-->
+<mapper namespace="mart.modules.prof.profMapper">
+	<!-- 테이블명 -->
+	<sql id="PROF_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG"/>PROF_${fnIdx}_INFO</trim></sql>
+	
+	<!-- KEY가 INT인 경우 -->
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(IDX), 0)</trim> + 1 MAXID
+		FROM 
+		RBS_PROF_1_INFO A
+	</select>
+	
+	<!-- KEY가 STRING인 경우 - KEY형식에 맞게 변경하여 사용 
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT <include refid="rbs.commonDBMSMapper.currentDateYYYYMM"/> || LPAD(TO_NUMBER(SUBSTR(NVL(MAX(A.IDX), <include refid="rbs.commonDBMSMapper.currentDateYYYYMM"/> || '0'), 7)) + 1, 4, '0') MAXID
+		FROM 
+		RBS_PROF_1_INFO A 
+		WHERE A.IDX LIKE <include refid="rbs.commonDBMSMapper.currentDateYYYYMM"/> || '%'
+	</select>
+	-->
+	<!-- 수정/삭제 권한 : 등록자 -->
+    <!-- 목록 수정/삭제 권한 조건 쿼리 -->
+	<sql id="editAuthListQuery">
+		<if test="AUTH_MEMBER_IDX != null">
+		, CASE WHEN A.REGI_IDX = #{AUTH_MEMBER_IDX} THEN '1' ELSE '0' END AS AUTH_MNG
+		</if>
+	</sql>
+	
+    <!-- 수정/삭제 권한 조건 쿼리 -->	
+	<sql id="editAuthWhereQuery">
+		<if test="AUTH_MEMBER_IDX != null">
+		AND A.REGI_IDX = #{AUTH_MEMBER_IDX} 
+		</if>
+	</sql>
+	
+	<!-- 교수 리스트 최초 조회 -->
+	<select id="getInitProfList" parameterType="java.util.HashMap" resultMap="profResultMap">
+		<!-- SELECT *
+		FROM (SELECT ROWNUM SEQ_NO, T.*
+			FROM (
+				SELECT 		base.EMP_NO 
+							, base.EMP_NM 
+							, base.NOW_DEPT_CD DEPT_CD
+							, (SELECT UF_GET_ORG_CODESET('B', base.NOW_DEPT_CD) FROM dual) COLG_NM
+							, (SELECT UF_GET_ORG_CODESET('D', base.NOW_DEPT_CD) FROM dual) DEPT_NM
+							, REPLACE(target.V_TEA_TLPHON, ')', '-') TEL_NO
+							, target.V_TEA_EMAIL EMAIL
+							, target.V_TEA_LOCATION LOCATION
+							, target.V_TEA_FILE_PATH
+							, target.V_TEA_RSRCH_REALM
+							, ROW_NUMBER() OVER (PARTITION BY target.V_TEA_EMPNO ORDER BY target.V_TEA_MDSDE DESC) AS RN
+				FROM		APS.APS010TB base
+				LEFT JOIN	KFORU2018.V_TAD_TE_TEA_DEPT target
+							ON target.V_TEA_EMPNO = base.EMP_NO 
+				WHERE 		base.EMP_GB_CODE NOT IN ('PS011', 'PS016')
+							AND base.TEACHER_GB_CODE IS NOT NULL
+				  			AND base.NOW_JOBG_CD IN ('12020101' , '12020201', '12020301')
+				  			AND base.RTI_DT IS NULL
+				  			<if test="university != ''">
+							AND  (SELECT UF_GET_ORG_CODESET('R', base.NOW_DEPT_CD) FROM dual) = #{university}
+							</if>
+							<if test="department != ''">
+							AND  base.NOW_DEPT_CD = #{department}
+							</if>
+				ORDER BY 	CASE 
+								WHEN base.EMP_NM BETWEEN '가' AND '힣' THEN 1
+								WHEN (base.EMP_NM &lt; '가' OR base.EMP_NM &gt; '힣') THEN 2
+								ELSE 3
+							END ASC
+							, base.EMP_NM
+			) T
+			WHERE T.RN = 1
+		)
+		<if test="startNum != null">
+		WHERE  	SEQ_NO <![CDATA[>=]]> #{startNum}
+				AND SEQ_NO <![CDATA[<=]]>  #{endNum}
+		</if>
+		<choose>
+			<when test="field == 'EMP_NM'">
+				ORDER BY EMP_NM ASC
+			</when>
+			<when test="field == 'DEPT_NM'">
+				ORDER BY DEPT_NM ASC
+			</when>
+			<otherwise>
+				ORDER BY EMP_NM ASC
+			</otherwise>
+		</choose> -->
+		
+		SELECT *
+		FROM (SELECT ROWNUM SEQ_NO, T.*
+						FROM (SELECT EMP_NO
+			     , EMP_NM
+			     , NOW_DEPT_CD                          AS DEPT_CD
+			     , UF_GET_ORG_CODESET('D', NOW_DEPT_CD) AS DEPT_NM
+			     , UF_GET_ORG_CODESET('B', NOW_DEPT_CD) AS COLG_NM
+			     , TEA_LOCATION AS LOCATION
+			     , TEA_TLPHON AS TEL_NO
+			     , TEA_EMAIL AS EMAIL
+			     , TEA_RSRCH_REALM
+			     , TEA_FILE_PATH
+			FROM (SELECT * FROM APS.APS010TB WHERE NOW_NRALI_CD IN ('120201','120202','120203') AND RTI_FL = 0) APS010
+			         LEFT JOIN (SELECT V_TEA_EMPNO                                                           AS TEA_EMPNO
+			                         , TRIM(V_TEA_NAME)                                                      AS TEA_NAME
+			                         , V_TEA_MAJOR    AS TEA_MAJOR
+			                         , V_TEA_LOCATION  AS TEA_LOCATION
+			                         , V_TEA_TLPHON   AS TEA_TLPHON
+			                         , V_TEA_EMAIL        AS TEA_EMAIL
+			                         , V_TEA_LABRUM   AS TEA_LABRUM
+			                         , V_TEA_LABRUM_INTRO AS TEA_LABRUM_INTRO
+			                         , V_TEA_MAIN        AS TEA_MAIN
+			                         , V_TEA_CAREER      AS TEA_CAREER
+			                         , V_TEA_RSRCH_REALM  AS TEA_RSRCH_REALM
+			                         , V_TEA_FAX       AS TEA_FAX
+			                         , V_TEA_FILE_PATH                                                       AS TEA_FILE_PATH
+			                         , COALESCE(V_TEA_RGSDE, TO_DATE('1970-01-01', 'YYYY-MM-DD'))            AS TEA_RGSDE
+			                         , COALESCE(V_TEA_MDSDE, TO_DATE('1970-01-01', 'YYYY-MM-DD'))            AS TEA_MDSDE
+			                    FROM (SELECT ROW_NUMBER() OVER (PARTITION BY V_TEA_EMPNO ORDER BY V_TEA_MDSDE DESC) AS ROW_NUM,
+			                                 PROFESSOR.*
+			                          FROM KFORU2018.V_TAD_TE_TEA_DEPT PROFESSOR
+                          		WHERE V_TEA_EMPNO IS NOT NULL) SUB
+                    			WHERE SUB.ROW_NUM = 1) KFORU ON TEA_EMPNO = EMP_NO
+							WHERE RTI_DT IS NULL
+				  			<if test="university != ''">
+							AND  (SELECT UF_GET_ORG_CODESET('R', APS010.NOW_DEPT_CD) FROM dual) = #{university}
+							</if>
+							<if test="department != ''">
+							AND  APS010.NOW_DEPT_CD = #{department}
+							</if>
+				ORDER BY 	CASE 
+								WHEN APS010.EMP_NM BETWEEN '가' AND '힣' THEN 1
+								WHEN (APS010.EMP_NM &lt; '가' OR APS010.EMP_NM &gt; '힣') THEN 2
+								ELSE 3
+							END ASC
+							, APS010.EMP_NM
+			) T
+		)
+		<if test="startNum != null">
+		WHERE  	SEQ_NO <![CDATA[>=]]> #{startNum}
+				AND SEQ_NO <![CDATA[<=]]>  #{endNum}
+		</if>
+		<choose>
+			<when test="field == 'EMP_NM'">
+				ORDER BY EMP_NM ASC
+			</when>
+			<when test="field == 'DEPT_NM'">
+				ORDER BY DEPT_NM ASC
+			</when>
+			<otherwise>
+				ORDER BY EMP_NM ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 교수 총 건수 -->
+	<select id="getInitProfListCount" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT COUNT(1) AS TOTAL_COUNT
+		FROM (SELECT * FROM APS.APS010TB WHERE NOW_NRALI_CD IN ('120201','120202','120203') AND RTI_FL = 0) APS010
+		         LEFT JOIN (SELECT V_TEA_EMPNO                                                           AS TEA_EMPNO
+		                         , TRIM(V_TEA_NAME)                                                      AS TEA_NAME
+		                         , V_TEA_MAJOR    AS TEA_MAJOR
+		                         , V_TEA_TLPHON   AS TEA_TLPHON
+		                         , V_TEA_EMAIL        AS TEA_EMAIL
+		                         , V_TEA_LABRUM   AS TEA_LABRUM
+		                         , V_TEA_FAX       AS TEA_FAX
+		                         , V_TEA_FILE_PATH                                                       AS TEA_FILE_PATH
+		                         , COALESCE(V_TEA_RGSDE, TO_DATE('1970-01-01', 'YYYY-MM-DD'))            AS TEA_RGSDE
+		                         , COALESCE(V_TEA_MDSDE, TO_DATE('1970-01-01', 'YYYY-MM-DD'))            AS TEA_MDSDE
+		                    FROM (SELECT ROW_NUMBER() OVER (PARTITION BY V_TEA_EMPNO ORDER BY V_TEA_MDSDE DESC) AS ROW_NUM,
+		                                 PROFESSOR.*
+		                          FROM KFORU2018.V_TAD_TE_TEA_DEPT PROFESSOR
+		                          WHERE V_TEA_EMPNO IS NOT NULL) SUB
+		                    WHERE SUB.ROW_NUM = 1) KFORU ON TEA_EMPNO = EMP_NO
+		WHERE 				RTI_DT IS NULL
+		<if test="university != ''">
+		AND  (SELECT UF_GET_ORG_CODESET('R', APS010.NOW_DEPT_CD) FROM dual) = #{university}
+		</if>
+		<if test="department != ''">
+		AND  APS010.NOW_DEPT_CD = #{department}
+		</if>
+		<!-- SELECT COUNT(*) AS TOTAL_COUNT
+		FROM (
+				SELECT 		base.EMP_NO 
+							, base.EMP_NM 
+							, base.NOW_DEPT_CD DEPT_CD
+							, (SELECT UF_GET_ORG_CODESET('B', base.NOW_DEPT_CD) FROM dual) COLG_NM
+							, (SELECT UF_GET_ORG_CODESET('D', base.NOW_DEPT_CD) FROM dual) DEPT_NM
+							, REPLACE(target.V_TEA_TLPHON, ')', '-') TEL_NO
+							, ROW_NUMBER() OVER (PARTITION BY target.V_TEA_EMPNO ORDER BY target.V_TEA_MDSDE DESC) AS RN
+				FROM		APS.APS010TB base
+				LEFT JOIN	KFORU2018.V_TAD_TE_TEA_DEPT target
+							ON target.V_TEA_EMPNO = base.EMP_NO 
+				WHERE 		base.EMP_GB_CODE NOT IN ('PS011', 'PS016')
+							AND base.TEACHER_GB_CODE IS NOT NULL
+				  			AND base.NOW_JOBG_CD IN ('12020101' , '12020201', '12020301')
+				  			AND base.RTI_DT IS NULL
+				  			<if test="university != ''">
+							AND  (SELECT UF_GET_ORG_CODESET('R', base.NOW_DEPT_CD) FROM dual) = #{university}
+							</if>
+							<if test="department != ''">
+							AND  base.NOW_DEPT_CD = #{department}
+							</if>
+			) T 
+		WHERE T.RN =1 -->
+	</select>
+	
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.IDX, SUBJECT, A.REGI_DATE 
+			<include refid="editAuthListQuery"/>
+			FROM 
+			RBS_PROF_1_INFO A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<choose>
+				<when test="dsetOrderField == null">
+					<bind name="defaultOrderStr" value="'IDX'"/>
+				</when>
+				<otherwise>
+					<bind name="defaultOrderStr" value="_parameter.get('dsetOrderField')"/>
+				</otherwise>
+			</choose>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	
+
+<select id="getCollegeList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		COLG_CD
+						, COLG_NM
+			FROM 		V_AI_ORG
+			WHERE 		USE_FG = 'Y'
+						AND COLG_CD IN ('301000', '309000', '310000', '308000')
+			GROUP BY 	COLG_CD
+						, COLG_NM	
+			ORDER BY 	COLG_CD
+			
+<!-- 			SELECT 		* -->
+<!-- 			FROM 		SCO.V_AI_ORG -->
+<!-- 			WHERE 		ORG_LVL = 2 -->
+<!-- 						AND DEPT_CD LIKE '3%' -->
+<!-- 						AND UP_DEPT_CD = 300000 -->
+<!-- 						AND USE_FG = 'Y' -->
+<!-- 						OR DEPT_CD = '446000' -->
+<!-- 			ORDER BY 	DEPT_CD ASC -->
+	</select>
+	
+	<select id="getDepartList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		CATEGORY AS TYPE
+						, COLG_CD
+						, COLG_NM 
+						, DEPT_CD
+						, DEPT_NM
+						, UF_COM_DEPT_NM(DEPT_CD, 3) AS DEPT_ENM
+						, UP_DEPT_CD AS UPPER_CD
+						, ORG_LVL
+			FROM 		V_AI_ORG
+			WHERE 		USE_FG = 'Y'
+						AND CATEGORY &lt;&gt; '부서'
+						<if test="univ != null and univ != ''">
+						AND UP_DEPT_CD = #{univ}
+						</if>
+			ORDER BY 	COLG_CD
+						, DEPT_CD
+			
+<!-- 			SELECT 		* -->
+<!-- 			FROM 		SCO.V_AI_ORG  -->
+<!-- 			WHERE 		ORG_LVL = 3 -->
+<!-- 						AND DEPT_CD LIKE '3%' -->
+<!-- 						AND UP_DEPT_CD = #{univ} -->
+<!-- 						AND USE_FG = 'Y' -->
+<!-- 			ORDER BY 	DEPT_CD ASC -->
+	</select>
+	
+	<select id="getMajorList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT A.*
+			FROM SCO.V_AI_ORG A
+			WHERE ORG_LVL = 4
+			AND DEPT_CD LIKE '3%'
+			AND UP_DEPT_CD = #{depart}
+			AND USE_FG = 'Y'
+			ORDER BY DEPT_CD ASC
+	</select>
+	
+	
+	<resultMap id="profResultMap" type="dataMap">
+	    <result property="EMP_NO" column="EMP_NO"/>
+	    <result property="EMP_NM" column="EMP_NM"/>
+	    <result property="EMP_CNM" column="EMP_CNM"/>
+	    <result property="EMP_ENM" column="EMP_ENM"/>
+	    <result property="DEPT_CD" column="DEPT_CD"/>
+	    <result property="DEPT_NM" column="DEPT_NM"/>
+	    <result property="COLG_CD" column="COLG_CD"/>
+	    <result property="COLG_NM" column="COLG_NM"/>
+	    <result property="JOBG_CD" column="JOBG_CD"/>
+	    <result property="JOBG_NM" column="JOBG_NM"/>
+	    <result property="TEA_MAJOR" column="TEA_MAJOR"/>
+	    <result property="TEA_LOCATION" column="TEA_LOCATION"/>
+	    <result property="TEA_LABRUM" column="TEA_LABRUM"/>
+	    <result property="TEA_LABRUM_INTRO" column="TEA_LABRUM_INTRO" jdbcType="CLOB" javaType="java.lang.String"/>
+	    <result property="TEA_TLPHON" column="TEA_TLPHON"/>
+	    <result property="TEA_EMAIL" column="TEA_EMAIL"/>
+	    <result property="TEA_MAIN" column="TEA_MAIN" jdbcType="CLOB" javaType="java.lang.String"/>
+	    <result property="TEA_CAREER" column="TEA_CAREER" jdbcType="CLOB" javaType="java.lang.String"/>
+	    <result property="TEA_RSRCH_REALM" column="TEA_RSRCH_REALM" jdbcType="CLOB" javaType="java.lang.String"/>
+	    <result property="TEA_FILE_PATH" column="TEA_FILE_PATH"/>
+	    <result property="RTI_FL" column="RTI_FL"/>
+	    <result property="TEA_RSRCH_REALM" column="V_TEA_RSRCH_REALM" jdbcType="CLOB" javaType="java.lang.String"/>
+	</resultMap>
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultMap="profResultMap">
+		SELECT NVL(EMP_NO, '-') AS EMP_NO  
+		     , NVL(EMP_NM, '-') AS EMP_NM 
+		     , TRIM(EMP_CNM)                        AS EMP_CNM
+		     , TRIM(EMP_ENM)                        AS EMP_ENM
+		     , NOW_DEPT_CD                          AS DEPT_CD
+		     , UF_GET_ORG_CODESET('D', NOW_DEPT_CD) AS DEPT_NM
+		     , (SELECT COLG_CD
+		        FROM SCO.V_AI_ORG ORG
+		        WHERE ORG.DEPT_CD = NOW_DEPT_CD)    AS COLG_CD
+		     , UF_GET_ORG_CODESET('B', NOW_DEPT_CD) AS COLG_NM
+		     , NOW_JOBG_CD                          AS JOBG_CD
+		     , (SELECT JOBG_NM
+		        FROM APS.APS920TB
+		        WHERE JOBG_CD = NOW_JOBG_CD)        AS JOBG_NM
+		     , NVL(TEA_MAJOR, '-') AS TEA_MAJOR 
+		     , NVL(TEA_LOCATION, '-') AS TEA_LOCATION 
+		     , NVL(TEA_LABRUM, '-') AS TEA_LABRUM 
+		     , NVL(TEA_LABRUM_INTRO, '-') AS TEA_LABRUM_INTRO 
+		     , NVL(TEA_TLPHON, '-') AS TEA_TLPHON 
+		     , NVL(TEA_EMAIL, '-') AS TEA_EMAIL 
+		     , NVL(TEA_MAIN, '-') AS TEA_MAIN 
+		     , NVL(TEA_CAREER, '-') AS TEA_CAREER
+		     , NVL(TEA_RSRCH_REALM, '-') AS TEA_RSRCH_REALM
+		     , TEA_FILE_PATH
+		     , RTI_FL
+		FROM APS.APS010TB APS010
+		         LEFT JOIN (SELECT V_TEA_EMPNO                                                           AS TEA_EMPNO
+		                         , TRIM(V_TEA_NAME)                                                      AS TEA_NAME
+		                         , REGEXP_REPLACE(V_TEA_MAJOR, '^[[:space:]]+|[[:space:]]+$', '')        AS TEA_MAJOR
+		                         , REGEXP_REPLACE(V_TEA_LOCATION, '^[[:space:]]+|[[:space:]]+$', '')     AS TEA_LOCATION
+		                         , REGEXP_REPLACE(V_TEA_TLPHON, '^[[:space:]]+|[[:space:]]+$', '')       AS TEA_TLPHON
+		                         , REGEXP_REPLACE(V_TEA_EMAIL, '^[[:space:]]+|[[:space:]]+$', '')        AS TEA_EMAIL
+		                         , REGEXP_REPLACE(V_TEA_LABRUM, '^[[:space:]]+|[[:space:]]+$', '')       AS TEA_LABRUM
+		                         , REGEXP_REPLACE(V_TEA_LABRUM_INTRO, '^[[:space:]]+|[[:space:]]+$', '') AS TEA_LABRUM_INTRO
+		                         , REGEXP_REPLACE(V_TEA_MAIN, '^[[:space:]]+|[[:space:]]+$', '')         AS TEA_MAIN
+		                         , REGEXP_REPLACE(V_TEA_CAREER, '^[[:space:]]+|[[:space:]]+$', '')       AS TEA_CAREER
+		                         , REGEXP_REPLACE(V_TEA_RSRCH_REALM, '^[[:space:]]+|[[:space:]]+$', '')  AS TEA_RSRCH_REALM
+		                         , REGEXP_REPLACE(V_TEA_FAX, '^[[:space:]]+|[[:space:]]+$', '')          AS TEA_FAX
+		                         , V_TEA_FILE_PATH                                                       AS TEA_FILE_PATH
+		                         , COALESCE(V_TEA_RGSDE, TO_DATE('1970-01-01', 'YYYY-MM-DD'))            AS TEA_RGSDE
+		                         , COALESCE(V_TEA_MDSDE, TO_DATE('1970-01-01', 'YYYY-MM-DD'))            AS TEA_MDSDE
+		                    FROM (SELECT ROW_NUMBER() OVER (PARTITION BY V_TEA_EMPNO ORDER BY V_TEA_MDSDE DESC) AS ROW_NUM,
+		                                 PROFESSOR.*
+		                          FROM KFORU2018.V_TAD_TE_TEA_DEPT PROFESSOR
+		                          WHERE V_TEA_EMPNO IS NOT NULL) SUB
+		                    WHERE SUB.ROW_NUM = 1) KFORU ON TEA_EMPNO = EMP_NO
+		WHERE 
+		    EMP_GB_CODE NOT IN ('PS011', 'PS016')
+		  AND NOW_JOBG_CD NOT IN ('12010101', '12060101', '12060201', '12070101', '12070201', '12070301')
+		  AND APS010.EMP_NO = #{empNo}
+	</select>
+	
+	<select id="selectProfRsh" parameterType="java.util.HashMap" resultMap="profResultMap">
+		SELECT PROFESSOR.*
+		FROM KFORU2018.V_TAD_TE_TEA_DEPT PROFESSOR
+		WHERE PROFESSOR.V_TEA_SN = #{sn}
+	</select>
+	
+	<select id="selectSubList" parameterType="java.util.HashMap" resultType="dataMap">
+			WITH RankedData AS (
+			    SELECT 		A.*, B.COMDIV_CODE, (SELECT UF_GET_COMMON_CODESET(B.COMDIV_CODE) FROM  dual) AS COMDIV_NM,
+			    			NVL((SELECT UF_GET_COMMON_CODESET(B.CLASS_CODE) FROM dual), '주간') AS CLASS_NM, SCO.DEPT_CDNM(A.COLL_CD) AS COLG_NM,
+           					ROW_NUMBER() OVER (ORDER BY A.YEAR DESC, A.DEPT_CD) AS SEQ_NO
+    			FROM 		SUF.V_AI_SUBJECT A
+    			LEFT OUTER JOIN SUF.SUF100TB B 
+    		 	ON 			A.YEAR = B.YEAR
+         		AND 		A.SMT = B.SMT
+         		AND 		A.SUBJECT_CD = B.SUBJECT_CD
+         		AND 		A.DIVCLS = B.DIVCLS
+			    WHERE 		A.EMP_NO = #{empNo}
+			    AND 		COLL_CD LIKE '3%'
+			    AND 		A.YEAR <![CDATA[<=]]> #{year}
+			    AND 		A.YEAR <![CDATA[>=]]> #{agoYear}
+			    AND	  	 A.SUBJECT_NM NOT LIKE '%설계및상담%'
+			    ORDER BY 	A.YEAR DESC, A.SUBJECT_NM ASC
+			)
+			
+			SELECT *
+			FROM RankedData
+			WHERE SEQ_NO <![CDATA[>=]]> #{startNum}
+			  AND SEQ_NO <![CDATA[<=]]> #{endNum}
+			ORDER BY SEQ_NO
+			<!-- SELECT *
+			FROM (
+				SELECT A.*, B.COLG_NM,ROWNUM SEQ_NO  
+					FROM SUF.V_AI_SUBJECT A 
+					LEFT OUTER JOIN SCO.V_AI_ORG B
+					ON A.DEPT_CD = B.DEPT_CD
+				WHERE A.EMP_NO = #{empNo} 
+				AND A.YEAR <![CDATA[<=]]> #{year}
+				AND A.YEAR <![CDATA[>=]]> #{agoYear}
+				ORDER BY A.DEPT_CD, A.YEAR DESC
+				)
+			<if test="startNum != null">
+			WHERE  SEQ_NO <![CDATA[>=]]> #{startNum}
+			AND SEQ_NO <![CDATA[<=]]>  #{endNum}
+			</if>
+			ORDER BY SEQ_NO -->
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+			SELECT COUNT(1) CNT
+			FROM (
+				SELECT A.*, B.COLG_NM  
+					FROM SUF.V_AI_SUBJECT A 
+					LEFT OUTER JOIN SCO.V_AI_ORG B
+					ON A.DEPT_CD = B.DEPT_CD
+				WHERE A.EMP_NO = #{empNo} 
+				AND 		COLL_CD LIKE '3%'
+				AND A.YEAR <![CDATA[<=]]> #{year}
+				AND A.YEAR <![CDATA[>=]]> #{agoYear}
+				 AND	  	 A.SUBJECT_NM NOT LIKE '%설계및상담%'
+				ORDER BY A.DEPT_CD, A.YEAR DESC
+				)
+	</select>
+	
+	<!-- <select id="selectFileList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			<foreach collection="columnList" item="columnItem" index="i" separator=",">
+				${columnItem}
+			</foreach>
+			FROM 
+			RBS_PROF_1_INFO A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<select id="selectFileView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.${columnItem}_SAVED_NAME, A.${columnItem}_ORIGIN_NAME
+			FROM 
+			RBS_PROF_1_INFO A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<update id="updateFileDown" parameterType="java.util.HashMap">
+		UPDATE <include refid="PROF_TABLE_NAME"/> SET ${FILE_COLUMN}_DCNT = ${FILE_COLUMN}_DCNT + 1 
+		WHERE IDX = #{KEY_IDX}
+	</update>
+	
+	<select id="authCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+		RBS_PROF_1_INFO A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<include refid="editAuthWhereQuery"/>
+	</select>
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+		A.* 
+		FROM 
+		RBS_PROF_1_INFO A 
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<include refid="editAuthWhereQuery"/>
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO RBS_PROF_1_INFO (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE RBS_PROF_1_INFO SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.IDX, SUBJECT, A.LAST_MODI_NAME, A.LAST_MODI_ID, A.REGI_DATE, A.LAST_MODI_DATE 
+			FROM 
+			RBS_PROF_1_INFO A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+			ORDER BY IDX
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+		RBS_PROF_1_INFO A
+		<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+	</select>
+	
+	<update id="delete" parameterType="java.util.HashMap">
+		UPDATE RBS_PROF_1_INFO SET ISDELETE = '1', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="restore" parameterType="java.util.HashMap">
+		UPDATE RBS_PROF_1_INFO SET ISDELETE = '0', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM RBS_PROF_1_INFO  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete> -->
+	
+</mapper>            

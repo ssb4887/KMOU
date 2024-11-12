@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.log.mngLogMapper">
+
+	<sql id="MNGLOG_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />MNG_LOG_INFO</trim></sql>
+	
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.*
+			FROM <include refid="MNGLOG_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			<choose>
+				<when test="dsetOrderField == null">
+					<bind name="defaultOrderStr" value="'A.ACCESS_DATE DESC'"/>
+				</when>
+				<otherwise>
+					<bind name="defaultOrderStr" value="_parameter.get('dsetOrderField')"/>
+				</otherwise>
+			</choose>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MNGLOG_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<!-- <select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Long">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(LOG_IDX), 0)</trim> + 1 MAXID
+		FROM <include refid="MNGLOG_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select> -->
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MNGLOG_TABLE_NAME"/> (
+			LOG_IDX, <include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, ACCESS_DATE
+		) (
+			SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(LOG_IDX), 0)</trim> + 1, 
+				<include refid="rbs.commonMapper.INSERT_VALUES"/>
+				, <include refid="rbs.commonDBMSMapper.currentDate"/>
+			FROM <include refid="MNGLOG_TABLE_NAME"/> 
+		)
+	</insert>
+</mapper>            

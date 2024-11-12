@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="rbs.modules.basket.basketMapper">
+	<sql id="BSK_TABLE_NAME">UNI_TLSN_APLY_BSK</sql>
+	
+	<!-- 장바구니 목록(교과목) -->
+	<select id="getSbjtBasket"  parameterType="java.util.HashMap" resultType="egovMap">
+		SELECT 
+			*
+		FROM <include refid="BSK_TABLE_NAME"/>
+		WHERE 			STD_NO 		 = #{STUDENT_NO}
+		AND				YEAR   		 = #{YEAR}
+		AND				SMT			 = #{SMT}
+		AND				SUBJECT_CD   = #{SUBJECT_CD}
+		AND				DEPT_CD   	 = #{DEPT_CD}
+		AND				DIVCLS   	 = #{DIVCLS}
+		
+	</select>
+
+	<!-- 장바구니 목록(마이페이지) -->
+	<select id="getMyBasketList"  parameterType="java.util.HashMap" resultType="egovMap">
+<!-- 		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/> -->
+		SELECT 
+			*
+		FROM <include refid="BSK_TABLE_NAME"/>
+		WHERE 			STD_NO 		 = #{STUDENT_NO}
+		<if test='!YEAR.equals("all")'>
+			AND YEAR = #{YEAR}
+		</if>
+		<if test='!SMT.equals("all")'>
+			AND SMT = #{SMT}
+		</if>
+		ORDER BY SUBJECT_CD, YEAR DESC, SMT
+<!-- 		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/> -->
+	</select>
+	
+	<select id="selectBasketCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT  COUNT(*)
+		FROM <include refid="BSK_TABLE_NAME"/>
+		WHERE 			STD_NO 		 = #{STUDENT_NO}
+		ORDER BY SUBJECT_CD, YEAR DESC, SMT
+	</select>
+	
+	<!-- 장바구니 입력하기 -->
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="BSK_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<!-- 장바구니 삭제하기 -->
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="BSK_TABLE_NAME"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+</mapper>

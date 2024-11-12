@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+	  
+	<bean name="propertiesService" class="egovframework.rte.fdl.property.impl.EgovPropertyServiceImpl" destroy-method="destroy">
+		<property name="properties">
+			<map>				
+				<!-- 목록 페이징 -->
+	            <entry key="PAGE_SIZE" value="10"/> <!-- 페이징 크기 -->
+				<entry key="DEFAULT_LIST_UNIT" value="20"/> <!-- 한페이지당 기본 목록 수 -->
+				<entry key="DEFAULT_LIST_MAX_CNT" value="5"/> <!-- 한페이지당 목록 수 선택 수 -->
+			</map>
+		</property>
+	</bean>
+	
+</beans>

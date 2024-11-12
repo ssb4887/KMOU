@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+<!--
+ ************************************************************************************************
+	데이터 암/복호화 할 수있는 서비스 클래스
+	1. rbs 데이터 암/복호화를 사용하는 빈
+ ************************************************************************************************
+-->
+	<!--데이터 암/복호화 할 수있는 서비스 클래스-->
+	<bean id="rbsDataSecurityUtil" class="com.woowonsoft.egovframework.util.DataSecurityUtil">
+        <property name="dataSecurityService">
+        	<!-- 원하는 bean id를 아래에 ref 태그에 적용한다 -->
+            <ref bean="rbsDataSecurityService" />
+        </property>
+    </bean>
+
+    <!-- 1. rbs 데이터 암/복호화를 사용하는 빈 -->
+    <bean id="rbsDataSecurityService" class="rbs.egovframework.service.DataSecurityServiceImpl"/>
+
+</beans>

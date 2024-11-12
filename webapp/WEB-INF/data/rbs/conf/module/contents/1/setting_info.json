@@ -1,0 +1,36 @@
+{
+	"setting_info": {
+		"list_title":"콘텐츠 목록"
+		, "input_title":"콘텐츠 등록"
+		, "deleteList_title":"콘텐츠 삭제목록"
+		, "design_type":"default"
+		, "page_name":"page"
+		, "idx_name":"contCd"
+		, "idx_column":"CONTENTS_CODE"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+		, "use_contents_type":0
+	}, "branch_setting_info": {
+		"list_title":"Branch 목록"
+		, "input_title":"Branch 등록"
+		, "deleteList_title":"Branch 삭제목록"
+		, "design_type":"default"
+		, "idx_name":"branchIdx"
+		, "idx_column":"BRANCH_IDX"
+		, "dset_list_block":0
+		, "dset_list_count":0
+		, "use_paging":0
+	}, "version_setting_info": {
+		"list_title":"버전 목록"
+		, "input_title":"버전 등록"
+		, "deleteList_title":"버전 삭제목록"
+		, "view_title":"콘텐츠 보기"
+		, "design_type":"default"
+		, "idx_name":"verIdx"
+		, "idx_column":"VER_IDX"
+		, "dset_list_block":0
+		, "dset_list_count":0
+		, "use_paging":0
+	}
+}

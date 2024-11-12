@@ -1,0 +1,23 @@
+{
+	"check_module": [
+		"board", "contents"
+	], "option_module": {"board":1
+	}, "banner_setting_info": {
+		"module_id":"banner"
+		,"input_title":"배너"
+		,"item_master_code":"DSP_PAGE"
+	}, "popup_setting_info": {
+		"module_id":"popup"
+		,"input_title":"팝업"
+	}, "board_setting_info": {
+		"module_id":"board"
+		,"input_title":"게시판"
+		,"item_number":10
+		,"idx_name":"menuIdx"
+	}, "contents_setting_info": {
+		"module_id":"contents"
+		,"input_title":"콘텐츠"
+		,"item_number":5
+		,"idx_name":"menuIdx"
+	}
+}

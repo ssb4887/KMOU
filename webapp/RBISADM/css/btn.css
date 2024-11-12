@@ -1,0 +1,98 @@
+@charset "utf-8";
+/* 일반용 버튼 */
+.btnBc{display:inline-block;margin:1px;vertical-align:middle;}
+.btnBc a, .btnBc button, .btnBc input{position:relative; margin:0; display:-moz-inline-stack; display:block;padding:0 30px;min-width:110px;width:100%;font-size:17px;color:#fff;line-height:50px;text-align:center;text-decoration:none;background-color:#2947ae;cursor:pointer;background-repeat: no-repeat;transition: all 0.3s;border-radius:0;border:0}
+.btnBc.dark a, .btnBc.dark button, .btnBc.dark input{background-color:var(--colorset-bgc3);}
+.btnBc.gray a, .btnBc.gray button, .btnBc.gray input{background-color:var(--colorset-bg-bt1);}
+.btnBc.green a, .btnBc.green button, .btnBc.green input{background-color:var(--colorset-bgc5);}
+.btnBc.darkgray a, .btnBc.darkgray button, .btnBc.darkgray input{background-color:darkgray}
+.btnBc.exel a, .btnBc.exel button, .btnBc.exel input{padding-left:55px;text-align:left;background-color:var(--colorset-bgc5);background-image:url('../img/ic_exel.png');background-position: 24px center;}
+.btnBc.exel2 a, .btnBc.exel2 button, .btnBc.exel2 input{text-indent:-999px;overflow: hidden;background-color:var(--colorset-bgc5);background-image:url('../img/ic_exel2.png');background-position: center center;}
+.btnBc.min_h a, .btnBc.min_h button, .btnBc.min_h input{line-height: 44px;}
+.btnBc.big a, .btnBc.big button, .btnBc.big input{font-size: 20px;line-height: 110px;}
+.btnBc.big2 a, .btnBc.big2 button, .btnBc.big2 input{min-width: 174px;font-size: 18px;line-height: 65px;}
+.btnBc.wd a, .btnBc.wd button, .btnBc.wd input{min-width: 174px;}
+.btnBc.small a, .btnBc.small button, .btnBc.small input{min-width: 90px;font-size: 16px;line-height: 36px;}
+
+.btnList{display: flex;justify-content: center;margin: 40px 0;}
+.btnList .btnBc{margin: 0 7px;}
+.btnList.rt{margin-top:30px;justify-content: right;}
+
+/* 페이지 하단 버튼 */
+.btnTypeA {width:100px; height:45px; display:inline-block; font-weight:600; font-size:14px; color:var(--colorset-font5) !important; line-height:45px; text-align:center; text-decoration:none !important; border:0px; background:var(--colorset-bg-bt2); border-radius:5px;}
+.btnTypeB {width:100px; height:45px; display:inline-block; font-weight:600; font-size:14px; color:var(--colorset-font5) !important; line-height:45px; text-align:center; text-decoration:none !important; border:0px; background:var(--colorset-bg-bt3); border-radius:5px;}
+
+.btnTypeAL {width:160px; height:64px; display:inline-block; font-weight:600; font-size:14px; color:var(--colorset-font5)f !important; line-height:64px; text-align:center; text-decoration:none !important; border:0px; background:var(--colorset-bg-bt2); border-radius:10px;}
+.btnTypeBL {width:160px; height:64px; display:inline-block; font-weight:600; font-size:14px; color:var(--colorset-font5) !important; line-height:64px; text-align:center; text-decoration:none !important; border:0px; background:var(--colorset-bg-bt3); border-radius:10px;}
+
+.btnTypeC {width:100px; height:45px; display:inline-block; font-weight:600; font-size:14px; color:var(--colorset-font5) !important; line-height:45px; text-align:center; text-decoration:none !important; border:0px; background:var(--colorset-bg-bt4); border-radius:5px;}
+.btnTypeD {width:151px; height:30px; font-weight:bold; color:#3e3e3e !important; line-height:30px; text-align:center; text-decoration:none !important; border:0px; background:#fff;}
+.btnTypeD span {padding-right:15px; background:url(../images/common/bul_arrow_blue.gif) no-repeat 100% 14px;}
+
+/* 테이블 내 버튼 */
+.btnTypeE {padding:0 15px; display:inline-block; border-radius:5px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:28px; text-decoration:none !important; background:#269E57; border:0px;}
+.btnTypeF {padding:0 15px; display:inline-block; border-radius:5px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:28px; text-decoration:none !important; background:#666; border:0px;}
+.btnTypeG {padding:0 15px; display:inline-block; border-radius:5px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:28px; text-decoration:none !important; background:#E27F23; border:0px;}
+.btnTypeH {padding:0 15px; display:inline-block; border-radius:5px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:28px; text-decoration:none !important; background:#524069; border:0px;}
+
+.btnTypeM {padding:0 15px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:28px; text-decoration:none !important; border:0px; background:#5d5d5d;}
+.btnTypeN {padding:0 15px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:28px; text-decoration:none !important; background:#888; border-radius:5px; border:0;}
+.btnTypeAM {padding:0 15px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:28px; text-decoration:none !important; border:0px; background:#006dba;}
+
+/* 테이블 상단 버튼 */
+.btnTopFull .btnTW {padding:0 10px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:32px; text-align:center; text-decoration:none !important; border:0px; background:var(--colorset-bg-bt2); border-radius:5px;}
+.btnTopFull .btnTEW {padding:0 10px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:32px; text-align:center; text-decoration:none !important; border:0px; background:url(../images/button/bg_type_e.gif) repeat-x 0 0; border-radius:5px;}
+.btnTopFull .btnTD {padding:0 10px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:32px; text-align:center; text-decoration:none !important; border:0px; background:var(--colorset-bg-bt2); border-radius:5px;}
+.btnTopFull .btnTDL {padding:0 10px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:32px; text-align:center; text-decoration:none !important; border:0px; background:var(--colorset-bg-bt3); border-radius:5px;}
+
+.btnTopFull .btnTFW {padding:0 10px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:32px; text-align:center; text-decoration:none !important; border:0px; background:#006dba; border-radius:5px; cursor:pointer;}
+.btnTopFull .btnTFEW {padding:0 10px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:32px; text-align:center; text-decoration:none !important; border:0px; background:#E27F23; border-radius:5px; cursor:pointer;}
+.btnTopFull .btnTFD {padding:0 10px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:32px; text-align:center; text-decoration:none !important; border:0px; background:#006dba; border-radius:5px; cursor:pointer;}
+.btnTopFull .btnTFDL {padding:0 10px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:32px; text-align:center; text-decoration:none !important; border:0px; background:#269E57; border-radius:5px; cursor:pointer;}
+.btnTopFull .btnTFDL.fn_btn_exceldown::before {content:'';display:inline-block;vertical-align:middle;width:20px;height:20px;margin-right:7px;background:url(../images/layout/ic_exel.svg) no-repeat 0 0;}
+
+.btnTypeI {width:80px; font-size:14px; font-weight:bold; color:var(--colorset-font5) !important; line-height:36px; text-decoration:none !important; background:#666; border:0px; text-align:center; border-radius:5px;}
+.btnTypeJ {width:80px; font-size:14px; font-weight:bold; color:var(--colorset-font5) !important; line-height:36px; text-decoration:none !important; background:#006dba; border:0px; text-align:center; border-radius:5px;}
+.btnTypeK {width:80px; font-size:14px; font-weight:bold; color:var(--colorset-font5) !important; line-height:36px; text-decoration:none !important; background:#E27F23; border:0px; text-align:center; border-radius:5px;}
+.btnTypeM {width:80px; font-size:14px; font-weight:bold; color:var(--colorset-font5) !important; line-height:36px; text-decoration:none !important; background:var(--colorset-bg-bt2); border:0px; text-align:center; border-radius:5px;}
+
+.btnTypeL {width:74px; font-size:14px; font-weight:bold; color:var(--colorset-font5) !important; line-height:30px; text-decoration:none !important; background:#006dba; border:0px; text-align:center; border-radius:5px;}
+
+
+/* 검색박스 내 버튼 */
+.btnTopFull1 .btnTW {padding:0; width:60px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:32px; text-align:center; text-decoration:none !important; border:0px; background:#006dba; border-radius:5px;}
+.btnTopFull1 .btnTEW {padding:0; width:60px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:32px; text-align:center; text-decoration:none !important; border:0px; background:url(../images/button/bg_type_e.gif) repeat-x 0 0; border-radius:5px;}
+.btnTopFull1 .btnTD {padding:0; width:60px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:32px; text-align:center; text-decoration:none !important; border:0px; background:#006dba; border-radius:5px;}
+.btnTopFull1 .btnTDL {padding:0; width:60px; font-size:13px; font-weight:500; color:var(--colorset-font5) !important; line-height:32px; text-align:center; text-decoration:none !important; border:0px; background:#5d5d5d; border-radius:5px;}
+
+.btnTopFull1 .btnTFW {padding:0 10px; font-size:13px; font-weight:500; color:#fff !important; line-height:32px; text-align:center; text-decoration:none !important; border:0px; background:#006dba; border-radius:5px;}
+.btnTopFull1 .btnTFEW {padding:0 10px; font-size:13px; font-weight:500; color:#fff !important; line-height:32px; text-align:center; text-decoration:none !important; border:0px; background:#E27F23; border-radius:5px;}
+.btnTopFull1 .btnTFD {padding:0 10px; font-size:13px; font-weight:500; color:#fff !important; line-height:32px; text-align:center; text-decoration:none !important; border:0px; background:#006dba; border-radius:5px;}
+.btnTopFull1 .btnTFDL {padding:0 10px; font-size:13px; font-weight:500; color:#fff !important; line-height:32px; text-align:center; text-decoration:none !important; border:0px; background:#269E57; border-radius:5px;}
+.btnTopFull1 .btnTFDL.fn_btn_exceldown::before {content:'';display:inline-block;vertical-align:middle;width:20px;height:20px;margin-right:7px;background:url(../images/layout/ic_exel.svg) no-repeat 0 0;}
+
+.btnCenter {margin:10px 0; display:flex; align-items:center; justify-content:center;}
+.btnCenter a, .btnCenter input {margin:0 5px;}
+
+/*.btnTypeH {padding:0 12px; display:inline-block; border-radius:5px; font-size:14px; font-weight:600; color:#fff !important; line-height:40px; text-decoration:none !important; background:url(../images/button/bg_type_h.gif) repeat-x 0 0; border:0px;}*/
+.btnTypeHL {height:30px; line-height:30px; padding:0 9px 0 10px; font-size:15px; font-weight:bold; color:#fff !important;  text-decoration:none !important; background:url(../images/button/bg_type_h.gif) repeat 0 0; border:0px;}
+
+.btnTypeAS {margin:1px 0; width:80px; height:25px; font-size:14px; font-weight:bold; color:#fff !important; line-height:25px; text-align:center; text-decoration:none !important; background:#006dba; border:0px;}
+
+.btnTypeH.fn_btn_member_log_open {padding:0 12px; display:inline-block; border-radius:5px; font-size:13px; font-weight:500; color:#fff !important; line-height:32px; text-decoration:none !important; background:#5B4671; border:0px;}
+
+/* 검색박스 */
+.tbMSearch .btnSearch {width:110px; height:40px; padding:0px; font-size:14px; font-weight:666; color:#fff !important; line-height:40px; text-decoration:none !important; border:0px; background:var(--colorset-bg-bt2); border-radius:5px; display:inline-block; vertical-align:middle;}
+.tbMSearch .btnTotalList {width:110px; height:40px; padding:0px; font-size:14px; font-weight:666; color:#fff !important; line-height:40px; text-decoration:none !important; border:0px; background:var(--colorset-bg-bt2);  border-radius:5px; display:inline-block; vertical-align:middle;}
+
+/* 한줄라인 버튼 */
+.tbLSearch .btnTW {padding:0; width:60px; font-size:12px; font-weight:bold; color:#ffffff !important; line-height:26px; text-align:center; text-decoration:none !important; border:0px; background:#006dba;}
+.tbLSearch .btnTD {padding:0; width:60px; font-size:12px; font-weight:bold; color:#ffffff !important; line-height:26px; text-align:center; text-decoration:none !important; border:0px; background:#006dba;}
+.tbLSearch .btnTDL {padding:0; width:60px; font-size:12px; font-weight:bold; color:#ffffff !important; line-height:26px; text-align:center; text-decoration:none !important; border:0px; background:#5d5d5d;}
+
+.tbLSearch .btnTFW {padding:0 10px; font-size:12px; font-weight:bold; color:#ffffff !important; line-height:26px; text-align:center; text-decoration:none !important; border:0px; background:#006dba;}
+.tbLSearch .btnTFD {padding:0 10px; font-size:12px; font-weight:bold; color:#ffffff !important; line-height:26px; text-align:center; text-decoration:none !important; border:0px; background:#006dba;}
+.tbLSearch .btnTFDL {padding:0 10px; font-size:12px; font-weight:bold; color:#ffffff !important; line-height:26px; text-align:center; text-decoration:none !important; border:0px; background:#5d5d5d;}
+
+
+

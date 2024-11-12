@@ -1,0 +1,26 @@
+{
+	"module_name":"탭콘텐츠"
+	, "auth_list": [
+		{
+			"item_id":"list"
+			, "column_id":"LST"
+			, "item_name":"목록조회"
+		}, {
+			"item_id":"view"
+			, "column_id":"VEW"
+			, "item_name":"상세조회"
+		}, {
+			"item_id":"manage"
+			, "column_id":"MNG"
+			, "item_name":"등록관리"
+			, "usr_closed":1
+			, "adm_min_utp":45
+		}, {
+			"item_id":"cdelete"
+			, "column_id":"CDT"
+			, "item_name":"완전삭제"
+			, "usr_closed":1
+			, "adm_min_utp":50
+		}
+	]
+}

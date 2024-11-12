@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+	
+	<!-- facebook 로그인 연결 설정 -->
+	<!-- <bean id="facebookConnectionFactory" class="org.springframework.social.facebook.connect.FacebookConnectionFactory">
+        <constructor-arg value="1253073108228872" />
+        <constructor-arg value="72394af35d370215c5ce09600f6babfc" />
+    </bean> -->
+    <bean id="facebookOAuth2Parameters" class="org.springframework.social.oauth2.OAuth2Parameters">
+        <property name="scope" value="email" />
+        <property name="redirectUri" value="https://127.0.0.1:8443/rbis4/sns/facebook/login.do" />
+    </bean>
+    
+	<!-- kakao 로그인 연결 설정 -->
+	<!-- <bean id="kakaoConnectionFactory" class="rbs.egovframework.social.kakao.connect.KakaoConnectionFactory">
+		<constructor-arg value="67c48265ce7a886a88ba2177ca6650f0" />
+        <constructor-arg value="67c48265ce7a886a88ba2177ca6650f0" />
+    </bean> -->
+    <bean id="kakaoOAuth2Parameters" class="org.springframework.social.oauth2.OAuth2Parameters">
+        <property name="redirectUri" value="https://127.0.0.1:8443/rbis4/sns/kakao/login.do" />
+    </bean>
+    
+	<!-- naver 로그인 연결 설정 -->
+	<!-- <bean id="naverConnectionFactory" class="rbs.egovframework.social.naver.connect.NaverConnectionFactory">
+		<constructor-arg value="4KQVcvmG8CvDK1yPzjoq" />
+        <constructor-arg value="Eg3wn2qybr" />
+    </bean> -->
+    <bean id="naverOAuth2Parameters" class="org.springframework.social.oauth2.OAuth2Parameters">
+        <property name="redirectUri" value="https://127.0.0.1:8443/rbis4/sns/naver/login.do" />
+    </bean>
+    
+	<!-- google 로그인 연결 설정 -->
+	<!-- <bean id="googleConnectionFactory" class="org.springframework.social.google.connect.GoogleConnectionFactory">
+		<constructor-arg value="85969008733-3m8odjcstgc414b4lo2qojbhnk7gqrik.apps.googleusercontent.com" />
+        <constructor-arg value="AoiZSPurDWkYKCTXB9IwTsku" />
+    </bean> -->
+    <bean id="googleOAuth2Parameters" class="org.springframework.social.oauth2.OAuth2Parameters">
+        <property name="redirectUri" value="https://127.0.0.1:8443/rbis4/sns/google/login.do" />
+    </bean>
+</beans>

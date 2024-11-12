@@ -1,0 +1,388 @@
+{
+	"item_info":{
+		"items":{
+			"title":{
+				"item_id":"title"
+				,"column_id":"TITLE"
+				,"item_name":"제목"
+				,"item_name_ko":"제목"
+				,"item_name_en":"제목"
+				,"required_write":1
+				,"required_modify":1
+				,"format_type":0
+				,"object_type":0
+				,"maximum":200
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			}
+			,"limitDate":{
+				"item_id":"limitDate"
+				,"column_id":"LIMIT_DATE"
+				,"item_name":"설문기간"
+				,"item_name_ko":"설문기간"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":17
+			}
+			, "contents":{
+				"item_id":"contents"
+				, "column_id":"CONTENTS"
+				, "item_name":"개요"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":'1'
+				, "content_type":2
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}
+			, "img":{
+				"column_id":"IMG"
+				, "item_name":"대표이미지"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":6
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+				, "isimage":1
+				, "use_file_ext":1
+				, "dset_file_ext":"gif,jpg,jpeg,png"
+			}
+			,"isstop":{
+				"item_id":"isstop"
+				,"column_id":"ISSTOP"
+				,"item_name":"상태"
+				,"item_name_ko":"상태"
+				,"item_name_en":"상태"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":5
+				,"master_code":"POLL_STATE"
+				,"option_type":0
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"default_value":"0"
+			}
+			,"isresult":{
+				"item_id":"isresult"
+				,"column_id":"ISRESULT"
+				,"item_name":"결과보기"
+				,"item_name_ko":"결과보기"
+				,"item_name_en":"결과보기"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":14
+				,"option_type":0
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"default_value":"0"
+			}
+			,"isquestype":{
+				"item_id":"isquestype"
+				,"column_id":"ISQUESTYPE"
+				,"item_name":"결과유형"
+				,"item_name_ko":"결과유형"
+				,"item_name_en":"결과유형"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":14
+				,"option_type":0
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"default_value":"0"
+				,"comment":"참여자가 있는 경우 결과유형, 설문별항목은 변경하실 수 없습니다."
+			}
+			,"ispollitem":{
+				"item_id":"ispollitem"
+				,"column_id":"ISPOLLITEM"
+				,"item_name":"설문별항목"
+				,"item_name_ko":"설문별항목"
+				,"item_name_en":"설문별항목"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":14
+				,"option_type":0
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"default_value":"0"
+				,"comment":"결과유형 사용시에만 선택가능"
+			}
+		}, "list_order":[
+			"title"
+			, "limitDate"
+			, "contents"
+			, "isstop"
+			, "isresult"
+			, "isquestype"
+			, "ispollitem"
+			, "img"
+		], "write_order":[
+			"title"
+			, "limitDate"
+			, "contents"
+			, "isstop"
+			, "isresult"
+			, "isquestype"
+			, "ispollitem"
+			, "img"
+		]
+		, "writeproc_order":[
+			"title"
+			, "limitDate"
+			, "contents"
+			, "isstop"
+			, "isresult"
+			, "isquestype"
+			, "ispollitem"
+			, "img"
+		]
+		, "modify_order":[
+			"title"
+			, "limitDate"
+			, "contents"
+			, "isstop"
+			, "isresult"
+			, "isquestype"
+			, "ispollitem"
+			, "img"
+		]
+		, "modifyproc_order":[
+			"title"
+			, "limitDate"
+			, "contents"
+			, "isstop"
+			, "isresult"
+			, "isquestype"
+			, "ispollitem"
+			, "img"
+		]
+		, "list_search":{
+			"key":{
+				"items":{
+					"limitDate":{
+						"column_id":"LIMIT_DATE"
+						, "item_name":"설문기간"
+						, "format_type":16
+						, "object_type":0
+					}, "subject":{
+						"column_id":"TITLE"
+						, "item_name":"제목"
+						, "format_type":0
+						, "object_type":0
+						, "style_width":200
+
+					}
+				}
+			}, "searchForm_order":[
+				"limitDate"
+				, "subject"
+			], "search_order":[
+				"limitDate"
+				, "subject"
+			]
+		}
+	}, "ques_item_info": {
+		"items": {
+			"questionContents":{
+				"item_id":"questionContents"
+				, "column_id":"CONTENTS"
+				, "item_name":"문항내용"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":1
+				, "editor":'1'
+				, "content_type":2
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "resultContents":{
+				"item_id":"resultContents"
+				, "column_id":"RESULT_CONTENTS"
+				, "item_name":"유형특징"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":'1'
+				, "content_type":2
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"ordIdx":{
+				"item_id":"ordIdx"
+				,"column_id":"QUESTION_IDX"
+				,"item_name":"순서"
+				,"item_name_ko":"순서"
+				,"item_name_en":"순서"
+				,"required_write":0
+				,"required_modify":1
+				,"format_type":0
+				,"object_type":22
+				,"option_type":9
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			}, "ordType":{
+				"item_name":"위치"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"SORD_TYPE"
+				, "default_value":"2"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"answerType":{
+				"item_id":"answerType"
+				,"column_id":"ANSWER_TYPE"
+				,"item_name":"문항유형"
+				,"item_name_ko":"문항유형"
+				,"item_name_en":"문항유형"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":2
+				,"master_code":"ANSWER_TYPE"
+				,"default_value":"1"
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			},"itemType":{
+				"item_id":"itemType"
+				,"column_id":"ITEM_TYPE"
+				,"item_name":"선택유형"
+				,"item_name_ko":"선택유형"
+				,"item_name_en":"선택유형"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":2
+				,"master_code":"PITEM_TYPE"
+				,"default_value":"1"
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			}, "useInques":{
+				"item_id":"useInques"
+				,"column_id":"USE_INQUES"
+				,"item_name":"내부문항"
+				,"item_name_ko":"내부문항"
+				,"item_name_en":"내부문항"
+				,"required_write":0
+				,"required_modify":0
+				,"format_type":0
+				,"object_type":14
+				,"default_value":"0"
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"comment":"내부문항 선택시 주관식, 객관식 기타의견은 사용하실 수 없습니다."
+			}
+		}, "list_order":[
+			"questionContents"
+			, "resultContents"
+			, "answerType"
+			, "itemType"
+		], "write_order":[
+			"questionContents"
+			, "resultContents"
+			, "ordIdx"
+			, "ordType"
+			, "answerType"
+			, "itemType"
+			, "useInques"
+		],"writeproc_order":[
+			"questionContents"
+			, "resultContents"
+			, "answerType"
+			, "itemType"
+			, "useInques"
+		],"modify_order":[
+			"questionContents"
+			, "resultContents"
+			, "ordIdx"
+			, "ordType"
+			, "answerType"
+			, "itemType"
+			, "useInques"
+		],"modifyproc_order":[
+			"questionContents"
+			, "resultContents"
+			, "answerType"
+			, "itemType"
+			, "useInques"
+		]
+	}, "memb_excel_item_info": {
+		"items":{
+			"excelFile":{
+				"item_id":"excel_file"
+				,"column_id":"EXCEL_FILE"
+				,"item_name":"엑셀파일"
+				,"item_name_ko":"엑셀파일"
+				,"item_name_en":"excel file"
+				,"format_type":0
+				,"object_type":6
+				,"input_type":0
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+				,"use_file_ext":"1"
+				,"dset_file_ext":"xls"
+			}
+		},"list_order":[
+			"excelFile"
+		],"write_order":[
+			"excelFile"
+		],"writeproc_order":[
+			"excelFile"
+		],"modify_order":[
+			"excelFile"
+		],"modifyproc_order":[
+			"excelFile"
+		]
+	}
+	, "result_item_info":{
+		"items":{
+			"mngComment":{
+				"column_id":"MNG_COMMENT"
+				, "item_name":"결과"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":1
+				, "maximum":2000
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}
+		}, "list_order":[
+			"mngComment"
+		], "write_order":[
+			"mngComment"
+		], "writeproc_order":[
+			"mngComment"
+		], "modify_order":[
+			"mngComment"
+		], "modifyproc_order":[
+			"mngComment"
+		]
+	}
+}

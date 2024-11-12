@@ -1,0 +1,57 @@
+@charset "utf-8";
+table.tbViewA .fn_auth dl.fn_inlineBlockDl {width:150px;}
+table.tbViewA dl.fn_inlineBlock dt {width:auto; color:#848484;}
+table.tbViewA dl.fn_inlineBlock dd {margin-right:20px;}
+table.tbViewA dl.fn_inlineBlock dt:AFTER {
+	content: " : "
+}
+#fn_item_usertypeIdx:AFTER, #fn_item_managerUsertypeIdx:AFTER {
+	content: " 이상"
+}
+
+.cms_menu_info {position: absolute; bottom: 30px;}
+
+#cms_menu_dmng dl {display:inline-block; padding:5px;}
+#cms_menu_dmng dt {font-weight: bold; padding-right:5px;}
+#cms_menu_dmng dt, #cms_menu_dmng dd {float:left;}
+#cms_menu_dmng dl.date {float:right;}
+#cms_menu_dmng dl.date dd {width:100px;}
+
+#cms_menu_point .socialbox {width:703px; padding:15px 20px 16px 20px;border-top:1px solid #e1e1e1;border-left:1px solid #e1e1e1;border-right:1px solid #c3c3c3;border-bottom:1px solid #c3c3c3; /*background:#fafafa; margin-top:20px;*/}
+#cms_menu_point .socialbox p.comment {float:left;}
+#cms_menu_point .socialbox p.point {float:right; text-align: right;}
+#cms_menu_point .socialbox .so_input{clear:both; margin-top:20px;}
+#cms_menu_point .socialbox .so_input dl {display:inline-block;}
+#cms_menu_point .socialbox .so_input dl dt {position:absolute; width:0; height:0; line-height:0; overflow:hidden; visibility:hidden; z-index:-1;}
+#cms_menu_point .socialbox .so_input dl dd {padding:5px 5px 5px 0px;}
+
+#cms_menu_point .socialbox .so_input input[type=submit]{float:right;margin-top:7px;text-align:center;width:100px;height:55px; border:1px solid #3675ad; background-color: #3675ad; color:#FFF;}
+
+#cms_menu_point .socialbox .so_input dl dd.point label {position:relative;margin-right:5px;display:inline-block;padding-right:85px;background:url(images/icon_star.gif) 5px -150px no-repeat;color:#5b5b5b;text-indent:-20000px}
+#cms_menu_point .socialbox .so_input dl dd.point label[for=pmenuPoint1] {background-position:5px 0}
+#cms_menu_point .socialbox .so_input dl dd.point label[for=pmenuPoint2] {background-position:5px -30px}
+#cms_menu_point .socialbox .so_input dl dd.point label[for=pmenuPoint3] {background-position:5px -60px}
+#cms_menu_point .socialbox .so_input dl dd.point label[for=pmenuPoint4] {background-position:5px -90px}
+#cms_menu_point .socialbox .so_input dl dd.point label[for=pmenuPoint5] {background-position:5px -120px}
+#cms_menu_point .socialbox .so_input dl dd.point label[for=pmenuPoint0] {background-position:5px -150px}
+
+#cms_menu_point .socialbox .so_input dl dd.point textarea {width:550px;height:30px;}
+
+#cms_menu_point .star{position:relative;display:inline-block;padding-right:85px;background:url(images/icon_star.gif) right -150px no-repeat;color:#5b5b5b;text-indent:-20000px;overflow: hidden;}
+#cms_menu_point .star1{background-position:right 0}
+#cms_menu_point .star2{background-position:right -30px}
+#cms_menu_point .star3{background-position:right -60px}
+#cms_menu_point .star4{background-position:right -90px}
+#cms_menu_point .star5{background-position:right -120px}
+#cms_menu_point .star0{background-position:right -150px}
+
+#cms_menu_point .star0_hf{background-position:right -180px}
+#cms_menu_point .star1_hf{background-position:right -210px}
+#cms_menu_point .star2_hf{background-position:right -240px}
+#cms_menu_point .star3_hf{background-position:right -270px}
+#cms_menu_point .star4_hf{background-position:right -300px}
+
+
+/* moduleUtil setting */
+#cms_menu_point input.cms_im_d {ime-mode:disabled;}
+#cms_menu_point .cms_w_m {width:500px;}

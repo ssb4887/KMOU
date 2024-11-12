@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	1. IDX, RBS_SBJT_1_INFO, SUBJECT, IDX, 테이블명 등 변경해서 사용
+	2. 그 외 필요에 따라 쿼리 수정하여 사용 
+-->
+
+<mapper namespace="mart.modules.nonSbjt.nonSbjtMapper">
+
+	<sql id="BK_COUR_TABLE_NAME">uni_pers_bookmark_cour</sql>
+
+	<!-- CLOB 데이터 조회하기 위해 만들기 -->
+	<resultMap type="java.util.HashMap" id="clobMap">
+		<result property="DOC_ID" column="DOC_ID" />
+		<result property="INTRV_POSB_TM_CTNT" column="INTRV_POSB_TM_CTNT" />
+		<result property="TELNO" column="TELNO" />
+		<result property="LSN_SMRY" column="LSN_SMRY" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="LSN_PURP" column="LSN_PURP" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="LSN_PROG_MTHD_CTNT" column="LSN_PROG_MTHD_CTNT" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="APPR_MTHD_EXAM_RATE" column="APPR_MTHD_EXAM_RATE" />
+		<result property="APPR_MTHD_ATTEND_RATE" column="APPR_MTHD_ATTEND_RATE" />
+		<result property="APPR_MTHD_PRJT_RATE" column="APPR_MTHD_PRJT_RATE" />
+		<result property="LRN_APPR_MTHD_CTNT" column="LRN_APPR_MTHD_CTNT" />
+	</resultMap>
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT A.SUBJECT_NM, A.SUBJECT_ENM, A.CDT_NUM, A.SISU, B.COM_GRADE, C.SUBJ_DESC_KOR, C.SUBJ_DESC_ENG, D.DEPT_NM, D.COLG_NM, D.CATEGORY, E.NM AS SMT, F.NM AS COMDIV_CODE
+				FROM SUF.SUF010TB A
+					LEFT OUTER JOIN SUF.SUF050TB B
+					ON  A.SUBJECT_CD = B.SUBJECT_CD
+					LEFT OUTER JOIN SUF.SUF080TB C
+					ON  A.SUBJECT_CD = C.SUBJECT_CD
+					AND B.YEAR = C.YEAR
+					AND B.DEPT_CD = C.DEPT_CD
+					LEFT OUTER JOIN SCO.V_AI_ORG D
+					ON B.DEPT_CD = D.DEPT_CD
+					LEFT OUTER JOIN SCO.V_AI_CODE E
+					ON B.SMT = E.SCD
+					LEFT OUTER JOIN SCO.V_AI_CODE F
+					ON B.COMDIV_CODE = F.SCD
+			WHERE A.SUBJECT_CD = #{subjectCd}
+			AND B.DEPT_CD = #{deptCd}
+			AND B.YEAR = #{year}
+	</select>
+		
+		
+	
+	<select id="getJobCd" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getJobCd,직업 직무 코드값*/
+		SELECT * 
+		  FROM (
+				SELECT (DEPT_CLSF_CD||'_'||HG_MJ_CD||'_'||SC_CD||'_'||TM_GBN||'_'||YY) DOC_ID
+					 , NVL(NCS_L_CLAS_CD, 'not') AS NCS_L_CLAS_CD
+					 , NVL(NCS_M_CLAS_CD, 'not') AS NCS_M_CLAS_CD
+					 , NVL(NCS_S_CLAS_CD, 'not') AS NCS_S_CLAS_CD
+					 , NVL(NCS_SUB_D_CD, 'not') AS NCS_SUB_D_CD
+					 , NVL(NCS_CL_CD, 'not') AS NCS_CL_CD
+				  FROM INU_UNI.V_COUR127
+				) T
+		<if test="value != null and !value.equals('')">
+		WHERE T.DOC_ID = #{docId}
+		</if>
+	</select>
+	
+	<select id="getTrackList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getTrackList,나노디그리 매트릭스 상단정보*/
+		SELECT * 
+		  FROM (
+				SELECT A.TRACK_GBN
+					 , (SELECT KOR_CD_NM FROM INU_COM.BSNS011 i WHERE i.CMMN_CD= A.TRACK_GBN AND i.RPST_CD='UC075' ) AS KOR_TRACK_GBN
+					 , A.TRACK_CD
+					 , (SELECT c2.TRACK_NM FROM INU_UNI.COUR180 c2 WHERE c2.TRACK_CD = A.TRACK_CD) AS TRACK_NM
+					 ,A.YY
+					 , TRACK_SC_CD
+					 , (SELECT SC_NM FROM INU_UNI.COUR001 c2 WHERE c2.SC_CD = A.TRACK_SC_CD) AS SC_NM
+					 , (SELECT KOR_ABB_NM FROM INU_COM.BSNS011 c WHERE c.CMMN_CD = A.TM_GBN AND c.RPST_CD= 'UB011') AS KOR_TM_GBN
+					 , A.HG_MJ_CD
+					 , (SELECT DEPT_NM FROM INU_ADM.STAF010 s WHERE A.HG_MJ_CD = s.DEPT_CD) AS KOR_HG_MJ_CD
+					 , ROW_NUMBER()OVER(PARTITION BY A.TRACK_CD ORDER BY A.TRACK_CD DESC) AS RNUM
+				  FROM INU_UNI.COUR182 A
+					 , INU_UNI.COUR180 B
+				 WHERE A.DEPT_CLSF_CD = B.DEPT_CLSF_CD(+)
+				   AND A.TRACK_GBN = B.TRACK_GBN(+)
+				   AND A.TRACK_CD = B.TRACK_CD (+)
+				   AND A.YY = B.YY(+)
+				   AND A.TM_GBN = B.TM_GBN(+)
+				   AND A.HG_MJ_CD = B.HG_MJ_CD(+)
+				   AND A.TRACK_GBN NOT IN ('10','50')
+				   AND A.TRACK_SC_CD = #{trackScCd}
+				   <if test="trackCd != null and !trackCd.equals('')">
+				   AND A.TRACK_CD = #{trackCd}
+				   </if>
+				) T
+		 WHERE T.RNUM = 1
+	</select>
+	
+	<select id="getLessonPlan" parameterType="java.lang.String" resultType="java.util.HashMap" resultMap="clobMap">
+		/* SbjtOraMapper.getLessonPlan,개설강좌-강의계획서 정보 */
+		SELECT T.DOC_ID
+			 , T.TM_GBN
+			 , T.YY
+			 , T.LSN_SMRY
+			 , T.ENG_LSN_SMRY
+		  FROM (
+				SELECT (DEPT_CLSF_CD||'_'||HAKSU_NO||'_'||TM_GBN||'_'||YY) DOC_ID
+					 , A.*
+				  FROM INU_UNI.COUR200 A
+			    ) T
+		<if test="value != null and !value.equals('')">
+		WHERE T.DOC_ID = #{docId}
+		</if>
+	</select>
+	
+	<select id="getPlanInfo" parameterType="java.lang.String" resultType="java.util.HashMap" resultMap="clobMap">
+		/* SbjtOraMapper.getPlanInfo,개설강좌-강의계획서 정보 */
+		SELECT *
+		 FROM (
+				SELECT (A.DEPT_CLSF_CD||'_'||A.HAKSU_NO||'_'||A.TM_GBN||'_'||A.YY) DOC_ID
+					  , A.INTRV_POSB_TM_CTNT		/*면담가능시간 */
+					  , A.TELNO						/* 전화번호 */
+					  , A.LSN_SMRY					/*수업개요 */
+					  , A.LSN_PURP					/*수업목표 */
+					  , A.LSN_PROG_MTHD_CTNT 		/*수업진행방법내용 */
+					  , A.APPR_MTHD_EXAM_RATE 		/*평가방법시험비율 */
+					  , A.APPR_MTHD_ATTEND_RATE		/*평가방법출석비율 */
+					  , A.APPR_MTHD_PRJT_RATE		/*평가방법과제비율 */
+					  , A.LRN_APPR_MTHD_CTNT 		/*학습평가방법내용 */
+					  , NVL( A.CONC_DUTY_CTNT,'-') AS CONC_DUTY_CTNT 	/*관련직무내용(해시태그) */
+				  FROM INU_UNI.COUR200 A
+				 ) T
+		<if test="value != null and !value.equals('')">
+		WHERE T.DOC_ID = #{docId}
+		</if>
+	</select>
+	
+	<select id="getPlanProg" parameterType="java.lang.String" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getPlanProg,개설강좌-강의계획서 정보-수업진행방법 */
+		SELECT *
+		  FROM (
+				SELECT T.DOC_ID
+					 , LISTAGG(T.LSN_PROG_MTHD_GBN,',') WITHIN GROUP(ORDER BY T.LSN_PROG_MTHD_GBN) OVER(PARTITION BY T.DOC_ID) AS LSN_PROG_MTHD_GBN
+					 , SUM(T.PROG_RATE_1)OVER(PARTITION BY T.DOC_ID) AS PROG_RATE_1
+					 , SUM(T.PROG_RATE_2)OVER(PARTITION BY T.DOC_ID) AS PROG_RATE_2
+					 , SUM(T.PROG_RATE_3)OVER(PARTITION BY T.DOC_ID) AS PROG_RATE_3
+					 , SUM(T.PROG_RATE_4)OVER(PARTITION BY T.DOC_ID) AS PROG_RATE_4
+					 , SUM(T.PROG_RATE_5)OVER(PARTITION BY T.DOC_ID) AS PROG_RATE_5
+					 , SUM(T.PROG_RATE_6)OVER(PARTITION BY T.DOC_ID) AS PROG_RATE_6
+					 , SUM(T.PROG_RATE_7)OVER(PARTITION BY T.DOC_ID) AS PROG_RATE_7
+					 , SUM(T.PROG_RATE_8)OVER(PARTITION BY T.DOC_ID) AS PROG_RATE_8
+					 , ROW_NUMBER()OVER(PARTITION BY T.DOC_ID ORDER BY T.DOC_ID) AS RNUM
+				  FROM (
+						SELECT (A.DEPT_CLSF_CD||'_'||A.HAKSU_NO||'_'||A.TM_GBN||'_'||A.YY) DOC_ID
+							 , A.LSN_PROG_MTHD_GBN
+							 , (SELECT KOR_CD_NM FROM INU_COM.BSNS011 B WHERE B.RPST_CD = 'UC027' AND A.LSN_PROG_MTHD_GBN = B.CMMN_CD) AS KOR_LSN_PROG_MTHD_GBN
+							 , A.LSN_PROG_MTHD_RATE -- 수업진행방법비율
+							 , DECODE(A.LSN_PROG_MTHD_GBN, '01', A.LSN_PROG_MTHD_RATE, '0') PROG_RATE_1
+							 , DECODE(A.LSN_PROG_MTHD_GBN, '02', A.LSN_PROG_MTHD_RATE, '0') PROG_RATE_2
+							 , DECODE(A.LSN_PROG_MTHD_GBN, '03', A.LSN_PROG_MTHD_RATE, '0') PROG_RATE_3
+							 , DECODE(A.LSN_PROG_MTHD_GBN, '04', A.LSN_PROG_MTHD_RATE, '0') PROG_RATE_4
+							 , DECODE(A.LSN_PROG_MTHD_GBN, '05', A.LSN_PROG_MTHD_RATE, '0') PROG_RATE_5
+							 , DECODE(A.LSN_PROG_MTHD_GBN, '06', A.LSN_PROG_MTHD_RATE, '0') PROG_RATE_6
+							 , DECODE(A.LSN_PROG_MTHD_GBN, '07', A.LSN_PROG_MTHD_RATE, '0') PROG_RATE_7
+							 , DECODE(A.LSN_PROG_MTHD_GBN, '08', A.LSN_PROG_MTHD_RATE, '0') PROG_RATE_8
+						  FROM INU_UNI.COUR210 A
+						)T
+				<if test="value != null and !value.equals('')">
+				WHERE T.DOC_ID = #{docId}
+				</if>
+				)TB
+		WHERE TB.RNUM = 1
+	</select>
+	
+	<select id="getPlanAprt" parameterType="java.lang.String" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getPlanAprt,개설강좌-강의계획서 정보-기자재활용 */
+		SELECT *
+		  FROM (
+				SELECT T.DOC_ID
+					 , LISTAGG(T.APRT_GBN,',') WITHIN GROUP(ORDER BY T.APRT_GBN) OVER(PARTITION BY T.DOC_ID) AS APRT_GBN
+					 , SUM(T.APRT_RATE_1)OVER(PARTITION BY T.DOC_ID) AS APRT_RATE_1
+					 , SUM(T.APRT_RATE_2)OVER(PARTITION BY T.DOC_ID) AS APRT_RATE_2
+					 , SUM(T.APRT_RATE_3)OVER(PARTITION BY T.DOC_ID) AS APRT_RATE_3
+					 , SUM(T.APRT_RATE_4)OVER(PARTITION BY T.DOC_ID) AS APRT_RATE_4
+					 , SUM(T.APRT_RATE_5)OVER(PARTITION BY T.DOC_ID) AS APRT_RATE_5
+					 , SUM(T.APRT_RATE_6)OVER(PARTITION BY T.DOC_ID) AS APRT_RATE_6
+					 , SUM(T.APRT_RATE_7)OVER(PARTITION BY T.DOC_ID) AS APRT_RATE_7
+					 , SUM(T.APRT_RATE_8)OVER(PARTITION BY T.DOC_ID) AS APRT_RATE_8
+					 , ROW_NUMBER()OVER(PARTITION BY T.DOC_ID ORDER BY T.DOC_ID) AS RNUM
+				  FROM (
+						SELECT (A.DEPT_CLSF_CD||'_'||A.HAKSU_NO||'_'||A.TM_GBN||'_'||A.YY) DOC_ID
+							 , A.APRT_GBN
+							 , (SELECT KOR_CD_NM FROM INU_COM.BSNS011 B WHERE B.RPST_CD = 'UC026' AND A.APRT_GBN = B.CMMN_CD) AS KOR_APRT_GBN
+							 , A.APRT_RATE
+							 , DECODE(A.APRT_GBN, '01', A.APRT_RATE, '0') APRT_RATE_1
+							 , DECODE(A.APRT_GBN, '02', A.APRT_RATE, '0') APRT_RATE_2
+							 , DECODE(A.APRT_GBN, '03', A.APRT_RATE, '0') APRT_RATE_3
+							 , DECODE(A.APRT_GBN, '04', A.APRT_RATE, '0') APRT_RATE_4
+							 , DECODE(A.APRT_GBN, '05', A.APRT_RATE, '0') APRT_RATE_5
+							 , DECODE(A.APRT_GBN, '06', A.APRT_RATE, '0') APRT_RATE_6
+							 , DECODE(A.APRT_GBN, '07', A.APRT_RATE, '0') APRT_RATE_7
+							 , DECODE(A.APRT_GBN, '08', A.APRT_RATE, '0') APRT_RATE_8
+						  FROM INU_UNI.COUR220 A
+						)T
+				<if test="value != null and !value.equals('')">
+				WHERE T.DOC_ID = #{docId}
+				</if>
+				)TB
+		WHERE TB.RNUM = 1
+	</select>
+	
+	<select id="getPlanBook" parameterType="java.lang.String" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getPlanBook,개설강좌-강의계획서 정보-교제정보 */
+		SELECT *
+		  FROM (
+				SELECT (A.DEPT_CLSF_CD||'_'||A.HAKSU_NO||'_'||A.TM_GBN||'_'||A.YY) DOC_ID
+					 , A.TEACHM_SEQ 	
+					 , A.TEACHM_GBN 	/*교재구분 */
+					 , A.AUTH_NM 		/*저자명 */
+					 , A.PUBCO_NM 		/*출판사명 */
+					 , A.TEACHM_NM		/*교재명 */
+					 , A.OCCR_YY 		/*발생년도 */
+				  FROM INU_UNI.COUR230 A
+				 )T
+		<if test="value != null and !value.equals('')">
+		WHERE T.DOC_ID = #{docId}
+		</if>
+		ORDER BY TO_NUMBER(T.TEACHM_SEQ)
+	</select>
+	
+	<select id="getPlanWeek" parameterType="java.lang.String" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getPlanWeek,개설강좌-강의계획서 정보-주별 세부 수업계획 */
+		SELECT *
+		  FROM (
+				SELECT (A.DEPT_CLSF_CD||'_'||A.HAKSU_NO||'_'||A.TM_GBN||'_'||A.YY) DOC_ID
+					 , A.LSN_WEK_ORD_GBN
+					 , (SELECT KOR_CD_NM FROM INU_COM.BSNS011 B WHERE B.RPST_CD = 'UC001' AND A.LSN_WEK_ORD_GBN = B.CMMN_CD) AS KOR_LSN_WEK_ORD_GBN
+					 , A.LT_CTNT
+				  FROM INU_UNI.COUR250 A
+				 )T
+		<if test="value != null and !value.equals('')">
+		WHERE T.DOC_ID = #{docId}
+		</if>
+		ORDER BY TO_NUMBER(T.LSN_WEK_ORD_GBN)
+	</select>
+	
+	<select id="getPlanPrjt" parameterType="java.lang.String" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getPlanPrjt,개설강좌-강의계획서 정보-과제 */
+		SELECT *
+		  FROM (
+				SELECT (A.DEPT_CLSF_CD||'_'||A.HAKSU_NO||'_'||A.TM_GBN||'_'||A.YY) DOC_ID
+					 , A.PRJT_SEQ 					/*과제순번 */
+					 , A.LSN_PRJT_NM 				/*수업과제명 */
+					 , A.PRJT_SUBM_DT				/*과제제출일자 */
+					 , A.PRJT_PURP 					/*과제목표 */
+					 , A.PRJT_PROG_MTHD_CTNT		/*과제진행방법내용 */
+					 , A.PRJT_REF_DATA_CTNT 		/*과제참고자료내용 */
+				  FROM INU_UNI.COUR240 A
+				 )T
+		<if test="value != null and !value.equals('')">
+		WHERE T.DOC_ID = #{docId}
+		</if>
+		ORDER BY TO_NUMBER(T.PRJT_SEQ)
+	</select>
+	
+	<select id="getLessonTime" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getLessonTime,개설강좌-시간표 정보 */
+		SELECT * 
+		  FROM (
+				SELECT X.*
+					, ROW_NUMBER()OVER(PARTITION BY X.LT_ROOM_CD ORDER BY X.LT_ROOM_CD DESC) RNUM
+				  FROM (
+						SELECT (DEPT_CLSF_CD||'_'||HAKSU_NO||'_'||TM_GBN||'_'||YY) DOC_ID
+							 , Y.YY
+							 , Y.TM_GBN
+							 , Y.BD_CD
+							 , Y.LT_ROOM_CD
+							 , (SELECT KOR_CD_NM FROM INU_COM.BSNS011 B WHERE B.RPST_CD = 'UC004' AND Y.DAY_GBN = B.CMMN_CD) AS KOR_DAY_GBN
+							 , (SELECT KOR_CD_NM FROM INU_COM.BSNS011 B WHERE B.RPST_CD = 'UC054' AND Y.DISP_LECTM_GBN = B.CMMN_CD) AS KOR_DISP_LECTM_GBN
+						  FROM INU_UNI.COUR320 Y
+						) X
+				WHERE X.DOC_ID IN 
+				<foreach collection="list" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+				)A
+		WHERE A.RNUM = '1'
+	</select>
+	
+	<select id="getLessonRoom" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getLessonRoom,개설강좌-강의실 정보 */
+		SELECT T.DOC_ID
+			 , LISTAGG(T.LT_ROOM_NM,',')WITHIN GROUP (ORDER BY T.LT_ROOM_NM) AS LT_ROOM_NM
+			 , T.KOR_DAY_GBN
+			 ,T.KOR_DISP_LECTM_GBN
+		  FROM (
+				<foreach collection="list" item="map" open="" close="" separator=" UNION ALL "> 
+					SELECT #{map.DOC_ID} AS DOC_ID
+						 , A.LT_ROOM_NM
+						 , A.LT_ROOM_ABB_NM
+						 , #{map.KOR_DAY_GBN} AS KOR_DAY_GBN
+						 , #{map.KOR_DISP_LECTM_GBN} AS KOR_DISP_LECTM_GBN
+					  FROM INU_UNI.COUR300 A
+					<!-- WHERE A.DEPT_CLSF_CD = '0000587' -->
+					  WHERE A.USE_YN = '1'
+					  AND A.BD_CD = #{map.BD_CD}
+					  AND A.LT_ROOM_CD = #{map.LT_ROOM_CD}
+					  AND A.YY = #{map.YY}
+					  AND A.TM_GBN = #{map.TM_GBN}
+				</foreach>
+		       )T
+		GROUP BY T.DOC_ID, T.KOR_DAY_GBN, T.KOR_DISP_LECTM_GBN
+	</select>
+	
+	<!-- 대학코드 조회 -->
+	<select id="getStatList" resultType="java.util.HashMap">
+		/*SbjtOraMapper.getStatList, 학수번호 별 대학코드 조회*/
+		<foreach collection="list" item="map" open="" close="" separator=" UNION ALL "> 
+			SELECT #{map.colgCdCnt} AS COLG_CNT
+				 , A.DEPT_NM
+			  FROM INU_ADM.STAF010 A
+			  WHERE A.USE_YN = '1'
+			  AND A.DEPT_CD = #{map.colgCd}
+		</foreach>
+	</select>
+	
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(ORDER_IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="BK_COUR_TABLE_NAME"/> A
+	</select>
+	
+
+
+</mapper>            

@@ -1,0 +1,44 @@
+{
+	"module_name":"테스트사업"
+	, "auth_list": [
+		{
+			"item_id":"list"
+			, "column_id":"LST"
+			, "item_name":"목록조회"
+		}, {
+			"item_id":"view"
+			, "column_id":"VEW"
+			, "item_name":"상세조회"
+		}, {
+			"item_id":"write"
+			, "column_id":"WRT"
+			, "item_name":"등록"
+			, "usr_min_utp":5
+		}, {
+			"item_id":"reply"
+			, "column_id":"RWT"
+			, "item_name":"신청"
+			, "usr_min_utp":5
+		}, {
+			"item_id":"down"
+			, "column_id":"DWN"
+			, "item_name":"다운로드"
+			, "tch_min_utp":30
+			, "adm_min_utp":50
+		}, {
+			"item_id":"manage"
+			, "column_id":"MNG"
+			, "item_name":"등록관리"
+			, "tch_min_utp":50
+			, "adm_min_utp":50
+			, "usr_min_utp":45
+		}, {
+			"item_id":"cdelete"
+			, "column_id":"CDT"
+			, "item_name":"완전삭제"
+			, "tch_min_utp":50
+			, "adm_min_utp":50
+			, "usr_min_utp":45
+		}
+	]
+}

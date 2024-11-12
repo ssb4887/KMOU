@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	1. IDX, RBS_SBJT_1_INFO, SUBJECT, IDX, 테이블명 등 변경해서 사용
+	2. 그 외 필요에 따라 쿼리 수정하여 사용 
+-->
+<mapper namespace="rbs.modules.sbjt.sbjtMapper">
+	<!-- 테이블명 -->
+	<sql id="SBJT_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG"/>SBJT_${fnIdx}_INFO</trim></sql>
+	<sql id="BK_COUR_TABLE_NAME">uni_pers_bookmark_cour</sql>
+	<sql id="BK_LECTURE_TABLE_NAME">uni_pers_bookmark_lecture</sql>
+	
+	<select id="getJobCdNm" resultType="java.util.HashMap">
+		/* SbjtMapper.getJobCdNm,교과목 직업 직무 코드명*/
+		SELECT CASE WHEN T.CNT = '1' THEN T.NCS_LCLAS_CDNM
+					WHEN T.CNT = '2' THEN CONCAT(T.NCS_LCLAS_CDNM,">",T.NCS_MCLAS_CDNM)
+					WHEN T.CNT = '3' THEN CONCAT(T.NCS_LCLAS_CDNM,">",T.NCS_MCLAS_CDNM,">",T.NCS_SCLAS_CDNM)
+					WHEN T.CNT = '4' THEN CONCAT(T.NCS_LCLAS_CDNM,">",T.NCS_MCLAS_CDNM,">",T.NCS_SCLAS_CDNM,">",T.NCS_SUBD_CD_NM)
+					WHEN T.CNT = '5' THEN CONCAT(T.NCS_LCLAS_CDNM,">",T.NCS_MCLAS_CDNM,">",T.NCS_SCLAS_CDNM,">",T.NCS_SUBD_CD_NM,">",T.COMPE_UNIT_NAME)
+					END JOB_CD_NM
+		FROM (
+			SELECT NCS_LCLAS_CDNM
+				 , NCS_MCLAS_CDNM
+				 , NCS_SCLAS_CDNM
+				 , NCS_SUBD_CD_NM
+				 , COMPE_UNIT_NAME
+				 , #{cnt} AS CNT
+			  FROM uni_ncs 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		)T
+	</select>
+	
+	<select id="getCourBk" resultType="java.util.HashMap">
+		/* SbjtMapper.getCourBk,관심교과목 북마크 등록 리스트 */
+		SELECT T.DOC_ID
+		  FROM (
+				SELECT CONCAT(A.DEPT_CLSF_CD,'_',A.HG_MJ_CD,'_',A.SC_CD,'_',A.TM_GBN,'_',A.YY) AS DOC_ID
+				  FROM <include refid="BK_COUR_TABLE_NAME"/> A
+				WHERE A.ISDELETE = '0'
+				  AND A.PERS_NO = #{persNo}
+			   ) T
+		<if test="pageGbn.equals('sbjt')">
+		WHERE T.DOC_ID IN 
+			<foreach collection="lectureDocId" item="map" open="(" close=")" separator=",">
+				#{map}
+			</foreach>
+		</if>
+	</select>
+
+	<!-- 관심교과목 북마크 등록 여부-->
+	<select id="bkCourCount" resultType="java.lang.Integer">
+		/* SbjtMapper.bkCourCount,관심강좌 북마크 여부 */
+		SELECT COUNT(1) CNT
+		FROM 
+		<include refid="BK_COUR_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<!-- 관심교과목 북마크 등록 -->
+	<insert id="insertBkCour" parameterType="java.util.HashMap">
+		/* SbjtMapper.insertBkCour,관심교과목 북마크 등록 */
+		<selectKey keyProperty="orderIdx" resultType="int" order="BEFORE"> 
+			SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(ORDER_IDX), 0)</trim> + 1 AS orderIdx
+			  FROM <include refid="BK_COUR_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		</selectKey>
+		INSERT INTO <include refid="BK_COUR_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, ORDER_IDX
+			, REGI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, #{orderIdx}
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert> 
+	
+	<!-- 관심교과목 북마크 업데이트 -->
+	<update id="updateBkCour" parameterType="java.util.HashMap">
+		/* SbjtMapper.updateBkCour,관심교과목 북마크 업데이트 */
+		UPDATE <include refid="BK_COUR_TABLE_NAME"/> 
+		SET ISDELETE = #{isdelete}
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<!-- 관심강좌 북마크 등록리스트 -->
+	<select id="getLectureBk" resultType="java.util.HashMap">
+		/* SbjtMapper.lectureBkDocId,관심강좌 북마크 등록리스트 */
+		SELECT T.DOC_ID
+		  FROM (
+				SELECT CONCAT(A.DEPT_CLSF_CD,'_',A.HAKSU_NO,'_',A.TM_GBN,'_',A.YY) AS DOC_ID
+				  FROM <include refid="BK_LECTURE_TABLE_NAME"/> A
+				WHERE A.ISDELETE = '0'
+				  AND A.PERS_NO = #{persNo}
+			   ) T
+		<if test="pageGbn.equals('sbjt')">
+		WHERE T.DOC_ID IN 
+			<foreach collection="classDocId" item="map" open="(" close=")" separator=",">
+				#{map}
+			</foreach>
+		</if>
+	</select>
+	
+	<!-- 관심강좌 북마크 등록 -->
+	<select id="bkLectureCount" resultType="java.lang.Integer">
+		/* SbjtMapper.bkLectureCount,관심강좌 북마크 여부 */
+		SELECT COUNT(1) CNT
+		FROM 
+		<include refid="BK_LECTURE_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<!-- 관심강좌 북마크 등록 -->
+	<insert id="insertBkLecture" parameterType="java.util.HashMap">
+		/* SbjtMapper.insertBkLecture,관심강좌 북마크 등록 */
+		<selectKey keyProperty="orderIdx" resultType="int" order="BEFORE"> 
+			SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(ORDER_IDX), 0)</trim> + 1 AS orderIdx
+			  FROM <include refid="BK_LECTURE_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		</selectKey>
+		INSERT INTO <include refid="BK_LECTURE_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, ORDER_IDX
+			, REGI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, #{orderIdx}
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert> 
+	
+	<!-- 관심강좌 북마크 업데이트 -->
+	<update id="updateBkLecture" parameterType="java.util.HashMap">
+		/* SbjtMapper.updateBkLecture,관심강좌 북마크 업데이트 */
+		UPDATE <include refid="BK_LECTURE_TABLE_NAME"/> 
+		SET ISDELETE = #{isdelete}
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+</mapper>            

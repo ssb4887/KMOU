@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="rbs.modules.statistics.statisticsMapper">
+
+	<select id="getSearhCountList" parameterType="java.util.HashMap" resultType="dataMap">
+	    SELECT
+	        REGI_DATE,
+	        COUNT(*) AS COUNT
+	    FROM
+	        (
+	        SELECT
+	            HST_IDX,
+	            DATE_FORMAT(REGI_DATE, ${dateFormat1}) AS REGI_DATE
+	        FROM
+	            UNI_QRYWD_HST
+	        GROUP BY
+	            HST_IDX,
+	            DATE_FORMAT(REGI_DATE, ${dateFormat1})
+	    ) AS subquery
+	    WHERE 1=1
+	    <if test=' dateFormat2 != null and dateFormat2 != "" '>
+	    AND DATE_FORMAT(STR_TO_DATE(REGI_DATE, ${dateFormat1}), ${dateFormat2}) = #{date}
+	    </if>
+	    GROUP BY REGI_DATE
+	    ORDER BY REGI_DATE
+	</select>
+	
+	<select id="getSearchUserList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT CASE
+		           WHEN base.USER_TYPE = '5' THEN '학생'
+		           WHEN base.USER_TYPE = '45' THEN '교수'
+		           WHEN base.USER_TYPE = '46' THEN '조교'
+		           WHEN base.USER_TYPE = '47' THEN '직원'
+		       END AS NAME,
+		       COALESCE(counts.COUNT, 0) AS COUNT
+		FROM (SELECT '5' AS USER_TYPE
+		      UNION ALL
+		      SELECT '45'
+		      UNION ALL
+		      SELECT '46'
+		      UNION ALL
+		      SELECT '47') base
+		LEFT JOIN (SELECT USER_TYPE, COUNT(*) AS COUNT
+		           FROM (SELECT HST_IDX, USER_TYPE, DATE_FORMAT(REGI_DATE, '%Y-%m-%d') AS REGI_DATE
+		                 FROM UNI_QRYWD_HST
+		                 WHERE USER_TYPE IN ('5', '45', '46', '47')
+		                 GROUP BY HST_IDX, USER_TYPE, DATE_FORMAT(REGI_DATE, '%Y-%m-%d')) A
+		           WHERE A.REGI_DATE BETWEEN #{searchStDt} AND #{searchEdDt}
+		           GROUP BY USER_TYPE) counts
+		ON base.USER_TYPE = counts.USER_TYPE
+		ORDER BY base.USER_TYPE	 		   
+	</select>
+	
+	<select id="getSearchGradeList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT
+		    base.GRADE AS NAME,
+		    COALESCE(counts.COUNT, 0) AS COUNT
+		FROM
+		    (SELECT 1 AS GRADE
+		     UNION ALL
+		     SELECT 2
+		     UNION ALL
+		     SELECT 3
+		     UNION ALL
+		     SELECT 4) base
+		LEFT JOIN
+		    (SELECT GRADE, COUNT(*) AS COUNT
+		     FROM
+		         (SELECT HST_IDX, GRADE, DATE_FORMAT(REGI_DATE, '%Y-%m-%d') AS REGI_DATE
+		          FROM UNI_QRYWD_HST
+		          WHERE USER_TYPE = '5'
+		          GROUP BY HST_IDX, GRADE, DATE_FORMAT(REGI_DATE, '%Y-%m-%d')) A
+		     WHERE A.REGI_DATE BETWEEN #{searchStDt} AND #{searchEdDt}
+		     GROUP BY GRADE) counts
+		ON base.GRADE = counts.GRADE
+		ORDER BY base.GRADE
+	</select>
+	
+	<select id="getSearchKeywordList" parameterType="java.util.HashMap" resultType="dataMap">
+	    <include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+	    SELECT
+	        KEYWORD, 
+	        COUNT(KEYWORD) AS COUNT,
+	        (COUNT(KEYWORD) / SUM(COUNT(KEYWORD)) OVER ()) * 100 AS PERS 
+	    FROM 
+	        (
+	        SELECT
+	            HST_IDX,
+	            KEYWORD,
+	            USER_TYPE,
+	            DEPT_CD,
+	            DATE_FORMAT(REGI_DATE, '%Y-%m-%d') AS REGI_DATE
+	        FROM
+	            UNI_QRYWD_HST
+	        WHERE 1=1
+	        <if test=' USER_TYPE != null and USER_TYPE != "" '>
+	            AND USER_TYPE = #{USER_TYPE}
+	        </if>
+	         <if test='SEL_RANGE != null and !SEL_RANGE.equals("")'>    
+			 AND (
+			 	     COLL_CD = #{SEL_RANGE} 
+			 	  OR DEPT_CD = #{SEL_RANGE} 
+			 	  OR MAJOR_CD = #{SEL_RANGE}
+			 	  )
+			 </if>
+	        <if test=' KEYWORD != null and KEYWORD != "" '>
+	            AND KEYWORD LIKE CONCAT('%', #{KEYWORD}, '%')
+	        </if>
+	        <if test=' START_DATE != null and START_DATE != "" and END_DATE != null and END_DATE != "" '>
+	            AND DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{START_DATE} AND #{END_DATE}
+	        </if>
+	        GROUP BY
+	            HST_IDX,
+	            KEYWORD,
+	            USER_TYPE,
+	            DEPT_CD,
+	            DATE_FORMAT(REGI_DATE, '%Y-%m-%d')
+	        ) AS subquery
+	    GROUP BY KEYWORD
+	    ORDER BY COUNT DESC
+	    <include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="getSearchKeywordCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+	    SELECT 
+	        COUNT(*) CNT
+	    FROM 
+	        (
+	        SELECT 
+	            KEYWORD
+	        FROM 
+	            (
+	                SELECT
+	                    HST_IDX,
+	                    KEYWORD,
+	                    SEARCH_TYPE,
+	                    USER_TYPE,
+	                    DEPT_CD,
+	                    DATE_FORMAT(REGI_DATE, '%Y-%m-%d') AS REGI_DATE
+	                FROM
+	                    UNI_QRYWD_HST
+	                WHERE 1=1
+	                <if test=' USER_TYPE != null and USER_TYPE != "" '>
+	                    AND USER_TYPE = #{USER_TYPE}
+	                </if>
+			         <if test='SEL_RANGE != null and !SEL_RANGE.equals("")'>    
+					 AND (
+					 	     COLL_CD = #{SEL_RANGE} 
+					 	  OR DEPT_CD = #{SEL_RANGE} 
+					 	  OR MAJOR_CD = #{SEL_RANGE}
+					 	  )
+					 </if>
+	                <if test=' KEYWORD != null and KEYWORD != "" '>
+	                    AND KEYWORD LIKE CONCAT('%', #{KEYWORD}, '%')
+	                </if>
+	                <if test=' START_DATE != null and START_DATE != "" and END_DATE != null and END_DATE != "" '>
+	                    AND DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{START_DATE} AND #{END_DATE}
+	                </if>
+	                GROUP BY
+	                    HST_IDX,
+	                    KEYWORD,
+	                    SEARCH_TYPE,
+	                    USER_TYPE,
+	                    DEPT_CD,
+	                    DATE_FORMAT(REGI_DATE, '%Y-%m-%d')
+	            ) AS subquery
+	        GROUP BY KEYWORD
+	        ) AS finalquery
+	</select>
+	
+	<!-- 검색만족도 만족도 평균 조회 -->
+	<select id="selectSrchPointAvrg" parameterType="java.util.HashMap" resultType="double">
+	    SELECT 
+	        IFNULL(ROUND(SUM(POINT) / COUNT(POINT), 1), 0) AS POINT_AVRG
+	    FROM 
+	        UNI_QRYWD_POINT A
+	</select>
+	
+	<!-- 검색만족도 만족도 그래프 조회 -->
+	<select id="selectSrchPointGraph" parameterType="java.util.HashMap" resultType="dataMap">
+	    SELECT 
+	        A.POINT,
+	        COUNT(*) AS POINT_CNT,
+	        ROUND(COUNT(*) / (SELECT COUNT(POINT_TYPE) FROM UNI_QRYWD_POINT) * 100, 1) AS POINT_PER
+	    FROM 
+	        UNI_QRYWD_POINT A
+	    GROUP BY 
+	        A.POINT
+	    ORDER BY 
+	        A.POINT DESC
+	</select>
+	
+	<!-- 검색만족도 만족도 구분 그래프 조회 -->
+	<select id="selectSrchPointTypeGraph" parameterType="java.util.HashMap" resultType="dataMap">
+	    SELECT 
+	        A.POINT_TYPE,
+	        CASE POINT_TYPE
+		        WHEN 'ACCURACY' THEN '검색정확도'
+		        WHEN 'QUALITY' THEN '검색정보의 양질'
+		        WHEN 'CONVENIENCE' THEN '사용의 편의성'
+		        WHEN 'ETC' THEN '기타' 
+		    END AS POINT_NAME,
+	        COUNT(*) AS POINT_TYPE_CNT,
+	        ROUND(COUNT(*) / (SELECT COUNT(POINT_TYPE) FROM UNI_QRYWD_POINT) * 100, 2) AS POINT_TYPE_PER
+	    FROM 
+	        UNI_QRYWD_POINT A
+	    GROUP BY 
+	        A.POINT_TYPE
+	    ORDER BY 
+	        POINT_TYPE
+	</select>
+	
+	<!-- 검색만족도 조회 -->
+	<select id="selectSrchPointList" parameterType="java.util.HashMap" resultType="dataMap">
+	    <include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+	    SELECT 
+	        CONCAT(COLL_NM,' > ',DEPT_NM, CASE WHEN(DEPT_NM = MAJOR_NM) THEN '' ELSE ' > ' END, CASE WHEN(DEPT_NM = MAJOR_NM) THEN '' ELSE MAJOR_NM END) AS DEPT_PATH,
+	        CASE POINT_TYPE
+		        WHEN 'ACCURACY' THEN '검색정확도'
+		        WHEN 'QUALITY' THEN '검색정보의 양질'
+		        WHEN 'CONVENIENCE' THEN '사용의 편의성'
+		        WHEN 'ETC' THEN '기타' 
+		    END AS POINT_NAME,
+	        A.*
+	    FROM 
+	        UNI_QRYWD_POINT A
+	    WHERE 1=1
+         <if test='SEL_RANGE != null and !SEL_RANGE.equals("")'>    
+		 AND (
+		 	     COLL_CD = #{SEL_RANGE} 
+		 	  OR DEPT_CD = #{SEL_RANGE} 
+		 	  OR MAJOR_CD = #{SEL_RANGE}
+		 	  )
+		 </if>
+	    <if test=' searchKeyword != null and searchKeyword != "" '>
+	        AND KEYWORD LIKE CONCAT('%', #{searchKeyword}, '%')
+	    </if>
+	    <if test=' searchStDt != null and searchStDt != "" and searchEdDt != null and searchEdDt != "" '>
+	        AND DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{searchStDt} AND #{searchEdDt}
+	    </if>
+	    <if test=' pointType != null and pointType != "" '>
+	        AND POINT_TYPE = #{pointType}
+	    </if>
+	    <if test=' point != null and point != "" '>
+	        AND POINT = #{point}
+	    </if>
+	    <include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="selectSrchPointCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+	    SELECT 
+	        COUNT(*) CNT
+	    FROM 
+	        UNI_QRYWD_POINT A
+	    WHERE 1=1
+         <if test='SEL_RANGE != null and !SEL_RANGE.equals("")'>    
+		 AND (
+		 	     COLL_CD = #{SEL_RANGE} 
+		 	  OR DEPT_CD = #{SEL_RANGE} 
+		 	  OR MAJOR_CD = #{SEL_RANGE}
+		 	  )
+		 </if>
+	    <if test=' searchKeyword != null and searchKeyword != "" '>
+	        AND KEYWORD LIKE CONCAT('%', #{searchKeyword}, '%')
+	    </if>
+	    <if test=' searchStDt != null and searchStDt != "" and searchEdDt != null and searchEdDt != "" '>
+	        AND DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{searchStDt} AND #{searchEdDt}
+	    </if>
+	    <if test=' pointType != null and pointType != "" '>
+	        AND POINT_TYPE = #{pointType}
+	    </if>
+	    <if test=' point != null and point != "" '>
+	        AND POINT = #{point}
+	    </if>
+	</select>
+
+	<select id="selectBmk" parameterType="java.util.HashMap" resultType="dataMap">
+	    SELECT
+	        B.REGI_DATE,     
+	        COUNT(*) AS CNT
+	    FROM
+	        (
+	        SELECT
+	            DATE_FORMAT(A.REGI_DATE, ${showDateFormat}) AS REGI_DATE
+	        FROM
+	            UNI_PERS_BOOKMARK A
+	        WHERE
+	            1 = 1
+	            AND A.MENU_FG = #{menu_fg}
+	            <if test=' dateFormat != null and dateFormat != "" '>
+	            AND DATE_FORMAT(A.REGI_DATE, ${dateFormat}) = #{date}
+	            </if>
+	        ) B
+	    GROUP BY
+	        B.REGI_DATE
+	    ORDER BY B.REGI_DATE
+	</select>
+	
+	<select id="selectProfMstBmk" parameterType="java.util.HashMap" resultType="dataMap">	       
+	        SELECT
+	        	DOC_ID AS DOC_ID,
+	            COUNT(*) AS CNT,
+	            ROUND((COUNT(*) / (SELECT COUNT(*) FROM UNI_PERS_BOOKMARK WHERE MENU_FG = 'prof' AND DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}) * 100), 2) AS PER
+	        FROM
+	            UNI_PERS_BOOKMARK A
+	        WHERE
+	        	 MENU_FG = 'prof'
+	        AND DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+	        GROUP BY
+	            DOC_ID
+	        ORDER BY CNT DESC
+	        LIMIT 30
+	</select>
+	
+	<select id="selectNonSbjtMstBmk" parameterType="java.util.HashMap" resultType="dataMap">     
+	        SELECT
+	        	SUBSTRING_INDEX(DOC_ID, '_', 1) AS DOC_ID,
+	            COUNT(*) AS CNT,
+	            ROUND((COUNT(*) / (SELECT COUNT(*) FROM UNI_PERS_BOOKMARK WHERE MENU_FG = 'nonSbjt' AND DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}) * 100), 2) AS PER
+	        FROM
+	            UNI_PERS_BOOKMARK A
+	        WHERE
+	        	 MENU_FG = 'nonSbjt'
+	        AND DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+	        GROUP BY
+	            SUBSTRING_INDEX(DOC_ID, '_', 1)
+	        ORDER BY CNT DESC
+	        LIMIT 30	        
+	</select>
+	
+	<select id="selectClsMstBmk" parameterType="java.util.HashMap" resultType="dataMap">
+	        SELECT
+	            CONCAT(
+			        SUBSTRING_INDEX(SUBSTRING_INDEX(DOC_ID, '_', 1), '_', -1), '_',
+			        SUBSTRING_INDEX(SUBSTRING_INDEX(DOC_ID, '_', 3), '_', -1), '_',
+			        SUBSTRING_INDEX(SUBSTRING_INDEX(DOC_ID, '_', 5), '_', -1), '_',
+			        SUBSTRING_INDEX(SUBSTRING_INDEX(DOC_ID, '_', 6), '_', -1), '_',
+			        SUBSTRING_INDEX(SUBSTRING_INDEX(DOC_ID, '_', 7), '_', -1)
+			    ) AS DOC_ID,
+	            COUNT(*) AS CNT,
+	            ROUND((COUNT(*) / (SELECT COUNT(*) FROM UNI_PERS_BOOKMARK WHERE MENU_FG = 'lecture' AND DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}) * 100), 2) AS PER
+	        FROM
+	            UNI_PERS_BOOKMARK A
+	        WHERE
+	            MENU_FG = 'lecture'
+	        AND DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+	        GROUP BY
+	            DOC_ID
+	        ORDER BY CNT DESC
+	        LIMIT 30	        
+	</select>
+	
+	<select id="selectMajorMstBmk" parameterType="java.util.HashMap" resultType="dataMap">
+	        SELECT
+	        	DOC_ID AS DOC_ID,
+	            COUNT(*) AS CNT,
+	            ROUND((COUNT(*) / (SELECT COUNT(*) FROM UNI_PERS_BOOKMARK WHERE MENU_FG = 'major' AND DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}) * 100), 2) AS PER
+	        FROM
+	            UNI_PERS_BOOKMARK A
+	        WHERE
+	        	 MENU_FG = 'major'
+	        AND DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+	        GROUP BY
+	            DOC_ID
+	        ORDER BY CNT DESC
+	        LIMIT 30	        
+	</select>
+	
+	<select id="selectSbjtMstBmk" parameterType="java.util.HashMap" resultType="dataMap">
+	        SELECT
+	        	SUBSTRING_INDEX(DOC_ID, '_', 1) AS DOC_ID,
+	            COUNT(*) AS CNT,
+	            ROUND((COUNT(*) / (SELECT COUNT(*) FROM UNI_PERS_BOOKMARK WHERE MENU_FG = 'sbjt' AND DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}) * 100), 2) AS PER
+	        FROM
+	            UNI_PERS_BOOKMARK A
+	        WHERE
+	        	 MENU_FG = 'sbjt'
+	        AND DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+	        GROUP BY
+	            SUBSTRING_INDEX(DOC_ID, '_', 1)
+	        ORDER BY CNT DESC
+	        LIMIT 30	        
+	</select>
+	
+	<select id="selectStudMstBmk" parameterType="java.util.HashMap" resultType="dataMap">
+	    	SELECT
+	            B.SDM_KOR_NM AS NM,
+	            COUNT(*) AS CNT,
+	            ROUND((COUNT(*) / (SELECT COUNT(*) FROM UNI_PERS_BOOKMARK WHERE MENU_FG = 'studPlan' AND DATE_FORMAT(A.REGI_DATE, '%Y-%m-%d') BETWEEN '2024-06-08' AND '2024-07-08') * 100), 2) AS PER
+	        FROM
+	            UNI_PERS_BOOKMARK A,
+	            UNI_SDM_APLY_INFMT B
+	        WHERE
+	            A.DOC_ID = B.SDM_DEPT_CD
+	            AND MENU_FG = 'studPlan'
+	            AND DATE_FORMAT(A.REGI_DATE, '%Y-%m-%d') BETWEEN '2024-06-08' AND '2024-07-08'
+	        GROUP BY
+	            B.SDM_KOR_NM
+	        ORDER BY CNT DESC
+	        LIMIT 30
+	</select>
+	
+	<select id="selectHashtagCnt" parameterType="java.util.HashMap" resultType="dataMap">
+	    SELECT
+	        DATE_FORMAT(A.REGI_DATE, ${showDateFormat}) AS REGI_DATE,
+	        COUNT(*) AS CNT
+	    FROM
+	        rbs_hashtag_info A
+	    WHERE
+	        FLAG_DEL = 'N'
+	        <if test=' dateFormat != null and dateFormat != "" '>
+	        AND DATE_FORMAT(A.REGI_DATE, ${dateFormat}) = #{date}
+	        </if>
+	    GROUP BY
+	        DATE_FORMAT(A.REGI_DATE, ${showDateFormat})
+	    ORDER BY DATE_FORMAT(A.REGI_DATE, ${showDateFormat})
+	</select>
+	
+	<select id="selectHashtagUsr" parameterType="java.util.HashMap" resultType="dataMap">
+	    SELECT 
+	        REGI_DATE AS REGI_DATE,
+	        COUNT(*) AS CNT
+	    FROM (
+	        SELECT
+	            DATE_FORMAT(A.REGI_DATE, ${showDateFormat}) AS REGI_DATE,
+	            A.STD_NO
+	        FROM
+	            rbs_hashtag_info A
+	        WHERE
+	            FLAG_DEL = 'N'
+	            <if test=' dateFormat != null and dateFormat != "" '>
+	            AND DATE_FORMAT(A.REGI_DATE, ${dateFormat}) = #{date}
+	            </if>
+	        GROUP BY
+	            A.STD_NO,
+	            DATE_FORMAT(A.REGI_DATE, ${showDateFormat})
+	    ) B
+	    GROUP BY 
+	        B.REGI_DATE
+	    ORDER BY 
+	        B.REGI_DATE
+	</select>
+	
+	<select id="selectHashtagStat" parameterType="java.util.HashMap" resultType="dataMap">
+	        SELECT
+	            A.HASHTAG AS NM,
+	            COUNT(*) AS CNT,
+	            ROUND((COUNT(*) / (SELECT COUNT(*) FROM rbs_hashtag_info WHERE DATE_FORMAT(REGI_DATE, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate} AND FLAG_DEL = 'N') * 100), 2) AS PER
+	        FROM
+	            rbs_hashtag_info A
+	        WHERE
+	            DATE_FORMAT(A.REGI_DATE, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+	        AND FLAG_DEL = 'N'
+	        GROUP BY
+	            A.HASHTAG
+	        ORDER BY
+	            CNT DESC
+	        LIMIT 30	        
+	</select>
+	
+
+
+</mapper>            

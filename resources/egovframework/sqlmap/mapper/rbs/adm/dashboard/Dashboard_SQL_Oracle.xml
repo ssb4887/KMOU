@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.adm.dashboard.dashboardMapper">
+	
+	<!-- 사용자 사이트 -->
+	<select id="websiteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.SITE_ID, A.SITE_NAME, A.SITE_DOMAIN, A.LOCALE_LANG, OPT_LOCALE.OPTION_NAME LOCALE_LANG_NAME
+			, A.SITE_TYPE, OPT_TYPE.OPTION_NAME SITE_TYPE_NAME
+			, A.REGI_DATE 
+			FROM 
+			<include refid="rbs.modules.website.websiteMapper.WEBSITE_TABLE_NAME"/> A 
+			LEFT OUTER JOIN (
+				<include refid="rbs.modules.code.OptionJoinMapper.optionJoinSql"/> AND MASTER_CODE = 'LOCALE'
+			) OPT_LOCALE 
+			ON A.LOCALE_LANG = OPT_LOCALE.OPTION_CODE 
+			LEFT OUTER JOIN (
+				<include refid="rbs.modules.code.OptionJoinMapper.optionJoinSql"/> AND MASTER_CODE = 'SITE_TYPE'
+			) OPT_TYPE 
+			ON A.SITE_TYPE = OPT_TYPE.OPTION_CODE 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/> 
+			ORDER BY A.ORDER_IDX ASC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<!-- 선택 사용자 사이트 -->
+	<select id="websiteView" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+		A.SITE_ID, A.SITE_NAME, A.SITE_DOMAIN, A.LOCALE_LANG, OPT_LOCALE.OPTION_NAME LOCALE_LANG_NAME
+		, A.SITE_TYPE, OPT_TYPE.OPTION_NAME SITE_TYPE_NAME
+		, A.REGI_DATE 
+		FROM 
+		<include refid="rbs.modules.website.websiteMapper.WEBSITE_TABLE_NAME"/> A 
+		LEFT OUTER JOIN (
+			<include refid="rbs.modules.code.OptionJoinMapper.optionJoinSql"/> AND MASTER_CODE = 'LOCALE'
+		) OPT_LOCALE 
+		ON A.LOCALE_LANG = OPT_LOCALE.OPTION_CODE 
+		LEFT OUTER JOIN (
+			<include refid="rbs.modules.code.OptionJoinMapper.optionJoinSql"/> AND MASTER_CODE = 'SITE_TYPE'
+		) OPT_TYPE 
+		ON A.SITE_TYPE = OPT_TYPE.OPTION_CODE 
+		WHERE A.ISDELETE = '0' AND A.SITE_ID = #{siteId}
+	</select>
+	
+	<!-- 콘텐츠 -->
+	<select id="contentsList" parameterType="java.util.HashMap" resultType="dataMap">
+		<if test="lastIndex > 0">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+		</if>
+			SELECT 
+			MENU.MENU_IDX, MENU.MENU_NAME, CONT.CONTENTS_CODE, CONT.CONTENTS_NAME, BRANCH.BRANCH_IDX, BRANCH.BRANCH_NAME, BRANCH.BRANCH_TYPE, OPT_BTYPE.OPTION_NAME BRANCH_TYPE_NAME, A.VER_IDX, A.WORK_TYPE, OPT_TYPE.OPTION_NAME WORK_TYPE_NAME
+			FROM 
+			<include refid="rbs.modules.contents.lang.contVersionMapper.VIEW_VERSION_TABLE_NAME"/> A 
+			LEFT OUTER JOIN <include refid="rbs.modules.contents.lang.contVersionMapper.VIEW_VERSION_TABLE_NAME"/> APPL_VER ON APPL_VER.ISDELETE = '0' AND APPL_VER.WORK_TYPE = '10' AND A.CONTENTS_CODE = APPL_VER.CONTENTS_CODE AND A.BRANCH_IDX = APPL_VER.BRANCH_IDX AND A.LOCALE_LANG = APPL_VER.LOCALE_LANG
+			INNER JOIN <include refid="rbs.modules.contents.lang.branchMapper.VIEW_BRANCH_TABLE_NAME"/> BRANCH ON A.CONTENTS_CODE = BRANCH.CONTENTS_CODE AND A.BRANCH_IDX = BRANCH.BRANCH_IDX AND A.LOCALE_LANG = BRANCH.LOCALE_LANG  
+			INNER JOIN <include refid="rbs.modules.contents.lang.contentsMapper.VIEW_CONTENTS_TABLE_NAME"/> CONT ON BRANCH.CONTENTS_CODE = CONT.CONTENTS_CODE AND BRANCH.LOCALE_LANG = CONT.LOCALE_LANG  
+			INNER JOIN <include refid="rbs.modules.menu.menuMapper.MENU_A_TABLE_NAME"/> MENU ON A.CONTENTS_CODE = MENU.CONTENTS_CODE AND A.BRANCH_IDX = MENU.BRANCH_IDX  
+			LEFT OUTER JOIN (
+				<include refid="rbs.modules.code.OptionJoinMapper.optionJoinSql"/> AND MASTER_CODE = 'WORK_TYPE'
+			) OPT_TYPE 
+			ON A.WORK_TYPE = OPT_TYPE.OPTION_CODE 
+			LEFT OUTER JOIN (
+				<include refid="rbs.modules.code.OptionJoinMapper.optionJoinSql"/> AND MASTER_CODE = 'SITE_TYPE'
+			) OPT_BTYPE 
+			ON BRANCH.BRANCH_TYPE = OPT_BTYPE.OPTION_CODE 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/> 
+			<![CDATA[AND A.WORK_TYPE < '10' AND (APPL_VER.VER_IDX IS NULL OR A.VER_IDX > APPL_VER.VER_IDX) ]]>
+			AND BRANCH.ISDELETE = '0' AND CONT.ISDELETE = '0'
+			<bind name="defaultOrderStr" value="'CONT.CONTENTS_CODE DESC, BRANCH.BRANCH_IDX DESC, A.VER_IDX DESC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+		<if test="lastIndex > 0">
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+		</if>
+	</select>
+	
+	<!-- 현재 접속자 -->
+	<select id="statsList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			* 
+			FROM 
+			<include refid="rbs.modules.contact.contactMapper.CONTACT_U_TABLE_NAME"/> A 
+			ORDER BY A.YEAR DESC, A.MONTH DESC, A.DAY DESC, A.HOUR DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+</mapper>

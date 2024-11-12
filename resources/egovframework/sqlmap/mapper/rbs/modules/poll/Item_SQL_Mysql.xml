@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.poll.itemMapper">
+
+	<sql id="ITEM_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />POLL_${fnIdx}_ITEM_INFO</trim></sql>
+	
+	
+	<select id="itemContView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.POLL_IDX, A.QUESTION_IDX, A.ITEM_IDX, A.ITEM_ORDER, A.CONTENTS ITEM_CONTENTS, POINTS, ISTEXT, QUES.CONTENTS
+			, POLL.TITLE, POLL.LIMIT_DATE11, POLL.LIMIT_DATE12, POLL.LIMIT_DATE13, POLL.LIMIT_DATE21, POLL.LIMIT_DATE22, POLL.LIMIT_DATE23 
+			FROM 
+			<include refid="ITEM_TABLE_NAME"/> A 
+			INNER JOIN  <include refid="rbs.modules.poll.quesMapper.QUES_TABLE_NAME"/> QUES ON A.POLL_IDX = QUES.POLL_IDX AND A.QUESTION_IDX = QUES.QUESTION_IDX
+			INNER JOIN  <include refid="rbs.modules.poll.pollMapper.POLL_TABLE_NAME"/> POLL ON QUES.POLL_IDX = POLL.POLL_IDX 
+			WHERE QUES.ISDELETE = '0' AND POLL.ISDELETE = '0' 
+			<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</select>
+	
+	<select id="itemJSONList" parameterType="java.util.HashMap" resultType="egovMap">
+			SELECT 
+			A.ITEM_IDX, A.CONTENTS, A.POINTS
+			FROM 
+			<include refid="ITEM_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			ORDER BY A.ITEM_ORDER ASC
+	</select>
+	<select id="itemList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.QUESTION_IDX, A.ITEM_IDX, A.CONTENTS, A.ISTEXT, A.POINTS, A.ITEM_ORDER
+			FROM 
+			<include refid="ITEM_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			ORDER BY A.ITEM_ORDER ASC
+	</select>
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.ITEM_IDX, A.CONTENTS, A.ISTEXT, A.POINTS
+			FROM 
+			<include refid="ITEM_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			ORDER BY A.ITEM_ORDER ASC
+	</select>
+	
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(ITEM_IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="ITEM_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="ITEM_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*
+			FROM 
+			<include refid="ITEM_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="ITEM_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="ITEM_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+		)
+	</insert>
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="ITEM_TABLE_NAME"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.POLL_IDX, A.TITLE, A.LIMIT_DATE11, A.LIMIT_DATE12, A.LIMIT_DATE13, A.LIMIT_DATE21, A.LIMIT_DATE22, A.LIMIT_DATE23, 
+			A.REGI_NAME, A.REGI_DATE, A.LAST_MODI_NAME, A.LAST_MODI_ID, A.LAST_MODI_DATE 
+			FROM 
+			<include refid="ITEM_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+			ORDER BY A.POLL_IDX DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="ITEM_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/> 
+	</select>
+	
+	<update id="delete" parameterType="java.util.HashMap">
+		UPDATE <include refid="ITEM_TABLE_NAME"/> SET ISDELETE = '1', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="restore" parameterType="java.util.HashMap">
+		UPDATE <include refid="ITEM_TABLE_NAME"/> SET ISDELETE = '0', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="ITEM_TABLE_NAME"/>  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	
+	<select id="deleteFileList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			<foreach collection="columnList" item="columnItem" index="i" separator=",">
+				${columnItem}
+			</foreach>
+			FROM 
+			<include refid="ITEM_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+	</select>
+</mapper>

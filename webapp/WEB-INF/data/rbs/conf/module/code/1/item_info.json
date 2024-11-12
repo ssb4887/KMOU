@@ -1,0 +1,148 @@
+{
+	"master_item_info":{
+		"items":{
+			"mstCd":{
+				"column_id":"MASTER_CODE"
+				, "item_name":"코드"
+				, "required_write":1
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":10
+				, "maximum":20
+				, "item_type":5
+				, "default_item":1
+			}, "mstName":{
+				"column_id":"MASTER_NAME"
+				, "item_name":"코드명"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "remarks":{
+				"column_id":"REMARKS"
+				, "item_name":"비고"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "maximum":500
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}
+		}, "list_order":[
+			"mstCd"
+			, "mstName"
+			, "remarks"
+		], "view_order":[
+			"mstCd"
+			, "mstName"
+			, "remarks"
+		], "write_order":[
+			"mstCd"
+			, "mstName"
+			, "remarks"
+		], "writeproc_order":[
+			"mstCd"
+			, "mstName"
+			, "remarks"
+		], "modify_order":[
+			"mstCd"
+			, "mstName"
+			, "remarks"
+		], "modifyproc_order":[
+			"mstName"
+			, "remarks"
+		]
+		, "list_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+					"mstCd":{
+						"column_id":"MASTER_CODE"
+						, "item_name":"코드"
+					}, "mstName":{
+						"column_id":"MASTER_NAME"
+						, "item_name":"코드명"
+					}
+				}, "select_order":[
+					"mstCd"
+					, "mstName"					
+				]
+			}, "searchForm_order":[
+				"keyField"
+			], "search_order":[
+				"keyField"
+			]
+		}
+	}
+	, 
+	"option_item_info":{
+		"items":{
+			"optCd":{
+				"column_id":"OPTION_CODE"
+				, "item_name":"코드"
+				, "required_write":1
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":10
+				, "maximum":20
+				, "default_item":1
+			}, "optName":{
+				"column_id":"OPTION_NAME"
+				, "item_name":"코드명"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "remarks":{
+				"column_id":"REMARKS"
+				, "item_name":"비고"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "maximum":500
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}
+		}, "list_order":[
+			"optCd"
+			, "optName"
+			, "remarks"
+		], "write_order":[
+			"optCd"
+			, "optName"
+			, "remarks"
+		], "writeproc_order":[
+			"optCd"
+			, "optName"
+			, "remarks"
+		], "modify_order":[
+			"optCd"
+			, "optName"
+			, "remarks"
+		], "modifyproc_order":[
+			"optName"
+			, "remarks"
+		]
+	}
+}

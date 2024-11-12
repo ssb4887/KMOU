@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.member.memberDprtJoinMapper">
+    <!-- join에서 사용 -->
+    <sql id="optionJoinSql">
+    	SELECT DEPART_IDX, DEPART_NAME FROM
+    	<choose>
+    		<when test="${USE_LANG} == 1">
+		    	<include refid="rbs.modules.member.lang.memberDprtMapper.VIEW_DEPART_TABLE_NAME"/> 
+		    	WHERE ISDELETE = '0' AND LOCALE_LANG = #{localeLang}
+    		</when>
+    		<otherwise>
+		    	<include refid="rbs.modules.member.memberDprtMapper.DEPART_TABLE_NAME"/> 
+		    	WHERE ISDELETE = '0' 
+    		</otherwise>
+    	</choose>
+    </sql>
+    
+    <sql id="dnOptionJoinSql">
+	    SELECT 
+	    	INDPT_A.DEPART_IDX, INDPT_A.DEPART_NAME
+	    FROM 
+	    	<choose>
+	    		<when test="${USE_LANG} == 1">
+			    	<include refid="rbs.modules.member.lang.memberDprtMapper.VIEW_DEPART_TABLE_NAME"/> 
+	    		</when>
+	    		<otherwise> 
+			    	<include refid="rbs.modules.member.memberDprtMapper.DEPART_TABLE_NAME"/> 
+	    		</otherwise>
+	    	</choose> INDPT_A
+		    , (
+		    	SELECT * 
+		    	FROM 
+		    		<include refid="rbs.modules.member.memberDprtMapper.DEPART_TABLE_NAME"/>
+					<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+				) INDPT_B
+	    <![CDATA[
+		    WHERE INDPT_A.ORDER_IDX >= INDPT_B.ORDER_IDX
+		    AND INDPT_A.ORDER_IDX < (
+		        SELECT 
+		        	NVL(MIN(ORDER_IDX), INDPT_A.ORDER_IDX + 1) 
+		        FROM 
+	    ]]>
+	    			<include refid="rbs.modules.member.memberDprtMapper.DEPART_TABLE_NAME"/>
+	    <![CDATA[
+	        WHERE 
+		        DEPART_LEVEL <= INDPT_B.DEPART_LEVEL 
+		        AND ORDER_IDX > INDPT_B.ORDER_IDX
+	    ]]>
+	    )
+    	<choose>
+    		<when test="${USE_LANG} == 1">
+		    	AND INDPT_A.ISDELETE = '0' AND INDPT_A.LOCALE_LANG = #{localeLang}
+    		</when>
+    		<otherwise> 
+		    	AND INDPT_A.ISDELETE = '0' 
+    		</otherwise>
+    	</choose>
+    </sql>
+</mapper>            

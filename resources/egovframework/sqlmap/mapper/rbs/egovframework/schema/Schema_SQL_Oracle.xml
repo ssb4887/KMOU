@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.egovframework.schema.schemaMapper">
+
+	<!-- 컬럼 -->
+	<update id="addColumn" parameterType="java.util.HashMap">
+		ALTER TABLE ${tableName}
+		ADD ${columnName} 
+		<choose>
+			<when test="dataType == 'CHAR'">NCHAR(${dataLength})</when>
+			<when test="dataType == 'LONGTEXT'">NCLOB</when>
+			<when test="dataType == 'INT'">NUMBER<if test="dataLength > 0">(${dataLength})</if></when>
+			<otherwise>NVARCHAR2(${dataLength})</otherwise>
+		</choose>		
+	</update>
+	
+	<update id="modifyColumn" parameterType="java.util.HashMap">
+		ALTER TABLE ${tableName}
+		MODIFY ${columnName} ${dataType}
+	</update>
+	
+	<update id="renameColumn" parameterType="java.util.HashMap">
+		ALTER TABLE ${tableName}
+		RENAME ${columnName} ${newColumnName}
+	</update>
+	
+	<update id="dropColumn" parameterType="java.util.HashMap">
+		ALTER TABLE ${tableName}
+		DROP COLUMN ${columnName}
+	</update>
+	
+	<!-- 테이블 -->
+	<update id="dropTable" parameterType="java.util.HashMap">
+		DROP TABLE ${tableName}
+	</update>
+</mapper>            

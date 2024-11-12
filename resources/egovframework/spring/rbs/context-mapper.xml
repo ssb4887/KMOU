@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<bean id="egov.propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:/egovframework/egovProps/globals.properties</value>
+            </list>
+        </property>
+    </bean>
+    
+	<!-- SqlSession setup for MyBatis Database Layer -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+	  	<property name="dataSource" ref="rbs.dataSource" />
+	  	<property name="configLocation" value="classpath:/egovframework/sqlmap/config/rbs/${Globals.DbType}/sql-mapper-config.xml"/>
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:/egovframework/sqlmap/mapper/rbs/**/*_SQL_${Globals.DbType}.xml</value>
+				<value>classpath:/egovframework/sqlmap/mapper/rbs/**/Common_SQL.xml</value>
+			</list>
+		</property>
+		<property name="configurationProperties">
+			<props>
+				<prop key="USE_LANG">${Globals.locale.lang.use}</prop>
+				<prop key="CODE_USERTYPE_ADMIN">${Globals.code.USERTYPE_ADMIN}</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- SqlSession setup for MyBatis Database Layer -->
+	<bean id="martSqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+	  	<property name="dataSource" ref="martdb.dataSource" />
+	  	<property name="configLocation" value="classpath:/egovframework/sqlmap/config/rbs/${Globals.DbType}/sql-mapper-config.xml"/>
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:/egovframework/sqlmap/mapper/mart/**/*_SQL_Oracle.xml</value>
+				<value>classpath:/egovframework/sqlmap/mapper/rbs/**/*_SQL_Oracle.xml</value>
+				<value>classpath:/egovframework/sqlmap/mapper/mart/**/Common_SQL.xml</value>
+			</list>
+		</property>
+		<property name="configurationProperties">
+			<props>
+				<prop key="USE_LANG">${Globals.locale.lang.use}</prop>
+				<prop key="CODE_USERTYPE_ADMIN">${Globals.code.USERTYPE_ADMIN}</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- 개발 -->
+	<bean id="martDevSqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+	  	<property name="dataSource" ref="martdbDev.dataSource" />
+	  	<property name="configLocation" value="classpath:/egovframework/sqlmap/config/rbs/${Globals.DbType}/sql-mapper-config.xml"/>
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:/egovframework/sqlmap/mapper/mart/**/BasketDev_SQL_Oracle.xml</value>
+				<value>classpath:/egovframework/sqlmap/mapper/rbs/**/*Dev_SQL_${Globals.DbType}.xml</value>
+				<value>classpath:/egovframework/sqlmap/mapper/mart/**/Common_SQL.xml</value>
+			</list>
+		</property>
+		<property name="configurationProperties">
+			<props>
+				<prop key="USE_LANG">${Globals.locale.lang.use}</prop>
+				<prop key="CODE_USERTYPE_ADMIN">${Globals.code.USERTYPE_ADMIN}</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="oceanSqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+	  	<property name="dataSource" ref="oceandb.dataSource" />
+	  	<property name="configLocation" value="classpath:/egovframework/sqlmap/config/rbs/${Globals.DbType}/sql-mapper-config.xml"/>
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:/egovframework/sqlmap/mapper/ocean/**/*_SQL_${Globals.DbType}.xml</value>
+				<value>classpath:/egovframework/sqlmap/mapper/rbs/**/*_SQL_${Globals.DbType}.xml</value>
+				<value>classpath:/egovframework/sqlmap/mapper/ocean/**/Common_SQL.xml</value>
+			</list>
+		</property>
+		<property name="configurationProperties">
+			<props>
+				<prop key="USE_LANG">${Globals.locale.lang.use}</prop>
+				<prop key="CODE_USERTYPE_ADMIN">${Globals.code.USERTYPE_ADMIN}</prop>
+			</props>
+		</property>
+	</bean>
+ 
+	<!--<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSession" />
+	</bean>-->
+	
+	
+	<!-- Batch SqlSession setup for MyBatis Database Layer 
+	<bean id="sqlSessionBatch" class="org.mybatis.spring.SqlSessionFactoryBean">
+	  	<property name="dataSource" ref="rbs.dataSource" />
+	  	<property name="configLocation" value="classpath:/egovframework/sqlmap/config/rbs/${Globals.DbType}/sql-mapper-config-batch.xml"/>
+		<property name="mapperLocations" value="classpath:/egovframework/sqlmap/mapper/rbs/**/*_SQL_${Globals.DbType}.xml" />
+		<property name="configurationProperties">
+			<props>
+				<prop key="USE_LANG">${Globals.locale.lang.use}</prop>
+				<prop key="CODE_USERTYPE_ADMIN">${Globals.code.USERTYPE_ADMIN}</prop>
+			</props>
+		</property>
+	</bean>-->
+    
+</beans>

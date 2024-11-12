@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mart.modules.statistics.statisticsOraMapper">
+	
+	<select id="getProfName" parameterType="java.util.HashMap" resultType="dataMap">
+	    SELECT 
+	    	A.V_TEA_NAME AS NM,
+	    	#{CNT} AS CNT,
+	    	#{PER} AS PER
+		FROM 
+			V_TAD_TE_TEA_DEPT A
+		INNER JOIN (
+		    SELECT 
+		    	V_TEA_EMPNO, 
+		    	MAX(V_TEA_SN) AS V_TEA_SN
+		    FROM 
+		    	V_TAD_TE_TEA_DEPT
+		    WHERE 
+		    	V_TEA_EMPNO = #{DOC_ID}
+		    GROUP BY V_TEA_EMPNO
+		) B
+		ON A.V_TEA_EMPNO = B.V_TEA_EMPNO AND A.V_TEA_SN = B.V_TEA_SN
+	</select>
+	
+	<select id="getClsName" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT
+   			SUBJECT_NM ||' (' || YEAR ||'학년도 ' || SMT || '학기 ' || DIVCLS ||'분반)' || ' - ' || EMP_NM  AS NM,
+			#{CNT} AS CNT,
+	    	#{PER} AS PER   			
+		FROM (
+        		SELECT 
+        			UF_SUF_SUBJECT_NM(A.SUBJECT_CD, 1)                   AS SUBJECT_NM,
+               		A.DIVCLS,
+               		UF_APS_EMPNO_NM(A.EMP_NO)                            AS EMP_NM,
+                	A.YEAR,
+                	CASE WHEN SMT = 'GH0220' THEN '2' WHEN SMT = 'GH0210' THEN '1' END AS SMT
+        		FROM 
+        			SUF.SUF110TB A
+        		WHERE 
+        			A.SUBJECT_CD||'_'||A.YEAR||'_'||A.SMT||'_'||A.DIVCLS||'_'||A.EMP_NO = #{DOC_ID}     
+			)
+	</select>
+	
+	<select id="getMajorName" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			DEPT_NM AS NM,
+			#{CNT} AS CNT,
+	    	#{PER} AS PER
+		FROM 
+			SCO.V_AI_ORG
+		WHERE 
+			DEPT_CD = #{DOC_ID} 
+	</select>
+
+	<select id="getSbjtName" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			SUBJECT_NM AS NM,
+			#{CNT} AS CNT,
+	    	#{PER} AS PER
+		FROM 
+			SUF.SUF010TB
+		WHERE 
+			SUBJECT_CD = #{DOC_ID}
+	</select>
+	
+</mapper>            

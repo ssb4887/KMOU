@@ -1,0 +1,13 @@
+{
+	"setting_info": {
+		"list_title":"한줄형게시판"
+		, "input_title":"한줄형게시판"
+		, "design_type":"memo"
+		, "page_name":"page"
+		, "idx_name":"memIdx"
+		, "idx_column":"MEM_IDX"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+	}
+}

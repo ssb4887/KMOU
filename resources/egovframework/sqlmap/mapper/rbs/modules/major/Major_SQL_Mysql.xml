@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="rbs.modules.major.majorMapper">
+
+	<!-- 전공 리스트 최초 조회 -->
+	<select id="getInitMajorList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT * 
+		FROM (
+		    SELECT 
+		        ROW_NUMBER() OVER (ORDER BY T.COLG_CD, T.DEPT_CD, T.MAJOR_CD) AS SEQ_NO,
+		        T.*
+		    FROM (
+		        SELECT
+		            CONCAT(base.DEPT_CD, '_', base.MAJOR_CD) AS id,
+		            base.COLG_CD AS COLG_CD,
+		            base.COLG_NM AS COLG_NM,
+		            base.DEPT_CD AS DEPT_CD,
+		            base.DEPT_NM AS DEPT_NM,
+		            base.MAJOR_CD AS MAJOR_CD,
+		            base.MAJOR_NM_KOR AS MAJOR_NM,
+		            base.MAJOR_NM_ENG AS MAJOR_ENM,
+		            base.MAJOR_INTRO AS INTRO,
+		            base.GOAL AS GOAL,
+		            base.GRDT_AF_CARR AS GRDT_AF_CARR,
+		            GROUP_CONCAT(DISTINCT target.FIELD ORDER BY target.GRADE SEPARATOR ',') AS `FIELD`,
+		            GROUP_CONCAT(DISTINCT target.SUBJECT_NM ORDER BY target.GRADE SEPARATOR ',') AS `SUBJECT_NM`,
+		            GROUP_CONCAT(DISTINCT target2.LICENSE_NM SEPARATOR ',') AS `LICENSE_NM`,
+		            GROUP_CONCAT(DISTINCT target3.NON_SBJT_NM SEPARATOR ',') AS `NON_SBJT_NM`,
+		            GROUP_CONCAT(DISTINCT target4.TALENT SEPARATOR ',') AS `TALENT`,
+		            GROUP_CONCAT(DISTINCT target4.MAJOR_ABTY SEPARATOR ',') AS `MAJOR_ABTY`
+		        FROM kmoudev.major_info base
+		        LEFT JOIN kmoudev.major_edu_cour_info target ON base.MAJOR_CD = target.MAJOR_CD
+		        LEFT JOIN kmoudev.major_license_info target2 ON base.MAJOR_CD = target2.MAJOR_CD
+		        LEFT JOIN kmoudev.major_nonsbjt_info target3 ON base.MAJOR_CD = target3.MAJOR_CD
+		        LEFT JOIN kmoudev.major_abty_info target4 ON base.MAJOR_CD = target4.MAJOR_CD
+		        WHERE 1=1
+		        <if test="univ != ''">
+				AND  base.COLG_CD = #{univ}
+				</if>
+				<if test="depart != ''">
+				AND  base.DEPT_CD = #{depart}
+				</if>
+				<if test="major != ''">
+				AND  base.MAJOR_CD = #{major}
+				</if>
+		        GROUP BY base.MAJOR_CD
+		        ORDER BY base.COLG_CD, base.DEPT_CD, base.MAJOR_CD
+		    ) T
+		) AS T
+		<if test="startNum != null">
+		WHERE  	T.SEQ_NO <![CDATA[>=]]> #{startNum}
+				AND T.SEQ_NO <![CDATA[<=]]> #{endNum}
+		</if>
+		<choose>
+			<when test="field == 'MAJOR_NM_KOR'">
+				ORDER BY MAJOR_NM ASC
+			</when>
+			<when test="field == 'DEPT_CD'">
+				ORDER BY DEPT_CD ASC
+			</when>
+			<when test="field == 'MAJOR_CD'">
+				ORDER BY MAJOR_CD ASC
+			</when>
+			<otherwise>
+				ORDER BY MAJOR_NM ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 전공 총 건수 -->
+	<select id="getInitMajorListCount" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT		COUNT(*) AS TOTAL_COUNT
+		FROM 		major_info
+		WHERE 1=1
+		<if test="univ != ''">
+		AND  COLG_CD = #{univ}
+		</if>
+		<if test="depart != ''">
+		AND  DEPT_CD = #{depart}
+		</if>
+		<if test="major != ''">
+		AND  MAJOR_CD = #{major}
+		</if>
+	</select>
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 				MAJOR_CD
+							, DEPT_CD
+							, DEPT_NM
+							, COLG_CD
+							, COLG_NM
+							, MAJOR_NM_KOR
+							, MAJOR_NM_ENG
+							, MAJOR_INTRO
+							, GOAL
+							, GRDT_AF_CARR
+							, FUSI_MJ_FG
+		FROM 				major_info
+		WHERE 				MAJOR_CD = #{MAJOR_CD}
+	</select>
+	
+	<!-- 전공별 교육과정 -->
+	<select id="selectEduCurr" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 				MAJOR_CD
+							, SUBJECT_NM
+							, FIELD
+							, GRADE
+		FROM 				major_edu_cour_info
+		WHERE 				MAJOR_CD = #{MAJOR_CD}
+	</select>
+	
+	<!-- 전공 능력 정보 -->
+	<select id="selectMajorAbty" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 				MAJOR_CD
+							, TALENT
+							, GROUP_CONCAT(MAJOR_ABTY ORDER BY MAJOR_ABTY SEPARATOR ', ') AS MAJOR_ABTY
+		FROM 				major_abty_info
+		WHERE 				MAJOR_CD = #{MAJOR_CD}
+		GROUP BY			TALENT
+	</select>
+	
+	<!-- 전공 하위역량 유무 확인 -->
+	<select id="checkAbty" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT 				COUNT(1) CNT 
+		FROM 				major_abty_detail_info 
+		WHERE 				MAJOR_CD =  #{MAJOR_CD} 
+		AND 				PARENT_ABTY_CD IS NOT NULL
+	</select>
+	
+	<!-- 전공능력 및 하위역량 정의 -->
+	<select id="selectMajorAbtyDef" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 				parent.MAJOR_CD AS MAJOR_CD,
+    						parent.ORD AS Parent_ORD,
+    						parent.ABTY_CD AS Parent_ABTY_CD,
+    						parent.MAJOR_ABTY AS Parent_MAJOR_ABTY,
+    						parent.MAJOR_ABTY_DEFN AS Parent_MAJOR_ABTY_DEFN,
+    						child.ORD AS Child_ORD,
+    						child.ABTY_CD AS Child_ABTY_CD,
+    						child.MAJOR_ABTY AS Child_MAJOR_ABTY,
+    						child.MAJOR_ABTY_DEFN AS Child_MAJOR_ABTY_DEFN,
+    						(SELECT COUNT(*)
+     						 FROM major_abty_detail_info subchild
+     						 WHERE subchild.PARENT_ABTY_CD = parent.ABTY_CD) AS Child_Count
+		FROM			    major_abty_detail_info parent
+		LEFT JOIN			major_abty_detail_info child
+		ON					parent.ABTY_CD = child.PARENT_ABTY_CD
+		WHERE 				parent.MAJOR_CD = #{MAJOR_CD}
+		AND   				parent.PARENT_ABTY_CD IS NULL
+		ORDER BY			parent.ABTY_CD, child.ABTY_CD
+	</select>
+	
+	<!-- 진출분야별 교육과정 -->
+	<select id="selectMajorSbjtList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 				A.FIELD,
+       						GROUP_CONCAT(CASE WHEN GRADE = 1 THEN SUBJECT_NM ELSE NULL END ORDER BY SUBJECT_NM SEPARATOR '\n ') AS GRADE_1,
+					        GROUP_CONCAT(CASE WHEN GRADE = 2 THEN SUBJECT_NM ELSE NULL END ORDER BY SUBJECT_NM SEPARATOR '\n ') AS GRADE_2,
+					        GROUP_CONCAT(CASE WHEN GRADE = 3 THEN SUBJECT_NM ELSE NULL END ORDER BY SUBJECT_NM SEPARATOR '\n ') AS GRADE_3,
+					        GROUP_CONCAT(CASE WHEN GRADE = 4 THEN SUBJECT_NM ELSE NULL END ORDER BY SUBJECT_NM SEPARATOR '\n ') AS GRADE_4,
+					        REPLACE(B.LICENSE_NM, ',', '\n') AS LICENSE_NM,
+         					REPLACE(C.NON_SBJT_NM, ',', '\n') AS NON_SBJT_NM
+		FROM 				major_edu_cour_info A
+        LEFT JOIN 			major_license_info B ON A.FIELD = B.FIELD AND A.MAJOR_CD = B.MAJOR_CD
+        LEFT JOIN 			major_nonsbjt_info C ON A.FIELD = C.FIELD AND A.MAJOR_CD = C.MAJOR_CD
+		WHERE 				A.MAJOR_CD = #{MAJOR_CD}
+		GROUP BY 			FIELD
+		ORDER BY 			FIELD
+	</select>
+	
+	
+	<!-- 등록 -->
+	<insert id="insertSample" parameterType="java.util.HashMap">
+
+	</insert> 
+	
+	<!-- 업데이트 -->
+	<update id="updateSample" parameterType="java.util.HashMap">
+
+	</update>
+	
+</mapper>            

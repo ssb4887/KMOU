@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.menu.menuVerMapper">
+
+	<sql id="VERSION_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />VERSION_INFO</trim></sql>
+	
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(VER_IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="VERSION_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="optionList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.VER_IDX OPTION_CODE, A.VER_IDX OPTION_NAME, A.ISSERVICE
+			FROM 
+			<include refid="VERSION_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			ORDER BY A.VER_IDX ASC
+	</select>
+	
+	<select id="serviceVerIdx" parameterType="java.util.HashMap" resultType="int">
+		SELECT VER_IDX
+		FROM 
+			<include refid="VERSION_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			AND A.ISSERVICE = '1'
+	</select>
+	
+	<select id="maxVerIdx" parameterType="java.util.HashMap" resultType="int">
+		SELECT MAX(VER_IDX) VER_IDX
+		FROM 
+			<include refid="VERSION_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.VER_IDX, A.ISSERVICE, A.LOCAL_PATH, A.INCLUDE_TOP, A.INCLUDE_BOTTOM, A.LAYOUT_TMP, A.LAYOUT_THEME, A.REGI_DATE
+			FROM 
+			<include refid="VERSION_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			ORDER BY A.VER_IDX ASC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="VERSION_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<!-- 사용자 사이트 미리보기의 사이트정보 -->
+	<select id="siteVerInfo" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT A.VER_IDX, A.LOCAL_PATH, A.INCLUDE_TOP, A.INCLUDE_BOTTOM, A.LAYOUT_TMP, A.LAYOUT_THEME, A.LOGO_SAVED_NAME, A.LOGO_TEXT 
+		FROM 
+			<include refid="VERSION_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*
+			FROM 
+			<include refid="VERSION_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="authCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="VERSION_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="VERSION_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectSiteVerView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*, SITE_T.SITE_TYPE 
+			FROM 
+			<include refid="VERSION_TABLE_NAME"/> A
+			INNER JOIN <include refid="rbs.modules.website.websiteMapper.WEBSITE_TABLE_NAME"/> SITE_T ON A.SITE_ID = SITE_T.SITE_ID 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			AND SITE_T.ISDELETE = '0' 
+	</select>
+	
+	<select id="applySiteVerInfo" parameterType="java.util.HashMap" resultType="jsonMap">
+		SELECT SITE_T.SITE_NAME, SITE_T.SITE_TITLE, SITE_T.LOCALE_LANG, SITE_T.SITE_DOMAIN, SITE_T.SITE_COPYRIGHT, SITE_T.MANAGER_NAME, SITE_T.SITE_EMAIL, SITE_T.SITE_PHONE
+		, SITE_T.SITE_FAX, SITE_T.SITE_ADDR, SITE_T.SSL_PORT, SITE_T.POPUP_FN_IDX, SITE_T.BANNER_FN_IDX, SITE_T.MANAGER_MEMBER_IDXS
+		, A.VER_IDX, A.LOCAL_PATH, A.INCLUDE_TOP, A.INCLUDE_BOTTOM, A.LAYOUT_TMP, A.LAYOUT_THEME, A.LOGO_SAVED_NAME, A.LOGO_TEXT 
+		FROM 
+			<include refid="VERSION_TABLE_NAME"/> A
+			INNER JOIN <include refid="rbs.modules.website.websiteMapper.WEBSITE_TABLE_NAME"/> SITE_T ON A.SITE_ID = SITE_T.SITE_ID 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			AND SITE_T.ISDELETE = '0'
+			AND A.ISSERVICE = '1'
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="VERSION_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="VERSION_TABLE_NAME"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="applyCancel" parameterType="java.util.HashMap">
+		UPDATE <include refid="VERSION_TABLE_NAME"/> SET ISSERVICE = '0' 
+		WHERE ISSERVICE = '1' 
+		<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</update>
+	
+	<update id="apply" parameterType="java.util.HashMap">
+		UPDATE <include refid="VERSION_TABLE_NAME"/> SET ISSERVICE = '1', APPLY_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.VER_IDX, A.ISSERVICE, A.LOCAL_PATH, A.INCLUDE_TOP, A.INCLUDE_BOTTOM, 
+			A.REGI_DATE, A.LAST_MODI_NAME, A.LAST_MODI_ID, A.LAST_MODI_DATE 
+			FROM 
+			<include refid="VERSION_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+			ORDER BY A.VER_IDX
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="VERSION_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/> 
+	</select>
+	
+	<update id="delete" parameterType="java.util.HashMap">
+		UPDATE <include refid="VERSION_TABLE_NAME"/> SET ISDELETE = '1', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="restore" parameterType="java.util.HashMap">
+		UPDATE <include refid="VERSION_TABLE_NAME"/> SET ISDELETE = '0', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="VERSION_TABLE_NAME"/>  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+</mapper>            

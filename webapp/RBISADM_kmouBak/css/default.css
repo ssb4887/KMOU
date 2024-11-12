@@ -1,0 +1,138 @@
+@charset "utf-8";
+
+/**********************************************************
+commnet : default
+*************************************************/
+
+@font-face {
+	font-family: 'NanumGothic';
+	font-style: normal;
+	font-weight: normal;
+	src: url('fonts/NanumGothic.eot');
+	src: local('NanumGothic'), url('fonts/NanumGothic.woff') format('woff'), url('fonts/NanumGothic.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'NanumGothic';
+	font-style: normal;
+	font-weight: bold;
+	src: url('fonts/NanumGothicBold.eot');
+	src: local('NanumGothicBold'), url('fonts/NanumGothicBold.woff') format('woff'), url('fonts/NanumGothicBold.ttf') format('truetype');
+}
+
+/*body {margin:0;padding:0;font-size:0.75em;line-height:14px;color:#424242;font-family:'나눔고딕', 'Nanum Gothic', 'NanumGothic', '돋움', dotum, sans-serif;}
+h1,h2,h3,h4,h5,h6,input,button,textarea {font-size:0.75em;line-height:14px;font-family:'나눔고딕', 'Nanum Gothic', 'NanumGothic', '돋움', dotum, sans-serif;}*/
+
+body * {box-sizing:border-box;}
+body {margin:0;padding:0;font-size:0.75em;line-height:14px;color:#747474;font-family: 'Nanum Gothic', 'NanumGothic', '나눔고딕', '돋움', dotum, sans-serif;}
+h1,h2,h3,h4,h5,h6,input,button,textarea {font-size:0.75em;line-height:14px;font-family: 'Nanum Gothic', 'NanumGothic', '나눔고딕', '돋움', dotum, sans-serif;}
+
+img {display:inline-block;border:0 none;/*vertical-align:top;*/}
+a, em, label, span, strong, button {display:inline-block;vertical-align:middle;}
+h1, h2, h3, h4, h5, h6 {margin:0;font-size:1em;font-weight:normal;}
+address/*, em*/ {font-style:normal;}
+p {margin:0;}
+hr {display:none;}
+
+table {border-collapse:collapse;border-spacing:0;}
+caption {padding:0;width:0;height:0;overflow:hidden;visibility:hidden;font-size:0;line-height:0;}
+th, td {padding:0;vertical-align:top;text-align:left;font-weight:normal;}
+
+dd, dl, ol, ul, form {margin:0;padding:0;}
+li {list-style-type:none;}
+
+form {margin:0;padding:0;}
+fieldset {margin:0;padding:0;border:0 none;}
+legend {position:absolute;top:0;left:0;width:0;height:0;overflow:hidden;visibility:hidden;font-size:0;line-height:0;padding:0;}
+input, select, textarea {font-size:12px;line-height:14px;padding:0;margin:0;vertical-align:middle;}
+label, button {cursor:pointer;}
+label {margin:0 2px 0 2px;}
+button {overflow:visible;margin:0;padding:0;border:none;background:none;/*vertical-align:top;*/cursor:pointer;}
+button::-moz-focus-inner {border:0;padding:0;}
+
+.inputTxt {height:25px; line-height:25px; padding:0 5px; border:1px solid #dbdbdb;}
+input[type="file"]::-ms-value {border:1px solid #dbdbdb;}
+input[type="file"]::-ms-browse{border:1px solid #dbdbdb;}
+.inputChk {width:13px; height:13px;}
+.hyphen {width:7px; height:1px; margin:0 4px; font-size:0; line-height:0; background:url(../images/common/bg_hyphen.gif) no-repeat 0 0;}
+.swungDash {margin:0 7px;}
+.select {height:27px; padding:3px; font-family: 'Nanum Gothic', 'NanumGothic', '나눔고딕', '돋움', dotum, sans-serif; color:#747474; border:1px solid #dbdbdb;}
+
+a {text-decoration:none;cursor:pointer;}
+a:link {color:#747474;}
+a:visited {color:#747474;}
+a:hover {color:#333333;text-decoration:underline;}
+a:active {color:#747474;}
+
+/* basic */
+.hidden {display:none !important;/* position:absolute;visibility:hidden;left:-9000px; */}
+.blind {position:absolute !important;left:-9000px !important;}
+.dspn {display:none;}
+
+/* align */
+.alignC {text-align:center !important;}
+.alignL {text-align:left !important;}
+.alignR {text-align:right !important;}
+.alignT {vertical-align:top !important;}
+.alignM {vertical-align:middle !important;}
+.alignM td {vertical-align:middle !important;}
+.alignB {vertical-align:bottom !important;}
+
+/* float */
+.fl {float:left !important;}
+.fr {float:right !important;}
+.flN {float:none !important;}
+.clear:after{content:".";height:0;font-size:0;visibility:hidden;display:block;clear:both;}
+.clear{display:inline-block;}
+* html .clear {height:0;}
+
+/* .clear{display:block;} 위와 같은 클래스 네임 */
+.cboth{clear:both;}
+
+/* none */
+.bg0 {background:none !important;}
+.bd0 {border:none !important;}
+
+/* margin */
+.mgt0 {margin-top:0 !important;}
+.mgl0 {margin-left:0 !important;}
+
+.mgt5 {margin-top:5px !important;}
+.mgt10 {margin-top:10px !important;}
+.mgt15 {margin-top:15px !important;}
+.mgt20 {margin-top:20px !important;}
+.mgt25 {margin-top:25px !important;}
+.mgt30 {margin-top:30px !important;}
+.mgt40 {margin-top:40px !important;}
+.mgt70 {margin-top:70px !important;}
+.mgt75 {margin-top:75px !important;}
+
+.mgl3 {margin-left:3px;}
+.mgl5 {margin-left:5px;}
+
+.cursor {cursor:pointer;}
+
+/* skip navi */
+#skipNavi {position:absolute; top:0; left:0; width:100%; height:0; text-indent:-9999px; z-index:10000;}
+#skipNavi li {width:0px; height:0px;}
+#skipNavi a {display:inline-block; width:0; height:30px; font-weight:bold; text-align:center;}
+#skipNavi a:hover, #skipNavi a:focus, #skipNavi a:active {display:block; position:absolute; top:0; left:0; width:100%; height:25px; padding:10px 0 0 0; background:#fff; font-size:12px; color:#666; text-indent:0;}
+
+.fn_readonly {background-color: #eee; color: #666;}
+.fn_skip {display:none/* !important*/;}
+.fn_required:before {content:'*'; color:red; margin-right:3px;}
+.nolist {padding:30px !important; text-align:center !important;}
+.txtLimit {overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+dl.fn_inlineBlockDl {display:inline-block; vertical-align: top;}
+dl.fn_inlineBlockDl dt {font-weight: bold;}
+div.fn_inlineBlock, ul.fn_inlineBlock li, dl.fn_inlineBlock dt, dl.fn_inlineBlock dd{display:inline-block;}
+dl.fn_inlineBlock dt {width:100px; font-weight: bold;}
+.noImg {background: url('../images/common/bg_no_image_txt.gif') no-repeat center;}
+
+.comment {color: #f15a38; line-height: 20px; font-size:11px;}
+.comment:before {content:'※ ';}
+
+/* 적용 highlight */
+table>tbody>tr.em {background:#f9f3e8;}
+table>tbody>tr.em>td.on {color:#f15a38;}
+
+input[type='text'].wFull {width:500px;}

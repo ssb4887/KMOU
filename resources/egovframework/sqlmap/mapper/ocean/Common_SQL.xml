@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.commonMapper">
+
+	<sql id="VIEW_PRE_FLAG">VIEW_RBS_</sql>
+	<sql id="TABLE_PRE_FLAG">RBS_</sql>
+	
+	<sql id="TABLE_ALIAS">
+		<choose>
+			<when test="tableAlias != null">${tableAlias}</when>
+			<otherwise>A</otherwise>
+		</choose>
+	</sql>
+	
+	<!-- 삭제여부 :1 -->
+	<sql id="SELECT_DT_WHERE">
+		<where>
+			<trim><include refid="rbs.commonMapper.TABLE_ALIAS" /></trim>.ISDELETE = '1' 
+			<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+		</where>
+	</sql>
+	
+	<!-- 삭제여부 :0 -->
+	<sql id="SELECT_DF_WHERE">
+		<where>
+			<trim><include refid="rbs.commonMapper.TABLE_ALIAS" /></trim>.ISDELETE = '0'  
+			<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+		</where>
+	</sql>
+	<!-- WHERE + searchList 조건 -->
+	<sql id="COM_SG_WHERE">
+		<where>
+			<include refid="rbs.commonMapper.COM_ST_WHERE"/>
+		</where>
+	</sql>
+	
+	<!-- 삭제여부 :1, 언어 -->
+	<sql id="SELECT_DT_WHERE_LANG">
+		<where>
+			<trim><include refid="rbs.commonMapper.TABLE_ALIAS" /></trim>.ISDELETE = '1' 
+			<if test="localeLang != null">
+				AND <trim><include refid="rbs.commonMapper.TABLE_ALIAS" /></trim>.LOCALE_LANG = #{localeLang}
+			</if>
+			<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+		</where>
+	</sql>
+	
+	<!-- 삭제여부 :0, 언어 -->
+	<sql id="SELECT_DF_WHERE_LANG">
+		<where>
+			<trim><include refid="rbs.commonMapper.TABLE_ALIAS" /></trim>.ISDELETE = '0'
+			<if test="localeLang != null"> 
+				AND <trim><include refid="rbs.commonMapper.TABLE_ALIAS" /></trim>.LOCALE_LANG = #{localeLang}
+			</if>
+			<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+		</where>
+	</sql>
+	
+	<!-- 언어 : alias , WHERE + searchList 조건 -->
+	<sql id="COM_SG_A_WHERE_LANG">
+		<where>
+			<choose>
+				<when test="localeLang != null">
+					<trim><include refid="rbs.commonMapper.TABLE_ALIAS" /></trim>.LOCALE_LANG = #{localeLang}
+					<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+				</when>
+				<otherwise>
+					<include refid="rbs.commonMapper.COM_ST_WHERE"/>
+				</otherwise>
+			</choose>
+		</where>
+	</sql>
+	<!-- 언어, WHERE + searchList 조건 -->
+	<sql id="COM_SG_WHERE_LANG">
+		<where>
+			<choose>
+				<when test="localeLang != null">
+					LOCALE_LANG = #{localeLang}
+					<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+				</when>
+				<otherwise>
+					<include refid="rbs.commonMapper.COM_ST_WHERE"/>
+				</otherwise>
+			</choose>
+		</where>
+	</sql>
+	
+	<!-- searchList 조건 : 첫번째 AND/OR 생략  -->
+	<sql id="COM_ST_WHERE">
+		<if test="searchList != null">
+			<foreach collection="searchList" item="searchItem" index="i">
+				<if test="i > 0"><choose>
+					<when test="searchItem.columnLink != null">${searchItem.columnLink}</when>
+					<otherwise>AND</otherwise>
+				</choose></if>
+				<include refid="rbs.commonMapper.INC_WHERE"/>
+			</foreach>
+		</if>
+	</sql>
+	
+	<sql id="COM_ST_WHERE2">
+		<if test="searchList2 != null">
+			<foreach collection="searchList2" item="searchItem" index="i">
+				<if test="i > 0"><choose>
+					<when test="searchItem.columnLink != null">${searchItem.columnLink}</when>
+					<otherwise>AND</otherwise>
+				</choose></if>
+				<include refid="rbs.commonMapper.INC_WHERE"/>
+			</foreach>
+		</if>
+	</sql>
+	
+	<!-- searchList 조건 : 첫번째 AND/OR 포함  -->
+	<sql id="COM_LK_WHERE">
+		<if test="searchList != null">
+			<foreach collection="searchList" item="searchItem" index="i">
+				<choose>
+					<when test="searchItem.columnLink != null">${searchItem.columnLink}</when>
+					<otherwise>AND</otherwise>
+				</choose>
+				<include refid="rbs.commonMapper.INC_WHERE"/>
+			</foreach>
+		</if>
+	</sql>
+	
+	<!-- searchList 조건 : 첫번째 AND/OR 포함  -->
+	<sql id="COM_LK_WHERE2">
+		<if test="searchList2 != null">
+			<foreach collection="searchList2" item="searchItem" index="i">
+				<choose>
+					<when test="searchItem.columnLink != null">${searchItem.columnLink}</when>
+					<otherwise>AND</otherwise>
+				</choose>
+				<include refid="rbs.commonMapper.INC_WHERE"/>
+			</foreach>
+		</if>
+	</sql>
+	
+	<!-- searchItem 조건 : 단일 조건  -->
+	<sql id="INC_WHERE">
+		<if test="searchItem != null">
+			<if test="searchItem.columnPre != null">${searchItem.columnPre}</if>
+			<if test="searchItem.useMultiColumn == 1 and multiDataSearchBegin != null">
+			 ${multiDataSearchBegin}<if test="searchItem.multiItemId != null"> AND ITEM_ID = #{searchItem.multiItemId}</if> AND 
+			</if>
+			<if test="searchItem.objectType == 9 and multiFileSearchBegin != null">
+			 ${multiFileSearchBegin}<if test="searchItem.multiItemId != null"> AND ITEM_ID = #{searchItem.multiItemId}</if> AND 
+			</if>
+			<choose>
+				<when test="searchItem.columnMultiORIds != null and searchItem.columnMultiORValues != null">
+					<foreach collection="searchItem.columnMultiORValues" item="columnMultiORValues" index="i" open="(" close=")" separator="OR">
+						<foreach collection="columnMultiORValues" item="columnValueI" index="i" separator="AND">
+						${searchItem.columnMultiORIds[i]}
+						<choose>
+							<when test="searchItem.columnVFlag != null and searchItem.columnVFlag != 'EQ_IGNORE'">${searchItem.columnVFlag}</when>
+							<otherwise>=</otherwise>
+						</choose>
+						<choose>
+							<when test="searchItem.columnFlag == 1 || searchItem.columnFlag == 7">${columnValueI}</when>
+							<when test="searchItem.columnFlag == 2">'${columnValueI}'</when>
+							<otherwise>#{columnValueI}</otherwise>
+						</choose>
+						</foreach>
+					</foreach>
+				</when>
+				<otherwise>
+					<choose>
+						<when test="searchItem.columnIds != null">
+							<include refid="rbs.commonDBMSMapper.INC_WHERE_COLUMNIDS"/>
+						</when>
+						<when test="searchItem.columnId != null">
+							<choose>
+								<!-- <when test="searchItem.columnDate == 1"> -->
+									<!-- 날짜형식 컬럼 -->
+									<!-- <bind name="dateColumnId" value="searchItem.columnId"/>
+									<include refid="rbs.commonDBMSMapper.dataDateYYYY-MM-DD"/>
+								</when> -->
+								<when test="searchItem.columnDate == 1 and @com.woowonsoft.egovframework.util.MybatisUtil@isEquals(searchItem.columnVFlag, '=')">
+									<!-- 날짜형식 컬럼  and '='조건 -->
+									<include refid="rbs.commonDBMSMapper.dataDateYYYY-MM-DD"/>
+								</when>
+								<when test="searchItem.columnVFlag != null and (searchItem.columnVFlag == 'LIKE' or searchItem.columnVFlag == 'EQ_IGNORE')">LOWER(REPLACE(${searchItem.columnId}, ' ', ''))</when>
+								<when test="searchItem.columnFlag == 7">#{searchItem.columnId}</when>
+								<otherwise>${searchItem.columnId}</otherwise>
+							</choose>
+						</when>
+					</choose>
+					<choose>
+						<when test="searchItem.columnVFlag != null and searchItem.columnVFlag != 'EQ_IGNORE'">${searchItem.columnVFlag}</when>
+						<otherwise>=</otherwise>
+					</choose>
+					<choose>
+						<when test="searchItem.classMasterCode != null and searchItem.classOptnCode != null">
+						(SELECT CLASS_IDX
+				        FROM <include refid="rbs.modules.itemClass.optionMapper.ICLASS_TABLE_NAME"/> A WHERE MASTER_CODE = #{searchItem.classMasterCode} 
+				        <![CDATA[AND ORDER_IDX >= (SELECT ORDER_IDX FROM]]> <include refid="rbs.modules.itemClass.optionMapper.ICLASS_TABLE_NAME"/> WHERE MASTER_CODE = #{searchItem.classMasterCode} AND CLASS_IDX = #{searchItem.classOptnCode}) 
+				        <![CDATA[AND ORDER_IDX < (]]>
+				            SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MIN(ORDER_IDX), A.ORDER_IDX + 1)</trim> FROM <include refid="rbs.modules.itemClass.optionMapper.ICLASS_TABLE_NAME"/> INCLASS WHERE MASTER_CODE = #{searchItem.classMasterCode} 
+				            <![CDATA[AND CLASS_LEVEL <= (SELECT CLASS_LEVEL FROM]]> <include refid="rbs.modules.itemClass.optionMapper.ICLASS_TABLE_NAME"/> WHERE MASTER_CODE = #{searchItem.classMasterCode} AND CLASS_IDX = #{searchItem.classOptnCode}) 
+				            <![CDATA[AND ORDER_IDX > (SELECT ORDER_IDX FROM]]> <include refid="rbs.modules.itemClass.optionMapper.ICLASS_TABLE_NAME"/> WHERE MASTER_CODE = #{searchItem.classMasterCode} AND CLASS_IDX = #{searchItem.classOptnCode})
+				        ))
+						</when>
+						<when test="searchItem.menuSiteId != null and searchItem.menuVerIdx != null and searchItem.menuIdx != null">
+						(SELECT MENU_IDX
+				        FROM <include refid="rbs.modules.menu.menuMapper.MENU_TABLE_NAME"/> A WHERE SITE_ID = #{searchItem.menuSiteId} AND VER_IDX = #{searchItem.menuVerIdx}
+				        <![CDATA[AND ORDER_IDX >= (SELECT ORDER_IDX FROM]]> <include refid="rbs.modules.menu.menuMapper.MENU_TABLE_NAME"/> WHERE SITE_ID = #{searchItem.menuSiteId} AND VER_IDX = #{searchItem.menuVerIdx} AND MENU_IDX = #{searchItem.menuIdx}) 
+				        <![CDATA[AND ORDER_IDX < (]]>
+				            SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MIN(ORDER_IDX), A.ORDER_IDX + 1)</trim> FROM <include refid="rbs.modules.menu.menuMapper.MENU_TABLE_NAME"/> INCLASS WHERE SITE_ID = #{searchItem.menuSiteId} AND VER_IDX = #{searchItem.menuVerIdx} 
+				            <![CDATA[AND CLASS_LEVEL <= (SELECT CLASS_LEVEL FROM]]> <include refid="rbs.modules.menu.menuMapper.MENU_TABLE_NAME"/> WHERE SITE_ID = #{searchItem.menuSiteId} AND VER_IDX = #{searchItem.menuVerIdx} AND MENU_IDX = #{searchItem.menuIdx}) 
+				            <![CDATA[AND ORDER_IDX > (SELECT ORDER_IDX FROM]]> <include refid="rbs.modules.menu.menuMapper.MENU_TABLE_NAME"/> WHERE SITE_ID = #{searchItem.menuSiteId} AND VER_IDX = #{searchItem.menuVerIdx} AND MENU_IDX = #{searchItem.menuIdx})
+				        ))
+						</when>
+						<when test="searchItem.columnValues != null">
+							<foreach collection="searchItem.columnValues" item="columnValueI" index="i" open="(" close=")" separator=",">
+								<choose>
+									<when test="searchItem.columnFlag == 1 || searchItem.columnFlag == 7">${columnValueI}</when>
+									<when test="searchItem.columnFlag == 2">'${columnValueI}'</when>
+									<otherwise>#{columnValueI}</otherwise>
+								</choose>
+							</foreach>
+						</when>
+						<otherwise>
+							<choose>
+								<when test="searchItem.columnDate == 1">
+									<!-- 날짜형식 컬럼 -->
+									<choose>
+										<when test="@com.woowonsoft.egovframework.util.MybatisUtil@isLtEquals(searchItem.columnVFlag)">
+											<include refid="rbs.commonDBMSMapper.searchMaxDateYYYY-MM-DDHH24:MI:SS"/>
+										</when>
+										<when test="@com.woowonsoft.egovframework.util.MybatisUtil@isGtEquals(searchItem.columnVFlag)">
+											<include refid="rbs.commonDBMSMapper.searchMinDateYYYY-MM-DDHH24:MI:SS"/>
+										</when>
+										<otherwise>#{searchItem.columnValue}</otherwise>
+									</choose>
+								</when>
+								<when test="searchItem.columnFlag == 1 || searchItem.columnFlag == 7">${searchItem.columnValue}</when>
+								<when test="searchItem.columnFlag == 2">'${searchItem.columnValue}'</when>
+								<otherwise>#{searchItem.columnValue}</otherwise>
+							</choose>
+						</otherwise>
+					</choose>
+				</otherwise>
+			</choose>
+			<if test="searchItem.useMultiColumn == 1 and multiDataSearchEnd != null">
+			 ${multiDataSearchEnd} 
+			</if>
+			<if test="searchItem.objectType == 9 and multiFileSearchEnd != null">
+			 ${multiFileSearchEnd} 
+			</if>
+			<if test="searchItem.columnPost != null">${searchItem.columnPost}</if>
+		</if>
+	</sql>
+	
+	<sql id="COM_ORDER">
+		
+		<choose>
+			<when test="orderList != null">
+				ORDER BY 
+				<foreach collection="orderList" item="orderItem" index="i" separator=",">
+					<include refid="rbs.commonMapper.INC_ORDER"/>
+				</foreach>
+			</when>
+			<when test="defaultOrderStr != null">
+				ORDER BY ${defaultOrderStr}
+			</when>
+		</choose>
+	</sql>
+	
+	<sql id="INC_ORDER">
+		<if test="orderItem != null">
+			${orderItem.columnId}
+			<if test="orderItem.columnType != null"> ${orderItem.columnType}</if>
+		</if>
+	</sql>
+	
+	<sql id="INSERT_COLUMNS">
+		<if test="dataList != null">
+			<foreach collection="dataList" item="dataItem" index="i" separator=",">
+				<if test="dataItem != null">
+					${dataItem.columnId}
+				</if>
+			</foreach>
+		</if>
+	</sql>
+	
+	<sql id="INSERT_VALUES">
+		<if test="dataList != null">
+			<foreach collection="dataList" item="dataItem" index="i" separator=",">
+				<if test="dataItem != null">
+					<choose>
+						<when test="@com.woowonsoft.egovframework.util.MybatisUtil@isEmpty(dataItem.columnValue)">NULL</when>
+						<when test="dataItem.columnFlag == 1 and dataItem.columnVFlag == 'REPLACE' and dataItem.columnSFlag != null and dataItem.columnTFlag != null">REPLACE(${dataItem.columnValue}, #{dataItem.columnSFlag}, #{dataItem.columnTFlag})</when>
+						<when test="dataItem.columnVFlag == 'REPLACE' and dataItem.columnSFlag != null and dataItem.columnTFlag != null">REPLACE(#{dataItem.columnValue}, #{dataItem.columnSFlag}, #{dataItem.columnTFlag})</when>
+						<when test="dataItem.columnFlag == 1">${dataItem.columnValue}</when>
+						<otherwise>#{dataItem.columnValue}</otherwise>
+					</choose>
+				</if>
+			</foreach>
+		</if>
+	</sql>
+			
+	<sql id="UPDATE_SET">
+		<if test="dataList != null">
+			<foreach collection="dataList" item="dataItem" index="i" separator=",">
+				<if test="dataItem != null">
+					${dataItem.columnId} = 
+					<choose>
+						<when test="@com.woowonsoft.egovframework.util.MybatisUtil@isEmpty(dataItem.columnValue)">NULL</when>
+						<when test="dataItem.columnFlag == 1">${dataItem.columnValue}</when>
+						<when test="dataItem.columnFlag == 2">'${dataItem.columnValue}'</when>
+						<otherwise>#{dataItem.columnValue}</otherwise>
+					</choose>
+				</if>
+			</foreach>
+		</if>
+	</sql>
+</mapper>

@@ -1,0 +1,347 @@
+{
+	"item_info":{
+		"items":{
+		    "name":{
+				"column_id":"NAME"
+				, "item_name":"작성자"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "subject":{
+				"column_id":"SUBJECT"
+				, "item_name":"제목"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "maximum":200
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "file":{
+				"column_id":"FILE"
+				, "item_name":"파일"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":6
+				, "write_type":0
+				, "modify_type":0
+				,"use_setting_id":"use_file"
+				, "default_item":1
+			}, "korNm":{
+				"column_id":"NM"
+				, "item_name":"성명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+				, "is_exist":1
+ 			}, "engFnm":{
+				"column_id":"ENM"
+				, "item_name":"성명(영문)"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+				, "is_exist":1
+ 			}, "chaFnm":{
+				"column_id":"CHM"
+				, "item_name":"성명(한문)"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+				, "is_exist":1
+ 			}, "telNo":{
+				"column_id":"TEL_NO"
+				, "item_name":"전화번호"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+				, "is_exist":1
+ 			}, "hoofFg":{
+				"column_id":"HOOF_FG"
+				, "item_name":"재직구분"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"PUBC_YN"
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "email":{
+				"column_id":"EMAIL"
+				, "item_name":"이메일"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "maximum":200
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"lab":{
+				"column_id":"LAB"
+				, "item_name":"연구실"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"homePage":{
+				"column_id":"HOME_PAGE"
+				, "item_name":"홈페이지"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"shcr":{
+				"column_id":"SHCR"
+				, "item_name":"학력"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"carr":{
+				"column_id":"CARR"
+				, "item_name":"경력"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"thssRech":{
+				"column_id":"THSS_RECH"
+				, "item_name":"논문연구실적"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"rechFld":{
+				"column_id":"RECH_FLD"
+				, "item_name":"주연구분야"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"bookThss":{
+				"column_id":"BOOK_THSS"
+				, "item_name":"저역서논문연구"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"shcrPubcYn":{
+				"item_id":"shcrPubcYn"
+				,"column_id":"SHCR_PUBC_YN"
+				, "item_name":"학력 공개여부"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"PUBC_YN"
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"thssRechPubcYn":{
+				"column_id":"THSS_RECH_PUBC_YN"
+				, "item_name":"논문연구실적 공개여부"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"PUBC_YN"
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"carrPubcYn":{
+				"column_id":"CARR_PUBC_YN"
+				, "item_name":"경력공개여부"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"PUBC_YN"
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"rechFldPubcYn":{
+				"column_id":"RECH_FLD_PUBC_YN"
+				, "item_name":"주연구분야 공개여부"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "master_code":"PUBC_YN"
+				, "object_type":5
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"bookThssPubcYn":{
+				"column_id":"BOOK_THSS_PUBC_YN"
+				, "item_name":"저역서논문연구 공개여부"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"PUBC_YN"
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"pubcYn":{
+				"item_id":"pubcYn"
+				, "column_id":"PUBC_YN"
+				, "item_name":"공개여부"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"PUBC_YN"
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"retiYn":{
+				"column_id":"RETI_YN"
+				, "item_name":"퇴직여부"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"PUBC_YN"
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"retiDt":{
+				"column_id":"RETI_DT"
+				, "item_name":"퇴직일자"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}
+		}
+		, "modify_order":[
+			"hoofFg"
+			, "shcrPubcYn"
+			, "carrPubcYn"
+			, "rechFldPubcYn"
+			, "bookThssPubcYn"
+		]
+		, "modifyproc_order":[
+			 "telNo"
+			, "email"
+			, "lab"
+			, "homePage"
+			, "shcr"
+			, "carr"
+			, "thssRech"
+			, "rechFld"
+			, "bookThss"
+			, "shcrPubcYn"
+			, "thssRechPubcYn"
+			, "carrPubcYn"
+			, "rechFldPubcYn"
+			, "bookThssPubcYn"
+			, "pubcYn"
+			, "retiYn"
+			, "retiDt"
+		]	
+		, "list_search":{
+			"key":{
+				"items":{
+					"korNm":{
+						"column_id":"(NM||STUDENT_NO)"
+						, "item_name":"이름/학번"						
+					},
+					"mjCd":{
+						"column_id":"MAJOR_CD"
+						, "item_name":"전공코드"
+						, "required_write":0
+						, "required_modify":0
+						, "format_type":0
+						, "object_type":0
+						, "default_item":1
+					}
+				}
+			}, "searchForm_order":[
+				"korNm"
+			], "search_order":[
+				"majorCd"
+				,"korNm"
+			]
+		}
+	}
+}

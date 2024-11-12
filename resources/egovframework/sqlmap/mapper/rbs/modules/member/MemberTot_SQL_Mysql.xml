@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.member.memberTotMapper">
+
+	<sql id="MEMBER_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />MEMBER_INFO</trim></sql>
+	<sql id="MEMBER_GROUP_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />MEMBER_GROUP_INFO</trim></sql>
+	<sql id="MEMBER_SNS_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />MEMBER_SNS_INFO</trim></sql>
+	
+	<!-- 전체 회원 검색 -->
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.MEMBER_IDX, A.MEMBER_ID, A.MEMBER_NAME, A.USERTYPE_IDX, UTP.USERTYPE_NAME USERTYPE_IDX_NAME, A.MEMBER_EMAIL, A.MOBILE_PHONE1, A.MOBILE_PHONE2, A.MOBILE_PHONE3, A.REGI_DATE 
+			FROM 
+			<include refid="MEMBER_TABLE_NAME"/> A 
+			LEFT OUTER JOIN (
+				<include refid="rbs.modules.member.memberUstpJoinMapper.optionJoinSql"/>
+			) UTP 
+			ON A.USERTYPE_IDX = UTP.USERTYPE_IDX 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<if test="mbrGrpCd != null">
+			AND A.MEMBER_IDX IN (SELECT MEMBER_IDX
+							     FROM  <include refid="rbs.modules.member.memberTotMapper.MEMBER_GROUP_TABLE_NAME"/>
+							     WHERE GROUP_CODE = #{mbrGrpCd})
+			</if>
+			ORDER BY A.MEMBER_IDX DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MEMBER_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<if test="mbrGrpCd != null">
+			AND A.MEMBER_IDX IN (SELECT MEMBER_IDX
+							     FROM  <include refid="rbs.modules.member.memberTotMapper.MEMBER_GROUP_TABLE_NAME"/>
+							     WHERE GROUP_CODE = #{mbrGrpCd})
+			</if>
+	</select>
+	
+	<select id="duplicateCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MEMBER_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectMemberGrupList" parameterType="java.util.HashMap" resultType="java.lang.String">
+			SELECT 
+			A.GROUP_CODE
+			FROM 
+			<include refid="MEMBER_GROUP_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectGrupMemberList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT MBR.*, OPT.GROUP_NAME
+			FROM 
+			<include refid="MEMBER_GROUP_TABLE_NAME"/> A 
+			INNER JOIN (
+			<include refid="rbs.modules.member.memberGrupJoinMapper.optionJoinSql"/>
+			) OPT
+			ON A.GROUP_CODE = OPT.GROUP_CODE
+			INNER JOIN 
+			<include refid="MEMBER_TABLE_NAME"/> MBR
+			ON A.MEMBER_IDX = MBR.MEMBER_IDX AND MBR.ISDELETE = '0'
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MEMBER_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="MEMBER_TABLE_NAME"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<!-- SNS 계정 중복확인 -->
+	<select id="snsDuplicateCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MEMBER_SNS_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<!-- SNS 계정 등록 -->
+	<insert id="snsInsert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MEMBER_SNS_TABLE_NAME"/> 
+			(<include refid="rbs.commonMapper.INSERT_COLUMNS"/>, REGI_DATE)
+			VALUES (<include refid="rbs.commonMapper.INSERT_VALUES"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>)
+		ON DUPLICATE KEY
+		UPDATE  
+			REGI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+			<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+	</insert>
+	
+	<delete id="cdeleteGrp" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MEMBER_GROUP_TABLE_NAME"/>  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	
+	<insert id="insertGrp" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MEMBER_GROUP_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+		)
+	</insert>
+	
+	<update id="delete" parameterType="java.util.HashMap">
+		UPDATE <include refid="MEMBER_TABLE_NAME"/> SET ISDELETE = '1', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="restore" parameterType="java.util.HashMap">
+		UPDATE <include refid="MEMBER_TABLE_NAME"/> SET ISDELETE = '0', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MEMBER_TABLE_NAME"/>  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	
+	<update id="pwupdate" parameterType="java.util.HashMap">
+		UPDATE <include refid="MEMBER_TABLE_NAME"/> SET PWD_MODI_TYPE = '2', PWD_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>, LOGIN_FAIL = 0
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="pwupdate1" parameterType="java.util.HashMap">
+		UPDATE <include refid="MEMBER_TABLE_NAME"/> SET PWD_MODI_DATE${columnName} = <include refid="rbs.commonDBMSMapper.currentDate"/>
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="selectReAgreeList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+		A.MEMBER_IDX, A.MEMBER_ID, A.MEMBER_NAME, A.USERTYPE_IDX, UTP.USERTYPE_NAME USERTYPE_IDX_NAME, A.MEMBER_EMAIL, A.REGI_DATE, DATE_FORMAT(DATE_ADD(A.LAST_LOGIN_DATE, INTERVAL 2 YEAR), '%Y년 %m월 %d일') AUTO_REGOUT_DATE
+		FROM 
+		<include refid="MEMBER_TABLE_NAME"/> A 
+		LEFT OUTER JOIN (
+			<include refid="rbs.modules.member.memberUstpJoinMapper.optionJoinSql"/>
+		) UTP 
+		ON A.USERTYPE_IDX = UTP.USERTYPE_IDX
+		WHERE DATE_FORMAT(A.LAST_LOGIN_DATE, '%Y-%m-%d') = DATE_FORMAT(DATE_ADD(DATE_ADD(<include refid="rbs.commonDBMSMapper.currentDate"/>, INTERVAL -2 YEAR), INTERVAL ${dDays} DAY), '%Y-%m-%d')
+		ORDER BY A.MEMBER_IDX DESC
+	</select>
+	
+	<delete id="reAgreeCdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MEMBER_TABLE_NAME"/>  
+		<![CDATA[WHERE DATE_FORMAT(LAST_LOGIN_DATE, '%Y-%m-%d') <= DATE_FORMAT(DATE_ADD(<include refid="rbs.commonDBMSMapper.currentDate"/>, INTERVAL -2 YEAR), '%Y-%m-%d')]]>
+	</delete>
+	
+	<select id="reAgreeMaxMemberIdx" parameterType="java.util.HashMap">
+		SELECT MAX(MEMBER_IDX) FROM <include refid="MEMBER_TABLE_NAME"/>  
+		<![CDATA[WHERE DATE_FORMAT(LAST_LOGIN_DATE, '%Y-%m-%d') <= DATE_FORMAT(DATE_ADD(<include refid="rbs.commonDBMSMapper.currentDate"/>, INTERVAL -2 YEAR), '%Y-%m-%d')]]>
+	</select>
+	<select id="maxMemberIdx" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT MAX(MEMBER_IDX)
+		FROM 
+		<include refid="rbs.modules.member.memberTotMapper.MEMBER_TABLE_NAME"/> A 
+	</select>
+	
+</mapper>            

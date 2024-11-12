@@ -1,0 +1,46 @@
+.registWrap {float:right; margin-bottom:10px; }
+.addWrap {float:right; margin-bottom:10px; margin-top:20px;}
+.btnAdd {background:#006dba; width: 100px; height:40px; color:#fff !important; border:0px; display:block; padding:0px; font-size:15px; font-weight:666; line-height:45px; vertical-align:middle; border-radius:5px; text-align:center; }
+.btnRegist {background:#006dba; width: 100px; height:40px; color:#fff !important; border:0px; display:block; padding:0px; font-size:15px; font-weight:666; line-height:45px; vertical-align:middle; border-radius:5px; text-align:center; }
+.btnCopy {background:#1C83D3; width: 100px; height:40px; color:#fff !important; border:0px; display:block; padding:0px; font-size:15px; font-weight:666; line-height:45px; vertical-align:middle; border-radius:5px; text-align:center; }
+.btnDelete {background:#ff9f31; width: 100px; height:40px; color:#fff !important; border:0px; display:block; padding:0px; font-size:15px; font-weight:666; line-height:45px; vertical-align:middle; border-radius:5px; text-align:center; }
+
+.filebox .upload-name {
+    display: inline-block;
+    height: 40px;
+    padding: 0 10px;
+    vertical-align: middle;
+    border: 1px solid #dddddd;
+    width: 18%;
+    color: #999999;
+}
+
+.filebox label {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #fff;
+    vertical-align: middle;
+    background-color: #999999;
+    cursor: pointer;
+    height: 40px;
+    margin-left: 10px;
+}
+
+ #wrapper {
+    position: relative;
+    width: 100%;
+    height: auto !important;
+    right: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+}
+
+
+td table {
+    max-width: 100%;
+    overflow: auto;
+}
+
+.tbWriteA.trackTable tbody tr th {text-align:center;!important}
+

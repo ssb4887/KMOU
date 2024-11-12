@@ -1,0 +1,13 @@
+{
+	"setting_info": {
+		"list_title":"연혁 목록"
+		, "input_title":"연혁 등록"
+		, "deleteList_title":"연혁 삭제목록"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+		, "page_name":"page"
+		, "idx_name":"hisIdx"
+		, "idx_column":"HIS_IDX"
+	}
+}

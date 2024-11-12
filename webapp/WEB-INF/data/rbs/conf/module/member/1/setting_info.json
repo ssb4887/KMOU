@@ -1,0 +1,80 @@
+{
+	"usertype_setting_info": {
+		"list_title":"사용자유형 목록"
+		, "input_title":"사용자유형 등록"
+		, "deleteList_title":"사용자유형 삭제목록"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":0
+		, "page_name":"page"
+		, "idx_name":"utpIdx"
+		, "idx_column":"USERTYPE_IDX"
+	}
+	, "group_setting_info": {
+		"list_title":"사용자그룹 목록"
+		, "input_title":"사용자그룹 등록"
+		, "deleteList_title":"사용자그룹 삭제목록"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":0
+		, "page_name":"page"
+		, "idx_name":"grpCd"
+		, "idx_column":"GROUP_CODE"
+	}
+	, "depart_setting_info": {
+		"list_title":"사용자부서 목록"
+		, "input_title":"사용자부서 등록"
+		, "deleteList_title":"사용자부서 삭제목록"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":0
+		, "page_name":"page"
+		, "idx_name":"departIdx"
+		, "idx_column":"DEPART_IDX"
+	}
+	, "setting_info": {
+		"list_title":"일반회원 목록"
+		, "input_title":"일반회원 등록"
+		, "deleteList_title":"일반회원 삭제목록"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+		, "page_name":"page"
+		, "idx_name":"memberIdx"
+		, "idx_column":"MEMBER_IDX"
+		, "sns_info":{
+			"items":{
+				"facebook":{"sns_type":"1", "sns_name":"페이스북", "sns_url_flag":"FACEBOOK"}
+				, "naver":{"sns_type":"2", "sns_name":"네이버", "sns_url_flag":"NAVER"}
+				, "kakao":{"sns_type":"3", "sns_name":"카카오", "sns_url_flag":"KAKAO"}
+				, "google":{"sns_type":"4", "sns_name":"구글", "sns_url_flag":"GOOGLE"}
+			}
+			, "list":["facebook", "naver", "kakao", "google"]
+		}
+	}
+	, "memberAn_setting_info": {
+		"list_title":"운영자 목록"
+		, "input_title":"운영자 등록"
+		, "deleteList_title":"운영자 삭제목록"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+		, "page_name":"page"
+		, "idx_name":"memberIdx"
+		, "idx_column":"MEMBER_IDX"
+	}
+	, "myInfo_setting_info": {
+		"list_title":"내정보"
+		, "input_title":"내정보 등록"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+		, "page_name":"page"
+		, "idx_name":"memberIdx"
+		, "idx_column":"MEMBER_IDX"
+	}
+	, "login_setting_info": {
+		"idx_name":"url"
+		, "use_ssl":"0"
+	}
+}

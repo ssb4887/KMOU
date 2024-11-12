@@ -1,0 +1,40 @@
+{
+	"item_info":{
+		"items":{
+			"mbrName":{
+				"column_id":"MEMBER_NAME"
+				, "item_name":"이름"
+				, "required_write":1
+				, "required_modify":1
+				, "required_join03":1
+				, "required_idsearch":1
+				, "required_pwsearch":1
+				, "format_type":0
+				, "object_type":0
+				, "maximum":50
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}
+		}
+		, "list_order":[
+			"mbrName"
+		]
+		, "list_search":{
+			"key":{
+				"items":{
+					"mbrName":{
+						"column_id":"A.MEMBER_NAME"
+						, "item_name":"이름"
+						, "format_type":0
+						, "object_type":0
+					}
+				}
+			}, "searchForm_order":[
+				"mbrName"
+			], "search_order":[
+				"mbrName"
+			]
+		}
+	}
+}

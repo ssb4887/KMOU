@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.contents.lang.contWork9Mapper">
+    
+	<sql id="WORK_TABLE_NAME"><trim><include refid="rbs.modules.contents.contWork9Mapper.WORK_TABLE_NAME"/></trim></sql>
+	<sql id="WORK_A_TABLE_NAME"><trim><include refid="rbs.modules.contents.contWork9Mapper.WORK_A_TABLE_NAME"/></trim></sql>
+	
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="WORK_TABLE_NAME"/> A 
+			INNER JOIN <include refid="rbs.modules.contents.lang.contVersionMapper.VIEW_VERSION_TABLE_NAME"/> VER ON A.CONTENTS_CODE = VER.CONTENTS_CODE AND A.BRANCH_IDX = VER.BRANCH_IDX AND A.VER_IDX = VER.VER_IDX AND A.LOCALE_LANG = VER.LOCALE_LANG  
+			INNER JOIN <include refid="rbs.modules.contents.lang.branchMapper.VIEW_BRANCH_TABLE_NAME"/> BRANCH ON VER.CONTENTS_CODE = BRANCH.CONTENTS_CODE AND VER.BRANCH_IDX = BRANCH.BRANCH_IDX AND VER.LOCALE_LANG = BRANCH.LOCALE_LANG  
+			INNER JOIN <include refid="rbs.modules.contents.lang.contentsMapper.VIEW_CONTENTS_TABLE_NAME"/> CONT ON BRANCH.CONTENTS_CODE = CONT.CONTENTS_CODE AND BRANCH.LOCALE_LANG = CONT.LOCALE_LANG  
+			WHERE VER.ISDELETE = '0' AND BRANCH.ISDELETE = '0' AND CONT.ISDELETE = '0'
+			AND A.LOCALE_LANG = #{localeLang}   
+			<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</select>
+	
+	<select id="selectApplyView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="WORK_A_TABLE_NAME"/> A 
+			WHERE A.LOCALE_LANG = #{localeLang}   
+			<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</select>
+</mapper>            

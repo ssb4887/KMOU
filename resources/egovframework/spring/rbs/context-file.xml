@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+				
+	<bean id="rbsDownloadView" class="com.woowonsoft.egovframework.view.DownloadView" />
+	<bean id="rbsImageView" class="com.woowonsoft.egovframework.view.ImageView" />
+	<bean id="rbsExcelDownloadView" class="com.woowonsoft.egovframework.view.ExcelDownloadView" />
+	<bean id="rbsExcelXDownloadView" class="com.woowonsoft.egovframework.view.ExcelXDownloadView" />
+	<bean id="rbsExcelXSDownloadView" class="com.woowonsoft.egovframework.view.ExcelXSDownloadView" />
+	<bean id="rbsPdfDownloadView" class="com.woowonsoft.egovframework.view.PdfDownloadView" />
+	
+</beans>

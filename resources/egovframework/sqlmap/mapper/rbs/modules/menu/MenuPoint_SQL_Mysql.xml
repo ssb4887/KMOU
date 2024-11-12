@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.menu.menuPointMapper">
+	<sql id="POINT_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />MENU_POINT_INFO</trim></sql>	
+	
+	<!-- 메뉴 전체 평균점수 -->
+	<select id="menuPointTotalView" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(AVG(A.POINT), 0)</trim> AVG_POINT, COUNT(1) CNT 
+		FROM <include refid="POINT_TABLE_NAME"/> A 
+		INNER JOIN <include refid="rbs.modules.menu.menuMapper.MENU_A_TABLE_NAME"/> MENU ON A.SITE_ID = MENU.SITE_ID AND A.VER_IDX = MENU.VER_IDX AND A.MENU_IDX = MENU.MENU_IDX 
+		WHERE MENU.USE_POLL = '1'  
+		<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</select>
+	
+	<!-- 메뉴별 평균점수 -->
+	<select id="menuPointList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT CONCAT('MENU', CONVERT(A.MENU_IDX, CHAR(20))) GUBUN_DATA, A.MENU_IDX, <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(AVG(A.POINT), 0)</trim> AVG_POINT, COUNT(1) CNT 
+		FROM <include refid="POINT_TABLE_NAME"/> A 
+		INNER JOIN <include refid="rbs.modules.menu.menuMapper.MENU_A_TABLE_NAME"/> MENU ON A.SITE_ID = MENU.SITE_ID AND A.VER_IDX = MENU.VER_IDX AND A.MENU_IDX = MENU.MENU_IDX 
+		WHERE MENU.USE_POLL = '1'  
+		<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+		GROUP BY A.MENU_IDX
+		ORDER BY A.MENU_IDX ASC
+	</select>
+	
+	<!-- 점수별 참여자수 -->
+	<select id="pointPTotalCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(A.PIDX) CNT
+		FROM <include refid="POINT_TABLE_NAME"/> A
+		INNER JOIN <include refid="rbs.modules.menu.menuMapper.MENU_A_TABLE_NAME"/> MENU ON A.SITE_ID = MENU.SITE_ID AND A.VER_IDX = MENU.VER_IDX AND A.MENU_IDX = MENU.MENU_IDX 
+		WHERE MENU.USE_POLL = '1'  
+		<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</select>
+	
+	<select id="pointPList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT CONCAT('POINT', OPT_POINT.OPTION_CODE) GUBUN_DATA, OPT_POINT.OPTION_CODE POINT, OPT_POINT.OPTION_NAME POINT_NAME, COUNT(AA.PIDX) CNT 
+		FROM (
+			<include refid="rbs.modules.code.OptionJoinMapper.optionJoinSql"/> AND MASTER_CODE = 'MENU_POINT'
+		) OPT_POINT 
+		LEFT OUTER JOIN 
+		(
+			SELECT A.*
+			FROM <include refid="POINT_TABLE_NAME"/> A
+			INNER JOIN <include refid="rbs.modules.menu.menuMapper.MENU_A_TABLE_NAME"/> MENU ON A.SITE_ID = MENU.SITE_ID AND A.VER_IDX = MENU.VER_IDX AND A.MENU_IDX = MENU.MENU_IDX 
+			WHERE MENU.USE_POLL = '1'  
+			<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+		) AA 
+		ON OPT_POINT.OPTION_CODE = AA.POINT 
+		GROUP BY OPT_POINT.OPTION_CODE, OPT_POINT.OPTION_NAME, OPT_POINT.ORDER_IDX
+		ORDER BY OPT_POINT.ORDER_IDX ASC
+	</select>
+	
+	<!-- 참여자 -->
+	<select id="pointMTotalCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM <include refid="POINT_TABLE_NAME"/> A
+		INNER JOIN <include refid="rbs.modules.menu.menuMapper.MENU_A_TABLE_NAME"/> MENU ON A.SITE_ID = MENU.SITE_ID AND A.VER_IDX = MENU.VER_IDX AND A.MENU_IDX = MENU.MENU_IDX 
+		WHERE MENU.USE_POLL = '1'  
+		<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</select>
+	
+	<select id="pointMList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+		SELECT A.*
+		FROM <include refid="POINT_TABLE_NAME"/> A
+		INNER JOIN <include refid="rbs.modules.menu.menuMapper.MENU_A_TABLE_NAME"/> MENU ON A.SITE_ID = MENU.SITE_ID AND A.VER_IDX = MENU.VER_IDX AND A.MENU_IDX = MENU.MENU_IDX 
+		WHERE MENU.USE_POLL = '1'  
+		<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+		ORDER BY A.PIDX DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(PIDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="POINT_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="POINT_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+</mapper>

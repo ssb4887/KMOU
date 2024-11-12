@@ -1,0 +1,109 @@
+@charset "utf-8";
+@import url('../../common.css');
+/* TITLE */
+#cms_member_article .titTypeA {padding-left:25px; font-size:18px; font-weight:bold; color:#3e3e3e; line-height:40px; background: url(./images/bul_type1.png) no-repeat 0 13px ;}
+#cms_member_article .titTypeB {padding-left:23px; font-size:15px; font-weight:bold; color:#3e3e3e; line-height:20px; background: url(./images/bul_type2.png) no-repeat 0 2px;}
+
+/* 아이디/비번찾기 */
+#cms_member_article .findTit {overflow:hidden; margin:40px 0 10px 0px;}
+#cms_member_article .findid {padding:38px 0 40px 80px; border-bottom:1px solid #e4e4e4; width:100%;}
+#cms_member_article .loginWrap {padding:47px 0 55px; border-top:2px solid #0e6bc1; border-bottom:1px solid #e4e4e4; background:#fbfbfb;}
+#cms_member_article .loginWrap .snsLogin {float:left; padding-left:60px; height:100%; }
+#cms_member_article .loginWrap fieldset {overflow:hidden; margin-left:180px;}
+#cms_member_article .loginWrap .login {float:left; margin-top:15px; width: 408px;}
+#cms_member_article .loginWrap .login li {margin-top:5px;float:left;}
+#cms_member_article .loginWrap .login li:first-child {margin-top:0;}
+#cms_member_article .loginWrap .login li label {float:left; width:65px; padding-left:9px; font-size:14px; font-weight:bold; color:#3e3e3e; line-height:32px; background:url(./images/dot.gif) no-repeat 0 center;}
+#cms_member_article .loginWrap .login li .inputTxt {float:left; width:260px; height:32px; line-height:32px;}
+#cms_member_article .loginWrap .btnLogin {float:left; margin-top:15px; margin-left:7px;}
+#cms_member_article .loginWrap .login li .inputTxt2 {border:1px solid #dbdbdb; margin-right:2px; width:308px; height:32px; line-height:32px;}
+#cms_member_article .loginWrap .login li .inputTxt3 {border:1px solid #dbdbdb; margin-right:2px; width:90px !important; height:32px; line-height:32px;}
+#cms_member_article .loginWrap .login li .select {height:34px;}
+
+/* 비밀번호 변경 */
+#cms_member_article .pwModiForm {}
+#cms_member_article .pwModiForm fieldset {margin:0px;}
+#cms_member_article .pwModiForm .txt {margin-bottom:20px; text-align:center; font-size:13px; color:#3e3e3e;}
+#cms_member_article .loginWrap .pwModiG {clear:both; float:none;width:500px; margin:auto;}
+#cms_member_article .loginWrap .pwModiG li {float:none;}
+#cms_member_article .loginWrap .pwModiG li label {width:100px;}
+#cms_member_article .loginWrap .pwModiBtn {clear:both; margin-top:30px; text-align: center;}
+
+/* 회원가입 */
+#cms_member_article .register_wrap { padding:40px 10px 50px; border-top:2px solid #0e6bc1; border-bottom:1px solid #e4e4e4;border-left:1px solid #e4e4e4;border-right:1px solid #e4e4e4; background:#fbfbfb;}
+#cms_member_article .register_wrap ul li{ text-align:center; float:left; width:49%;}
+#cms_member_article .register_wrap ul li h4{font-size:18px;color:#0e6bc1; font-weight:bold; }
+#cms_member_article .register_wrap ul li p{padding:5px 0 20px;}
+#cms_member_article .register_wrap ul li .reg_icon1 {height:95px; background:url(./images/reg_icon1.gif) no-repeat center 0;  }
+#cms_member_article .register_wrap ul li .reg_icon2 {height:95px;  background:url(./images/reg_icon2.gif) no-repeat center 0;  }
+#cms_member_article .line { border-right:1px solid #e4e4e4; }
+#cms_member_article .terms { margin:25px 0;}
+#cms_member_article .termsBox { height:150px; padding:20px; margin:15px 0;border:1px solid #e2e2e2; background:#f9f9f9;overflow-x:hidden;overflow-y:scroll;color:#666;line-height:20px }
+#cms_member_article .termsBtn { text-align:center; padding:30px; border-top:1px solid #a0a0a0;}
+#cms_member_article .agreeChk {text-align:right;}
+#cms_member_article .agreeChk .txt {padding-right:10px;}
+#cms_member_article .regStep {margin:10px 0 40px;height:75px; }
+#cms_member_article .regStep ol {overflow:hidden;}
+#cms_member_article .regStep ol li {float:left; overflow:hidden; width:183px; height:75px; margin-left:0px; text-align:center;}
+#cms_member_article .regStep ol li.step01 {background:url(./images/reg_step_01.png) no-repeat 0 0;}
+#cms_member_article .regStep ol li.step02 {background:url(./images/reg_step_02.png) no-repeat 0 0;}
+#cms_member_article .regStep ol li.step03 {background:url(./images/reg_step_03.png) no-repeat 0 0;}
+#cms_member_article .regStep ol li.step04 {margin-left:0px; background:url(./images/reg_step_04.png) no-repeat 0 0;}
+#cms_member_article .regStep ol li .num {position:absolute; top:-99999px; left:-99999px;height:0; font-size:0; line-height:0;}
+#cms_member_article .regStep ol li strong {display:block; margin-top:40px; font-size:15px; color:#666666; line-height:20px;}
+#cms_member_article .regStep ol li.on {background-position:0 -75px;}
+#cms_member_article .regStep ol li.on strong {color:#ffffff;}
+#cms_member_article .regStep ol li.pstep strong {line-height:15px; margin:35px 60px 0 0; font-size:13px; text-align:right;}
+
+#cms_member_article .tbWriteA {width:100%; border-top:2px solid #005AAB; border-bottom:1px solid #6b6b6b; border-collapse:collapse; border-spacing:0; table-layout:fixed;}
+#cms_member_article .tbWriteA tbody tr th {height:27px; padding:10px 0; font-weight:bold; color:#3e3e3e; text-align:center; vertical-align:middle; border-top:1px solid #e4e4e4; background:#fbfbfb;}
+#cms_member_article .tbWriteA tbody tr td {height:27px; padding:10px 0; line-height:18px; vertical-align:middle; border-top:1px solid #e4e4e4; background:#fbfbfb;}
+#cms_member_article .tbWriteA tbody tr:first-child th, .tbWriteA tbody tr:first-child td {border-top:0;}
+#cms_member_article .tbWriteA tbody tr td .chkList {overflow:hidden; margin:-7px 0 10px;}
+#cms_member_article .tbWriteA tbody tr td .chkList li {float:left; width:152px; margin-top:12px;}
+#cms_member_article .tbWriteA tbody tr td .chkList li.long {width:304px;}
+#cms_member_article .tbWriteA tbody tr td .chkList li label input {margin-right:1px;}
+#cms_member_article .tbWriteA tbody tr td .chkList li label span {color:#006dba;}
+#cms_member_article .tbWriteA tbody tr td ul li{margin: 5px 0;}
+#cms_member_article .tbWriteA tbody tr th .required:before{color: #f15a38; content:'* ';}
+#cms_member_article .tbWriteA input[type="text"],#cms_member_article .tbWriteA input[type="password"],#cms_member_article .tbWriteA input[type="file"], #cms_member_article .tbWriteA textarea {border:1px solid #dbdbdb; padding:0 5px; height:25px; line-height:25px;}
+#cms_member_article select {border:1px solid #dbdbdb; padding:2px; height:27px;}
+#cms_member_article .tbWriteA .fn_file ul li {margin-bottom:4px;}
+#cms_member_article .tbWriteA .fn_email input[type="text"]
+	, #cms_member_article .tbWriteA .fn_phone input[type="text"]
+	, #cms_member_article .tbWriteA .fn_addr input[type="text"] {margin:auto 4px;}
+#cms_member_article .tbWriteA .fn_phone select {width:80px;}
+#cms_member_article .tbWriteA .fn_email #email1
+	, #cms_member_article .tbWriteA .fn_addr #home_addr1
+	, #cms_member_article .tbWriteA .fn_addr #home_addr3
+	, #cms_member_article .tbWriteA .fn_addr #home_addr4 {margin-left:0px;}
+#cms_member_article .tbWriteA .fn_addr .fn_item_zip
+	, #cms_member_article .tbWriteA .fn_addr .fn_item_addr3 {margin-bottom:4px;}
+#cms_member_article .tbWriteA .fn_phone select {margin-right:4px;}
+
+/* 회원가입완료 */
+#cms_member_article .regConfirm {padding:30px; text-align:center; margin:15px 0;border:1px solid #e2e2e2; background:#f9f9f9;}
+#cms_member_article .regConfirm  p{padding-top:20px;margin-top:20px; border-top:1px solid #e2e2e2;}
+#cms_member_article .regConfirm  p.noline{padding-top:0px;margin-top:0px; border-top:0px;}
+#cms_member_article .regConfirm .login {/*float:left;*/ margin:25px auto; width: 418px;}
+#cms_member_article .regConfirm .login li {margin-top:5px;/*float:left;*/}
+#cms_member_article .regConfirm .login li:first-child {margin-top:0;}
+#cms_member_article .regConfirm .login li label {float:left; width:75px; padding-left:9px; font-size:14px; font-weight:bold; color:#3e3e3e; line-height:32px; background:url(./images/dot.gif) no-repeat 0 center;}
+#cms_member_article .regConfirm .login li .inputTxt {float:left; width:260px; height:32px; line-height:32px;}
+#cms_member_article .regConfirm .btnLogin {float:left; margin-top:15px; margin-left:7px;}
+#cms_member_article .regConfirm .login li .inputTxt2 {border:1px solid #dbdbdb; margin-right:2px; width:330px; height:32px; line-height:32px;}
+#cms_member_article .regConfirm .login li .inputTxt3 {border:1px solid #dbdbdb; margin-right:2px; width:90px; height:32px; line-height:32px;}
+#cms_member_article .regConfirm .login li .select {height:34px;}
+
+/* 회원탈퇴 */
+#cms_member_article .loginWrap .inputBtn{margin-top: 15px;}
+
+/* 버튼 */
+#cms_member_article .btnTypeA {width:100px; height:30px; font-weight:bold; font-size:13px !important; color:#ffffff !important; line-height:30px; text-align:center; text-decoration:none !important; border:0px; background:#005AAB;}
+#cms_member_article input.btnTypeA {width:100px; height:32px; font-weight:bold; font-size:13px !important; color:#ffffff !important; line-height:30px; text-align:center; text-decoration:none !important; border:0px; background:#005AAB;}
+#cms_member_article .btnTypeAL {width:140px; height:40px; font-weight:bold; color:#ffffff !important; line-height:40px; text-align:center; text-decoration:none !important; border:0px; background:#005AAB;}
+#cms_member_article .btnTypeB {width:100px; height:30px; font-weight:bold; font-size:13px;  color:#ffffff !important; line-height:30px; text-align:center; text-decoration:none !important; border:0px; background:#5d5d5d;}
+#cms_member_article .btnTypeC {width:100px; height:30px; font-weight:bold; color:#fff !important; line-height:30px; text-align:center; text-decoration:none !important; border:0px; background:#676767;}
+#cms_member_article .btnTypeF {padding:0 14px 0 15px ; font-size:11px; font-weight:bold; color:#fff !important; line-height:25px; text-decoration:none !important;border:0px; background:#005AAB;}
+#cms_member_article .btnTypeK {width:150px; height:25px;  font-size:11px; font-weight:bold; color:#fff !important; line-height:25px;text-align:center;text-decoration:none !important;border:0px; background:#005AAB;}
+#cms_member_article .btnOrganSearch {cursor:pointer; width:100px; height:30px; font-weight:bold; font-size:13px !important; color:#ffffff !important; line-height:30px; text-align:center; text-decoration:none !important; border:0px; background:#005AAB;}

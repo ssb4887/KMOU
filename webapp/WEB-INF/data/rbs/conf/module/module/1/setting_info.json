@@ -1,0 +1,43 @@
+{
+	"fn_setting_info": {
+		"list_title":"기능 목록"
+		, "input_title":"기능 등록"
+		, "deleteList_title":"기능 삭제목록"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+		, "page_name":"page"
+		, "idx_name":"mfIdx"
+		, "idx_column":"FN_IDX"
+	}, "set_setting_info": {
+		"list_title":"기능 설정"
+		, "input_title":"기능 설정"
+	}, "design_setting_info": {
+		"list_title":"디자인 템플릿"
+		, "input_title":"디자인 템플릿"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+		, "page_name":"dpage"
+		, "idx_name":"dg"
+		, "idx_column":"FN_IDX"
+	}, "item_setting_info": {
+		"list_title":"기능 항목 목록"
+		, "input_title":"기능 항목 등록"
+		, "searchInput_title":"기능 검색항목 등록"
+		, "deleteList_title":"기능 항목 삭제목록"
+		, "use_paging":0
+		, "idx_name":"itemId"
+		, "idx_column":"ITEM_ID"
+	}, "auth_setting_info": {
+		"list_title":"권한 목록"
+		, "input_title":"권한 등록"
+		, "deleteList_title":"권한 삭제목록"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+		, "page_name":"page"
+		, "idx_name":"authIdx"
+		, "idx_column":"AUTH_IDX"
+	}
+}

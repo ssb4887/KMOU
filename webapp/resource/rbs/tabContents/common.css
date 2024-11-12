@@ -1,0 +1,36 @@
+@charset "utf-8";
+@import url('../../../include/js/editor/css/smart_editor2_out.css');
+
+#cms_tabContents_article .inputTxt {height:25px; line-height:25px; padding:0 5px; border:1px solid #dbdbdb;width:150px;}
+#cms_tabContents_article input[type="file"].inputTxt {border:0px;}
+#cms_tabContents_article input[type="file"]::-ms-value {border:1px solid #dbdbdb;}
+#cms_tabContents_article input[type="file"]::-ms-browse{border:1px solid #dbdbdb;}
+#cms_tabContents_article textarea.inputTxt {width:500px;height:170px;}
+#cms_tabContents_article .wFull {width:500px;}
+
+/* multi file */
+#cms_tabContents_article ul.multiFileUL input[type="file"].inputTxt {width:500px;}
+#cms_tabContents_article ul.multiFileUL input.altTxt {width:405px;}
+#cms_tabContents_article ul.multiFileUL select {height:80px; width:500px;}
+#cms_tabContents_article ul.multiFileUL .fn_text_label {width:72px;}
+#cms_tabContents_article ul.multiFileUL ul.fn_btn_ud {display:inline-block; vertical-align: top;}
+#cms_tabContents_article ul.multiFileUL ul.fn_btn_ud .fn_btn_up {width:50px; font-size:11px; font-weight:bold; color:#fff !important; line-height:26px; text-decoration:none !important; background:url(../images/button/bg_type_f.gif) repeat-x 0 0;}
+#cms_tabContents_article ul.multiFileUL ul.fn_btn_ud .fn_btn_down {width:50px; font-size:11px; font-weight:bold; color:#fff !important; line-height:26px; text-decoration:none !important; background:url(../images/button/bg_type_f.gif) repeat-x 0 0;}
+
+/* single file */
+#cms_tabContents_article ul.singleFileUL input[type="file"].inputTxt {width:510px;}
+#cms_tabContents_article ul.singleFileUL input.altTxt {width:415px;}
+#cms_tabContents_article ul.singleFileUL select {height:80px; width:500px;}
+#cms_tabContents_article ul.singleFileUL .fn_text_label {width:72px;}
+
+.tbBViewA {width:100%; border-top:2px solid #005AAB; border-bottom:1px solid #6b6b6b; border-collapse:collapse; border-spacing:0; table-layout:fixed; word-break:break-all;}
+
+
+
+/* 탭콘텐츠 탭 */
+#fn_formTab li {display:none;}
+#c_w_h_tab_con {display:none;}
+#c_w_h_tab {clear: both; width: auto; margin-left: 0px; display:none;}
+#c_w_h_tab li {float: left; border-top: 1px solid #cacaca; border-right: 1px solid #cacaca; width: 84.4px; background: #e0d9d9;}
+#c_w_h_tab li a {display: block; text-align: center; padding: 8px 10px 3px 10px; text-decoration: none; border-bottom: 1px solid #cacaca;}
+

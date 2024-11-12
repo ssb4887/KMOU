@@ -1,0 +1,10 @@
+{
+	"setting_info":{
+		"page_name":"page"
+		,"idx_name":"brdIdx"
+		,"idx_column":"BRD_IDX"
+		,"dset_list_block":10
+		,"dset_list_count":20
+		,"use_paging":1
+	}
+}

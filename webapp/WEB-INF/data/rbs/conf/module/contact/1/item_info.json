@@ -1,0 +1,79 @@
+{
+	"site_item_info":{
+		"list_search":{
+			"key":{
+				"items":{
+					"statsType":{
+						"item_name":"검색옵션"
+						, "format_type":0
+						, "object_type":2
+						, "master_code":"STATS_STYPE"
+						, "default_value":"3"
+					}, "statsDate":{
+						"item_name":"검색일자"
+						, "format_type":22
+						, "object_type":0
+						, "start_year":2016
+					}
+				}
+			}, "searchForm_order":[
+				"statsType"
+				, "statsDate"
+			], "search_order":[
+				"statsType"
+				, "statsDate"
+			]
+		}
+	}, 
+	"sitepage_item_info":{
+		"list_search":{
+			"key":{
+				"items":{
+					"statsType":{
+						"item_name":"검색옵션"
+						, "format_type":0
+						, "object_type":2
+						, "master_code":"STATS_SPTYPE"
+						, "default_value":"2"
+					}, "statsDate":{
+						"item_name":"검색일자"
+						, "format_type":20
+						, "object_type":0
+						, "start_year":2016
+					}
+				}
+			}, "searchForm_order":[
+				"statsType"
+				, "statsDate"
+			], "search_order":[
+				"statsType"
+				, "statsDate"
+			]
+		}
+	}, 
+	"menu_item_info":{
+		"list_search":{
+			"key":{
+				"items":{
+					"statsType":{
+						"item_name":"검색옵션"
+						, "format_type":0
+						, "object_type":5
+						, "master_code":"STATS_MTYPE"
+						, "default_value":"3"
+					}, "statsDate":{
+						"item_name":"검색일자"
+						, "format_type":5
+						, "object_type":0
+					}
+				}
+			}, "searchForm_order":[
+				"statsType"
+				, "statsDate"
+			], "search_order":[
+				"statsType"
+				, "statsDate"
+			]
+		}
+	}
+}

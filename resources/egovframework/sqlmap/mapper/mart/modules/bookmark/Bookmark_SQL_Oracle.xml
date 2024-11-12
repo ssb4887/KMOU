@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mart.modules.bookmark.bookmarkOraMapper">
+	<sql id="BOOKMARK_TABLE_NAME">UNI_PERS_BOOKMARK</sql>
+	
+		
+	
+	<!-- 교과목 상세정보-->
+	<select id="getSbjtView" parameterType="String" resultType="dataMap">
+		 SELECT		base.YEAR
+						, base.SMT 
+						, (SELECT UF_GET_COMMON_CODESET(base.SMT) FROM dual) AS SMT_NM
+						, base.DEPT_CD
+						, (SELECT UF_GET_ORG_CODESET('B', base.DEPT_CD) FROM dual) AS COLG_NM
+						, (SELECT UF_GET_ORG_CODESET('D', base.DEPT_CD) FROM dual) AS DEPT_NM
+						, base.GRADE
+			 			, base.SUBJECT_CD
+						, (SELECT UF_GET_SUBJECT_CODESET(base.SUBJECT_CD) FROM dual) AS SUBJECT_NM
+						, (SELECT SUBJECT_ENM FROM SUF010TB WHERE SUBJECT_CD = base.SUBJECT_CD) AS SUBJECT_ENM
+						, base.SINBUN_CODE
+						, (SELECT UF_GET_COMMON_CODESET(base.SINBUN_CODE) FROM dual) AS SINBUN_NM
+						, base.COMDIV_CODE
+						, (SELECT UF_GET_COMMON_CODESET(base.COMDIV_CODE) FROM dual) AS COMDIV_NM
+						, base.MNRCOM_DIV_CODE
+						, (SELECT UF_GET_COMMON_CODESET(base.MNRCOM_DIV_CODE) FROM dual) AS MNRCOM_DIV_CODE
+						, base.CDT_NUM
+						, base.WTIME_NUM
+						, base.PTIME_NUM
+						, base.SUBJ_DESC
+						, ( SELECT
+							    LISTAGG(ABI_NM, ',') WITHIN GROUP (ORDER BY SUF335.YEAR DESC, SUF335.SMT, SUF335.SUBJECT_CD, SUF335.DIVCLS, SUF335.DEPT_CD, SUF335.ABI_GB_CD, ABI_NM) AS MAIN_ABI_NM
+							FROM SUF.SUF330TB SUF330,
+							    (SELECT *
+							     FROM (
+							         SELECT YEAR,
+							                SMT,
+							                SUBJECT_CD,
+							                DIVCLS,
+							                DEPT_CD,
+							                MAIN_GB_CODE,
+							                MAX(LINK_RT) AS LINK_RT,
+							                ABI_GB_CD,
+							                ROW_NUMBER() OVER (PARTITION BY MAIN_GB_CODE, DEPT_CD, DIVCLS, SUBJECT_CD, SMT, YEAR ORDER BY ABI_GB_CD) AS RN
+							         FROM SUF.SUF335TB BASE
+							         WHERE YEAR = #{year}
+							           AND SMT = #{smt}
+							           AND DEPT_CD = #{deptCd}
+							           AND SUBJECT_CD = #{subjectCd}
+							         GROUP BY MAIN_GB_CODE, DEPT_CD, DIVCLS, SUBJECT_CD, SMT, YEAR, ABI_GB_CD
+							     ) WHERE RN = 1
+							    ) SUF335
+							WHERE SUF330.YEAR = SUF335.YEAR
+							  AND SUF330.SMT = SUF335.SMT
+							  AND SUF330.DEPT_CD = SUF335.DEPT_CD
+							  AND SUF330.ABI_GB_CD = SUF335.ABI_GB_CD
+						) AS MAIN_ABI_NM
+			FROM 		SUF100TB base
+			WHERE 		base.YEAR = #{year}
+						AND base.SMT = #{smt}
+						AND base.SUBJECT_CD = #{subjectCd}
+						AND base.DEPT_CD = #{deptCd}
+						AND base.ABO_YN = 'N'
+						AND ROWNUM &lt; 2
+			ORDER BY 	base.SMT
+						, base.DEPT_CD
+						, base.GRADE 
+						, base.SUBJECT_CD
+						, base.SINBUN_CODE
+						, base.COMDIV_CODE
+	</select>
+	
+	<!-- 강좌 상세정보-->
+	<select id="getLecView" parameterType="String" resultType="dataMap">
+		 SELECT  UF_SUF_SUBJECT_NM(A.SUBJECT_CD,1) AS SUBJECT_NM,
+                          UF_SUF_SUBJECT_NM(A.SUBJECT_CD,2)  AS SUBJECT_ENM,
+                          A.SUBJECT_CD,
+                          A.YEAR,
+                          A.SMT,
+                          A.SISU,
+                          A.EMP_NO,
+                          A.DIVCLS,
+                          UF_APS_EMPNO_NM(A.EMP_NO) AS EMP_NM,
+                          A.STUDENT_CNT,
+                          B.RSTR_MCNT,
+                          B.WTIME_NUM,
+                          B.PTIME_NUM,
+                          B.GRADE,
+                          B.COMDIV_CODE,
+                          C.DEPT_NM,
+                          C.DEPT_CD,
+                          C.COLG_NM,
+                          C.CATEGORY,
+                          UF_GET_SYS020TB(B.SMT)                              AS SMT_NAME,
+                          UF_GET_SYS020TB(B.COMDIV_CODE)                      AS COMDIV_CODE_NAME,
+                          NVL(UF_SUG_MATRIX2(A.YEAR, A.SMT, #{subjectCd}, A.DIVCLS),' ') AS ROOM_TIME
+                 FROM     SUF.SUF110TB A
+	                          JOIN 
+	                          	SUF.SUF100TB B ON A.SUBJECT_CD = B.SUBJECT_CD AND A.SMT = B.SMT AND A.YEAR = B.YEAR AND A.DIVCLS = B.DIVCLS
+						      JOIN 
+						      	SCO.V_AI_ORG C ON B.DEPT_CD = C.DEPT_CD
+                 WHERE    A.SUBJECT_CD       = #{subjectCd}
+                 AND      A.SMT  	         = #{smt}
+                 AND      A.YEAR             = #{year}
+                 AND      B.DEPT_CD          = #{deptCd}
+                 AND      A.DIVCLS           = #{divcls}
+                 AND      A.EMP_NO           = #{empNo}
+                 ORDER BY A.YEAR DESC
+	</select>
+	
+	<resultMap id="bookResultMap" type="dataMap">
+	    <result property="EMP_NO" column="EMP_NO"/>
+	    <result property="EMP_NM" column="EMP_NM"/>
+	    <result property="EMP_CNM" column="EMP_CNM"/>
+	    <result property="EMP_ENM" column="EMP_ENM"/>
+	    <result property="DEPT_CD" column="DEPT_CD"/>
+	    <result property="DEPT_NM" column="DEPT_NM"/>
+	    <result property="COLG_CD" column="COLG_CD"/>
+	    <result property="COLG_NM" column="COLG_NM"/>
+	    <result property="JOBG_CD" column="JOBG_CD"/>
+	    <result property="JOBG_NM" column="JOBG_NM"/>
+	    <result property="TEA_MAJOR" column="TEA_MAJOR"/>
+	    <result property="TEA_LOCATION" column="TEA_LOCATION"/>
+	    <result property="TEA_LABRUM" column="TEA_LABRUM"/>
+	    <result property="TEA_LABRUM_INTRO" column="TEA_LABRUM_INTRO" jdbcType="CLOB" javaType="java.lang.String"/>
+	    <result property="TEA_TLPHON" column="TEA_TLPHON"/>
+	    <result property="TEA_EMAIL" column="TEA_EMAIL"/>
+	    <result property="TEA_MAIN" column="TEA_MAIN" jdbcType="CLOB" javaType="java.lang.String"/>
+	    <result property="TEA_CAREER" column="TEA_CAREER" jdbcType="CLOB" javaType="java.lang.String"/>
+	    <result property="TEA_RSRCH_REALM" column="TEA_RSRCH_REALM" jdbcType="CLOB" javaType="java.lang.String"/>
+	    <result property="TEA_FILE_PATH" column="TEA_FILE_PATH"/>
+	    <result property="RTI_FL" column="RTI_FL"/>
+	</resultMap>
+	
+	<!-- 교수 상세정보-->
+	<select id="getProfView" parameterType="java.util.HashMap" resultMap="bookResultMap">
+		SELECT EMP_NO
+		     , EMP_NM
+		     , TRIM(EMP_CNM)                        AS EMP_CNM
+		     , TRIM(EMP_ENM)                        AS EMP_ENM
+		     , NOW_DEPT_CD                          AS DEPT_CD
+		     , UF_GET_ORG_CODESET('D', NOW_DEPT_CD) AS DEPT_NM
+		     , (SELECT COLG_CD
+		        FROM SCO.V_AI_ORG ORG
+		        WHERE ORG.DEPT_CD = NOW_DEPT_CD)    AS COLG_CD
+		     , UF_GET_ORG_CODESET('B', NOW_DEPT_CD) AS COLG_NM
+		     , NOW_JOBG_CD                          AS JOBG_CD
+		     , (SELECT JOBG_NM
+		        FROM APS.APS920TB
+		        WHERE JOBG_CD = NOW_JOBG_CD)        AS JOBG_NM
+		     , TEA_MAJOR
+		     , TEA_LOCATION
+		     , TEA_LABRUM
+		     , TEA_LABRUM_INTRO
+		     , TEA_TLPHON
+		     , TEA_EMAIL
+		     , TEA_MAIN
+		     , TEA_CAREER
+		     , TEA_RSRCH_REALM
+		     , TEA_FILE_PATH
+		     , RTI_FL
+		FROM APS.APS010TB APS010
+		         LEFT JOIN (SELECT V_TEA_EMPNO                                                           AS TEA_EMPNO
+		                         , TRIM(V_TEA_NAME)                                                      AS TEA_NAME
+		                         , REGEXP_REPLACE(V_TEA_MAJOR, '^[[:space:]]+|[[:space:]]+$', '')        AS TEA_MAJOR
+		                         , REGEXP_REPLACE(V_TEA_LOCATION, '^[[:space:]]+|[[:space:]]+$', '')     AS TEA_LOCATION
+		                         , REGEXP_REPLACE(V_TEA_TLPHON, '^[[:space:]]+|[[:space:]]+$', '')       AS TEA_TLPHON
+		                         , REGEXP_REPLACE(V_TEA_EMAIL, '^[[:space:]]+|[[:space:]]+$', '')        AS TEA_EMAIL
+		                         , REGEXP_REPLACE(V_TEA_LABRUM, '^[[:space:]]+|[[:space:]]+$', '')       AS TEA_LABRUM
+		                         , REGEXP_REPLACE(V_TEA_LABRUM_INTRO, '^[[:space:]]+|[[:space:]]+$', '') AS TEA_LABRUM_INTRO
+		                         , REGEXP_REPLACE(V_TEA_MAIN, '^[[:space:]]+|[[:space:]]+$', '')         AS TEA_MAIN
+		                         , REGEXP_REPLACE(V_TEA_CAREER, '^[[:space:]]+|[[:space:]]+$', '')       AS TEA_CAREER
+		                         , REGEXP_REPLACE(V_TEA_RSRCH_REALM, '^[[:space:]]+|[[:space:]]+$', '')  AS TEA_RSRCH_REALM
+		                         , REGEXP_REPLACE(V_TEA_FAX, '^[[:space:]]+|[[:space:]]+$', '')          AS TEA_FAX
+		                         , V_TEA_FILE_PATH                                                       AS TEA_FILE_PATH
+		                         , COALESCE(V_TEA_RGSDE, TO_DATE('1970-01-01', 'YYYY-MM-DD'))            AS TEA_RGSDE
+		                         , COALESCE(V_TEA_MDSDE, TO_DATE('1970-01-01', 'YYYY-MM-DD'))            AS TEA_MDSDE
+		                    FROM (SELECT ROW_NUMBER() OVER (PARTITION BY V_TEA_EMPNO ORDER BY V_TEA_MDSDE DESC) AS ROW_NUM,
+		                                 PROFESSOR.*
+		                          FROM KFORU2018.V_TAD_TE_TEA_DEPT PROFESSOR
+		                          WHERE V_TEA_EMPNO IS NOT NULL) SUB
+		                    WHERE SUB.ROW_NUM = 1) KFORU ON TEA_EMPNO = EMP_NO
+		WHERE 
+		    EMP_GB_CODE NOT IN ('PS011', 'PS016')
+		  AND NOW_JOBG_CD NOT IN ('12010101', '12060101', '12060201', '12070101', '12070201', '12070301')
+		  AND APS010.EMP_NO = #{empNo}
+	</select>
+
+
+
+	
+</mapper>

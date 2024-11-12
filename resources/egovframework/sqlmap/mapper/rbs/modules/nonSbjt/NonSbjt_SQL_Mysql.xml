@@ -1,0 +1,691 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="rbs.modules.nonSbjt.nonSbjtMapper">
+	<!-- 비교과 리스트 최초 조회 -->
+	<select id="getInitNonSbjtList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT
+			CAST(target.idx AS CHAR(5)) AS IDX
+			, CAST(base.tidx AS CHAR(5)) AS TIDX
+			, REPLACE(target.title, '"', "'") AS PROGRAM_TITLE
+			, target.cover AS COVER
+			, target.updated_date AS UPDATED_DATE			
+			, target.abstract AS ABSTRACT
+			, target.iidx AS IIDX
+			, (select title from im_coursemos_institution_table where idx = target.iidx) AS IIDX_NM
+			, target.didx AS DIDX
+			, (select title from im_coursemos_department_table where idx = target.didx) AS DIDX_NM
+            , CASE target.signin_grade WHEN ('' OR '*') THEN '전체' ELSE target.signin_grade END  as SIGNIN_GRADE
+            , REPLACE(REPLACE(REPLACE(target.signin_gender,'MAIL','남자'),'FEMAIL','여자'),'*','전체 성별') as SIGNIN_GENDER
+			, CAST(base.count AS CHAR(5)) COUNT
+			, CAST(base.time AS CHAR(5)) TIME
+			, DATE_FORMAT(FROM_UNIXTIME(base.start_date), '%Y-%m-%d %H:%i') START_DATE
+            , CASE DAYOFWEEK(FROM_UNIXTIME(base.start_date))
+                WHEN 1 THEN '일'
+                WHEN 2 THEN '월'
+                WHEN 3 THEN '화'
+                WHEN 4 THEN '수'
+                WHEN 5 THEN '목'
+                WHEN 6 THEN '금'
+                WHEN 7 THEN '토' END AS START_DAY
+			, DATE_FORMAT(FROM_UNIXTIME(base.end_date), '%Y-%m-%d %H:%i') END_DATE
+            , CASE DAYOFWEEK(FROM_UNIXTIME(base.end_date))
+                WHEN 1 THEN '일'
+                WHEN 2 THEN '월'
+                WHEN 3 THEN '화'
+                WHEN 4 THEN '수'
+                WHEN 5 THEN '목'
+                WHEN 6 THEN '금'
+                WHEN 7 THEN '토' END AS END_DAY
+			, DATE_FORMAT(FROM_UNIXTIME(base.signin_start_date), '%Y-%m-%d') SIGNIN_START_DATE
+            , CASE DAYOFWEEK(FROM_UNIXTIME(base.signin_start_date))
+                WHEN 1 THEN '일'
+                WHEN 2 THEN '월'
+                WHEN 3 THEN '화'
+                WHEN 4 THEN '수'
+                WHEN 5 THEN '목'
+                WHEN 6 THEN '금'
+                WHEN 7 THEN '토' END AS SIGNIN_START_DAY
+			, DATE_FORMAT(FROM_UNIXTIME(base.signin_end_date), '%Y-%m-%d') SIGNIN_END_DATE
+            , CASE DAYOFWEEK(FROM_UNIXTIME(base.signin_end_date))
+                WHEN 1 THEN '일'
+                WHEN 2 THEN '월'
+                WHEN 3 THEN '화'
+                WHEN 4 THEN '수'
+                WHEN 5 THEN '목'
+                WHEN 6 THEN '금'
+                WHEN 7 THEN '토' END AS SIGNIN_END_DAY
+			, CASE WHEN DATEDIFF(FROM_UNIXTIME(base.signin_end_date), SYSDATE()) &lt; 0 THEN '종료'
+			   WHEN DATEDIFF(FROM_UNIXTIME(base.signin_start_date), SYSDATE()) &lt;= 0 AND DATEDIFF(FROM_UNIXTIME(base.signin_end_date), SYSDATE()) &gt;= 0 THEN '신청/운영 중'
+			   ELSE CONCAT('D-',DATEDIFF(FROM_UNIXTIME(base.signin_start_date), SYSDATE())) END AS D_DAY
+			, CAST(base.signin_limit AS CHAR(5)) SIGNIN_LIMIT
+			, CAST(base.participant AS CHAR(5)) PARTICIPANT
+			, target.signin_type AS SIGNIN_TYPE
+			, CASE target.signin_type WHEN 'INDIVIDUAL' THEN '개인' ELSE '팀' END AS SIGNIN_TYPE_NM
+			, FLOOR(base.point) AS POINT
+			, target.signin_status AS SIGNIN_STATUS
+			, REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(target.signin_status,'*','전체'),'ENROLLEE','재학생'),'ABSENCE','휴학생'),'COMPLETE','수료생'),'GRADUATE','졸업생') AS SIGNIN_STATUS_NM
+			, target.signin_target AS SIGNIN_TARGET
+			, REPLACE(REPLACE(REPLACE(REPLACE(signin_target,'EMPLOYEE','교직원'),'PROFESSOR','교수'),'GRADUATE_ENROLLEE','대학원생'),'GRADUATE','졸업생')  AS SIGNIN_TARGET_NM			
+		FROM 
+			coursemos.im_eco_program_table target
+		  	, im_eco_program_topic_table base
+		<if test="startNum != null">
+		LIMIT #{startNum}, #{endNum}
+		</if>
+	</select>
+	
+	<!-- 비교과 총 건수 -->
+	<select id="getInitNonSbjtListCount" parameterType="java.util.HashMap" resultType="dataMap">
+	    SELECT COUNT(*) AS TOTAL_COUNT FROM (
+	        <if test='RECOMMENDED_KEYS != null and RECOMMENDED_KEYS.size() > 0 and ORDER_BY.equals("RECOMMEND")'>
+	            SELECT target.idx, base.tidx
+	            FROM im_eco_program_table target, im_eco_program_topic_table base
+	            WHERE target.idx = base.pidx
+	            AND CONCAT(target.idx,'_',base.tidx) IN
+	            <foreach collection="RECOMMENDED_KEYS" item="key" separator="," open="(" close=")">
+	                #{key}
+	            </foreach>
+	
+	            UNION
+	        </if>
+	
+	        SELECT target.idx, base.tidx
+	        FROM im_eco_program_table target, im_eco_program_topic_table base
+	        WHERE 1=1
+	        AND target.idx = base.pidx
+	        <if test="MAIN_CATEGORY != null and MAIN_CATEGORY != ''">
+	        AND category1 = #{MAIN_CATEGORY}
+	        </if>
+	        <if test="SUB_CATEGORY != null and SUB_CATEGORY != ''">
+	        AND category2 = #{SUB_CATEGORY}
+	        </if>
+	        <if test="SIGNIN_END_DATE != null and SIGNIN_END_DATE != '' and SIGNIN_END_DATE1 != null and SIGNIN_END_DATE1 != ''">
+	        AND DATE_FORMAT(FROM_UNIXTIME(base.signin_end_date), '%Y%m%d') between #{SIGNIN_END_DATE} and #{SIGNIN_END_DATE1}
+	        </if>
+	        <if test="START_DATE != null and START_DATE != '' and START_DATE1 != null and START_DATE1 != ''">
+	        AND DATE_FORMAT(FROM_UNIXTIME(base.start_date), '%Y%m%d') between #{START_DATE} and #{START_DATE1}
+	        </if>
+	        <if test="PROGRAM_TYPE != null and PROGRAM_TYPE != ''">
+	        AND type = #{PROGRAM_TYPE}
+	        </if>
+	        <if test="METHOD != null and METHOD != ''">
+	        AND method = #{METHOD}
+	        </if>
+	    ) AS combined_results
+	</select>
+	
+	
+	<!-- 비교과(DB쿼리) - 빈값검색 -->
+	<select id="getNonSbjtListEmptySearchY" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+		SELECT *,
+		   CASE
+		        WHEN LEFT(raw_signin_end_date, 8) >= DATE_FORMAT(CURDATE(), '%Y%m%d') THEN
+		            DATEDIFF(STR_TO_DATE(LEFT(raw_signin_end_date, 8), '%Y%m%d'), CURDATE())
+		        ELSE
+		            DATEDIFF(CURDATE(), STR_TO_DATE(LEFT(raw_signin_end_date, 8), '%Y%m%d')) + 10000000
+		    END AS signin_end_rank,
+		   CAST(count AS DECIMAL) / NULLIF(CAST(signin_limit AS DECIMAL), 0) AS participant_rate_rank,
+		   DATE_FORMAT(FROM_UNIXTIME(reg_date), '%Y-%m-%d %H:%i') AS reg_date_rank
+		FROM (
+		    <if test='RECOMMENDED_KEYS != null and RECOMMENDED_KEYS.size() > 0 and ORDER_BY.equals("RECOMMEND")'>
+		    (SELECT
+		        CAST(target.idx AS CHAR(5)) AS IDX,
+		        CAST(base.tidx AS CHAR(5)) AS TIDX,
+		        REPLACE(target.title, '"', "'") AS TITLE,
+		        target.cover AS COVER,
+		        target.updated_date AS UPDATED_DATE,            
+		        target.abstract AS ABSTRACT,
+		        target.iidx AS IIDX,
+		        (select title from im_coursemos_institution_table where idx = target.iidx) AS COLG_NM,
+		        target.didx AS DIDX,
+		        (select title from im_coursemos_department_table where idx = target.didx) AS DEPT_NM,
+		        CASE target.signin_grade WHEN ('' OR '*') THEN '전체' ELSE target.signin_grade END as SIGNIN_GRADE,
+		        REPLACE(REPLACE(REPLACE(target.signin_gender,'MAIL','남자'),'FEMAIL','여자'),'*','전체 성별') as SIGNIN_GENDER,
+		        CAST(base.count AS CHAR(5)) COUNT,
+		        CAST(base.time AS CHAR(5)) TIME,
+		        DATE_FORMAT(FROM_UNIXTIME(base.start_date), '%Y-%m-%d %H:%i') START_DATE,
+		        CASE DAYOFWEEK(FROM_UNIXTIME(base.start_date))
+		            WHEN 1 THEN '일' WHEN 2 THEN '월' WHEN 3 THEN '화' WHEN 4 THEN '수'
+		            WHEN 5 THEN '목' WHEN 6 THEN '금' WHEN 7 THEN '토' END AS START_DAY,
+		        DATE_FORMAT(FROM_UNIXTIME(base.end_date), '%Y-%m-%d %H:%i') END_DATE,
+		        CASE DAYOFWEEK(FROM_UNIXTIME(base.end_date))
+		            WHEN 1 THEN '일' WHEN 2 THEN '월' WHEN 3 THEN '화' WHEN 4 THEN '수'
+		            WHEN 5 THEN '목' WHEN 6 THEN '금' WHEN 7 THEN '토' END AS END_DAY,
+		        DATE_FORMAT(FROM_UNIXTIME(base.signin_start_date), '%Y-%m-%d') SIGNIN_START_DATE,
+		        CASE DAYOFWEEK(FROM_UNIXTIME(base.signin_start_date))
+		            WHEN 1 THEN '일' WHEN 2 THEN '월' WHEN 3 THEN '화' WHEN 4 THEN '수'
+		            WHEN 5 THEN '목' WHEN 6 THEN '금' WHEN 7 THEN '토' END AS SIGNIN_START_DAY,
+		        DATE_FORMAT(FROM_UNIXTIME(base.signin_end_date), '%Y-%m-%d') SIGNIN_END_DATE,
+		        CASE DAYOFWEEK(FROM_UNIXTIME(base.signin_end_date))
+		            WHEN 1 THEN '일' WHEN 2 THEN '월' WHEN 3 THEN '화' WHEN 4 THEN '수'
+		            WHEN 5 THEN '목' WHEN 6 THEN '금' WHEN 7 THEN '토' END AS SIGNIN_END_DAY,
+		        DATE_FORMAT(FROM_UNIXTIME(base.signin_end_date), '%Y%m%d%H%i%s')   AS RAW_SIGNIN_END_DATE,
+		        CASE 
+		            WHEN DATEDIFF(FROM_UNIXTIME(base.signin_end_date), SYSDATE()) &lt; 0 THEN '종료'
+		            WHEN DATEDIFF(FROM_UNIXTIME(base.signin_start_date), SYSDATE()) &gt;= 0 
+		                AND DATEDIFF(FROM_UNIXTIME(base.signin_end_date), SYSDATE()) &lt;= 0 THEN '신청/운영 중'
+		            ELSE CONCAT('D-',DATEDIFF(FROM_UNIXTIME(base.signin_start_date), SYSDATE())) 
+		        END AS D_DAY,
+		        CAST(base.signin_limit AS CHAR(5)) SIGNIN_LIMIT,
+		        CAST(base.participant AS CHAR(5)) PARTICIPANT,
+		        target.signin_type AS SIGNIN_TYPE,
+		        CASE target.signin_type WHEN 'INDIVIDUAL' THEN '개인' ELSE '팀' END AS SIGNIN_TYPE_NM,
+		        FLOOR(base.point) AS POINT,
+		        target.signin_status AS SIGNIN_STATUS,
+		        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(target.signin_status,'*','전체'),'ENROLLEE','재학생'),'ABSENCE','휴학생'),'COMPLETE','수료생'),'GRADUATE','졸업생') AS SIGNIN_STATUS_NM,
+		        target.signin_target AS SIGNIN_TARGET,
+		        REPLACE(REPLACE(REPLACE(REPLACE(signin_target,'EMPLOYEE','교직원'),'PROFESSOR','교수'),'GRADUATE_ENROLLEE','대학원생'),'GRADUATE','졸업생') AS SIGNIN_TARGET_NM,
+		        'Y' AS RECOMMENDED,
+		        target.reg_date AS reg_date
+		    FROM 
+		        coursemos.im_eco_program_table target,
+		        im_eco_program_topic_table base,
+		        (
+		            <foreach collection="RECOMMENDED_KEYS" item="idx" index="index" separator="UNION ALL">
+		                SELECT #{idx} as idx, #{RECOMMENDED_RANKS[${index}]} as rank
+		            </foreach>
+		        ) recommended_key
+		    WHERE target.idx = base.pidx
+		    AND CONCAT(target.idx,'_',base.tidx) = recommended_key.idx
+		    ORDER BY recommended_key.rank)
+		
+		    UNION ALL
+		    </if>
+		
+		    (SELECT
+		        CAST(target.idx AS CHAR(5)) AS IDX,
+		        CAST(base.tidx AS CHAR(5)) AS TIDX,
+		        REPLACE(target.title, '"', "'") AS TITLE,
+		        target.cover AS COVER,
+		        target.updated_date AS UPDATED_DATE,            
+		        target.abstract AS ABSTRACT,
+		        target.iidx AS IIDX,
+		        (select title from im_coursemos_institution_table where idx = target.iidx) AS COLG_NM,
+		        target.didx AS DIDX,
+		        (select title from im_coursemos_department_table where idx = target.didx) AS DEPT_NM,
+		        CASE target.signin_grade WHEN ('' OR '*') THEN '전체' ELSE target.signin_grade END as SIGNIN_GRADE,
+		        REPLACE(REPLACE(REPLACE(target.signin_gender,'MAIL','남자'),'FEMAIL','여자'),'*','전체 성별') as SIGNIN_GENDER,
+		        CAST(base.count AS CHAR(5)) COUNT,
+		        CAST(base.time AS CHAR(5)) TIME,
+		        DATE_FORMAT(FROM_UNIXTIME(base.start_date), '%Y-%m-%d %H:%i') START_DATE,
+		        CASE DAYOFWEEK(FROM_UNIXTIME(base.start_date))
+		            WHEN 1 THEN '일' WHEN 2 THEN '월' WHEN 3 THEN '화' WHEN 4 THEN '수'
+		            WHEN 5 THEN '목' WHEN 6 THEN '금' WHEN 7 THEN '토' END AS START_DAY,
+		        DATE_FORMAT(FROM_UNIXTIME(base.end_date), '%Y-%m-%d %H:%i') END_DATE,
+		        CASE DAYOFWEEK(FROM_UNIXTIME(base.end_date))
+		            WHEN 1 THEN '일' WHEN 2 THEN '월' WHEN 3 THEN '화' WHEN 4 THEN '수'
+		            WHEN 5 THEN '목' WHEN 6 THEN '금' WHEN 7 THEN '토' END AS END_DAY,
+		        DATE_FORMAT(FROM_UNIXTIME(base.signin_start_date), '%Y-%m-%d') SIGNIN_START_DATE,
+		        CASE DAYOFWEEK(FROM_UNIXTIME(base.signin_start_date))
+		            WHEN 1 THEN '일' WHEN 2 THEN '월' WHEN 3 THEN '화' WHEN 4 THEN '수'
+		            WHEN 5 THEN '목' WHEN 6 THEN '금' WHEN 7 THEN '토' END AS SIGNIN_START_DAY,
+		        DATE_FORMAT(FROM_UNIXTIME(base.signin_end_date), '%Y-%m-%d') SIGNIN_END_DATE,
+		        CASE DAYOFWEEK(FROM_UNIXTIME(base.signin_end_date))
+		            WHEN 1 THEN '일' WHEN 2 THEN '월' WHEN 3 THEN '화' WHEN 4 THEN '수'
+		            WHEN 5 THEN '목' WHEN 6 THEN '금' WHEN 7 THEN '토' END AS SIGNIN_END_DAY,
+		        DATE_FORMAT(FROM_UNIXTIME(base.signin_end_date), '%Y%m%d%H%i%s')   AS RAW_SIGNIN_END_DATE,
+		        CASE 
+		            WHEN DATEDIFF(FROM_UNIXTIME(base.signin_end_date), SYSDATE()) &lt; 0 THEN '종료'
+		            WHEN DATEDIFF(FROM_UNIXTIME(base.signin_start_date), SYSDATE()) &gt;= 0 
+		                AND DATEDIFF(FROM_UNIXTIME(base.signin_end_date), SYSDATE()) &lt;= 0 THEN '신청/운영 중'
+		            ELSE CONCAT('D-',DATEDIFF(FROM_UNIXTIME(base.signin_start_date), SYSDATE())) 
+		        END AS D_DAY,
+		        CAST(base.signin_limit AS CHAR(5)) SIGNIN_LIMIT,
+		        CAST(base.participant AS CHAR(5)) PARTICIPANT,
+		        target.signin_type AS SIGNIN_TYPE,
+		        CASE target.signin_type WHEN 'INDIVIDUAL' THEN '개인' ELSE '팀' END AS SIGNIN_TYPE_NM,
+		        FLOOR(base.point) AS POINT,
+		        target.signin_status AS SIGNIN_STATUS,
+		        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(target.signin_status,'*','전체'),'ENROLLEE','재학생'),'ABSENCE','휴학생'),'COMPLETE','수료생'),'GRADUATE','졸업생') AS SIGNIN_STATUS_NM,
+		        target.signin_target AS SIGNIN_TARGET,
+		        REPLACE(REPLACE(REPLACE(REPLACE(signin_target,'EMPLOYEE','교직원'),'PROFESSOR','교수'),'GRADUATE_ENROLLEE','대학원생'),'GRADUATE','졸업생') AS SIGNIN_TARGET_NM,
+		        'N' AS RECOMMENDED,
+		        target.reg_date AS reg_date    
+		    FROM 
+		        coursemos.im_eco_program_table target,
+		        im_eco_program_topic_table base
+		    WHERE 1=1
+		    AND target.idx = base.pidx        
+		    <if test="MAIN_CATEGORY != null and MAIN_CATEGORY != ''">
+		    AND category1 = #{MAIN_CATEGORY}
+		    </if>
+		    <if test="SUB_CATEGORY != null and SUB_CATEGORY != ''">
+		    AND category2 = #{SUB_CATEGORY}
+		    </if>
+		    <if test="SIGNIN_END_DATE != null and SIGNIN_END_DATE != '' and SIGNIN_END_DATE1 != null and SIGNIN_END_DATE1 != ''">
+		    AND DATE_FORMAT(FROM_UNIXTIME(target.signin_end_date), '%Y%m%d') between #{SIGNIN_END_DATE} and #{SIGNIN_END_DATE1}
+		    </if>
+		    <if test="START_DATE != null and START_DATE != '' and START_DATE1 != null and START_DATE1 != ''">
+		    AND DATE_FORMAT(FROM_UNIXTIME(target.start_date), '%Y%m%d') between #{START_DATE} and #{START_DATE1}
+		    </if>
+		    <if test="PROGRAM_TYPE != null and PROGRAM_TYPE != ''">
+		    AND type = #{PROGRAM_TYPE}
+		    </if>
+		    <if test="METHOD != null and METHOD != ''">
+		    AND method = #{METHOD}
+		    </if>
+		    )
+		) AS combined_results
+		WHERE 1=1
+		ORDER BY 
+		RECOMMENDED DESC
+		<choose>
+		    <when test="ORDER_BY == 'SIGNIN_END_RANK' or ORDER_BY == 'RECOMMEND' or ORDER_BY == 'DEFAULT'">    
+		    , signin_end_rank ASC, signin_end_date ASC
+		    </when>
+		    <when test="ORDER_BY == 'PARTICIPANT_RATE_RANK'">
+		    , participant_rate_rank DESC
+		    </when>
+		    <when test="ORDER_BY == 'REG_DATE_RANK'">
+		    , reg_date_rank desc
+		    </when>
+		</choose>
+	<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+			
+	<!-- 비교과(SEARCH API호출) - 키워드검색 -->
+	<select id="getNonSbjtListEmptySearchN" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+		SELECT *,
+		    CASE
+		        WHEN LEFT(signin_end_date, 8) >= DATE_FORMAT(CURDATE(), '%Y%m%d') THEN
+		            DATEDIFF(STR_TO_DATE(LEFT(signin_end_date, 8), '%Y%m%d'), CURDATE())
+		        ELSE
+		            DATEDIFF(CURDATE(), STR_TO_DATE(LEFT(signin_end_date, 8), '%Y%m%d')) + 10000000
+		    END AS signin_end_rank,
+		   CAST(count AS DECIMAL) / NULLIF(CAST(signin_limit AS DECIMAL), 0) AS participant_rate_rank,
+		   DATE_FORMAT(FROM_UNIXTIME(reg_date), '%Y-%m-%d %H:%i') AS reg_date_rank
+		FROM (
+		    SELECT
+		        CAST(target.idx AS CHAR(5)) AS IDX,
+		        CAST(base.tidx AS CHAR(5)) AS TIDX,
+		        REPLACE(target.title, '"', "'") AS TITLE,
+		        target.cover AS COVER,
+		        target.updated_date AS UPDATED_DATE,            
+		        target.abstract AS ABSTRACT,
+		        target.iidx AS IIDX,
+		        (select title from im_coursemos_institution_table where idx = target.iidx) AS COLG_NM,
+		        target.didx AS DIDX,
+		        (select title from im_coursemos_department_table where idx = target.didx) AS DEPT_NM,
+		        CASE target.signin_grade WHEN ('' OR '*') THEN '전체' ELSE target.signin_grade END as SIGNIN_GRADE,
+		        REPLACE(REPLACE(REPLACE(target.signin_gender,'MAIL','남자'),'FEMAIL','여자'),'*','전체 성별') as SIGNIN_GENDER,
+		        CAST(base.count AS CHAR(5)) COUNT,
+		        CAST(base.time AS CHAR(5)) TIME,
+		        DATE_FORMAT(FROM_UNIXTIME(base.start_date), '%Y-%m-%d %H:%i') START_DATE,
+		        CASE DAYOFWEEK(FROM_UNIXTIME(base.start_date))
+		            WHEN 1 THEN '일' WHEN 2 THEN '월' WHEN 3 THEN '화' WHEN 4 THEN '수'
+		            WHEN 5 THEN '목' WHEN 6 THEN '금' WHEN 7 THEN '토' END AS START_DAY,
+		        DATE_FORMAT(FROM_UNIXTIME(base.end_date), '%Y-%m-%d %H:%i') END_DATE,
+		        CASE DAYOFWEEK(FROM_UNIXTIME(base.end_date))
+		            WHEN 1 THEN '일' WHEN 2 THEN '월' WHEN 3 THEN '화' WHEN 4 THEN '수'
+		            WHEN 5 THEN '목' WHEN 6 THEN '금' WHEN 7 THEN '토' END AS END_DAY,
+		        DATE_FORMAT(FROM_UNIXTIME(base.signin_start_date), '%Y-%m-%d') SIGNIN_START_DATE,
+		        CASE DAYOFWEEK(FROM_UNIXTIME(base.signin_start_date))
+		            WHEN 1 THEN '일' WHEN 2 THEN '월' WHEN 3 THEN '화' WHEN 4 THEN '수'
+		            WHEN 5 THEN '목' WHEN 6 THEN '금' WHEN 7 THEN '토' END AS SIGNIN_START_DAY,
+		        DATE_FORMAT(FROM_UNIXTIME(base.signin_end_date), '%Y-%m-%d') SIGNIN_END_DATE,
+		        CASE DAYOFWEEK(FROM_UNIXTIME(base.signin_end_date))
+		            WHEN 1 THEN '일' WHEN 2 THEN '월' WHEN 3 THEN '화' WHEN 4 THEN '수'
+		            WHEN 5 THEN '목' WHEN 6 THEN '금' WHEN 7 THEN '토' END AS SIGNIN_END_DAY,
+		        CASE 
+		            WHEN DATEDIFF(FROM_UNIXTIME(base.signin_end_date), SYSDATE()) &lt; 0 THEN '종료'
+		            WHEN DATEDIFF(FROM_UNIXTIME(base.signin_start_date), SYSDATE()) &gt;= 0 
+		                AND DATEDIFF(FROM_UNIXTIME(base.signin_end_date), SYSDATE()) &lt;= 0 THEN '신청/운영 중'
+		            ELSE CONCAT('D-',DATEDIFF(FROM_UNIXTIME(base.signin_start_date), SYSDATE())) 
+		        END AS D_DAY,
+		        CAST(base.signin_limit AS CHAR(5)) SIGNIN_LIMIT,
+		        CAST(base.participant AS CHAR(5)) PARTICIPANT,
+		        target.signin_type AS SIGNIN_TYPE,
+		        CASE target.signin_type WHEN 'INDIVIDUAL' THEN '개인' ELSE '팀' END AS SIGNIN_TYPE_NM,
+		        FLOOR(base.point) AS POINT,
+		        target.signin_status AS SIGNIN_STATUS,
+		        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(target.signin_status,'*','전체'),'ENROLLEE','재학생'),'ABSENCE','휴학생'),'COMPLETE','수료생'),'GRADUATE','졸업생') AS SIGNIN_STATUS_NM,
+		        target.signin_target AS SIGNIN_TARGET,
+		        REPLACE(REPLACE(REPLACE(REPLACE(signin_target,'EMPLOYEE','교직원'),'PROFESSOR','교수'),'GRADUATE_ENROLLEE','대학원생'),'GRADUATE','졸업생') AS SIGNIN_TARGET_NM,
+		        target.reg_date AS reg_date    
+		    FROM 
+		        coursemos.im_eco_program_table target,
+		        im_eco_program_topic_table base
+		    WHERE 1=1
+		    AND target.idx = base.pidx        
+		    AND CONCAT(target.idx,'_',base.tidx) IN        
+		    <choose>
+		        <when test="idList != null and idList.size() > 0">
+		            <foreach collection="idList" item="id" index="index" separator="," open="(" close=")">
+		                #{id}
+		            </foreach>
+		        </when>
+		        <otherwise>
+		            ('')
+		        </otherwise>
+		    </choose>
+		) AS combined_results
+		WHERE 1=1
+		ORDER BY 
+		FIELD(CONCAT(IDX,'_',TIDX), 
+		<foreach collection="idList" item="id" separator=",">
+		    #{id}
+		</foreach>
+		)
+		<choose>
+		    <when test="ORDER_BY == 'SIGNIN_END_RANK' or ORDER_BY == 'RECOMMEND'">    
+		    , signin_end_rank ASC, signin_end_date ASC
+		    </when>
+		    <when test="ORDER_BY == 'PARTICIPANT_RATE_RANK'">
+		    , participant_rate_rank DESC
+		    </when>
+		    <when test="ORDER_BY == 'REG_DATE_RANK'">
+		    , reg_date_rank desc
+		    </when>
+		</choose>
+	<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>	
+	
+	<!-- 비교과 프로그램 이력 -->
+	<select id="getNonSbjtHist" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+			SELECT
+			   IFNULL((SELECT title FROM im_eco_topic_table a WHERE a.idx = base.tidx),(select title from im_eco_program_table b where b.idx = base.pidx)) AS TITLE,
+			   CASE
+		           WHEN DATEDIFF(FROM_UNIXTIME(base.signin_end_date), SYSDATE()) <![CDATA[<]]> 0 THEN '종료'
+		           WHEN DATEDIFF(FROM_UNIXTIME(base.signin_start_date), SYSDATE()) <![CDATA[<=]]> 0 AND
+		                DATEDIFF(FROM_UNIXTIME(base.signin_end_date), SYSDATE()) <![CDATA[>=]]> 0 THEN '신청/운영 중'
+		       ELSE CONCAT('D-', DATEDIFF(FROM_UNIXTIME(base.signin_start_date), SYSDATE())) END       AS D_DAY,
+		       CAST(base.signin_limit AS CHAR(5))                                                             SIGNIN_LIMIT,
+		       CAST(base.participant AS CHAR(5))                                                              PARTICIPANT,
+		              CAST(base.count AS CHAR(5))                                                                    COUNT,
+		       CAST(base.time AS CHAR(5))                                                                     TIME,
+			   DATE_FORMAT(FROM_UNIXTIME(base.start_date), '%Y-%m-%d')                                  START_DATE,
+		       DATE_FORMAT(FROM_UNIXTIME(base.start_date), '%H:%i')                                  START_TIME,
+		       CASE DAYOFWEEK(FROM_UNIXTIME(base.start_date))
+		           WHEN 1 THEN '일'
+		           WHEN 2 THEN '월'
+		           WHEN 3 THEN '화'
+		           WHEN 4 THEN '수'
+		           WHEN 5 THEN '목'
+		           WHEN 6 THEN '금'
+		           WHEN 7 THEN '토' END                                                                     AS START_DAY,
+		       DATE_FORMAT(FROM_UNIXTIME(base.end_date), '%Y-%m-%d')                                    END_DATE,
+		       DATE_FORMAT(FROM_UNIXTIME(base.end_date), '%H:%i')                                    END_TIME,
+		       CASE DAYOFWEEK(FROM_UNIXTIME(base.end_date))
+		           WHEN 1 THEN '일'
+		           WHEN 2 THEN '월'
+		           WHEN 3 THEN '화'
+		           WHEN 4 THEN '수'
+		           WHEN 5 THEN '목'
+		           WHEN 6 THEN '금'
+		           WHEN 7 THEN '토' END                                                                     AS END_DAY,
+		       DATE_FORMAT(FROM_UNIXTIME(base.signin_start_date), '%Y-%m-%d')                                 SIGNIN_START_DATE,
+		       CASE DAYOFWEEK(FROM_UNIXTIME(base.signin_start_date))
+		           WHEN 1 THEN '일'
+		           WHEN 2 THEN '월'
+		           WHEN 3 THEN '화'
+		           WHEN 4 THEN '수'
+		           WHEN 5 THEN '목'
+		           WHEN 6 THEN '금'
+		           WHEN 7 THEN '토' END                                                                     AS SIGNIN_START_DAY,
+		       DATE_FORMAT(FROM_UNIXTIME(base.signin_end_date), '%Y-%m-%d')                                   SIGNIN_END_DATE,
+		       CASE DAYOFWEEK(FROM_UNIXTIME(base.signin_end_date))
+		           WHEN 1 THEN '일'
+		           WHEN 2 THEN '월'
+		           WHEN 3 THEN '화'
+		           WHEN 4 THEN '수'
+		           WHEN 5 THEN '목'
+		           WHEN 6 THEN '금'
+		           WHEN 7 THEN '토' END                                                                     AS SIGNIN_END_DAY
+			FROM  im_eco_program_topic_table base
+	        WHERE base.pidx = #{idx}		
+	</select>
+	
+	<!-- 개인 비교과 프로그램 신청 이력 -->
+	<select id="getMyNonSbjtSigninHist" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+			SELECT
+			   (SELECT title FROM im_eco_program_table b WHERE b.idx = base.pidx) AS TITLE,
+			   (SELECT title FROM im_eco_topic_table a WHERE a.idx = base.tidx) AS SUB_TITLE,
+			   CASE
+		           WHEN DATEDIFF(FROM_UNIXTIME(base.signin_end_date), SYSDATE()) <![CDATA[<]]> 0 THEN '종료'
+		           WHEN DATEDIFF(FROM_UNIXTIME(base.signin_start_date), SYSDATE()) <![CDATA[<=]]> 0 AND
+		                DATEDIFF(FROM_UNIXTIME(base.signin_end_date), SYSDATE()) <![CDATA[>=]]> 0 THEN '신청/운영 중'
+		       ELSE CONCAT('D-', DATEDIFF(FROM_UNIXTIME(base.signin_start_date), SYSDATE())) END       AS D_DAY,
+		       CAST(base.signin_limit AS CHAR(5))                                                             SIGNIN_LIMIT,
+		       CAST(base.participant AS CHAR(5))                                                              PARTICIPANT,
+		              CAST(base.count AS CHAR(5))                                                                    COUNT,
+		       CAST(base.time AS CHAR(5))                                                                     TIME,
+			   DATE_FORMAT(FROM_UNIXTIME(base.start_date), '%Y-%m-%d')                                  START_DATE,
+		       DATE_FORMAT(FROM_UNIXTIME(base.start_date), '%H:%i')                                  START_TIME,
+		       CASE DAYOFWEEK(FROM_UNIXTIME(base.start_date))
+		           WHEN 1 THEN '일'
+		           WHEN 2 THEN '월'
+		           WHEN 3 THEN '화'
+		           WHEN 4 THEN '수'
+		           WHEN 5 THEN '목'
+		           WHEN 6 THEN '금'
+		           WHEN 7 THEN '토' END                                                                     AS START_DAY,
+		       DATE_FORMAT(FROM_UNIXTIME(base.end_date), '%Y-%m-%d')                                    END_DATE,
+		       DATE_FORMAT(FROM_UNIXTIME(base.end_date), '%H:%i')                                    END_TIME,
+		       CASE DAYOFWEEK(FROM_UNIXTIME(base.end_date))
+		           WHEN 1 THEN '일'
+		           WHEN 2 THEN '월'
+		           WHEN 3 THEN '화'
+		           WHEN 4 THEN '수'
+		           WHEN 5 THEN '목'
+		           WHEN 6 THEN '금'
+		           WHEN 7 THEN '토' END                                                                     AS END_DAY,
+		       DATE_FORMAT(FROM_UNIXTIME(base.signin_start_date), '%Y-%m-%d')                                 SIGNIN_START_DATE,
+		       CASE DAYOFWEEK(FROM_UNIXTIME(base.signin_start_date))
+		           WHEN 1 THEN '일'
+		           WHEN 2 THEN '월'
+		           WHEN 3 THEN '화'
+		           WHEN 4 THEN '수'
+		           WHEN 5 THEN '목'
+		           WHEN 6 THEN '금'
+		           WHEN 7 THEN '토' END                                                                     AS SIGNIN_START_DAY,
+		       DATE_FORMAT(FROM_UNIXTIME(base.signin_end_date), '%Y-%m-%d')                                   SIGNIN_END_DATE,
+		       CASE DAYOFWEEK(FROM_UNIXTIME(base.signin_end_date))
+		           WHEN 1 THEN '일'
+		           WHEN 2 THEN '월'
+		           WHEN 3 THEN '화'
+		           WHEN 4 THEN '수'
+		           WHEN 5 THEN '목'
+		           WHEN 6 THEN '금'
+		           WHEN 7 THEN '토' END                                                                     AS SIGNIN_END_DAY,
+				my.note                                                                                 AS NOTE,
+				my.status																				AS STATUS,
+				CASE my.status
+		        WHEN 'WAITING' THEN '승인대기'
+                WHEN 'PENDING' THEN '보류'
+                WHEN 'CONFIRMED' THEN '승인' END 															AS STATUS_NM,
+                my.grade                                                                                AS GRADE,
+				CASE WHEN my.is_complete = 'TRUE' THEN '이수' ELSE '미이수' END                         AS IS_COMPLETE
+			FROM  im_eco_program_topic_table base,
+			    im_eco_application_table my
+	        WHERE my.haksa = #{STUDENT_NO}	
+			AND my.pidx = base.pidx
+			AND my.tidx = base.tidx
+			<if test="idx != null">
+			AND base.pidx = #{idx}
+			</if>
+			ORDER BY base.start_date DESC
+	</select>
+	
+	<!-- 비교과 핵심역량 분류 -->
+	<select id="getCategory" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT
+			*
+		FROM
+			im_eco_category_table
+		WHERE 
+			PARENT = #{parent}
+	</select>
+	
+	
+	<!-- 비교과 태그 -->
+	<select id="getTag" resultType="java.util.HashMap">	
+		SELECT
+			*
+		FROM 
+			im_eco_tag_table
+		WHERE 
+			LATEST_PROGRAM != '0'
+		ORDER BY
+			LATEST_PROGRAM DESC, PROGRAM DESC
+	</select>
+	
+	
+
+	<!-- 비교과 프로그램 상세정보(view)-->
+	<select id="getNonSbjtInfo" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT
+			CAST(target.idx AS CHAR(5)) AS IDX
+			, CAST(base.tidx AS CHAR(5)) AS TIDX
+			, target.iidx AS IIDX
+			, REPLACE(target.title, '"', "'") AS PROGRAM_TITLE
+			, target.cover AS COVER
+			, target.updated_date AS UPDATED_DATE			
+			, target.abstract AS ABSTRACT
+			, target.iidx AS IIDX
+			, (select title from im_coursemos_institution_table where idx = target.iidx) AS IIDX_NM
+			, target.didx AS DIDX
+			, (select title from im_coursemos_department_table where idx = target.didx) AS DIDX_NM
+            , CASE target.signin_grade WHEN ('' OR '*') THEN '전체' ELSE target.signin_grade END  as SIGNIN_GRADE
+            , REPLACE(REPLACE(REPLACE(target.signin_gender,'MAIL','남자'),'FEMAIL','여자'),'*','전체 성별') as SIGNIN_GENDER
+			, CAST(base.count AS CHAR(5)) COUNT
+			, CAST(base.time AS CHAR(5)) TIME
+			, DATE_FORMAT(FROM_UNIXTIME(base.start_date), '%Y-%m-%d %H:%i') START_DATE
+            , CASE DAYOFWEEK(FROM_UNIXTIME(base.start_date))
+                WHEN 1 THEN '일'
+                WHEN 2 THEN '월'
+                WHEN 3 THEN '화'
+                WHEN 4 THEN '수'
+                WHEN 5 THEN '목'
+                WHEN 6 THEN '금'
+                WHEN 7 THEN '토' END AS START_DAY
+			, DATE_FORMAT(FROM_UNIXTIME(base.end_date), '%Y-%m-%d %H:%i') END_DATE
+            , CASE DAYOFWEEK(FROM_UNIXTIME(base.end_date))
+                WHEN 1 THEN '일'
+                WHEN 2 THEN '월'
+                WHEN 3 THEN '화'
+                WHEN 4 THEN '수'
+                WHEN 5 THEN '목'
+                WHEN 6 THEN '금'
+                WHEN 7 THEN '토' END AS END_DAY
+			, DATE_FORMAT(FROM_UNIXTIME(base.signin_start_date), '%Y-%m-%d') SIGNIN_START_DATE
+            , CASE DAYOFWEEK(FROM_UNIXTIME(base.signin_start_date))
+                WHEN 1 THEN '일'
+                WHEN 2 THEN '월'
+                WHEN 3 THEN '화'
+                WHEN 4 THEN '수'
+                WHEN 5 THEN '목'
+                WHEN 6 THEN '금'
+                WHEN 7 THEN '토' END AS SIGNIN_START_DAY
+			, DATE_FORMAT(FROM_UNIXTIME(base.signin_end_date), '%Y-%m-%d') SIGNIN_END_DATE
+            , CASE DAYOFWEEK(FROM_UNIXTIME(base.signin_end_date))
+                WHEN 1 THEN '일'
+                WHEN 2 THEN '월'
+                WHEN 3 THEN '화'
+                WHEN 4 THEN '수'
+                WHEN 5 THEN '목'
+                WHEN 6 THEN '금'
+                WHEN 7 THEN '토' END AS SIGNIN_END_DAY
+			, CASE WHEN DATEDIFF(FROM_UNIXTIME(base.signin_end_date), SYSDATE()) &lt; 0 THEN '종료'
+			   WHEN DATEDIFF(FROM_UNIXTIME(base.signin_start_date), SYSDATE()) &lt;= 0 AND DATEDIFF(FROM_UNIXTIME(base.signin_end_date), SYSDATE()) &gt;= 0 THEN '신청/운영 중'
+			   ELSE CONCAT('D-',DATEDIFF(FROM_UNIXTIME(base.signin_start_date), SYSDATE())) END AS D_DAY
+			, CAST(base.signin_limit AS CHAR(5)) SIGNIN_LIMIT
+			, CAST(base.participant AS CHAR(5)) PARTICIPANT
+			, target.signin_type AS SIGNIN_TYPE
+			, CASE target.signin_type WHEN 'INDIVIDUAL' THEN '개인' ELSE '팀' END AS SIGNIN_TYPE_NM
+			, FLOOR(base.point) AS POINT
+			, target.signin_status AS SIGNIN_STATUS
+			, REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(target.signin_status,'*','전체'),'ENROLLEE','재학생'),'ABSENCE','휴학생'),'COMPLETE','수료생'),'GRADUATE','졸업생') AS SIGNIN_STATUS_NM
+			, target.signin_target AS SIGNIN_TARGET
+			, REPLACE(REPLACE(REPLACE(REPLACE(signin_target,'EMPLOYEE','교직원'),'PROFESSOR','교수'),'GRADUATE_ENROLLEE','대학원생'),'GRADUATE','졸업생')  AS SIGNIN_TARGET_NM
+			, target.content as CONTENT		
+			, target.satisfaction as SATISFACTION	
+			, target.email                                                                                AS EMAIL
+       		, target.contact                                                                              AS CONTACT
+       		, target.location                                                                             AS LOCATION
+       		, target.department                                                                           AS DEPARTMENT		
+       		, IFNULL((SELECT avg FROM im_eco_program_expected_score_table WHERE pidx = target.idx), '0')  AS EXPECTED_SCORE	
+		FROM 
+			coursemos.im_eco_program_table target
+		  , im_eco_program_topic_table base
+		WHERE 
+			target.idx = #{idx}
+			AND base.tidx = #{tidx}
+			AND target.idx = base.pidx
+	</select>
+	
+	
+	
+	<!-- 비교과 프로그램 태그 -->
+	<select id="getNonSbjtTag" parameterType="java.util.HashMap" resultType="java.util.HashMap">	
+		SELECT 
+			* 
+		FROM 
+			im_eco_program_tag_table  
+		WHERE 
+			PIDX = #{idx}
+	</select>
+	
+	
+	<!-- 비교과 프로그램 핵심역량 지수 -->
+	<select id="getNonSbjtEssential" parameterType="java.util.HashMap" resultType="java.util.HashMap">	
+		SELECT
+			base.rate,
+			target.title 
+		FROM
+			im_eco_program_essential_table base,
+			im_essential_table target			
+		WHERE
+			PIDX = #{idx}
+		AND base.ESSENTIAL = target.IDX
+	</select>
+	
+	
+	<!-- 비교과 프로그램 첨부파일 -->
+	<select id="getNonSbjtAttachmentFile" parameterType="java.util.HashMap" resultType="java.util.HashMap">	
+		SELECT
+    		CONCAT('https://cts.kmou.ac.kr/attachment/download/',IDX,'/',NAME) AS ATTACHMENT_URL,
+    		name AS NAME
+		FROM 
+			im_attachment_table
+		WHERE 
+			IDX IN
+			<foreach collection="filesList" item="idx" index="index" separator="," open="(" close=")">
+				#{idx}
+			</foreach>
+	</select>
+
+	
+	<!-- 등록 -->
+	<insert id="insertSample" parameterType="java.util.HashMap">
+
+	</insert> 
+	
+	<!-- 업데이트 -->
+	<update id="updateSample" parameterType="java.util.HashMap">
+
+	</update>
+	
+	<!-- 비교과 교육형식 -->
+	<select id="getProgramType" resultType="java.util.HashMap">	
+		SELECT
+			*
+		FROM 			
+			im_eco_program_type_table
+		WHERE type IN ('a01', 'a02', 'a03', 'a08', 'a09', 'a11', 'a12', 'a13', 'a14', 'a15', 'a16')
+		ORDER BY sort		
+	</select>
+	
+	<!-- 비교과 운영방식 -->
+	<select id="getMethod" resultType="java.util.HashMap">	
+		SELECT
+			*
+		FROM 
+			im_eco_method_table
+		ORDER BY idx
+	</select>
+	
+</mapper>            

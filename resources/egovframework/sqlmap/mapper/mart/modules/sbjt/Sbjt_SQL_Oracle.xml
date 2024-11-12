@@ -1,0 +1,1595 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	1. IDX, RBS_SBJT_1_INFO, SUBJECT, IDX, 테이블명 등 변경해서 사용
+	2. 그 외 필요에 따라 쿼리 수정하여 사용 
+-->
+
+<mapper namespace="mart.modules.sbjt.sbjtOraMapper">
+
+	<sql id="BK_COUR_TABLE_NAME">uni_pers_bookmark_cour</sql>
+
+	<!-- CLOB 데이터 조회하기 위해 만들기 -->
+	<resultMap type="java.util.HashMap" id="clobMap">
+		<result property="DOC_ID" column="DOC_ID" />
+		<result property="INTRV_POSB_TM_CTNT" column="INTRV_POSB_TM_CTNT" />
+		<result property="TELNO" column="TELNO" />
+		<result property="LSN_SMRY" column="LSN_SMRY" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="LSN_PURP" column="LSN_PURP" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="LSN_PROG_MTHD_CTNT" column="LSN_PROG_MTHD_CTNT" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="APPR_MTHD_EXAM_RATE" column="APPR_MTHD_EXAM_RATE" />
+		<result property="APPR_MTHD_ATTEND_RATE" column="APPR_MTHD_ATTEND_RATE" />
+		<result property="APPR_MTHD_PRJT_RATE" column="APPR_MTHD_PRJT_RATE" />
+		<result property="LRN_APPR_MTHD_CTNT" column="LRN_APPR_MTHD_CTNT" />
+	</resultMap>
+	
+	<!-- 교과목 리스트 최초 조회 -->
+	<!-- <select id="getInitSbjtList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT *
+		FROM   ( SELECT R.*,
+		               ROWNUM AS RN
+		       FROM    (SELECT  SUF100.YEAR ,
+		                        SUF100.SMT                        AS SMT_CD ,
+		                        UF_GET_COMMON_CODESET(SUF100.SMT) AS SMT_NM ,
+		                        SUF100.SUBJECT_CD ,
+		                        SUF010.SUBJECT_NM ,
+		                        SUF010.SUBJECT_ENM ,
+		                        SUF100.DIVCLS ,
+		                        (SELECT COLG_CD
+		                        FROM    SCO.V_AI_ORG ORG
+		                        WHERE   ORG.DEPT_CD = SUF100.DEPT_CD
+		                        )
+		                                                                AS COLG_CD ,
+		                        UF_GET_ORG_CODESET('B', SUF100.DEPT_CD) AS COLG_NM ,
+		                        (SELECT
+		                                CASE
+		                                        WHEN ORG_LVL = 4
+		                                        THEN UP_DEPT_CD
+		                                        WHEN ORG_LVL = 3
+		                                        THEN DEPT_CD
+		                                END AS DEPT_CD
+		                        FROM    SCO.V_AI_ORG ORG
+		                        WHERE   ORG.DEPT_CD = SUF100.DEPT_CD
+		                        )
+		                        AS DEPT_CD ,
+		                        UF_GET_ORG_CODESET('D',
+		                        (SELECT
+		                                CASE
+		                                        WHEN ORG_LVL = 4
+		                                        THEN UP_DEPT_CD
+		                                        WHEN ORG_LVL = 3
+		                                        THEN DEPT_CD
+		                                END AS DEPT_CD
+		                        FROM    SCO.V_AI_ORG ORG
+		                        WHERE   ORG.DEPT_CD = SUF100.DEPT_CD
+		                        )
+		                        ) AS DEPT_NM ,
+		                        (SELECT
+		                                CASE
+		                                        WHEN ORG_LVL = 4
+		                                        THEN DEPT_CD
+		                                END AS MAJOR_CD
+		                        FROM    SCO.V_AI_ORG ORG
+		                        WHERE   ORG.DEPT_CD = SUF100.DEPT_CD
+		                        )
+		                        AS MAJOR_CD ,
+		                        UF_GET_ORG_CODESET('D',
+		                        (SELECT
+		                                CASE
+		                                        WHEN ORG_LVL = 4
+		                                        THEN DEPT_CD
+		                                END AS MAJOR_CD
+		                        FROM    SCO.V_AI_ORG ORG
+		                        WHERE   ORG.DEPT_CD = SUF100.DEPT_CD
+		                        )
+		                        ) AS MAJOR_NM ,
+		                        GRADE ,
+		                        SUF100.COMDIV_CODE                        AS COMDIV_CD ,
+		                        UF_GET_COMMON_CODESET(SUF100.COMDIV_CODE) AS COMDIV_NM ,
+		                        PYENGGA_TP_CD ,
+		                        UF_GET_COMMON_CODESET(SUF100.PYENGGA_TP_CD)                                     AS PYENGGA_TP_NM ,
+		                        SUF100.CDT_NUM ,
+		                        SUF100.WTIME_NUM ,
+		                        SUF100.PTIME_NUM ,
+		                        NVL(ABO_YN, 'N')                                             AS ABO_YN ,
+		                        SUBJ_DESC
+		               FROM     SUF.SUF100TB SUF100
+		                        LEFT JOIN SUF.SUF050TB SUF050
+		                        ON       SUF100.YEAR       = SUF050.YEAR
+		                        AND      SUF100.SMT        = SUF050.SMT
+		                        AND      SUF100.DEPT_CD    = SUF050.DEPT_CD
+		                        AND      SUF100.SUBJECT_CD = SUF050.SUBJECT_CD
+		                        AND      SUF100.GRADE      = SUF050.COM_GRADE
+		                        LEFT JOIN SUF.SUF010TB SUF010
+		                        ON       SUF010.SUBJECT_CD = SUF100.SUBJECT_CD
+		               where      SUF100.YEAR BETWEEN 2020 AND 2024
+		               AND SUF100.SINBUN_CODE = 'UD340001'
+		               ORDER BY SUBJECT_NM ASC
+		               )
+		               R
+		       )
+		where    RN >= 1
+		AND    RN <= 6WHERE 1 = 1
+		<if test="university != ''">AND  COLG_CD = #{university}</if>
+		<if test="department != ''">AND  DEPT_CD = #{department}</if>
+		<if test="major != ''">AND  MAJOR_CD = #{major}</if>
+		<if test="year != ''">AND  YEAR = #{year}</if>
+		<if test="semester != ''">AND  SMT_CD = #{semester}</if>
+		<if test="grade != ''">AND  GRADE = #{grade}</if>
+		<if test="completCount != 0">
+			AND  COMDIV_CD IN (
+				<foreach collection="course_classification" item="item" index="i" separator=",">
+					'${item}'
+				</foreach>
+			)
+		</if>
+		<if test="coreCount != 0">
+			AND  (
+				<foreach collection="core_competence" item="item" index="i" open="(" close=")" separator="OR">
+					MAIN_ABI_NM = '${item}'
+				</foreach>
+			 OR 
+				<foreach collection="core_competence" item="item" index="i" open="(" close=")" separator="OR">
+					SUB_ABI_NM LIKE '%${item}%'
+				</foreach>
+			)
+		</if>
+		)
+		WHERE 1=1
+		<if test="startNum != null">
+		AND  	RN <![CDATA[>=]]> #{startNum}
+		AND 	RN <![CDATA[<=]]> #{endNum}
+		</if>
+	</select> -->
+	<select id="getInitSbjtList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT * FROM ( 
+		 			SELECT R.*, ROWNUM AS RN
+    				FROM (SELECT SUF100.YEAR
+                    , SUF100.SMT                                                                           AS SMT_CD
+                    , UF_GET_COMMON_CODESET(SUF100.SMT)                                                    AS SMT_NM
+                    , SUF100.SUBJECT_CD
+                    , SUF010.SUBJECT_NM
+                    , SUF010.SUBJECT_ENM
+                    , SUF100.DIVCLS
+                    , SUF110.EMP_NO
+                    , APS010.EMP_NM
+                    , APS010.EMP_ENM
+                    , SUF100.SINBUN_CODE                                                                   AS SINBUN_CD
+                    , UF_GET_COMMON_CODESET(SUF100.SINBUN_CODE)                                            AS SINBUN_NM
+                    , ORG.DEPT_CD
+                    , ORG.UP_DEPT_CD
+                    , DEPT_CDNM(ORG.UP_DEPT_CD) AS UP_DEPT_NM
+                    , ORG.ORG_LVL
+                    , ORG.DEPT_NM
+                    , ORG.COLG_CD
+                    , ORG.COLG_NM
+                    , (SELECT CASE
+                                  WHEN ORG_LVL = 4 THEN DEPT_CD
+                                  END AS MAJOR_CD
+                       FROM SCO.V_AI_ORG ORG
+                       WHERE ORG.DEPT_CD = SUF100.DEPT_CD)                                                 AS MAJOR_CD
+                    , UF_GET_ORG_CODESET('D', (SELECT CASE
+                                                          WHEN ORG_LVL = 4 THEN DEPT_CD
+                                                          END AS MAJOR_CD
+                                               FROM SCO.V_AI_ORG ORG
+                                               WHERE ORG.DEPT_CD = SUF100.DEPT_CD))                        AS MAJOR_NM
+                    , GRADE
+                    , CLASS_CODE                                                                           AS CLASS_CD
+                    , UF_GET_COMMON_CODESET(SUF100.CLASS_CODE)                                             AS CLASS_NM
+                    , SUF100.COMDIV_CODE                                                                   AS COMDIV_CD
+                    , UF_GET_COMMON_CODESET(SUF100.COMDIV_CODE)                                            AS COMDIV_NM
+                    , PYENGGA_TP_CD
+                    , UF_GET_COMMON_CODESET(SUF100.PYENGGA_TP_CD)                                          AS PYENGGA_TP_NM
+                    , COALESCE(SUF100.MNRCOM_DIV_CODE, SUF050.MNRCOM_DIV_CODE)                             AS MNRCOM_DIV_CD
+                    , UF_GET_COMMON_CODESET(COALESCE(SUF100.MNRCOM_DIV_CODE, SUF050.MNRCOM_DIV_CODE))      AS MNRCOM_DIV_NM
+                    , SUF050.MAJOR_GB_CODE                                                                 AS MAJOR_GB_CD
+                    , UF_GET_COMMON_CODESET(SUF050.MAJOR_GB_CODE)                                          AS MAJOR_GB_NM
+                    , SUF100.CDT_NUM
+                    , SUF100.WTIME_NUM
+                    , SUF100.PTIME_NUM
+                    , NVL(ABO_YN, 'N')                                                                     AS ABO_YN
+                    , SUBJ_DESC
+                    , MAIN_ABI_NM
+                    , ROW_NUMBER() OVER (PARTITION BY SUF100.YEAR, SUF100.SMT, SUF100.SUBJECT_CD, SUF100.GRADE ORDER BY SUF100.DIVCLS ASC) AS RNK
+                     <if test="coreCount != 0">
+                    , SUB_ABI_NM
+                    </if>
+               FROM SUF.SUF100TB SUF100
+                        LEFT JOIN SUF.SUF050TB SUF050
+                                  ON SUF100.YEAR = SUF050.YEAR
+                                      AND SUF100.SMT = SUF050.SMT
+                                      AND SUF100.DEPT_CD = SUF050.DEPT_CD
+                                      AND SUF100.SUBJECT_CD = SUF050.SUBJECT_CD
+                                      AND SUF100.GRADE = SUF050.COM_GRADE
+                        LEFT JOIN SUF.SUF010TB SUF010
+                                  ON SUF010.SUBJECT_CD = SUF100.SUBJECT_CD
+                        LEFT JOIN SUF.SUF110TB SUF110
+                                  ON SUF110.YEAR = SUF100.YEAR
+                                      AND SUF110.SMT = SUF100.SMT
+                                      AND SUF110.SUBJECT_CD = SUF100.SUBJECT_CD
+                                      AND SUF110.DIVCLS = SUF100.DIVCLS
+                                      AND SUF110.PROF_YN = 'Y'
+                        LEFT JOIN APS.APS010TB APS010
+                                  ON APS010.EMP_NO = SUF110.EMP_NO
+                        LEFT JOIN SCO.V_AI_ORG ORG ON SUF100.DEPT_CD = ORG.DEPT_CD
+                       
+                        LEFT JOIN (SELECT SUF335.YEAR
+                                        , SUF335.SMT
+                                        , SUF335.SUBJECT_CD
+                                        , SUF335.DIVCLS
+                                        , SUF335.DEPT_CD
+                                        , LISTAGG(CASE
+                                                      WHEN MAIN_GB_CODE = 'UE390001' THEN ABI_NM
+                                                      WHEN MAIN_GB_CODE IS NULL AND LINK_RT = MAX_LINK_RT THEN ABI_NM
+                                                      END, ',')
+                                                  WITHIN GROUP ( ORDER BY SUF335.YEAR DESC, SUF335.SMT, SUF335.SUBJECT_CD, SUF335.DIVCLS, SUF335.DEPT_CD, SUF335.ABI_GB_CD, CASE WHEN LINK_RT = MAX_LINK_RT THEN ABI_NM END)  AS MAIN_ABI_NM
+                                       <if test="coreCount != 0">
+                                        , LISTAGG(CASE
+                                                      WHEN MAIN_GB_CODE = 'UE390002' THEN ABI_NM
+                                                      WHEN MAIN_GB_CODE IS NULL AND LINK_RT != MAX_LINK_RT THEN ABI_NM
+                                                      END, ',')
+                                                  WITHIN GROUP ( ORDER BY SUF335.YEAR DESC, SUF335.SMT, SUF335.SUBJECT_CD, SUF335.DIVCLS, SUF335.DEPT_CD, SUF335.ABI_GB_CD, CASE WHEN LINK_RT != MAX_LINK_RT THEN ABI_NM END) AS SUB_ABI_NM
+                                   	   </if>
+                                   FROM SUF.SUF335TB SUF335
+                                            JOIN SUF.SUF330TB SUF330
+                                                 ON SUF330.YEAR = SUF335.YEAR
+                                                     AND SUF330.SMT = SUF335.SMT
+                                                     AND SUF330.DEPT_CD = SUF335.DEPT_CD
+                                                     AND SUF330.ABI_GB_CD = SUF335.ABI_GB_CD
+                                            JOIN (SELECT SUF335.YEAR
+                                                       , SUF335.SMT
+                                                       , SUF335.SUBJECT_CD
+                                                       , SUF335.DIVCLS
+                                                       , SUF335.DEPT_CD
+                                                       , MAX(LINK_RT) AS MAX_LINK_RT
+                                                  FROM SUF.SUF335TB SUF335
+                                                           JOIN SUF.SUF330TB SUF330
+                                                                ON SUF330.YEAR = SUF335.YEAR
+                                                                    AND SUF330.SMT = SUF335.SMT
+                                                                    AND SUF330.DEPT_CD = SUF335.DEPT_CD
+                                                                    AND SUF330.ABI_GB_CD = SUF335.ABI_GB_CD
+                                                  WHERE MAJOR_ABI_CODE = 'UE350001'
+                                                  GROUP BY SUF335.YEAR, SUF335.SMT, SUF335.SUBJECT_CD, SUF335.DIVCLS,
+                                                           SUF335.DEPT_CD) MAX_LINK_RT_TB
+                                                 ON SUF335.YEAR = MAX_LINK_RT_TB.YEAR
+                                                     AND SUF335.SMT = MAX_LINK_RT_TB.SMT
+                                                     AND SUF335.SUBJECT_CD = MAX_LINK_RT_TB.SUBJECT_CD
+                                                     AND SUF335.DIVCLS = MAX_LINK_RT_TB.DIVCLS
+                                                     AND SUF335.DEPT_CD = MAX_LINK_RT_TB.DEPT_CD
+                                   GROUP BY SUF335.YEAR, SUF335.SMT, SUF335.SUBJECT_CD, SUF335.DIVCLS,
+                                            SUF335.DEPT_CD) SUF335
+                                  ON SUF335.YEAR = SUF100.YEAR
+                                      AND SUF335.SMT = SUF100.SMT
+                                      AND SUF335.SUBJECT_CD = SUF100.SUBJECT_CD
+                                      AND SUF335.DIVCLS = SUF100.DIVCLS
+                            
+               WHERE SUF100.DEPT_CD NOT LIKE '2%'
+               AND SUF100.ABO_YN  = 'N' 
+               	<if test="endDate != '' and endDate != null">AND  SUF100.YEAR <![CDATA[<=]]> #{endDate}</if>
+				<if test="startDate != null and startDate != null">AND  SUF100.YEAR <![CDATA[>=]]> #{startDate}</if>
+				<choose>
+					<when test="field == 'SUBJECT_NM'">ORDER BY SUBJECT_NM ASC, YEAR DESC, SMT_CD DESC</when>
+					<when test="field == 'YEAR'">ORDER BY YEAR DESC, SMT_CD DESC</when>
+					<when test="field == 'MAJOR_NM'">ORDER BY MAJOR_NM ASC, YEAR DESC, SMT_CD DESC</when>
+					<when test="field == 'COMDIV_CD'">ORDER BY COMDIV_CODE DESC, YEAR DESC, SMT_CD DESC</when>
+					<when test="field == 'GRADE'">ORDER BY GRADE DESC, YEAR DESC, SMT_CD DESC</when>
+					<otherwise>ORDER BY SUBJECT_NM ASC, YEAR DESC, SMT_CD DESC</otherwise>
+				</choose>
+               ) R
+		WHERE RNK = 1
+		<if test="university != ''">AND  COLG_CD = #{university}</if>
+		<if test="department != ''">AND  DEPT_CD LIKE #{department}</if>
+		<if test="major != ''">AND  MAJOR_CD = #{major}</if>
+		<!-- <if test="year != ''">AND  YEAR = #{year}</if> -->
+		<if test="semester != ''">AND  SMT_CD = #{semester}</if>
+		<if test="grade != ''">AND  GRADE = #{grade}</if>
+		<if test="completCount != 0">
+			AND  COMDIV_CD IN (
+				<foreach collection="course_classification" item="item" index="i" separator=",">
+					'${item}'
+				</foreach>
+			)
+		</if>
+		<if test="coreCount != 0">
+			AND  (
+				<foreach collection="core_competence" item="item" index="i" open="(" close=")" separator="OR">
+					MAIN_ABI_NM = '${item}'
+				</foreach>
+			 OR 
+				<foreach collection="core_competence" item="item" index="i" open="(" close=")" separator="OR">
+					SUB_ABI_NM LIKE '%${item}%'
+				</foreach>
+			)
+		</if>
+		)
+		WHERE 1=1
+		<if test="startNum != null">
+		AND  	RN <![CDATA[>=]]> #{startNum}
+		AND 	RN <![CDATA[<=]]> #{endNum}
+		</if>
+	</select>
+			
+	<!-- <select id="getInitSbjtList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT * 
+		FROM (
+			SELECT ROWNUM SEQ_NO, T.*
+			FROM (
+				SELECT		DISTINCT
+							suf100.YEAR
+							, suf100.SMT
+							, (SELECT UF_GET_SMT_CODESET(suf100.SMT) FROM dual) AS SMT_NM
+							, suf100.SINBUN_CODE 
+							, (SELECT UF_GET_COMMON_CODESET(suf100.SINBUN_CODE) FROM dual) AS SINBUN_NM
+							, (SELECT UF_GET_ORG_CODESET('R', suf100.DEPT_CD) FROM dual) AS COLG_CD
+							, (SELECT UF_GET_ORG_CODESET('B', suf100.DEPT_CD) FROM dual) AS COLG_NM
+							, (
+								SELECT 	CASE
+                       						WHEN ORG_LVL = 4 THEN UP_DEPT_CD
+                      						WHEN ORG_LVL = 3 THEN DEPT_CD
+                      			 		END AS DEPT_CD
+                				FROM SCO.V_AI_ORG ORG
+                				WHERE ORG.DEPT_CD = suf100.DEPT_CD) AS DEPT_CD
+                			, UF_GET_ORG_CODESET('D', (
+                				SELECT 	CASE
+                           					WHEN ORG_LVL = 4 THEN UP_DEPT_CD
+                           					WHEN ORG_LVL = 3 THEN DEPT_CD
+										END AS DEPT_CD
+	                            FROM SCO.V_AI_ORG ORG
+	                            WHERE ORG.DEPT_CD = suf100.DEPT_CD)) AS DEPT_NM
+	                        , (
+	                        	SELECT 	CASE WHEN ORG_LVL = 4 THEN DEPT_CD END AS MAJOR_CD
+			                	FROM SCO.V_AI_ORG ORG
+			                	WHERE ORG.DEPT_CD = SUF100.DEPT_CD) AS MAJOR_CD
+			            	, UF_GET_ORG_CODESET('D', (
+			            		SELECT 	CASE WHEN ORG_LVL = 4 THEN DEPT_CD END AS MAJOR_CD
+				                FROM SCO.V_AI_ORG ORG
+				                WHERE ORG.DEPT_CD = SUF100.DEPT_CD)) AS MAJOR_NM
+							, suf100.SUBJECT_CD
+							, suf010.SUBJECT_NM
+							, suf100.CLASS_CODE
+							, (SELECT UF_GET_COMMON_CODESET(suf100.CLASS_CODE) FROM dual) AS CLASS_NM
+							, suf100.COMDIV_CODE
+							, (SELECT UF_GET_COMMON_CODESET(suf100.COMDIV_CODE) FROM dual) AS COMDIV_NM
+							, suf100.GRADE
+							, suf100.CDT_NUM
+							, suf100.SUBJ_DESC
+				FROM 		SUF.SUF100TB suf100
+				LEFT JOIN 	SUF.SUF010TB suf010
+							ON suf010.SUBJECT_CD = suf100.SUBJECT_CD
+				WHERE 		suf100.SINBUN_CODE = 'UD340001'
+							AND suf100.ABO_YN = 'N'
+				ORDER BY 	suf100.YEAR DESC 
+							, suf100.SMT
+							, CASE 
+								WHEN suf010.SUBJECT_NM BETWEEN '가' AND '힣' THEN 1
+								WHEN (suf010.SUBJECT_NM &lt; '가' OR suf010.SUBJECT_NM &gt; '힣') THEN 2
+								ELSE 3
+							END ASC
+							, suf010.SUBJECT_NM
+			) T
+			WHERE 1=1
+			<if test="university != ''">AND  COLG_CD = #{university}</if>
+			<if test="department != ''">AND  DEPT_CD = #{department}</if>
+			<if test="major != ''">AND  MAJOR_CD = #{major}</if>
+			<if test="year != ''">AND  YEAR = #{year}</if>
+			<if test="semester != ''">AND  SMT = #{semester}</if>
+			<if test="grade != ''">AND  GRADE = #{grade}</if>
+			<if test="completCount != 0">
+				AND  COMDIV_CODE IN (
+					<foreach collection="course_classification" item="item" index="i" separator=",">
+						'${item}'
+					</foreach>
+				)
+			</if>
+			<if test="coreCount != 0">
+				AND  ESSENTIAL_ABI IN (
+					<foreach collection="core_competence" item="item" index="i" separator=",">
+						'%${item}%'
+					</foreach>
+				)
+			</if>
+			) 
+		<if test="startNum != null">
+		WHERE  	SEQ_NO <![CDATA[>=]]> #{startNum}
+				AND SEQ_NO <![CDATA[<=]]>  #{endNum}
+		</if>
+		<choose>
+			<when test="field == 'SUBJECT_NM'">ORDER BY SUBJECT_NM ASC</when>
+			<when test="field == 'YEAR'">ORDER BY YEAR DESC</when>
+			<when test="field == 'MAJOR_NM'">ORDER BY MAJOR_NM ASC</when>
+			<when test="field == 'COMDIV_CD'">ORDER BY COMDIV_CODE DESC</when>
+			<when test="field == 'GRADE'">ORDER BY GRADE DESC</when>
+			<otherwise>ORDER BY SUBJECT_NM ASC</otherwise>
+		</choose>
+	</select>  -->
+	
+	<!-- 교과목 총 건수 -->
+	<!-- <select id="getInitSbjtListCount" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT		COUNT(*) AS TOTAL_COUNT
+		FROM 		SUF.SUF100TB suf100
+		WHERE 		suf100.SINBUN_CODE = 'UD340001'
+					AND suf100.ABO_YN = 'N'
+	</select> -->
+	<select id="getInitSbjtListCount" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT COUNT(*) AS TOTAL_COUNT FROM (SELECT SUF100.YEAR
+                    , SUF100.SMT                                                                           AS SMT_CD
+                    , UF_GET_COMMON_CODESET(SUF100.SMT)                                                    AS SMT_NM
+                    , SUF100.SUBJECT_CD
+                    , SUF010.SUBJECT_NM
+                    , SUF010.SUBJECT_ENM
+                    , SUF100.DIVCLS
+                    , SUF110.EMP_NO
+                    , SUF100.SINBUN_CODE                                                                   AS SINBUN_CD
+                    , UF_GET_COMMON_CODESET(SUF100.SINBUN_CODE)                                            AS SINBUN_NM
+                    , ORG.DEPT_CD
+                    , ORG.DEPT_NM
+                    , ORG.COLG_CD
+                    , ORG.COLG_NM
+                    , (SELECT CASE
+                                  WHEN ORG_LVL = 4 THEN DEPT_CD
+                                  END AS MAJOR_CD
+                       FROM SCO.V_AI_ORG ORG
+                       WHERE ORG.DEPT_CD = SUF100.DEPT_CD)                                                 AS MAJOR_CD
+                    , UF_GET_ORG_CODESET('D', (SELECT CASE
+                                                          WHEN ORG_LVL = 4 THEN DEPT_CD
+                                                          END AS MAJOR_CD
+                                               FROM SCO.V_AI_ORG ORG
+                                               WHERE ORG.DEPT_CD = SUF100.DEPT_CD))                        AS MAJOR_NM
+                    , GRADE
+                    , CLASS_CODE                                                                           AS CLASS_CD
+                    , UF_GET_COMMON_CODESET(SUF100.CLASS_CODE)                                             AS CLASS_NM
+                    , SUF100.COMDIV_CODE                                                                   AS COMDIV_CD
+                    , UF_GET_COMMON_CODESET(SUF100.COMDIV_CODE)                                            AS COMDIV_NM
+                    , PYENGGA_TP_CD
+                    , UF_GET_COMMON_CODESET(SUF100.PYENGGA_TP_CD)                                          AS PYENGGA_TP_NM
+                    , COALESCE(SUF100.MNRCOM_DIV_CODE, SUF050.MNRCOM_DIV_CODE)                             AS MNRCOM_DIV_CD
+                    , UF_GET_COMMON_CODESET(COALESCE(SUF100.MNRCOM_DIV_CODE, SUF050.MNRCOM_DIV_CODE))      AS MNRCOM_DIV_NM
+                    , SUF050.MAJOR_GB_CODE                                                                 AS MAJOR_GB_CD
+                    , UF_GET_COMMON_CODESET(SUF050.MAJOR_GB_CODE)                                          AS MAJOR_GB_NM
+                    , SUF100.CDT_NUM
+                    , SUF100.WTIME_NUM
+                    , SUF100.PTIME_NUM
+                    , NVL(ABO_YN, 'N')                                                                     AS ABO_YN
+                    , SUBJ_DESC
+                    , MAIN_ABI_NM
+                    , ROW_NUMBER() OVER (PARTITION BY SUF100.YEAR, SUF100.SMT, SUF100.SUBJECT_CD, SUF100.GRADE ORDER BY SUF100.DIVCLS ASC) AS RNK
+                    <if test="coreCount != 0">
+                    , SUB_ABI_NM
+                    </if>
+               FROM SUF.SUF100TB SUF100
+                        LEFT JOIN SUF.SUF050TB SUF050
+                                  ON SUF100.YEAR = SUF050.YEAR
+                                      AND SUF100.SMT = SUF050.SMT
+                                      AND SUF100.DEPT_CD = SUF050.DEPT_CD
+                                      AND SUF100.SUBJECT_CD = SUF050.SUBJECT_CD
+                                      AND SUF100.GRADE = SUF050.COM_GRADE
+                        LEFT JOIN SUF.SUF010TB SUF010
+                                  ON SUF010.SUBJECT_CD = SUF100.SUBJECT_CD
+                        LEFT JOIN SUF.SUF110TB SUF110
+                                  ON SUF110.YEAR = SUF100.YEAR
+                                      AND SUF110.SMT = SUF100.SMT
+                                      AND SUF110.SUBJECT_CD = SUF100.SUBJECT_CD
+                                      AND SUF110.DIVCLS = SUF100.DIVCLS
+                                      AND SUF110.PROF_YN = 'Y'
+                        LEFT JOIN SCO.V_AI_ORG ORG ON SUF100.DEPT_CD = ORG.DEPT_CD
+                        LEFT JOIN (SELECT SUF335.YEAR
+                                        , SUF335.SMT
+                                        , SUF335.SUBJECT_CD
+                                        , SUF335.DIVCLS
+                                        , SUF335.DEPT_CD
+                                        , LISTAGG(CASE
+                                                      WHEN MAIN_GB_CODE = 'UE390001' THEN ABI_NM
+                                                      WHEN MAIN_GB_CODE IS NULL AND LINK_RT = MAX_LINK_RT THEN ABI_NM
+                                                      END, ',')
+                                                  WITHIN GROUP ( ORDER BY SUF335.YEAR DESC, SUF335.SMT, SUF335.SUBJECT_CD, SUF335.DIVCLS, SUF335.DEPT_CD, SUF335.ABI_GB_CD, CASE WHEN LINK_RT = MAX_LINK_RT THEN ABI_NM END)  AS MAIN_ABI_NM
+                                        <if test="coreCount != 0">
+                                        , LISTAGG(CASE
+                                                      WHEN MAIN_GB_CODE = 'UE390002' THEN ABI_NM
+                                                      WHEN MAIN_GB_CODE IS NULL AND LINK_RT != MAX_LINK_RT THEN ABI_NM
+                                                      END, ',')
+                                                  WITHIN GROUP ( ORDER BY SUF335.YEAR DESC, SUF335.SMT, SUF335.SUBJECT_CD, SUF335.DIVCLS, SUF335.DEPT_CD, SUF335.ABI_GB_CD, CASE WHEN LINK_RT != MAX_LINK_RT THEN ABI_NM END) AS SUB_ABI_NM
+                                        </if>
+                                   FROM SUF.SUF335TB SUF335
+                                            JOIN SUF.SUF330TB SUF330
+                                                 ON SUF330.YEAR = SUF335.YEAR
+                                                     AND SUF330.SMT = SUF335.SMT
+                                                     AND SUF330.DEPT_CD = SUF335.DEPT_CD
+                                                     AND SUF330.ABI_GB_CD = SUF335.ABI_GB_CD
+                                            JOIN (SELECT SUF335.YEAR
+                                                       , SUF335.SMT
+                                                       , SUF335.SUBJECT_CD
+                                                       , SUF335.DIVCLS
+                                                       , SUF335.DEPT_CD
+                                                       , MAX(LINK_RT) AS MAX_LINK_RT
+                                                  FROM SUF.SUF335TB SUF335
+                                                           JOIN SUF.SUF330TB SUF330
+                                                                ON SUF330.YEAR = SUF335.YEAR
+                                                                    AND SUF330.SMT = SUF335.SMT
+                                                                    AND SUF330.DEPT_CD = SUF335.DEPT_CD
+                                                                    AND SUF330.ABI_GB_CD = SUF335.ABI_GB_CD
+                                                  WHERE MAJOR_ABI_CODE = 'UE350001'
+                                                  GROUP BY SUF335.YEAR, SUF335.SMT, SUF335.SUBJECT_CD, SUF335.DIVCLS,
+                                                           SUF335.DEPT_CD) MAX_LINK_RT_TB
+                                                 ON SUF335.YEAR = MAX_LINK_RT_TB.YEAR
+                                                     AND SUF335.SMT = MAX_LINK_RT_TB.SMT
+                                                     AND SUF335.SUBJECT_CD = MAX_LINK_RT_TB.SUBJECT_CD
+                                                     AND SUF335.DIVCLS = MAX_LINK_RT_TB.DIVCLS
+                                                     AND SUF335.DEPT_CD = MAX_LINK_RT_TB.DEPT_CD
+                                   GROUP BY SUF335.YEAR, SUF335.SMT, SUF335.SUBJECT_CD, SUF335.DIVCLS,
+                                            SUF335.DEPT_CD) SUF335
+                                  ON SUF335.YEAR = SUF100.YEAR
+                                      AND SUF335.SMT = SUF100.SMT
+                                      AND SUF335.SUBJECT_CD = SUF100.SUBJECT_CD
+                                      AND SUF335.DIVCLS = SUF100.DIVCLS
+                         
+               WHERE SUF100.DEPT_CD NOT LIKE '2%'
+               AND SUF100.ABO_YN  = 'N' 
+               	<if test="endDate != '' and endDate != null">AND  SUF100.YEAR <![CDATA[<=]]> #{endDate}</if>
+				<if test="startDate != null and startDate != null">AND  SUF100.YEAR <![CDATA[>=]]> #{startDate}</if>
+               )
+		WHERE RNK = 1
+		<if test="university != ''">AND  COLG_CD = #{university}</if>
+		<if test="department != ''">AND  DEPT_CD = #{department}</if>
+		<if test="major != ''">AND  MAJOR_CD = #{major}</if>
+		<!-- <if test="year != ''">AND  YEAR = #{year}</if> -->
+		<if test="semester != ''">AND  SMT_CD = #{semester}</if>
+		<if test="grade != ''">AND  GRADE = #{grade}</if>
+		<if test="completCount != 0">
+			AND  COMDIV_CD IN (
+				<foreach collection="course_classification" item="item" index="i" separator=",">
+					'${item}'
+				</foreach>
+			)
+		</if>
+		<if test="coreCount != 0">
+			AND  (
+				<foreach collection="core_competence" item="item" index="i" open="(" close=")" separator="OR">
+					MAIN_ABI_NM = '${item}'
+				</foreach>
+			 OR 
+				<foreach collection="core_competence" item="item" index="i" open="(" close=")" separator="OR">
+					SUB_ABI_NM LIKE '%${item}%'
+				</foreach>
+			)
+		</if>
+	</select> 
+	
+	<select id="getCollegeList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		COLG_CD
+						, COLG_NM
+			FROM 		V_AI_ORG
+			WHERE 		USE_FG = 'Y'
+						AND COLG_CD IN ('301000', '309000', '310000', '308000')
+			GROUP BY 	COLG_CD
+						, COLG_NM	
+			ORDER BY 	COLG_CD
+			
+<!-- 			SELECT 		* -->
+<!-- 			FROM 		SCO.V_AI_ORG -->
+<!-- 			WHERE 		ORG_LVL = 2 -->
+<!-- 						AND DEPT_CD LIKE '3%' -->
+<!-- 						AND UP_DEPT_CD = 300000 -->
+<!-- 						AND USE_FG = 'Y' -->
+<!-- 						OR DEPT_CD = '446000' -->
+<!-- 			ORDER BY 	DEPT_CD ASC -->
+	</select>
+	
+	<select id="getDepartList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		CATEGORY AS TYPE
+						, COLG_CD
+						, COLG_NM 
+						, DEPT_CD
+						, DEPT_NM
+						, UF_COM_DEPT_NM(DEPT_CD, 3) AS DEPT_ENM
+						, UP_DEPT_CD AS UPPER_CD
+						, ORG_LVL
+			FROM 		V_AI_ORG
+			WHERE 		USE_FG = 'Y'
+						AND CATEGORY &lt;&gt; '부서'
+						<if test="univ != null and univ != ''">
+						AND UP_DEPT_CD = #{univ}
+						</if>
+			ORDER BY 	COLG_CD
+						, DEPT_CD
+			
+<!-- 			SELECT 		* -->
+<!-- 			FROM 		SCO.V_AI_ORG  -->
+<!-- 			WHERE 		ORG_LVL = 3 -->
+<!-- 						AND DEPT_CD LIKE '3%' -->
+<!-- 						AND UP_DEPT_CD = #{univ} -->
+<!-- 						AND USE_FG = 'Y' -->
+<!-- 			ORDER BY 	DEPT_CD ASC -->
+	</select>
+	
+	<select id="getMajorList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT A.*, UF_COM_DEPT_NM(DEPT_CD, 3) AS DEPT_ENM
+			FROM SCO.V_AI_ORG A
+			WHERE ORG_LVL = 4
+			AND DEPT_CD LIKE '3%'
+			AND UP_DEPT_CD = #{depart}
+			AND USE_FG = 'Y'
+			ORDER BY DEPT_CD ASC
+	</select>
+	
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT		base.YEAR
+						, base.SMT 
+						, (SELECT UF_GET_COMMON_CODESET(base.SMT) FROM dual) AS SMT_NM
+						, base.DEPT_CD
+						, (SELECT UF_GET_ORG_CODESET('B', base.DEPT_CD) FROM dual) AS COLG_NM
+						, (SELECT UF_GET_ORG_CODESET('D', base.DEPT_CD) FROM dual) AS DEPT_NM
+						, base.GRADE
+			 			, base.SUBJECT_CD
+						, (SELECT UF_GET_SUBJECT_CODESET(base.SUBJECT_CD) FROM dual) AS SUBJECT_NM
+						, (SELECT SUBJECT_ENM FROM SUF010TB WHERE SUBJECT_CD = base.SUBJECT_CD) AS SUBJECT_ENM
+						, base.SINBUN_CODE
+						, (SELECT UF_GET_COMMON_CODESET(base.SINBUN_CODE) FROM dual) AS SINBUN_NM
+						, base.COMDIV_CODE
+						, (SELECT UF_GET_COMMON_CODESET(base.COMDIV_CODE) FROM dual) AS COMDIV_NM
+						, base.MNRCOM_DIV_CODE
+						, (SELECT UF_GET_COMMON_CODESET(base.MNRCOM_DIV_CODE) FROM dual) AS MNRCOM_DIV_CODE
+						, base.CLASS_CODE
+						, NVL((SELECT UF_GET_COMMON_CODESET(base.CLASS_CODE) FROM dual), '주간') AS CLASS_NM
+						, base.CDT_NUM
+						, base.WTIME_NUM
+						, base.PTIME_NUM
+						, base.SUBJ_DESC
+						, base.METHOD
+						, base.LECPLN_OPEN_FL
+						, base.PYENGGA_TP_CD 
+						, (SELECT UF_GET_COMMON_CODESET(base.PYENGGA_TP_CD) FROM dual) AS PYENGGA_TP_NM
+						, base.CORE_GOAL 
+						, base.MAJOR_GOAL 
+						, base.CLS_GOAL1
+						, base.CLS_GOAL2
+						, base.CLS_GOAL3
+						, DECODE(base.ABO_YN, 'N', 'O', 'Y', 'X', '-') AS ABO_YN
+						, DECODE(base.SDU_YN, 'N', 'X', 'Y', 'O', '-') AS SDU_YN
+						, DECODE(base.CYB_YN, 'N', 'X', 'Y', 'O', '-') AS CYB_YN
+						, DECODE(base.LECPLN_FUSE_FL, '0', 'X', '1', 'O', 'X') AS LECPLN_FUSE_FL
+						, DECODE(base.LECPLN_LINK_FL, '0', 'X', '1', 'O', 'X') AS LECPLN_LINK_FL
+						, DECODE(base.LECPLN_MICRO_FL, '0', 'X', '1', 'O', 'X') AS LECPLN_MICRO_FL
+						, DECODE(base.LECPLN_NANO_FL, '0', 'X', '1', 'O', 'X') AS LECPLN_NANO_FL
+			FROM 		SUF100TB base
+			WHERE 		base.YEAR = #{year}
+						AND base.SMT = #{smt}
+						AND base.SUBJECT_CD = #{subjectCd}
+						AND base.DEPT_CD = #{deptCd}
+						AND base.ABO_YN = 'N'
+						AND ROWNUM &lt; 2
+			ORDER BY 	base.SMT
+						, base.DEPT_CD
+						, base.GRADE 
+						, base.SUBJECT_CD
+						, base.SINBUN_CODE
+						, base.COMDIV_CODE
+						
+			<!-- SELECT 				A.SUBJECT_NM
+								, A.SUBJECT_CD
+								, A.SUBJECT_ENM
+								, A.CDT_NUM
+								, A.SISU
+								, B.YEAR
+								, B.WTIME_NUM
+								, B.PTIME_NUM
+								, B.COM_GRADE
+								, B.COMDIV_CODE
+								, C.SUBJ_DESC_KOR
+								, C.SUBJ_DESC_ENG
+								, D.DEPT_NM
+								, D.DEPT_CD
+								, D.COLG_NM
+								, D.CATEGORY
+								, B.SMT
+								, UF_GET_SYS020TB(B.SMT) AS SMT_NM
+								, UF_GET_SYS020TB(B.COMDIV_CODE) AS COMDIV_CODE_NM
+								, ROWNUM SEQ_NO  
+			FROM 				SUF.SUF010TB A
+			LEFT OUTER JOIN 	SUF.SUF050TB B
+								ON  A.SUBJECT_CD 	= B.SUBJECT_CD
+			LEFT OUTER JOIN 	SUF.SUF080TB C
+								ON  A.SUBJECT_CD	= C.SUBJECT_CD
+								AND B.YEAR       	= C.YEAR
+								AND B.DEPT_CD    	= C.DEPT_CD
+								AND B.SMT        	= C.SMT
+			LEFT OUTER JOIN 	SCO.V_AI_ORG D
+								ON B.DEPT_CD 		= D.DEPT_CD
+			WHERE				A.SUBJECT_CD 		= #{subjectCd}
+								<if test="deptCd != null and deptCd != ''">
+								AND B.DEPT_CD     	= #{deptCd}
+								</if>
+								AND B.YEAR         	= #{year}
+								AND B.SMT          	= #{smt} -->
+	</select>
+	
+	<select id="selectCoreView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		SCO.COMMON_CDNM(A.MAJOR_ABI_CODE) AS ABI_NAME, 
+						LISTAGG(CASE 
+				                  WHEN B.MAIN_GB_CODE = 'UE390001' THEN A.ABI_NM || '(' || SCO.COMMON_CDNM(B.MAIN_GB_CODE) || ')' 
+				                  ELSE A.ABI_NM 
+				                END,', ')WITHIN GROUP (ORDER BY B.MAIN_GB_CODE) AS ABI_NM_LIST
+       		FROM   		SUF.SUF330TB A
+       		JOIN   		(SELECT 	YEAR, SMT, DEPT_CD, ABI_GB_CD, SUBJECT_CD, DIVCLS, MAIN_GB_CODE
+				        FROM   		SUF.SUF335TB 
+				        WHERE 		YEAR = #{year} AND SUBJECT_CD = #{subjectCd} 
+				        			AND DIVCLS = (
+				        				SELECT MIN(DIVCLS)
+		                  				FROM     SUF.SUF335TB
+		                  				WHERE    YEAR = #{year} AND SMT = #{smt} AND SUBJECT_CD = #{subjectCd} AND  DEPT_CD  = '446000'
+				        			)
+				        ) B 
+				        ON A.YEAR = B.YEAR AND A.SMT = B.SMT AND A.DEPT_CD = B.DEPT_CD AND A.ABI_GB_CD = B.ABI_GB_CD
+			WHERE  		A.YEAR             = #{year}
+			AND    		A.SMT              = #{smt}
+			AND    		A.DEPT_CD		   = '446000'
+			AND    		B.SUBJECT_CD       = #{subjectCd}
+			GROUP BY 	A.YEAR, A.SMT, A.DEPT_CD, A.MAJOR_ABI_CODE
+	</select>
+	
+	<select id="selectAbiView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		SCO.COMMON_CDNM(A.MAJOR_ABI_CODE) AS ABI_NAME, 
+						LISTAGG(CASE 
+				                  WHEN B.MAIN_GB_CODE = 'UE390001' THEN A.ABI_NM || '(' || SCO.COMMON_CDNM(B.MAIN_GB_CODE) || ')' 
+				                  ELSE A.ABI_NM 
+				                END,', ')WITHIN GROUP (ORDER BY B.MAIN_GB_CODE) AS ABI_NM_LIST
+       		FROM   		SUF.SUF330TB A
+       		JOIN   		(SELECT 	YEAR, SMT, DEPT_CD, ABI_GB_CD, SUBJECT_CD, DIVCLS, MAIN_GB_CODE
+				        FROM   		SUF.SUF335TB 
+				        WHERE 		YEAR = #{year} AND SUBJECT_CD = #{subjectCd} 
+				        			AND DIVCLS = (
+				        				SELECT MIN(DIVCLS)
+		                  				FROM     SUF.SUF335TB
+		                  				WHERE    YEAR = #{year} AND SMT = #{smt} AND SUBJECT_CD = #{subjectCd} AND  DEPT_CD  = #{deptCd}
+				        			)
+				        ) B 
+				        ON A.YEAR = B.YEAR AND A.SMT = B.SMT AND A.DEPT_CD = B.DEPT_CD AND A.ABI_GB_CD = B.ABI_GB_CD
+			WHERE  		A.YEAR             = #{year}
+			AND    		A.SMT              = #{smt}
+			AND    		A.DEPT_CD		   = #{deptCd}
+			AND    		B.SUBJECT_CD       = #{subjectCd}
+			GROUP BY 	A.YEAR, A.SMT, A.DEPT_CD, A.MAJOR_ABI_CODE
+	</select>
+	
+	<!-- 목록  조회시 핵심역량 항목 삽입-->
+	<select id="getCoreAbi" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		NVL(COMBINED.MAJOR_ABI, '') AS MAJOR_ABI, 
+    					NVL(COMBINED.ESSENTIAL_ABI, '') AS ESSENTIAL_ABI 
+    		FROM 		(SELECT
+				               (SELECT (SELECT A.ABI_NM
+				                                   FROM SUF330TB A
+				                                   WHERE A.YEAR = B.YEAR
+				                                     AND A.SMT = B.SMT
+				                                     AND A.DEPT_CD = B.DEPT_CD
+				                                     AND A.ABI_GB_CD = B.ABI_GB_CD)
+				                FROM 		SUF.SUF335TB B
+				                WHERE 		YEAR = #{year}
+				                AND 		SUBJECT_CD = #{subjectCd}
+				                AND 		DIVCLS = (SELECT 	MIN(DIVCLS)
+				                                   	  FROM 		SUF.SUF335TB
+				                                  	  WHERE 	YEAR = #{year}
+				                                      AND 		SUBJECT_CD = #{subjectCd}
+				                                      AND 		DEPT_CD = '446000')
+				                AND 		DEPT_CD = '446000'
+				                AND 		SMT = #{smtCd}
+				                AND			MAIN_GB_CODE = 'UE390001') AS ESSENTIAL_ABI
+				               ,(SELECT (SELECT A.ABI_NM
+				                            FROM SUF330TB A
+				                            WHERE A.YEAR = B.YEAR
+				                              AND A.SMT = B.SMT
+				                              AND A.DEPT_CD = B.DEPT_CD
+				                              AND A.ABI_GB_CD = B.ABI_GB_CD)
+				                FROM 		SUF.SUF335TB B
+				                WHERE 		YEAR = #{year}
+				                AND 		SUBJECT_CD = #{subjectCd}
+				                AND 		DIVCLS = (SELECT 	MIN(DIVCLS)
+				                                      FROM 		SUF.SUF335TB
+				                                      WHERE 	YEAR = #{year}
+				                                      AND 		SUBJECT_CD = #{subjectCd}
+				                                      <choose>
+				                                      	<when test="majorCd == null or majorCd == ''"> AND DEPT_CD = #{deptCd}</when>
+				                                      	<otherwise>AND DEPT_CD = #{majorCd}</otherwise>
+				                                      </choose>
+				                                      )
+				                <choose>
+                                	<when test="majorCd == null or majorCd == ''"> AND DEPT_CD = #{deptCd}</when>
+                                	<otherwise>AND DEPT_CD = #{majorCd}</otherwise>
+                                </choose>
+				                AND 		SMT = #{smtCd}
+				                AND			MAIN_GB_CODE = 'UE390001')    AS MAJOR_ABI
+				                FROM DUAL
+				) COMBINED
+	</select>
+	
+	<!-- 교과목 상세보기 : 개설과목 리스트 -->
+	<select id="selectCoursesOffered" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT		base.YEAR
+						, base.SMT
+						, (SELECT UF_GET_COMMON_CODESET(base.SMT) FROM dual) AS SMT_NM
+						, base.DEPT_CD
+						, (SELECT UF_GET_ORG_CODESET('B', base.DEPT_CD) FROM dual) AS COLG_NM
+						, (SELECT UF_GET_ORG_CODESET('D', base.DEPT_CD) FROM dual) AS DEPT_NM
+						, base.SUBJECT_CD
+						, (SELECT UF_GET_SUBJECT_CODESET(base.SUBJECT_CD) FROM dual) AS SUBJECT_NM
+						, base.COMDIV_CODE
+						, (SELECT UF_GET_COMMON_CODESET(base.COMDIV_CODE) FROM dual) AS COMDIV_NM
+						, base.GRADE
+						, base.SINBUN_CODE
+						, (SELECT UF_GET_COMMON_CODESET(base.SINBUN_CODE) FROM dual) AS SINBUN_NM
+						, base.CDT_NUM
+						, base.DIVCLS
+						, target.EMP_NO
+						, (SELECT UF_GET_PROFESSOR_NAME(target.EMP_NO) FROM dual) AS EMP_NM
+						, (base.WTIME_NUM || '/' || base.PTIME_NUM) AS TIME_NUM
+						, NVL(UF_SUG_MATRIX2(base.YEAR, base.SMT, base.SUBJECT_CD, base.DIVCLS),' ') AS ROOM_TIME
+						, base.RSTR_MCNT
+						, base.SUBJ_DESC
+						, base.METHOD
+						, base.MNRCOM_DIV_CODE
+						, (SELECT UF_GET_COMMON_CODESET(base.MNRCOM_DIV_CODE) FROM dual) AS MNRCOM_DIV_NM
+						, base.LECPLN_OPEN_FL
+						, base.PYENGGA_TP_CD
+						, (SELECT UF_GET_COMMON_CODESET(base.PYENGGA_TP_CD) FROM dual) AS PYENGGA_TP_NM
+			FROM		SUF100TB base
+			LEFT JOIN	SUF110TB target
+						ON	base."YEAR" = target."YEAR"
+						AND	base.SMT = target.SMT
+						AND	base.SUBJECT_CD = target.SUBJECT_CD
+						AND	base.DIVCLS = target.DIVCLS
+			WHERE		base.YEAR = #{year}
+						AND	base.SMT = #{smt}
+						AND	base.SUBJECT_CD = #{subjectCd}
+						AND	base.ABO_YN = 'N'
+			ORDER BY	base.SMT
+						, base.DEPT_CD
+						, base.GRADE
+						, base.SUBJECT_CD
+						, base.SINBUN_CODE
+						, base.COMDIV_CODE
+						, base.DIVCLS
+	</select>
+	
+	<!-- <select id="selectCoursesOffered" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT		base.YEAR
+						, base.SMT
+						, (SELECT UF_GET_COMMON_CODESET(base.SMT) FROM dual) AS SMT_NM
+						, base.DEPT_CD
+						, (SELECT UF_GET_ORG_CODESET('B', base.DEPT_CD) FROM dual) AS COLG_NM
+						, (SELECT UF_GET_ORG_CODESET('D', base.DEPT_CD) FROM dual) AS DEPT_NM
+						, base.SUBJECT_CD
+						, (SELECT UF_GET_SUBJECT_CODESET(base.SUBJECT_CD) FROM dual) AS SUBJECT_NM
+						, base.COMDIV_CODE
+						, (SELECT UF_GET_COMMON_CODESET(base.COMDIV_CODE) FROM dual) AS COMDIV_NM
+						, base.GRADE
+						, base.SINBUN_CODE
+						, (SELECT UF_GET_COMMON_CODESET(base.SINBUN_CODE) FROM dual) AS SINBUN_NM
+						, base.CDT_NUM
+						, base.DIVCLS
+						, LISTAGG(target.EMP_NO, ',') 
+							WITHIN GROUP(ORDER BY EMP_NO) AS EMP_NO
+						, LISTAGG((SELECT UF_GET_PROFESSOR_NAME(target.EMP_NO) FROM dual), ',') 
+							WITHIN GROUP(ORDER BY (SELECT UF_GET_PROFESSOR_NAME(target.EMP_NO) FROM dual)) AS EMP_NM
+						, (base.WTIME_NUM || '/' || base.PTIME_NUM) AS TIME_NUM
+						, NVL(UF_SUG_MATRIX2(base.YEAR, base.SMT, base.SUBJECT_CD, base.DIVCLS),' ') AS ROOM_TIME
+						, base.RSTR_MCNT
+						, base.SUBJ_DESC
+						, base.METHOD
+						, base.MNRCOM_DIV_CODE
+						, (SELECT UF_GET_COMMON_CODESET(base.MNRCOM_DIV_CODE) FROM dual) AS MNRCOM_DIV_NM
+						, base.LECPLN_OPEN_FL
+						, base.PYENGGA_TP_CD
+						, (SELECT UF_GET_COMMON_CODESET(base.PYENGGA_TP_CD) FROM dual) AS PYENGGA_TP_NM
+			FROM		SUF100TB base
+			LEFT JOIN	SUF120TB target
+						ON	base."YEAR" = target."YEAR"
+						AND	base.SMT = target.SMT
+						AND	base.SUBJECT_CD = target.SUBJECT_CD
+						AND	base.DIVCLS = target.DIVCLS
+			WHERE		base.YEAR = #{year}
+						AND	base.SMT = #{smt}
+						AND	base.SUBJECT_CD = #{subjectCd}
+						AND	base.ABO_YN = 'N'
+			GROUP BY	base.YEAR
+						, base.SMT
+						, base.DEPT_CD
+						, base.GRADE
+						, base.SUBJECT_CD
+						, base.SINBUN_CODE
+						, base.COMDIV_CODE
+						, base.CDT_NUM
+						, base.DIVCLS
+						, base.WTIME_NUM
+						, base.PTIME_NUM
+						, base.RSTR_MCNT
+						, base.SUBJ_DESC
+						, base.MNRCOM_DIV_CODE
+						, base.METHOD
+						, base.LECPLN_OPEN_FL
+						, base.PYENGGA_TP_CD
+			ORDER BY	base.SMT
+						, base.DEPT_CD
+						, base.GRADE
+						, base.SUBJECT_CD
+						, base.SINBUN_CODE
+						, base.COMDIV_CODE
+						, base.DIVCLS
+	</select> -->
+	
+	<select id="selectClassList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT  	UF_SUF_SUBJECT_NM(A.SUBJECT_CD,1) AS SUBJECT_NM,
+        				A.SUBJECT_CD,
+       					A.YEAR,
+        				A.SMT,
+        				A.SISU,
+        				A.EMP_NO,
+        				A.DIVCLS,
+        				UF_APS_EMPNO_NM(A.EMP_NO) AS EMP_NM,
+        				A.STUDENT_CNT,
+        				B.RSTR_MCNT,
+        				B.GRADE,
+        				B.COMDIV_CODE,
+        				C.DEPT_NM,
+        				C.DEPT_CD,
+        				C.COLG_NM,
+        				C.CATEGORY,
+        				UF_GET_SYS020TB(B.SMT)                              AS SMT_NAME,
+        				UF_GET_SYS020TB(B.COMDIV_CODE)                      AS COMDIV_CODE_NAME,
+        				NVL(UF_SUG_MATRIX2(A.YEAR, A.SMT, #{subjectCd}, A.DIVCLS),' ') AS ROOM_TIME
+			FROM     	SUF.SUF110TB A
+        	JOIN 		SUF.SUF100TB B
+					        ON       A.SUBJECT_CD = B.SUBJECT_CD
+					        AND      A.SMT        = B.SMT
+					        AND      A.YEAR       = B.YEAR
+					        AND      A.DIVCLS     = B.DIVCLS
+				        JOIN SCO.V_AI_ORG C
+				        	ON       B.DEPT_CD = C.DEPT_CD
+			WHERE 		A.SUBJECT_CD = #{subjectCd}
+			AND 		B.DEPT_CD = #{deptCd}
+			AND 		A.YEAR <![CDATA[<=]]> #{year}
+			AND 		A.YEAR <![CDATA[>=]]> #{agoYear}
+			ORDER BY 	A.YEAR DESC
+	</select>
+		
+	<select id="selectLectureList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT * 
+			FROM (SELECT ROWNUM SEQ_NO, T.*
+				FROM (
+					SELECT 
+			       		UF_SUF_SUBJECT_NM(A.SUBJECT_CD,1) AS SUBJECT_NM,
+		                UF_SUF_SUBJECT_NM(A.SUBJECT_CD,2) AS SUBJECT_ENM,
+		                A.SUBJECT_CD,
+		                A.YEAR,
+		                A.SMT,
+		                A.SISU,
+		                A.EMP_NO,
+		                A.DIVCLS,
+		                UF_APS_EMPNO_NM(A.EMP_NO) AS EMP_NM,
+		                A.STUDENT_CNT,
+		                B.RSTR_MCNT,
+                        B.WTIME_NUM,
+                        B.PTIME_NUM,
+                        B.GRADE, 
+		                B.COMDIV_CODE,
+		                C.DEPT_NM,
+		                C.DEPT_CD,
+		                C.COLG_NM,
+		                C.CATEGORY,
+		                UF_GET_SYS020TB(B.SMT)                                    AS SMT_NAME,
+		                UF_GET_SYS020TB(B.COMDIV_CODE)                            AS COMDIV_CODE_NAME,
+		                NVL(UF_SUG_MATRIX2(A.YEAR, A.SMT, #{subjectCd}, A.DIVCLS),' ') AS ROOM_TIME  
+					FROM     SUF.SUF110TB A
+	                          JOIN 
+	                          	SUF.SUF100TB B ON A.SUBJECT_CD = B.SUBJECT_CD AND A.SMT = B.SMT AND A.YEAR = B.YEAR AND A.DIVCLS = B.DIVCLS
+						      JOIN 
+						      	SCO.V_AI_ORG C ON B.DEPT_CD = C.DEPT_CD
+					WHERE A.SUBJECT_CD = #{subjectCd}
+					AND B.DEPT_CD = #{deptCd}
+					<choose>
+						<when test='type == "Y"'>
+							AND A.YEAR = #{year}
+						</when>
+						<when test='type == "N" '>
+							AND A.YEAR <![CDATA[<=]]> #{year}
+							AND A.YEAR <![CDATA[>=]]> #{agoYear}
+						</when>
+					</choose>
+					<if test='cSmt == "Y"'>
+						AND A.SMT = #{smt}
+					</if>
+					ORDER BY A.YEAR DESC 
+					) T
+			)
+			<if test="startNum != null">
+			WHERE  SEQ_NO <![CDATA[>=]]> #{startNum}
+			AND SEQ_NO <![CDATA[<=]]>  #{endNum}
+			</if>
+			ORDER BY SEQ_NO
+	</select>
+	
+	<select id="selectLectureCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+			SELECT COUNT(1) CNT
+			FROM (SELECT ROWNUM SEQ_NO, T.*
+				FROM (
+					SELECT 
+			       		UF_SUF_SUBJECT_NM(A.SUBJECT_CD,1) AS SUBJECT_NM,
+		                UF_SUF_SUBJECT_NM(A.SUBJECT_CD,2) AS SUBJECT_ENM,
+		                A.SUBJECT_CD,
+		                A.YEAR,
+		                A.SMT,
+		                A.SISU,
+		                A.EMP_NO,
+		                A.DIVCLS,
+		                UF_APS_EMPNO_NM(A.EMP_NO) AS EMP_NM,
+		                A.STUDENT_CNT,
+		                B.RSTR_MCNT,
+                        B.WTIME_NUM,
+                        B.PTIME_NUM,
+                        B.GRADE,
+		                B.COMDIV_CODE,
+		                C.DEPT_NM,
+		                C.DEPT_CD,
+		                C.COLG_NM,
+		                C.CATEGORY,
+		                UF_GET_SYS020TB(B.SMT)                                    AS SMT_NAME,
+		                UF_GET_SYS020TB(B.COMDIV_CODE)                            AS COMDIV_CODE_NAME,
+		                NVL(UF_SUG_MATRIX2(A.YEAR, A.SMT, #{subjectCd}, A.DIVCLS),' ') AS ROOM_TIME  
+					FROM     SUF.SUF110TB A
+	                          JOIN 
+	                          	SUF.SUF100TB B ON A.SUBJECT_CD = B.SUBJECT_CD AND A.SMT = B.SMT AND A.YEAR = B.YEAR AND A.DIVCLS = B.DIVCLS
+						      JOIN 
+						      	SCO.V_AI_ORG C ON B.DEPT_CD = C.DEPT_CD
+					WHERE A.SUBJECT_CD = #{subjectCd}
+					AND B.DEPT_CD = #{deptCd}
+					<choose>
+						<when test='type == "Y"'>
+							AND A.YEAR = #{year}
+						</when>
+						<when test='type == "N" '>
+							AND A.YEAR <![CDATA[<]]> #{year}
+							AND A.YEAR <![CDATA[>=]]> #{agoYear}
+						</when>
+					</choose>
+					<if test='cSmt == "Y"'>
+						AND A.SMT = #{smt}
+					</if>
+					) T
+			)
+	</select>
+	
+	<select id="selectTotalStudent" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT COUNT(*) AS TOTAL_COUNT, B.COLG_NM, B.COLG_CD
+			FROM SUH.SUH020TB A
+			JOIN SCO.V_AI_ORG B
+			ON A.DEPT_CD = B.DEPT_CD
+			WHERE A.SUBJECT_CD = #{subjectCd}
+			AND A.YEAR <![CDATA[>=]]> #{passYear}
+			AND A.YEAR <![CDATA[<=]]> #{nowYear}
+			GROUP BY B.COLG_CD, B.COLG_NM
+			<!-- SELECT SCO.UF_COM_DEPT_NM(C.COLG_CD, 5) AS COLG_NM, SUM(A.STUDENT_CNT) AS TOTAL_COUNT
+				FROM SUF.SUF110TB A 
+				LEFT JOIN SUF.SUF100TB B
+                ON       A.SUBJECT_CD = B.SUBJECT_CD
+        		AND      A.YEAR       = B.YEAR
+         		AND      A.SMT        = B.SMT
+         		AND 	 A.DIVCLS	  = B.DIVCLS
+                LEFT JOIN SCO.V_AI_ORG C
+                ON      B.DEPT_CD = C.DEPT_CD
+			WHERE A.SUBJECT_CD = #{subjectCd}
+			AND A.STUDENT_CNT IS NOT NULL
+			AND A.YEAR <![CDATA[>=]]> #{passYear}
+			AND A.YEAR <![CDATA[<=]]> #{nowYear}
+			GROUP BY C.COLG_CD
+			ORDER BY C.COLG_CD -->
+	</select>
+	
+	<select id="selectLectureView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT   UF_SUF_SUBJECT_NM(A.SUBJECT_CD,1) AS SUBJECT_NM,
+       				 UF_SUF_SUBJECT_NM(A.SUBJECT_CD,2) AS SUBJECT_ENM,
+			         A.SUBJECT_CD,
+			         A.YEAR,
+			         A.SMT,
+			         A.EMP_NO,
+			         UF_APS_EMPNO_NM(A.EMP_NO)   AS EMP_NM,
+			         TO_CHAR(NVL(B.RSTR_MCNT,0)) AS FIX_STU_CNT,
+			         A.DIVCLS,
+			         B.GRADE,
+			         B.COMDIV_CODE,
+			         B.ENVIR_ONLINE_FL,
+			         B.ENVIR_OFFLINE_FL,
+			         B.ENVIR_BLEND_FL,
+			         DECODE( B.ENG_YN, 'N', 'O', 'Y', 'X', '-') AS ENG_YN,
+			         B.PYENGGA_TP_CD ,
+			         (SELECT UF_GET_COMMON_CODESET(B.PYENGGA_TP_CD) FROM dual) AS PYENGGA_TP_NM,
+			         NVL((SELECT UF_GET_COMMON_CODESET(B.CLASS_CODE) FROM dual), '주간') AS CLASS_NM,
+			         B.CDT_NUM,
+			         C.DEPT_NM,
+			         C.DEPT_CD,
+			         C.COLG_NM,
+			         C.CATEGORY,
+			         UF_GET_SYS020TB(B.SMT)                                    AS SMT_NAME,
+			         UF_GET_SYS020TB(B.COMDIV_CODE)                            AS COMDIV_CODE_NAME,
+			         NVL(UF_SUG_MATRIX2(A.YEAR, A.SMT, #{subjectCd}, A.DIVCLS),' ') AS ROOM_TIME
+			FROM     SUF.SUF110TB A
+			      	 LEFT OUTER JOIN SUF.SUF100TB B
+			       	 ON     A.SUBJECT_CD = B.SUBJECT_CD
+			       	 AND    A.YEAR       = B.YEAR
+			       	 AND    A.DIVCLS    = B.DIVCLS
+			       	 AND    A.SMT       = B.SMT
+			       	 LEFT OUTER JOIN SCO.V_AI_ORG C
+			       	 ON     B.DEPT_CD = C.DEPT_CD
+			WHERE    A.SUBJECT_CD          = #{subjectCd}
+			AND      B.DEPT_CD             = #{deptCd}
+			AND      A.EMP_NO              = #{empNo}
+			AND      A.YEAR                = #{year}
+			AND      A.SMT 	               = #{smt}
+			AND      A.DIVCLS			   = #{divcls}
+	</select>
+	
+	<select id="selectLectureCore" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		SCO.COMMON_CDNM(A.MAJOR_ABI_CODE) AS ABI, A.ABI_NM, B.MAIN_GB_CODE, SCO.COMMON_CDNM(B.MAIN_GB_CODE) AS MAIN_GB_NM
+       		FROM   		SUF.SUF330TB A
+       		JOIN   		SUF.SUF335TB B ON A.YEAR = B.YEAR AND A.SMT = B.SMT	AND A.DEPT_CD = B.DEPT_CD AND A.ABI_GB_CD = B.ABI_GB_CD
+			WHERE  		A.YEAR             = #{year}
+			AND    		A.SMT              = #{smt}
+			AND    		A.DEPT_CD		   = '446000'
+			AND    		B.SUBJECT_CD       = #{subjectCd}
+			AND    		B.DIVCLS       	   = #{divcls}
+			ORDER BY B.MAIN_GB_CODE ASC
+	</select>
+	
+	<select id="selectLectureAbi" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		SCO.COMMON_CDNM(A.MAJOR_ABI_CODE) AS ABI, A.ABI_NM, B.MAIN_GB_CODE, SCO.COMMON_CDNM(B.MAIN_GB_CODE) AS MAIN_GB_NM
+       		FROM   		SUF.SUF330TB A
+       		JOIN   		SUF.SUF335TB B ON A.YEAR = B.YEAR AND A.SMT = B.SMT	AND A.DEPT_CD = B.DEPT_CD AND A.ABI_GB_CD = B.ABI_GB_CD
+			WHERE  		A.YEAR             = #{year}
+			AND    		A.SMT              = #{smt}
+			AND    		A.DEPT_CD		   = #{deptCd}
+			AND    		B.SUBJECT_CD       = #{subjectCd}
+			AND    		B.DIVCLS       	   = #{divcls}
+			ORDER BY B.MAIN_GB_CODE ASC
+	</select>
+
+	
+	
+	<select id="selectEvalList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT A.YEAR, UF_GET_SYS020TB(A.SMT) AS SMT_NM, A.SUBJECT_CD, A.DIVCLS, A.SUGANG_STD_CNT, A.ANSWER_STD_CNT, A.LECESTI_AVG 
+			FROM   SUF.SUF410TB A
+			WHERE  A.SUBJECT_CD = #{subjectCd}
+			AND    A.EMP_NO     = #{empNo}
+			AND    A.YEAR       = #{year}
+			AND    A.DIVCLS     = #{divcls}
+			AND    A.LEC_EVAL_CODE = 'UF130002'
+	</select>
+	
+	<select id="selectPlanView" parameterType="java.util.HashMap" resultType="dataMap">
+			WITH RankedProf AS (
+			    SELECT PROF.*, 
+			           ROW_NUMBER() OVER (PARTITION BY PROF.V_TEA_EMPNO ORDER BY PROF.V_TEA_MDSDE DESC) AS rn
+			    FROM KFORU2018.V_TAD_TE_TEA_DEPT PROF
+			)
+			
+			SELECT 		UF_SUF_SUBJECT_NM(A.SUBJECT_CD,1) AS SUBJECT_NM,
+				       	UF_SUF_SUBJECT_NM(A.SUBJECT_CD,2) AS SUBJECT_ENM,
+				       	A.SUBJECT_CD,
+				       	A.YEAR,
+				       	A.SMT,
+				       	A.EMP_NO,
+				       	UF_APS_EMPNO_NM(A.EMP_NO) AS EMP_NM,
+				       	RP.V_TEA_EMAIL          AS EMP_EMAIL,
+				       	A.DIVCLS,
+				       	UF_GET_SYS020TB(B.SMT)         AS SMT_NAME,
+				       	UF_GET_SYS020TB(B.COMDIV_CODE) AS COMDIV_CODE_NAME,
+				       	B.GRADE,
+				       	B.COMDIV_CODE,
+				       	B.CDT_NUM,
+				       	B.WTIME_NUM,
+				       	B.PTIME_NUM,
+				       	B.SUBJ_DESC,
+				       	B.METHOD,
+				       	B.SUGANG_TRG,
+				       	B.CQI_IMP,
+				       	B.CORE_GOAL,
+				       	B.MAJOR_GOAL,
+				       	B.CLS_GOAL1,
+				       	B.CLS_GOAL2,
+				       	B.CLS_GOAL3,
+				       	B.LECPLN_FOCUS_FL, B.LECPLN_FOCUS_METHOD,
+				       	B.NONSUBJECT_DEPT_NM, B.NONSUBJECT_METHOD,
+				       	B.LECPLN_FUSE_FL, B.LECPLN_LINK_FL, B.LECPLN_MICRO_FL, B.LECPLN_NANO_FL, B.DNA_METHOD, B.CLS_TP_ETC,
+				       	B.ENVIR_ONLINE_FL, B.ENVIR_OFFLINE_FL, B.ENVIR_BLEND_FL,
+				       	B.LEC_TYPE_CODE1, B.LEC_TYPE_CODE2, B.LEC_TYPE_CODE3, B.LEC_TYPE_CODE4, B.LEC_TYPE_CODE5,
+				       	B.LEC_TYPE_CODE6, B.LEC_TYPE_CODE7, B.LEC_TYPE_CODE8, B.LEC_TYPE_CODE9, B.LEC_TYPE_CODE10,
+				        B.LEC_TYPE_CODE11, B.LEC_TYPE_CODE12, B.LEC_TYPE_CODE13, B.LEC_TYPE_CODE14, B.LEC_TYPE_CODE15, B.LEC_TYPE_DESC,
+				       	UF_GET_SYS020TB(B.MID_CODE) AS MID_CODE, B.MID_DESC, B.MID_RT, UF_GET_SYS020TB(B.END_CODE) AS END_CODE, B.END_DESC, B.END_RT,
+				       	UF_GET_SYS020TB(B.ATT_CODE) AS ATT_CODE, B.ATT_DESC, B.ATT_RT,
+				       	UF_GET_SYS020TB(B.ETC_CODE1) AS ETC_CODE1, B.ETC_TYPE1, B.ETC_DESC1, B.ETC_RT1, UF_GET_SYS020TB(B.ETC_CODE2) AS ETC_CODE2, B.ETC_TYPE2, B.ETC_DESC2, B.ETC_RT2,
+				       	UF_GET_SYS020TB(B.ETC_CODE3) AS ETC_CODE3, B.ETC_TYPE3, B.ETC_DESC3, B.ETC_RT3, UF_GET_SYS020TB(B.ETC_CODE4) AS ETC_CODE4, B.ETC_TYPE4, B.ETC_DESC4, B.ETC_RT4,
+				       	B.STUDY_SUPP_CODE1, B.STUDY_SUPP_CODE2, B.STUDY_SUPP_CODE3, B.STUDY_SUPP_CODE4, B.STUDY_SUPP_CODE5,
+				       	B.ESTI_SUPP_CODE1, B.ESTI_SUPP_CODE2, B.ESTI_SUPP_CODE3, B.ETC_SUPP,
+				       	B.TOOL_EQU, B.TOOL_SW, B.TOOL_ETC,
+				       	C.DEPT_NM,
+				       	C.DEPT_CD,
+				       	C.COLG_NM
+			FROM   SUF.SUF110TB A
+				        LEFT OUTER JOIN SUF.SUF100TB B
+				        ON     A.SUBJECT_CD = B.SUBJECT_CD
+				        AND    A.YEAR       = B.YEAR
+				        AND    A.DIVCLS     = B.DIVCLS
+				        AND    A.SMT        = B.SMT
+				        LEFT OUTER JOIN SCO.V_AI_ORG C
+				        ON     B.DEPT_CD    = C.DEPT_CD
+				        LEFT JOIN RankedProf RP
+				        ON 	  A.EMP_NO      = RP.V_TEA_EMPNO
+				        AND   RP.rn		    = 1
+			WHERE    	A.SUBJECT_CD          = #{subjectCd}
+			AND      	B.DEPT_CD             = #{deptCd}
+			AND      	A.EMP_NO              = #{empNo}
+			AND      	A.YEAR                = #{year}
+			AND    		A.SMT       		  = #{smt}
+			AND      	A.DIVCLS			  = #{divcls}
+	</select>
+	
+	<select id="selectCoreList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		SCO.COMMON_CDNM(A.MAJOR_ABI_CODE) AS ABI, A.ABI_GB_NM, A.ABI_NM, A.ABI_GB_CD,
+						COALESCE(B.MAIN_GB_CODE, '-') AS MAIN_GB_CODE, 
+						COALESCE(SCO.COMMON_CDNM(B.MAIN_GB_CODE), '-') AS MAIN_GB_NM
+       		FROM   		SUF.SUF330TB A
+       		LEFT OUTER JOIN 
+       					SUF.SUF335TB B 
+       					ON A.YEAR = B.YEAR 
+       					AND A.SMT = B.SMT	
+       					AND A.DEPT_CD = B.DEPT_CD 
+       					AND A.ABI_GB_CD = B.ABI_GB_CD 
+       					AND B.SUBJECT_CD(+) = #{subjectCd} 
+       					AND B.DIVCLS(+) = #{divcls}
+			WHERE  		A.YEAR             = #{year}
+			AND    		A.SMT              = #{smt}
+			AND    		A.DEPT_CD		   = '446000'
+			ORDER BY 	A.ABI_GB_CD ASC
+	</select>
+	
+	<select id="selectAbiList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		SCO.COMMON_CDNM(A.MAJOR_ABI_CODE) AS ABI, A.ABI_GB_NM, A.ABI_NM, A.ABI_GB_CD,
+						COALESCE(B.MAIN_GB_CODE, '-') AS MAIN_GB_CODE, 
+						COALESCE(SCO.COMMON_CDNM(B.MAIN_GB_CODE), '-') AS MAIN_GB_NM
+       		FROM   		SUF.SUF330TB A
+       		LEFT OUTER JOIN 
+       					SUF.SUF335TB B 
+       					ON A.YEAR = B.YEAR 
+       					AND A.SMT = B.SMT	
+       					AND A.DEPT_CD = B.DEPT_CD 
+       					AND A.ABI_GB_CD = B.ABI_GB_CD 
+       					AND B.SUBJECT_CD(+) = #{subjectCd} 
+       					AND B.DIVCLS(+) = #{divcls}
+			WHERE  		A.YEAR             = #{year}
+			AND    		A.SMT              = #{smt}
+			AND    		A.DEPT_CD		   = #{deptCd}
+			ORDER BY 	A.ABI_GB_CD ASC
+	</select>
+	
+	<select id="selectLinkCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+			SELECT 		COUNT(*) AS CNT
+			FROM   		SUF.SUF323TB
+			WHERE  		YEAR    			= #{year}
+			AND    		SMT       			= #{smt}
+			AND    		SUBJECT_CD   		= #{subjectCd}
+			AND    		DIVCLS       		= #{divcls}
+			ORDER BY 	LINK_SQ ASC
+	</select>
+
+	<select id="selectBookCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+			SELECT 		COUNT(*) AS CNT
+			FROM   		SUF.SUF320TB
+			WHERE  		YEAR    			= #{year}
+			AND    		SMT       			= #{smt}
+			AND    		SUBJECT_CD   		= #{subjectCd}
+			AND    		DIVCLS       		= #{divcls}
+			ORDER BY 	BOOK_SQ ASC
+	</select>
+	
+	<select id="selectLinkList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		LINK_COMP_NM, LINK_SUMMARY
+			FROM   		SUF.SUF323TB
+			WHERE  		YEAR    			= #{year}
+			AND    		SMT       			= #{smt}
+			AND    		SUBJECT_CD   		= #{subjectCd}
+			AND    		DIVCLS       		= #{divcls}
+			ORDER BY 	LINK_SQ ASC
+	</select>
+	
+	<select id="selectBookList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		YEAR, SMT, SUBJECT_CD, DIVCLS, BOOK_SQ, BOOK_GB_CODE, UF_GET_SYS020TB(BOOK_GB_CODE) AS BOOK_CODE_NM ,BOOK, AUTHOR, PUBLI_COMP, PUBLI_YEAR
+			FROM   		SUF.SUF320TB
+			WHERE  		YEAR    			= #{year}
+			AND    		SMT       			= #{smt}
+			AND    		SUBJECT_CD   		= #{subjectCd}
+			AND    		DIVCLS       		= #{divcls}
+			ORDER BY 	BOOK_SQ ASC
+	</select>
+	
+	<select id="selectWeekList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		*
+			FROM   		SUF.SUF310TB A
+			WHERE  		A.YEAR    			= #{year}
+			AND    		A.SMT       		= #{smt}
+			AND    		A.SUBJECT_CD   		= #{subjectCd}
+			AND    		A.DIVCLS       		= #{divcls}
+			AND 		(A.ENVIR_ONLINE_FL IS NOT NULL OR A.ENVIR_OFFLINE_FL IS NOT NULL OR A.ENVIR_BLEND_FL IS NOT NULL)
+			ORDER BY 	TO_NUMBER(WEEK_TP) ASC
+	</select>
+	
+	<!-- <select id="selectEvalList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT * 
+			FROM (SELECT ROWNUM SEQ_NO, T.*
+				FROM (
+					SELECT A.YEAR, UF_GET_SYS020TB(A.SMT) AS SMT_NM, A.SUBJECT_CD, A.SUGANG_STD_CNT, A.ANSWER_STD_CNT, A.LECESTI_AVG 
+					FROM   SUF.SUF410TB A
+					WHERE  A.SUBJECT_CD = #{subjectCd}
+					AND    A.EMP_NO     = #{empNo}
+					AND    A.YEAR       = #{year}
+					AND    A.LEC_EVAL_CODE = 'UF130002') T
+			)
+			<if test="startNum != null">
+			WHERE  SEQ_NO <![CDATA[>=]]> #{startNum}
+			AND SEQ_NO <![CDATA[<=]]>  #{endNum}
+			</if>
+			ORDER BY SEQ_NO
+	</select>
+	
+	<select id="selectEvalCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+			SELECT COUNT(1) CNT
+			FROM (SELECT ROWNUM SEQ_NO, T.*
+				FROM (
+					SELECT A.YEAR, UF_GET_SYS020TB(A.SMT) AS SMT_NM, A.SUBJECT_CD, A.SUGANG_STD_CNT, A.ANSWER_STD_CNT, A.LECESTI_AVG 
+					FROM   SUF.SUF410TB A
+					WHERE  A.SUBJECT_CD = #{subjectCd}
+					AND    A.EMP_NO     = #{empNo}
+					AND    A.YEAR       = #{year}
+					AND    A.LEC_EVAL_CODE = 'UF130002') T
+			)
+	</select> -->
+	
+	<select id="getJobCd" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getJobCd,직업 직무 코드값*/
+		SELECT * 
+		  FROM (
+				SELECT (DEPT_CLSF_CD||'_'||HG_MJ_CD||'_'||SC_CD||'_'||TM_GBN||'_'||YY) DOC_ID
+					 , NVL(NCS_L_CLAS_CD, 'not') AS NCS_L_CLAS_CD
+					 , NVL(NCS_M_CLAS_CD, 'not') AS NCS_M_CLAS_CD
+					 , NVL(NCS_S_CLAS_CD, 'not') AS NCS_S_CLAS_CD
+					 , NVL(NCS_SUB_D_CD, 'not') AS NCS_SUB_D_CD
+					 , NVL(NCS_CL_CD, 'not') AS NCS_CL_CD
+				  FROM INU_UNI.V_COUR127
+				) T
+		<if test="value != null and !value.equals('')">
+		WHERE T.DOC_ID = #{docId}
+		</if>
+	</select>
+	
+	<select id="getTrackList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getTrackList,나노디그리 매트릭스 상단정보*/
+		SELECT * 
+		  FROM (
+				SELECT A.TRACK_GBN
+					 , (SELECT KOR_CD_NM FROM INU_COM.BSNS011 i WHERE i.CMMN_CD= A.TRACK_GBN AND i.RPST_CD='UC075' ) AS KOR_TRACK_GBN
+					 , A.TRACK_CD
+					 , (SELECT c2.TRACK_NM FROM INU_UNI.COUR180 c2 WHERE c2.TRACK_CD = A.TRACK_CD) AS TRACK_NM
+					 ,A.YY
+					 , TRACK_SC_CD
+					 , (SELECT SC_NM FROM INU_UNI.COUR001 c2 WHERE c2.SC_CD = A.TRACK_SC_CD) AS SC_NM
+					 , (SELECT KOR_ABB_NM FROM INU_COM.BSNS011 c WHERE c.CMMN_CD = A.TM_GBN AND c.RPST_CD= 'UB011') AS KOR_TM_GBN
+					 , A.HG_MJ_CD
+					 , (SELECT DEPT_NM FROM INU_ADM.STAF010 s WHERE A.HG_MJ_CD = s.DEPT_CD) AS KOR_HG_MJ_CD
+					 , ROW_NUMBER()OVER(PARTITION BY A.TRACK_CD ORDER BY A.TRACK_CD DESC) AS RNUM
+				  FROM INU_UNI.COUR182 A
+					 , INU_UNI.COUR180 B
+				 WHERE A.DEPT_CLSF_CD = B.DEPT_CLSF_CD(+)
+				   AND A.TRACK_GBN = B.TRACK_GBN(+)
+				   AND A.TRACK_CD = B.TRACK_CD (+)
+				   AND A.YY = B.YY(+)
+				   AND A.TM_GBN = B.TM_GBN(+)
+				   AND A.HG_MJ_CD = B.HG_MJ_CD(+)
+				   AND A.TRACK_GBN NOT IN ('10','50')
+				   AND A.TRACK_SC_CD = #{trackScCd}
+				   <if test="trackCd != null and !trackCd.equals('')">
+				   AND A.TRACK_CD = #{trackCd}
+				   </if>
+				) T
+		 WHERE T.RNUM = 1
+	</select>
+	
+	<select id="getPlanProg" parameterType="java.lang.String" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getPlanProg,개설강좌-강의계획서 정보-수업진행방법 */
+		SELECT *
+		  FROM (
+				SELECT T.DOC_ID
+					 , LISTAGG(T.LSN_PROG_MTHD_GBN,',') WITHIN GROUP(ORDER BY T.LSN_PROG_MTHD_GBN) OVER(PARTITION BY T.DOC_ID) AS LSN_PROG_MTHD_GBN
+					 , SUM(T.PROG_RATE_1)OVER(PARTITION BY T.DOC_ID) AS PROG_RATE_1
+					 , SUM(T.PROG_RATE_2)OVER(PARTITION BY T.DOC_ID) AS PROG_RATE_2
+					 , SUM(T.PROG_RATE_3)OVER(PARTITION BY T.DOC_ID) AS PROG_RATE_3
+					 , SUM(T.PROG_RATE_4)OVER(PARTITION BY T.DOC_ID) AS PROG_RATE_4
+					 , SUM(T.PROG_RATE_5)OVER(PARTITION BY T.DOC_ID) AS PROG_RATE_5
+					 , SUM(T.PROG_RATE_6)OVER(PARTITION BY T.DOC_ID) AS PROG_RATE_6
+					 , SUM(T.PROG_RATE_7)OVER(PARTITION BY T.DOC_ID) AS PROG_RATE_7
+					 , SUM(T.PROG_RATE_8)OVER(PARTITION BY T.DOC_ID) AS PROG_RATE_8
+					 , ROW_NUMBER()OVER(PARTITION BY T.DOC_ID ORDER BY T.DOC_ID) AS RNUM
+				  FROM (
+						SELECT (A.DEPT_CLSF_CD||'_'||A.HAKSU_NO||'_'||A.TM_GBN||'_'||A.YY) DOC_ID
+							 , A.LSN_PROG_MTHD_GBN
+							 , (SELECT KOR_CD_NM FROM INU_COM.BSNS011 B WHERE B.RPST_CD = 'UC027' AND A.LSN_PROG_MTHD_GBN = B.CMMN_CD) AS KOR_LSN_PROG_MTHD_GBN
+							 , A.LSN_PROG_MTHD_RATE -- 수업진행방법비율
+							 , DECODE(A.LSN_PROG_MTHD_GBN, '01', A.LSN_PROG_MTHD_RATE, '0') PROG_RATE_1
+							 , DECODE(A.LSN_PROG_MTHD_GBN, '02', A.LSN_PROG_MTHD_RATE, '0') PROG_RATE_2
+							 , DECODE(A.LSN_PROG_MTHD_GBN, '03', A.LSN_PROG_MTHD_RATE, '0') PROG_RATE_3
+							 , DECODE(A.LSN_PROG_MTHD_GBN, '04', A.LSN_PROG_MTHD_RATE, '0') PROG_RATE_4
+							 , DECODE(A.LSN_PROG_MTHD_GBN, '05', A.LSN_PROG_MTHD_RATE, '0') PROG_RATE_5
+							 , DECODE(A.LSN_PROG_MTHD_GBN, '06', A.LSN_PROG_MTHD_RATE, '0') PROG_RATE_6
+							 , DECODE(A.LSN_PROG_MTHD_GBN, '07', A.LSN_PROG_MTHD_RATE, '0') PROG_RATE_7
+							 , DECODE(A.LSN_PROG_MTHD_GBN, '08', A.LSN_PROG_MTHD_RATE, '0') PROG_RATE_8
+						  FROM INU_UNI.COUR210 A
+						)T
+				<if test="value != null and !value.equals('')">
+				WHERE T.DOC_ID = #{docId}
+				</if>
+				)TB
+		WHERE TB.RNUM = 1
+	</select>
+	
+	<select id="getPlanAprt" parameterType="java.lang.String" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getPlanAprt,개설강좌-강의계획서 정보-기자재활용 */
+		SELECT *
+		  FROM (
+				SELECT T.DOC_ID
+					 , LISTAGG(T.APRT_GBN,',') WITHIN GROUP(ORDER BY T.APRT_GBN) OVER(PARTITION BY T.DOC_ID) AS APRT_GBN
+					 , SUM(T.APRT_RATE_1)OVER(PARTITION BY T.DOC_ID) AS APRT_RATE_1
+					 , SUM(T.APRT_RATE_2)OVER(PARTITION BY T.DOC_ID) AS APRT_RATE_2
+					 , SUM(T.APRT_RATE_3)OVER(PARTITION BY T.DOC_ID) AS APRT_RATE_3
+					 , SUM(T.APRT_RATE_4)OVER(PARTITION BY T.DOC_ID) AS APRT_RATE_4
+					 , SUM(T.APRT_RATE_5)OVER(PARTITION BY T.DOC_ID) AS APRT_RATE_5
+					 , SUM(T.APRT_RATE_6)OVER(PARTITION BY T.DOC_ID) AS APRT_RATE_6
+					 , SUM(T.APRT_RATE_7)OVER(PARTITION BY T.DOC_ID) AS APRT_RATE_7
+					 , SUM(T.APRT_RATE_8)OVER(PARTITION BY T.DOC_ID) AS APRT_RATE_8
+					 , ROW_NUMBER()OVER(PARTITION BY T.DOC_ID ORDER BY T.DOC_ID) AS RNUM
+				  FROM (
+						SELECT (A.DEPT_CLSF_CD||'_'||A.HAKSU_NO||'_'||A.TM_GBN||'_'||A.YY) DOC_ID
+							 , A.APRT_GBN
+							 , (SELECT KOR_CD_NM FROM INU_COM.BSNS011 B WHERE B.RPST_CD = 'UC026' AND A.APRT_GBN = B.CMMN_CD) AS KOR_APRT_GBN
+							 , A.APRT_RATE
+							 , DECODE(A.APRT_GBN, '01', A.APRT_RATE, '0') APRT_RATE_1
+							 , DECODE(A.APRT_GBN, '02', A.APRT_RATE, '0') APRT_RATE_2
+							 , DECODE(A.APRT_GBN, '03', A.APRT_RATE, '0') APRT_RATE_3
+							 , DECODE(A.APRT_GBN, '04', A.APRT_RATE, '0') APRT_RATE_4
+							 , DECODE(A.APRT_GBN, '05', A.APRT_RATE, '0') APRT_RATE_5
+							 , DECODE(A.APRT_GBN, '06', A.APRT_RATE, '0') APRT_RATE_6
+							 , DECODE(A.APRT_GBN, '07', A.APRT_RATE, '0') APRT_RATE_7
+							 , DECODE(A.APRT_GBN, '08', A.APRT_RATE, '0') APRT_RATE_8
+						  FROM INU_UNI.COUR220 A
+						)T
+				<if test="value != null and !value.equals('')">
+				WHERE T.DOC_ID = #{docId}
+				</if>
+				)TB
+		WHERE TB.RNUM = 1
+	</select>
+	
+	<select id="getPlanBook" parameterType="java.lang.String" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getPlanBook,개설강좌-강의계획서 정보-교제정보 */
+		SELECT *
+		  FROM (
+				SELECT (A.DEPT_CLSF_CD||'_'||A.HAKSU_NO||'_'||A.TM_GBN||'_'||A.YY) DOC_ID
+					 , A.TEACHM_SEQ 	
+					 , A.TEACHM_GBN 	/*교재구분 */
+					 , A.AUTH_NM 		/*저자명 */
+					 , A.PUBCO_NM 		/*출판사명 */
+					 , A.TEACHM_NM		/*교재명 */
+					 , A.OCCR_YY 		/*발생년도 */
+				  FROM INU_UNI.COUR230 A
+				 )T
+		<if test="value != null and !value.equals('')">
+		WHERE T.DOC_ID = #{docId}
+		</if>
+		ORDER BY TO_NUMBER(T.TEACHM_SEQ)
+	</select>
+	
+	<select id="getPlanWeek" parameterType="java.lang.String" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getPlanWeek,개설강좌-강의계획서 정보-주별 세부 수업계획 */
+		SELECT *
+		  FROM (
+				SELECT (A.DEPT_CLSF_CD||'_'||A.HAKSU_NO||'_'||A.TM_GBN||'_'||A.YY) DOC_ID
+					 , A.LSN_WEK_ORD_GBN
+					 , (SELECT KOR_CD_NM FROM INU_COM.BSNS011 B WHERE B.RPST_CD = 'UC001' AND A.LSN_WEK_ORD_GBN = B.CMMN_CD) AS KOR_LSN_WEK_ORD_GBN
+					 , A.LT_CTNT
+				  FROM INU_UNI.COUR250 A
+				 )T
+		<if test="value != null and !value.equals('')">
+		WHERE T.DOC_ID = #{docId}
+		</if>
+		ORDER BY TO_NUMBER(T.LSN_WEK_ORD_GBN)
+	</select>
+	
+	<select id="getPlanPrjt" parameterType="java.lang.String" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getPlanPrjt,개설강좌-강의계획서 정보-과제 */
+		SELECT *
+		  FROM (
+				SELECT (A.DEPT_CLSF_CD||'_'||A.HAKSU_NO||'_'||A.TM_GBN||'_'||A.YY) DOC_ID
+					 , A.PRJT_SEQ 					/*과제순번 */
+					 , A.LSN_PRJT_NM 				/*수업과제명 */
+					 , A.PRJT_SUBM_DT				/*과제제출일자 */
+					 , A.PRJT_PURP 					/*과제목표 */
+					 , A.PRJT_PROG_MTHD_CTNT		/*과제진행방법내용 */
+					 , A.PRJT_REF_DATA_CTNT 		/*과제참고자료내용 */
+				  FROM INU_UNI.COUR240 A
+				 )T
+		<if test="value != null and !value.equals('')">
+		WHERE T.DOC_ID = #{docId}
+		</if>
+		ORDER BY TO_NUMBER(T.PRJT_SEQ)
+	</select>
+	
+	<select id="getLessonTime" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getLessonTime,개설강좌-시간표 정보 */
+		SELECT * 
+		  FROM (
+				SELECT X.*
+					, ROW_NUMBER()OVER(PARTITION BY X.LT_ROOM_CD ORDER BY X.LT_ROOM_CD DESC) RNUM
+				  FROM (
+						SELECT (DEPT_CLSF_CD||'_'||HAKSU_NO||'_'||TM_GBN||'_'||YY) DOC_ID
+							 , Y.YY
+							 , Y.TM_GBN
+							 , Y.BD_CD
+							 , Y.LT_ROOM_CD
+							 , (SELECT KOR_CD_NM FROM INU_COM.BSNS011 B WHERE B.RPST_CD = 'UC004' AND Y.DAY_GBN = B.CMMN_CD) AS KOR_DAY_GBN
+							 , (SELECT KOR_CD_NM FROM INU_COM.BSNS011 B WHERE B.RPST_CD = 'UC054' AND Y.DISP_LECTM_GBN = B.CMMN_CD) AS KOR_DISP_LECTM_GBN
+						  FROM INU_UNI.COUR320 Y
+						) X
+				WHERE X.DOC_ID IN 
+				<foreach collection="list" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+				)A
+		WHERE A.RNUM = '1'
+	</select>
+	
+	<select id="getLessonRoom" resultType="java.util.HashMap">
+		/* SbjtOraMapper.getLessonRoom,개설강좌-강의실 정보 */
+		SELECT T.DOC_ID
+			 , LISTAGG(T.LT_ROOM_NM,',')WITHIN GROUP (ORDER BY T.LT_ROOM_NM) AS LT_ROOM_NM
+			 , T.KOR_DAY_GBN
+			 ,T.KOR_DISP_LECTM_GBN
+		  FROM (
+				<foreach collection="list" item="map" open="" close="" separator=" UNION ALL "> 
+					SELECT #{map.DOC_ID} AS DOC_ID
+						 , A.LT_ROOM_NM
+						 , A.LT_ROOM_ABB_NM
+						 , #{map.KOR_DAY_GBN} AS KOR_DAY_GBN
+						 , #{map.KOR_DISP_LECTM_GBN} AS KOR_DISP_LECTM_GBN
+					  FROM INU_UNI.COUR300 A
+					<!-- WHERE A.DEPT_CLSF_CD = '0000587' -->
+					  WHERE A.USE_YN = '1'
+					  AND A.BD_CD = #{map.BD_CD}
+					  AND A.LT_ROOM_CD = #{map.LT_ROOM_CD}
+					  AND A.YY = #{map.YY}
+					  AND A.TM_GBN = #{map.TM_GBN}
+				</foreach>
+		       )T
+		GROUP BY T.DOC_ID, T.KOR_DAY_GBN, T.KOR_DISP_LECTM_GBN
+	</select>
+	
+	<!-- 대학코드 조회 -->
+	<select id="getStatList" resultType="java.util.HashMap">
+		/*SbjtOraMapper.getStatList, 학수번호 별 대학코드 조회*/
+		<foreach collection="list" item="map" open="" close="" separator=" UNION ALL "> 
+			SELECT #{map.colgCdCnt} AS COLG_CNT
+				 , A.DEPT_NM
+			  FROM INU_ADM.STAF010 A
+			  WHERE A.USE_YN = '1'
+			  AND A.DEPT_CD = #{map.colgCd}
+		</foreach>
+	</select>
+	
+	
+	
+
+
+</mapper>            

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+			"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ocean.main.mainOceanMapper">
+
+	<!-- 비교과 정보 -->
+	<select id="selectAiNonCourse" parameterType="java.util.List" resultType="dataMap">
+		<foreach collection="list" item="item" index="index" open="" separator="UNION ALL" close="">
+		SELECT			CAST(base.pidx AS CHAR(5)) pidx
+						, (SELECT REPLACE(title, '"', "'") FROM im_eco_program_table WHERE base.pidx = idx) program_title
+						, CAST(base.tidx AS CHAR(5)) tidx
+						, (SELECT REPLACE(title, '"', "'") FROM im_eco_topic_table WHERE base.tidx = idx) topic_title
+						, target.type
+						, (SELECT REPLACE(title, '"', "'") FROM im_eco_program_type_table WHERE target.type = TYPE AND is_visible = TRUE) type_nm
+						, CAST(target.category1 AS CHAR(5)) category1
+						, (SELECT REPLACE(title, '"', "'") FROM im_eco_category_table WHERE target.category1 = idx AND is_use = TRUE) category1_nm
+						, CAST(target.category2 AS CHAR(5)) category2
+						, (SELECT REPLACE(title, '"', "'") FROM im_eco_category_table WHERE target.category2 = idx AND is_use = TRUE) category2_nm
+ 						, REPLACE(target.education_goal, '"', "'") education_goal
+						, REPLACE(target.abstract, '"', "'") abstract_title
+						, CONCAT('GH02', base.semester) smt
+						, CAST(base.count AS CHAR(5)) count
+						, CAST(base.time AS CHAR(5)) time
+						, DATE_FORMAT(FROM_UNIXTIME(base.start_date), '%Y-%m-%d') start_date
+						, DATE_FORMAT(FROM_UNIXTIME(base.end_date), '%Y-%m-%d') end_date
+						, DATE_FORMAT(FROM_UNIXTIME(base.signin_start_date), '%Y-%m-%d') signin_start_date
+						, DATE_FORMAT(FROM_UNIXTIME(base.signin_end_date), '%Y-%m-%d') signin_end_date
+						, CAST(base.level AS CHAR(5)) level
+						, base.level2
+						, CAST(base.essential_level AS CHAR(5)) essential_level
+						, CAST(base.essential_point AS CHAR(5)) essential_point
+						, CAST(base.score AS CHAR(5)) score
+						, CAST(base.signin_limit AS CHAR(5)) signin_limit
+						, CAST(base.awaiter_limit AS CHAR(5)) awaiter_limit
+						, base.showing_topic
+						, CAST(base.applicant AS CHAR(5)) applicant
+						, CAST(base.participant AS CHAR(5)) participant
+						, base.is_complete
+						, target.cover cover
+		                , target.updated_date updated_date
+		                , base.point point
+		FROM			im_eco_program_topic_table base
+		LEFT JOIN		im_eco_program_table target
+						ON base.pidx = target.idx
+		WHERE			pidx = #{item.pidx} AND tidx = #{item.tidx}
+		</foreach>
+	</select>
+	
+	<!-- 핵심역량 -->
+	<select id="selectCoreCompDiagnosis" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT
+		    diagnosis,
+		    year,
+		    name,
+		    midx,
+		    code,
+		    essential1,
+		    essential1_nm,
+		    essential2,
+		    essential2_nm,
+		    CASE WHEN  point > 45 THEN 45 ELSE point end AS point
+		FROM (
+				SELECT			base.diagnosis		
+								, CONCAT(YEAR(FROM_UNIXTIME(target3.start_date)),MONTH(FROM_UNIXTIME(target3.start_date))) year																						
+								, target.name 																								
+								, base.midx																									
+								, target.code																								
+								, base.essential1																							
+								, (SELECT title FROM im_essential_table WHERE idx = base.essential1) essential1_nm							
+								, base.essential2																							
+								, (SELECT title FROM im_essential_table WHERE idx = base.essential2) essential2_nm
+								, TRUNCATE(CASE WHEN (target2.`point` &lt;&gt; 0 ) THEN ( base.`point` + target2.`point` ) ELSE base.`point` END, 1) point							
+				FROM			im_essential_diagnosis_result_table base
+				LEFT JOIN		im_member_table 					target
+								ON base.midx = target.idx
+				LEFT JOIN		im_essential_point_table 			target2				
+								ON base.midx = target2.midx 
+				JOIN 			im_essential_diagnosis_table 		target3 
+								ON base.diagnosis = target3.idx
+								AND ( base.essential1 = target2.essential OR base.essential2 = target2.essential )
+				WHERE			target.code = #{STUDENT_NO}
+								AND base.essential2 = 0
+								AND base.essential1 &lt;&gt; 0
+				ORDER BY		base.essential1
+			)combined
+	</select>
+	
+	<!-- 전공역량 -->
+	<select id="selectMajorCompDiagnosis" parameterType="java.util.HashMap" resultType="dataMap">
+<!-- 		SELECT			base.diagnosis -->
+<!-- 						, base.midx -->
+<!-- 						, base.competency1  -->
+<!-- 						, (SELECT title FROM im_course_competency_table WHERE idx = base.competency1) competency1_nm	 -->
+<!-- 						, base.point -->
+<!-- 		FROM 			im_competency_diagnosis_result_table base -->
+<!-- 		LEFT JOIN		im_member_table target -->
+<!-- 						ON base.midx = target.idx -->
+<!-- 		WHERE			target.code = #{STUDENT_NO} -->
+<!-- 						AND competency1 &lt;&gt; 0 -->
+
+<!-- 		SELECT			base.diagnosis -->
+<!-- 						, #{STUDENT_NO} AS STUDENT_NO -->
+<!-- 						, base.midx AS USER_NO -->
+<!-- 						, base.didx	AS DEPT_CD -->
+<!-- 						, base.major_idx 	 -->
+<!-- 						, (SELECT RTRIM(title) FROM im_course_competency_table WHERE idx = base.major_idx) competency1_nm	 -->
+<!-- 						, SUM(base.point) AS POINT -->
+<!-- 		FROM 			im_competency_diagnosis_major_result_table base -->
+<!-- 		LEFT JOIN		im_member_table target -->
+<!-- 						ON base.midx = target.idx -->
+<!-- 		WHERE			target.code = #{STUDENT_NO} -->
+<!-- 		GROUP BY		base.diagnosis -->
+<!-- 						, base.midx -->
+<!-- 						, base.didx -->
+<!-- 						, base.major_idx -->
+
+			SELECT
+			        target.code as STUDENT_NO
+			       , CONCAT(YEAR(FROM_UNIXTIME(target2.start_date)),MONTH(FROM_UNIXTIME(target2.start_date))) year
+			       , CASE WHEN base.competency1 = 0
+			           THEN '전체'
+			           ELSE (SELECT RTRIM(title) FROM im_competency_table WHERE idx = base.competency1)
+			         END COMPETENCY1_NM
+			       , base.midx AS USER_NO
+			       , CASE WHEN base.point > 20 THEN 20 ELSE base.point END AS POINT
+			FROM 
+				  im_competency_diagnosis_result_table base 
+				, im_member_table target
+				, im_competency_diagnosis_table target2
+			WHERE 
+				base.midx = target.idx
+			AND base.competency1 != 0
+			AND target.code = #{STUDENT_NO}			
+			AND base.diagnosis = target2.idx
+	</select>
+	
+</mapper>

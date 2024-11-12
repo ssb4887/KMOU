@@ -1,0 +1,8 @@
+@charset "utf-8";
+
+@import url('default.css');
+@import url('iframe_layout.css');
+@import url('contents.css');
+
+
+.btnCenter {margin-top:10px; text-align:right;}

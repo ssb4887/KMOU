@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.code.lang.masterMapper">
+    
+	<sql id="MASTER_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG"/>MASTER_INFO_LANG</trim></sql>
+	<sql id="VIEW_MASTER_TABLE_NAME"><trim><include refid="rbs.commonMapper.VIEW_PRE_FLAG"/>MASTER_INFO_LANG</trim></sql>
+	
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.MASTER_CODE, A.MASTER_NAME, A.ISHIDDEN, A.REMARKS, A.REGI_DATE
+			FROM 
+			<include refid="VIEW_MASTER_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+			<bind name="defaultOrderStr" value="'A.ORDER_IDX DESC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="VIEW_MASTER_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+	</select>
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="VIEW_MASTER_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+	</select>
+	
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="VIEW_MASTER_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+	</select>
+	
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="MASTER_TABLE_NAME"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE_LANG"/>
+	</update>
+	
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.MASTER_CODE, A.MASTER_NAME, A.REMARKS, A.REGI_NAME,  
+			A.REGI_DATE, A.LAST_MODI_NAME, A.LAST_MODI_ID, A.LAST_MODI_DATE 
+			FROM 
+			<include refid="VIEW_MASTER_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE_LANG"/> 
+			ORDER BY A.LAST_MODI_DATE DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="VIEW_MASTER_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE_LANG"/> 
+	</select>
+</mapper>

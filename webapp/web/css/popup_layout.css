@@ -1,0 +1,18 @@
+@charset "utf-8";
+
+@import url('common_layout.css');
+
+/* 메인페이지 내용 */
+#container {position:relative; z-index:1;} /* 2014-06-09 수정 */
+#contentsWrap {position:relative; overflow:hidden; /*width:800px; margin:0 auto;*/ margin:0px;}
+
+
+/* 본문내용 */
+/*#content {margin:0 auto; position:relative; width:100%; min-height:500px; padding:0px 0 30px; font-size:13px;}*/
+#content {margin:0px auto; position:relative; padding:0px; font-size:13px;}
+
+#footerWrap {position:absolute; bottom:0px; width:100%;background-color:#486db3;height:30px; z-index:1000;}
+#footerWrap .close_check {float:left;padding:5px;}
+#footerWrap .close_btn {float:right;padding:7px;}
+#footerWrap .close_btn #fn_btn_close {border:0px; width:15px; height:15px; background: url(../images/button/btn_close_01.gif) no-repeat #486db3; text-indent: -999px;}
+#footerWrap img, #footer input {vertical-align: middle;}

@@ -1,0 +1,162 @@
+{
+	"item_info":{
+		"items":{
+		    "name":{
+				"column_id":"NAME"
+				, "item_name":"작성자"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "calDate":{
+				"column_id":"CAL_DATE"
+				, "item_name":"일정기간"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":15
+				, "object_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "endDate":{
+				"column_id":"END_DATE"
+				, "item_name":"일정종료"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":15
+				, "object_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "subject":{
+				"column_id":"SUBJECT"
+				, "item_name":"제목"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "maximum":200
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "contents":{
+				"column_id":"CONTENTS"
+				, "item_name":"내용"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":1
+				, "editor":1
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "file":{
+				"column_id":"FILE"
+				, "item_name":"파일"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":9
+				, "write_type":0
+				, "modify_type":0
+				,"use_setting_id":"use_file"
+				, "default_item":1
+			},"listImg":{
+				"item_id":"listImg"
+				, "column_id":"LISTIMG"
+				,"dset_file_ext":"gif,jpg,jpeg,png"
+				,"format_type":0
+				,"isimage":1
+				,"item_name":"대표이미지"
+				,"item_name_de":"대표이미지"
+				,"item_name_en":"대표이미지"
+				,"item_name_es":"대표이미지"
+				,"item_name_fr":"대표이미지"
+				,"item_name_ja":"대표이미지"
+				,"item_name_ko":"대표이미지"
+				,"item_name_zh":"대표이미지"
+				,"maximum":0
+				,"minimum":0
+				,"modify_type":0
+				,"object_type":6
+				,"option_type":0
+				,"use_file_ext":1
+				,"write_type":0
+				,"use_setting_id":"use_list_img"
+				,"default_item":1
+			}
+		}, "list_order":[
+			"listImg"
+			, "calDate"
+			, "subject"
+			, "contents"
+		]
+		, "view_order":[
+			"listImg"
+			, "calDate"
+			, "subject"
+			, "contents"
+			, "file"
+		]
+		, "write_order":[
+		    "name"	
+			, "calDate"
+			, "subject"
+			, "contents"
+			, "listImg"
+			, "file"
+		]
+		, "writeproc_order":[
+			"name"	
+			, "calDate"
+			, "subject"
+			, "contents"
+			, "listImg"
+			, "file"
+		]
+		, "modify_order":[
+			"name"	
+			, "calDate"
+			, "subject"
+			, "contents"
+			, "listImg"
+			, "file"
+		]
+		, "modifyproc_order":[
+		    "name"	
+			, "calDate"
+			, "subject"
+			, "contents"
+			, "listImg"
+			, "file"
+		]
+		, "list_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+				 "subject":{
+						"column_id":"SUBJECT"
+						, "item_name":"제목"
+					},
+					 "contents":{
+						"column_id":"CONTENTS"
+						, "item_name":"내용"
+					}
+				}, "select_order":[
+				    "subject"
+					, "contents"
+				]
+			}, "searchForm_order":[
+				 "keyField"
+			], "search_order":[
+				 "keyField"
+			]
+		}
+	}
+}

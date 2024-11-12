@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.usr.main.mainMapper">
+	<select id="boardHashMap" parameterType="java.util.HashMap" resultType="dataMap">
+		<foreach collection="boardJsonArray" item="board" index="i" open=" ( " separator=" ) UNION ALL ( " close=" ) ">
+			<bind name="defaultOrderStr" value="'A.' + board.boardIdxColumn + ' DESC'"/>
+			<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+				SELECT ${board.menuIdx} MENU_IDX, ${board.fnIdx} FN_IDX, A.${board.boardIdxColumn} IDX
+				<choose>
+					<when test="board.boardDesignType != 'memo'">, A.SUBJECT</when>
+					<otherwise>, NULL SUBJECT</otherwise>
+				</choose> 
+				, A.CONTENTS, A.CONTENTS2 CONTENTS2, A.REGI_DATE, <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(A.NAME, A.REGI_NAME)</trim> NAME
+				<choose>
+					<when test="board.useCate">, (<include refid="rbs.modules.code.lang.optionMapper.SELECT_OPTN_NAME"/> AND OPTN.MASTER_CODE = #{board.dsetCateListMasterCode} AND OPTN.OPTION_CODE = A.${board.dsetCateListColumnId}) OPTN_NAME</when>
+					<otherwise>, NULL OPTN_NAME</otherwise>
+				</choose> 
+				FROM 
+				<bind name="fnIdx" value="board.fnIdx"/>
+				<choose>
+					<when test="board.boardDesignType == 'memo'"><include refid="rbs.modules.board.boardMemoMapper.MEMO_TABLE_NAME"/></when>
+					<otherwise><include refid="rbs.modules.board.boardMapper.BORD_TABLE_NAME"/></otherwise>
+				</choose> A
+				<bind name="tableAlias" value="'A'"/>
+				<bind name="searchList" value="board.searchList"/>
+				<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+				<bind name="useQna" value="board.useQna"/>
+				<bind name="useDldate" value="board.useDldate"/>
+				<bind name="usePrivate" value="board.usePrivate"/>
+				<bind name="boardDesignType" value="board.boardDesignType"/>
+				<include refid="rbs.modules.board.boardMapper.SELECT_LIST_WHERE"/>
+			<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+		</foreach>
+	</select>
+	
+	<select id="contentsHashMap" parameterType="java.util.HashMap" resultType="dataMap">
+		<foreach collection="contentsJsonArray" item="contents" index="i" separator="UNION ALL">
+			SELECT ${contents.menuIdx} MENU_IDX, A.CONTENTS_CODE, A.BRANCH_IDX, A.LOCALE_LANG, A.VER_IDX, A.WORK_CONTENTS, A.REGI_DATE, A.REGI_NAME 
+			FROM <include refid="rbs.modules.contents.contWork9Mapper.WORK_A_TABLE_NAME"/> A
+			<bind name="tableAlias" value="'A'"/>
+			<bind name="searchList" value="contents.searchList"/>
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		</foreach>
+	</select>
+	
+	<select id="getIsPrivacyAgree" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT 
+			CASE WHEN COUNT(*) = 0 THEN 'N' 
+									ELSE 'Y' 
+			END AS IS_AGREE 
+		FROM 
+			uni_privacy_policy
+		WHERE 
+			PERS_NO = #{MEMBER_ID}
+		AND NOW() BETWEEN START_DATE AND END_DATE
+	</select>
+	
+	<insert id="insertPrivacyPolicy" parameterType="java.util.HashMap">
+	    INSERT INTO uni_privacy_policy (
+	    	PERS_NO, 		
+	    	START_DATE, 	
+	    	END_DATE
+	    ) VALUES (
+	    	#{MEMBER_ID}, 	
+	    	NOW(), 			
+	    	DATE_ADD(NOW(), INTERVAL 6 MONTH)
+	    ) 
+	</insert>		
+</mapper>

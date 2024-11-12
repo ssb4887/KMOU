@@ -1,0 +1,660 @@
+{
+	"item_info":{
+		"items":{
+		    "name":{
+				"column_id":"NAME"
+				, "item_name":"작성자"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "subject":{
+				"column_id":"SUBJECT"
+				, "item_name":"제목"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "maximum":200
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "file":{
+				"column_id":"FILE"
+				, "item_name":"파일"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":6
+				, "write_type":0
+				, "modify_type":0
+				,"use_setting_id":"use_file"
+				, "default_item":1
+			}, "colgCd":{
+				"column_id":"COLG_CD"
+				, "item_name":"대학코드"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":22
+				, "item_type":1
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+				, "is_exist":1
+ 			}, "deptCd":{
+				"column_id":"DEPT_CD"
+				, "item_name":"학부/학과코드"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":22
+				, "item_type":1
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+				, "is_exist":1
+ 			}, "majorCd":{
+				"column_id":"MAJOR_CD"
+				, "item_name":"전공코드"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":22
+				, "master_code":"MAJOR_CODE"
+				, "item_type":1
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+				, "is_exist":1
+ 			},"year":{
+				"item_name":"연도"
+				, "column_id":"YEAR"
+				, "required_write":1
+				, "required_modify":0
+				, "format_type":19
+				, "start_year":2020
+				, "end_addcnt":1
+				, "object_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+				, "excel_row":0
+			}, "colgNm":{
+				"column_id":"COLG_NM"
+				, "item_name":"대학명"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "maximum":200
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "deptNm":{
+				"column_id":"DEPT_NM"
+				, "item_name":"학부(과)명"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "maximum":200
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "majorNmKor":{
+				"column_id":"MAJOR_NM_KOR"
+				, "item_name":"전공명한글"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "maximum":200
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "majorNmEng":{
+				"column_id":"MAJOR_NM_ENG"
+				, "item_name":"전공명영문"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "maximum":200
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"majorIntro":{
+				"column_id":"MAJOR_INTRO"
+				, "item_name":"전공소개"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "content_type":2
+				, "editor":1
+				, "editor_utype":1				
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"grdtAfCarr":{
+				"column_id":"GRDT_AF_CARR"
+				, "item_name":"졸업후진로(진출분야)"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "content_type":2
+				, "editor":1
+				, "editor_utype":1
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"ord":{
+				"item_name":"순서"
+				, "column_id":"ORD"
+				, "required_write":1
+				, "required_modify":0
+				, "format_type":19
+				, "start_year":2020
+				, "end_addcnt":1
+				, "object_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+				, "excel_row":0
+			},"licenseNm":{
+				"column_id":"LICENSE_NM"
+				, "item_name":"관련자격증"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "content_type":2
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"filed":{
+				"column_id":"FIELD"
+				, "item_name":"진출분야"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "content_type":2
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"nonSbjtNm":{
+				"column_id":"NON_SBJT_NM"
+				, "item_name":"비교과"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "content_type":2
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"goal":{
+				"column_id":"GOAL"
+				, "item_name":"교육목표"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "content_type":2
+				, "editor":1
+				, "editor_utype":1
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"useFg":{
+				"item_id":"useFg"
+				, "column_id":"USE_FG"
+				, "item_name":"사용여부"
+				, "required_write":0
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"USE_FG"
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+ 			},"sptPsnKor":{
+				"column_id":"SPT_PSN_KOR"
+				, "item_name":"전문인(한글)"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "content_type":2
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"majorAbty":{
+				"column_id":"MAJOR_ABTY"
+				, "item_name":"전공능력"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "content_type":2
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},"majorAbtyDefn":{
+				"column_id":"MAJOR_ABTY_DEFN"
+				, "item_name":"전공능력정의"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "content_type":2
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "parentAbty":{
+				"column_id":"PARENT_ABTY_CD"
+				, "item_name":"상위능력코드"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":22
+				, "item_type":1
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+				, "is_exist":1
+ 			}
+			,"sbjtFgNm":{
+				"column_id":"SBJT_FG_NM"
+				, "item_name":"교과구분"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			
+			} ,"sbjtFg":{
+				"column_id":"SBJT_FG"
+				, "item_name":"교과구분 코드"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			
+			},"openShyrNm":{
+				"column_id":"OPEN_SHYR_NM"
+				, "item_name":"개설학년 구분"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			
+			} ,"shtmNm":{
+				"column_id":"SHTM_NM"
+				, "item_name":"학기구분"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			
+			} ,"openShyrFg":{
+				"column_id":"OPEN_SHYR_FG"
+				, "item_name":"개설학년 구분 코드"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			
+			},"openSustMjNm":{
+				"column_id":"OPEN_SUST_MJ_NM"
+				, "item_name":"개설학과전공명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			
+			} ,"sbjtKorNm":{
+				"column_id":"SUBJECT_NM"
+				, "item_name":"과목명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			
+			} ,"sbjtKorNm1":{
+				"column_id":"SBJT_KOR_NM_1"
+				, "item_name":"1학년 과목명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			
+			} ,"sbjtKorNm2":{
+				"column_id":"SBJT_KOR_NM_2"
+				, "item_name":"2학년 과목명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			
+			} ,"sbjtKorNm3":{
+				"column_id":"SBJT_KOR_NM_3"
+				, "item_name":"3학년 과목명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			
+			} ,"sbjtKorNm4":{
+				"column_id":"SBJT_KOR_NM_4"
+				, "item_name":"4학년 과목명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			
+			} ,"sbjtKorNm5":{
+				"column_id":"SBJT_KOR_NM_5"
+				, "item_name":"5학년 과목명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1			
+			} ,"lastModiId":{
+				"column_id":"LAST_MODI_ID"
+				, "item_name":"최종수정자ID"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1			
+			} ,"lastModiDate":{
+				"column_id":"LAST_MODI_DATE"
+				, "item_name":"최종수정일자"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			} ,"courseNo":{
+				"column_id":"COURSE_NO"
+				, "item_name":"학수번호"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":0
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}
+		}, "list_order":[
+			"majorCd"
+			, "courseNo"
+			, "year"
+			
+		], "majorList_order":[
+			"majorCd"
+		], "trackList_order":[
+		], "jobList_order":[
+		], "view_order":[
+			"year"
+			, "useFg"
+			, "majorCd"
+			, "majorIntro"
+			, "grdtAfCarr"
+			, "licenseNm"
+			, "goal"	
+		], "copy_order":[
+			"year"	
+		]
+		, "write_order":[
+			"majorCd"
+			, "useFg"
+			, "majorIntro"
+			, "grdtAfCarr"
+			, "licenseNm"
+			, "goal"
+		], "writeDept_order":[
+			"useFg"
+		]
+		, "writeTrack_order":[
+		], "writeJob_order":[
+		], "writeDtl_order":[
+		]
+		, "writeproc_order":[
+			 "useFg"
+			, "colgCd"
+			, "colgNm"
+			, "deptCd"
+			, "deptNm"
+			, "majorCd"
+			, "majorNmKor"
+			, "majorNmEng"
+			, "majorIntro"
+			, "grdtAfCarr"
+			, "goal"
+		], "writeAbtyproc_order":[
+			"majorCd"
+			,"majorAbty"
+			,"majorAbtyDefn"
+			,"parentAbty"
+		], "writeYearproc_order":[
+		], "writeCYearproc_order":[
+		], "writeStatisticproc_order":[
+		], "writeTrackproc_order":[
+		], "writeCTrackproc_order":[
+		], "writeJobproc_order":[
+		], "writeCJobproc_order":[
+		], "writeDtlproc_order":[
+		], "writeCDtlproc_order":[
+		], "courMajorModifyproc_order":[
+			"field"
+		], "rcmdCultModifyproc_order":[
+			"eduCorsCapbFg"
+		]
+		, "modify_order":[
+			"year"
+			, "file"
+			, "useFg"
+			, "majorCd"
+			, "majorIntro"
+			, "grdtAfCarr"
+			, "licenseNm"
+			, "goal"
+		], "modifyTrack_order":[
+		], "modifyJob_order":[
+		]
+		, "modifyproc_order":[
+			 "useFg"
+			, "majorIntro"
+			, "grdtAfCarr"
+			, "licenseNm"
+			, "goal"
+		], "modifyNonMajorproc_order":[
+			 "majorCd"
+			, "field"
+			, "nonSbjtNm"
+			, "ord"
+		], "modifyLicenseproc_order":[
+			 "majorCd"
+			, "field"
+			, "licenseNm"
+			, "ord"
+		]
+		, "modifyYearproc_order":[
+		], "modifyStatisticproc_order":[
+		], "modifyTrackproc_order":[
+		], "modifyJobproc_order":[
+		], "modifyDtlproc_order":[
+		]
+		, "list_search":{
+			"key":{
+				"items":{
+					
+					"sbjtNm":{
+						"column_id":"SUBJECT_NM"
+						, "item_name":"과목명"
+					},
+					"year":{
+						"item_name":"연도"
+						, "column_id":"YEAR"
+						, "required_write":1
+						, "required_modify":0
+						, "format_type":19
+						, "start_year":2020
+						, "end_addcnt":1
+						, "object_type":0
+						, "write_type":1
+						, "modify_type":10
+						, "default_item":1
+						, "excel_row":0
+					},
+					"colgCd":{
+						"column_id":"COLG_CD"
+						, "item_name":"대학코드"
+						, "required_write":0
+						, "required_modify":0
+						, "format_type":0
+						, "object_type":0
+						, "editor":1
+						, "maximum":0
+						, "write_type":0
+						, "modify_type":0
+						, "default_item":1
+					},
+					"deptCd":{
+						"column_id":"DEPT_CD"
+						, "item_name":"학과/학부코드"
+						, "required_write":0
+						, "required_modify":0
+						, "format_type":0
+						, "object_type":0
+						, "editor":1
+						, "maximum":0
+						, "write_type":0
+						, "modify_type":0
+						, "default_item":1
+					},
+					"majorCd":{
+						"column_id":"MAJOR_CD"
+						, "item_name":"전공코드"
+						, "required_write":0
+						, "required_modify":0
+						, "format_type":0
+						, "object_type":0
+						, "default_item":1
+					},
+					"majorNmKor":{
+						"column_id":"MAJOR_NM_KOR"
+						, "item_name":"전공명"
+						, "required_write":0
+						, "required_modify":0
+						, "format_type":0
+						, "object_type":0
+						, "default_item":1
+					}
+				}
+			}, "searchForm_order":[
+				"majorNmKor"
+			], "search_order":[
+				"majorCd"
+				,"year"				
+				,"majorNmKor"
+				,"colgCd"
+				,"deptCd"
+			]
+		}
+	}
+}

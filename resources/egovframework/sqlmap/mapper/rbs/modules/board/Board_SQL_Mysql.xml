@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.board.boardMapper">
+	<sql id="BORD_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />BOARD_${fnIdx}_INFO</trim></sql>
+	<sql id="COMMON_SELECT">
+		A.*
+		<choose>
+			<when test="boardDesignType == 'photo'"><include refid="BORD_PHOTO_SELECT"/></when>
+			<when test="boardDesignType != 'memo'"><include refid="BORD_FILE_CNT_SELECT"/></when>
+		</choose>
+		<if test="useQna and boardDesignType == 'default' and pageType == 'view'">
+			<include refid="BORD_QNA_CNT_SELECT"/>
+		</if>
+	</sql>
+	<sql id="BORD_PHOTO_SELECT">
+		, (SELECT COUNT(1) FROM <include refid="rbs.modules.board.boardFileMapper.FILE_TABLE_NAME"/> T_FILE WHERE T_FILE.BRD_IDX = A.BRD_IDX AND <![CDATA[T_FILE.ITEM_ID <> 'file']]>) FILE_CNT
+		, T_FILE.FILE_SAVED_NAME, T_FILE.FILE_TEXT
+	</sql>
+	<sql id="BORD_FILE_CNT_SELECT">
+		, (SELECT COUNT(1) FROM <include refid="rbs.modules.board.boardFileMapper.FILE_TABLE_NAME"/> T_FILE WHERE T_FILE.BRD_IDX = A.BRD_IDX) FILE_CNT
+	</sql>
+	<sql id="BORD_QNA_CNT_SELECT">
+		, (SELECT COUNT(1) FROM <include refid="BORD_TABLE_NAME"/> WHERE PNT_IDX = A.BRD_IDX AND ISDELETE = '0') QNA_CNT
+	</sql>
+	<sql id="SELECT_DLDATE_WHERE">
+		AND A.ISSTOP = '0' 
+		<![CDATA[AND ((A.DSP_DATE1 IS NULL OR (A.DSP_DATE1 IS NOT NULL AND A.DSP_DATE1 <= ]]><include refid="rbs.commonDBMSMapper.currentDateYYYY-MM-DD"/><![CDATA[)) AND (A.DSP_DATE2 IS NULL OR (A.DSP_DATE2 IS NOT NULL AND A.DSP_DATE2 >= ]]><include refid="rbs.commonDBMSMapper.currentDateYYYY-MM-DD"/><![CDATA[)))]]>
+	</sql>
+	<sql id="SELECT_PRIVATE_WHERE">
+		AND A.PNT_IDX IN (
+			SELECT BRD_IDX 
+			FROM 
+			<include refid="rbs.modules.board.boardMapper.BORD_TABLE_NAME"/>
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<if test="useQna and boardDesignType == 'default' and !isAllSelect">AND A.RE_LEVEL = 1</if>
+			<choose>
+				<when test="isNmPage">AND MEMBER_DUP = #{memberDup}</when>
+				<otherwise>AND REGI_IDX = #{memberIdx}</otherwise>
+			</choose>
+		)
+	</sql>
+	<sql id="SELECT_LIST_WHERE">
+		<if test="useQna and boardDesignType == 'default' and !isAllSelect">AND A.RE_LEVEL = 1</if>
+		<include refid="rbs.modules.board.boardMapper.SELECT_LIST_COMMON_WHERE"/>
+	</sql>
+	<sql id="SELECT_LIST_COMMON_WHERE">
+		<if test="!isAdmMode">
+			<if test="useDldate"><include refid="rbs.modules.board.boardMapper.SELECT_DLDATE_WHERE"/></if>
+			<if test="usePrivate"><include refid="rbs.modules.board.boardMapper.SELECT_PRIVATE_WHERE"/></if>
+		</if>
+	</sql>
+	<sql id="SELECT_LIST_COMMON_ORDER">
+		<choose>
+			<when test="dsetOrderField == null">
+				<choose>
+					<when test="boardDesignType == 'faq'"><bind name="defaultOrderStr" value="'A.BRD_IDX DESC'"/></when>
+					<when test="boardDesignType == 'memo'"><bind name="defaultOrderStr" value="'A.MEM_IDX DESC'"/></when>
+					<otherwise><bind name="defaultOrderStr" value="'A.PNT_IDX DESC, A.RE_STEP'"/></otherwise>
+				</choose>
+			</when>
+			<otherwise>
+				<bind name="defaultOrderStr" value="_parameter.get('dsetOrderField')"/>
+			</otherwise>
+		</choose>
+		<include refid="rbs.commonMapper.COM_ORDER"/>
+	</sql>
+	<sql id="SELECT_NEXT_LIST">
+			SELECT
+			<include refid="COMMON_SELECT"/>, 1 ISPRENEXT
+			FROM 
+			<include refid="BORD_TABLE_NAME"/> A 
+			LEFT OUTER JOIN <include refid="rbs.modules.board.boardFileMapper.FILE_TABLE_NAME"/> T_FILE 
+			ON T_FILE.BRD_IDX = A.BRD_IDX AND T_FILE.ITEM_ID = 'file' AND T_FILE.ORDER_IDX = 1
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<include refid="SELECT_LIST_WHERE"/>
+			AND A.NOTICE = '0'
+			<choose>
+				<when test="dsetOrderField == null">
+					AND (
+						A.PNT_IDX <![CDATA[>]]> #{brdIdx} 
+						OR (
+							A.PNT_IDX = (SELECT PNT_IDX FROM <include refid="BORD_TABLE_NAME"/> WHERE BRD_IDX = #{brdIdx})
+							AND A.RE_STEP <![CDATA[<]]> (SELECT RE_STEP FROM <include refid="BORD_TABLE_NAME"/> WHERE BRD_IDX = #{brdIdx})
+						)
+					)
+					<choose>
+						<when test="dsetViewNextCnt == 1"><bind name="defaultOrderStr" value="'A.PNT_IDX ASC, A.RE_STEP DESC'"/></when>
+						<otherwise><bind name="defaultOrderStr" value="'A.PNT_IDX DESC, A.RE_STEP ASC'"/></otherwise>
+					</choose>
+				</when>
+				<otherwise>
+					<bind name="defaultOrderStr" value="_parameter.get('dsetOrderField')"/>
+				</otherwise>
+			</choose>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+	</sql>
+	<sql id="SELECT_PRE_LIST">
+			SELECT
+			<include refid="COMMON_SELECT"/>, 2 ISPRENEXT
+			FROM 
+			<include refid="BORD_TABLE_NAME"/> A 
+			LEFT OUTER JOIN <include refid="rbs.modules.board.boardFileMapper.FILE_TABLE_NAME"/> T_FILE 
+			ON T_FILE.BRD_IDX = A.BRD_IDX AND T_FILE.ITEM_ID = 'file' AND T_FILE.ORDER_IDX = 1
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<include refid="SELECT_LIST_WHERE"/>
+			AND A.NOTICE = '0'
+			<choose>
+				<when test="dsetOrderField == null">
+					AND (
+						(
+							A.PNT_IDX <![CDATA[<]]> (SELECT PNT_IDX FROM <include refid="BORD_TABLE_NAME"/> WHERE BRD_IDX = #{brdIdx}) 
+							<if test="dsetViewPreCnt == 1">AND A.BRD_IDX <![CDATA[<]]> #{brdIdx}</if> 
+							
+						) OR 
+						(
+							A.PNT_IDX = (SELECT PNT_IDX FROM <include refid="BORD_TABLE_NAME"/> WHERE BRD_IDX = #{brdIdx})
+							AND A.RE_STEP <![CDATA[>]]> (SELECT RE_STEP FROM <include refid="BORD_TABLE_NAME"/> WHERE BRD_IDX = #{brdIdx})
+						) 
+					)
+					<bind name="defaultOrderStr" value="'A.PNT_IDX DESC, A.RE_STEP ASC'"/>
+				</when>
+				<when test="inverseDefaultOrderStr != null">
+					<bind name="defaultOrderStr" value="_parameter.get('inverseDefaultOrderStr')"/>
+				</when>
+				<otherwise>
+					<bind name="defaultOrderStr" value="_parameter.get('dsetOrderField')"/>
+				</otherwise>
+			</choose>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+	</sql>
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(BRD_IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="BORD_TABLE_NAME"/> A
+	</select>
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		<if test="useNotice">
+		SELECT A.*
+		FROM (
+			(
+				SELECT 
+				<include refid="COMMON_SELECT"/>
+				<if test="usePntInfo">
+				, NULL P_REGI_IDX, NULL P_MEMBER_DUP
+				</if>
+				FROM 
+				<include refid="BORD_TABLE_NAME"/> A 
+				LEFT OUTER JOIN <include refid="rbs.modules.board.boardFileMapper.FILE_TABLE_NAME"/> T_FILE 
+				ON T_FILE.BRD_IDX = A.BRD_IDX AND T_FILE.ITEM_ID = 'file' AND T_FILE.ORDER_IDX = 1
+				WHERE A.ISDELETE = '0'
+				AND A.NOTICE = '1'
+				<include refid="SELECT_LIST_WHERE"/>
+				<include refid="SELECT_LIST_COMMON_ORDER"/>
+			)
+			UNION ALL
+			(
+		</if>
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			<include refid="COMMON_SELECT"/>
+			<if test="usePntInfo">
+			, P.REGI_IDX P_REGI_IDX, P.MEMBER_DUP P_MEMBER_DUP
+			</if>
+			FROM 
+			<include refid="BORD_TABLE_NAME"/> A 
+			LEFT OUTER JOIN <include refid="rbs.modules.board.boardFileMapper.FILE_TABLE_NAME"/> T_FILE 
+			ON T_FILE.BRD_IDX = A.BRD_IDX AND T_FILE.ITEM_ID = 'file' AND T_FILE.ORDER_IDX = 1
+			<if test="usePntInfo">
+			LEFT OUTER JOIN <include refid="BORD_TABLE_NAME"/> P 
+			<![CDATA[ ON A.BRD_IDX <> A.PNT_IDX AND A.PNT_IDX = P.BRD_IDX AND P.ISDELETE = '0' AND P.RE_LEVEL = 1 ]]>
+			</if>
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<if test="useNotice">AND A.NOTICE = '0'</if>
+			<include refid="SELECT_LIST_WHERE"/>
+			<choose>
+				<when test="searchValue != null and searchValue != '' and field == 'sj'">AND  SUBJECT LIKE #{searchValue}</when>
+				<when test="searchValue != null and searchValue != '' and field == 'all'">AND (SUBJECT LIKE #{searchValue} OR CONTENTS LIKE #{searchValue})</when>
+				<when test="searchValue != null and searchValue != '' and field == 'cn'">AND CONTENTS LIKE #{searchValue}</when>
+				<when test="searchValue != null and searchValue != '' and field == 'ncnm'">AND NAME LIKE #{searchValue}</when>
+				<otherwise></otherwise>
+			</choose>
+			<include refid="SELECT_LIST_COMMON_ORDER"/>
+			<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+		<if test="useNotice">
+			)) A
+			<choose>
+			<when test="dsetOrderField == null">
+				<choose>
+					<when test="boardDesignType == 'faq'"><bind name="defaultOrderStr" value="'A.NOTICE DESC, A.BRD_IDX DESC'"/></when>
+					<otherwise><bind name="defaultOrderStr" value="'A.NOTICE DESC, A.PNT_IDX DESC, A.RE_STEP'"/></otherwise>
+				</choose>
+			</when>
+			<otherwise>
+				<bind name="defaultOrderStr" value="_parameter.get('dsetOrderField')"/>
+			</otherwise>
+		</choose>
+		<include refid="rbs.commonMapper.COM_ORDER"/>
+		</if>
+	</select>
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="BORD_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<include refid="SELECT_LIST_WHERE"/>
+			<choose>
+				<when test="searchValue != null and searchValue != '' and field == 'sj'">AND  SUBJECT LIKE #{searchValue}</when>
+				<when test="searchValue != null and searchValue != '' and field == 'all'">AND (SUBJECT LIKE #{searchValue} OR CONTENTS LIKE #{searchValue})</when>
+				<when test="searchValue != null and searchValue != '' and field == 'cn'">AND CONTENTS LIKE #{searchValue}</when>
+				<when test="searchValue != null and searchValue != '' and field == 'ncnm'">AND NAME LIKE #{searchValue}</when>
+				<otherwise></otherwise>
+			</choose>
+	</select>
+	<select id="selectPntList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT A.*
+		FROM 
+		<include refid="BORD_TABLE_NAME"/> A 
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		AND A.RE_STEP IN (
+			SELECT MAX_RE_STEP
+			FROM (
+				SELECT PNT_IDX, RE_LEVEL, MAX(RE_STEP) MAX_RE_STEP
+				FROM 
+				<include refid="BORD_TABLE_NAME"/> A
+				<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+				GROUP BY PNT_IDX, RE_LEVEL
+			) A
+		)
+		<include refid="SELECT_LIST_COMMON_WHERE"/>
+		<bind name="defaultOrderStr" value="'A.PNT_IDX DESC, A.RE_STEP'"/>
+		<include refid="rbs.commonMapper.COM_ORDER"/>
+	</select>
+	<select id="selectNextCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM (
+			<include refid="SELECT_NEXT_LIST"/>
+		) 
+	</select>
+	<select id="selectPreCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM (
+			<include refid="SELECT_PRE_LIST"/>
+		) 
+	</select>
+	<select id="selectPreNextList" parameterType="java.util.HashMap" resultType="dataMap">
+		(
+			SELECT AAA.*
+			FROM (
+				<include refid="SELECT_NEXT_LIST"/>
+				LIMIT #{dsetViewNextCnt} OFFSET 0
+			) AAA
+		)
+		UNION ALL
+		(
+			SELECT AAA.*
+			FROM (
+				<include refid="SELECT_PRE_LIST"/>
+				LIMIT #{dsetViewPreCnt} OFFSET 0
+			) AAA	
+		)
+	</select>
+	<select id="selectFileList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			<foreach collection="columnList" item="columnItem" index="i" separator=",">
+				${columnItem}
+			</foreach>
+			FROM 
+			<include refid="BORD_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<select id="selectFileView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.${columnItem}_SAVED_NAME, A.${columnItem}_ORIGIN_NAME
+			FROM 
+			<include refid="BORD_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*, MEM.MEMBER_NAME, MEM.MEMBER_EMAIL, MEM.MOBILE_PHONE1, MEM.MOBILE_PHONE2, MEM.MOBILE_PHONE3
+			<if test="useQna and boardDesignType == 'default'">
+				<include refid="BORD_QNA_CNT_SELECT"/>
+			</if>
+			FROM 
+			<include refid="BORD_TABLE_NAME"/> A 
+			LEFT OUTER JOIN <include refid="rbs.modules.member.memberTotMapper.MEMBER_TABLE_NAME"/> MEM
+			ON A.REGI_IDX = MEM.MEMBER_IDX
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<if test="!isAdmMode">
+				<if test="useDldate"><include refid="SELECT_DLDATE_WHERE"/></if>
+				<if test="usePrivate"><include refid="SELECT_PRIVATE_WHERE"/></if>
+			</if>
+	</select>
+	<update id="updateViews" parameterType="java.util.HashMap">
+		UPDATE <include refid="BORD_TABLE_NAME"/> SET VIEWS = VIEWS + 1 
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	<update id="updateFileDown" parameterType="java.util.HashMap">
+		UPDATE <include refid="BORD_TABLE_NAME"/> SET ${FILE_COLUMN}_DCNT = ${FILE_COLUMN}_DCNT + 1 
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	<select id="authCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="BORD_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectPwdCnt" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1)
+		FROM 
+		<include refid="BORD_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/> 
+		<choose>
+		<when test="checkType == 2">
+		AND (A.BRD_IDX = #{brdIdx} 
+			OR A.BRD_IDX IN (
+				SELECT IA.PNT_IDX 
+				FROM <include refid="BORD_TABLE_NAME"/> IA 
+				WHERE IA.ISDELETE = '0' AND IA.BRD_IDX = #{brdIdx}))
+		</when>
+		<when test="checkType == 1">
+		AND A.BRD_IDX IN (
+				SELECT IA.PNT_IDX 
+				FROM <include refid="BORD_TABLE_NAME"/> IA 
+				WHERE IA.ISDELETE = '0' AND IA.BRD_IDX = #{brdIdx})
+		</when>
+		</choose>
+	</select>
+	
+	<select id="selectReLevel" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT RE_LEVEL
+		FROM 
+		<include refid="BORD_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/> 
+	</select>
+	
+	<!-- 비밀번호 확인 항목 -->
+	<select id="selectPwdView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.PWD, A.RE_LEVEL
+			FROM 
+			<include refid="BORD_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*
+			<if test="useQna and boardDesignType == 'default'">
+				<include refid="BORD_QNA_CNT_SELECT"/>
+			</if>
+			FROM 
+			<include refid="BORD_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="BORD_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="BORD_TABLE_NAME"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT A.*
+			FROM 
+			<include refid="BORD_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+			<bind name="defaultOrderStr" value="'A.BRD_IDX DESC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="BORD_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/> 
+	</select>
+	<update id="delete" parameterType="java.util.HashMap">
+		UPDATE <include refid="BORD_TABLE_NAME"/> SET ISDELETE = '1', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	<update id="restore" parameterType="java.util.HashMap">
+		UPDATE <include refid="BORD_TABLE_NAME"/> SET ISDELETE = '0', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="BORD_TABLE_NAME"/>  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	
+	<!-- 파일다운로드 사유 -->
+	<sql id="BORD_FILECMT_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />BOARD_FILECOMT_INFO</trim></sql>
+	
+	<select id="fileCmtNextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(CMT_IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="BORD_FILECMT_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<insert id="fileCmtInsert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="BORD_FILECMT_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+</mapper>            

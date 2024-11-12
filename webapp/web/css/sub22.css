@@ -1,0 +1,1773 @@
+@charset "utf-8";
+
+/*서브 상단 백그라운드*/
+.sub_background{background-repeat:no-repeat; background-size:cover;padding:2.5rem 0;}
+.sub_background.major_bg{background-image:url(../images/bg_sub_major.png);background-position:center 80%;}
+.sub_background.profess_bg{background-image:url(../images/bg_sub_profess.png);background-position:center 80%;}
+.sub_background.speci_bg{background-image:url(../images/bg_sub_speci.png);background-position:center 80%;}
+.sub_background.mypage_bg{background-image:url(../images/bg_sub_mypage.png);background-position:center 80%;}
+.sub_background.plan_bg{background-image:url(../images/bg_sub_plan.png);background-position:center 80%;}
+ 
+.sub_background .title{ font-size:clamp(28px, 4vw, 32px); }
+
+
+/*공통****detail page -- title****상세페이지 공통 제목박스*/
+.detail_title_wrap .title_box{border-top:1px solid #222; border-bottom:1px solid #222;}
+.detail_title_wrap .title_box a{color:var(--pk_blue); min-width: 80px; }
+.detail_title_wrap .content_title{width:calc(100% - 160px)}
+.detail_title_wrap .content_title.sbjt__title{padding-right:80px;width:calc(100% - 80px)}
+.like_container{min-width: 80px;cursor: pointer;}
+.like_container .link_cnt:hover svg{animation: heart_hov 0.4s ease-in-out alternate infinite;}
+.like_container .link_cnt > svg{width:20px; height:20px;transform-origin: center bottom;}
+.like_container.on_red .link_cnt > svg path:first-child{fill:#f95e5e!important;transition:all 0.3s;;}
+@keyframes heart_hov {
+    0%{transform: rotate(-3deg);}
+    100%{transform: rotate(3deg);}
+    
+}
+/*공통****list page -- search ressult text*****리스트 공통 서치결과 텍스트*/
+.search_res{font-size:20px;}
+.search_res strong{color:#0038FF; }
+.search_res span{color:#979797;}
+
+/*공통****list page -- item category*****리스트 공통 아이템 카테고리 기본set*/
+.item .cate li{padding:0.2rem 0.5rem 0.1rem 0.5rem; border-radius:4px; font-size:13px;font-weight:700;}
+
+
+/*공통*****list page --- search wrap bbox*****서치빡스*/
+.search_wrap_bbox{margin-top:2.5rem;}
+.search_wrap_bbox .row_box > *{font-size:15px!important;}
+.search_wrap_bbox .row_box h4 , .search_wrap_bbox .row_box .h4{min-width:120px; font-size:15px; font-weight:bolder;}
+.search_wrap_bbox .row_box .form-select{cursor: pointer; font-size:15px;}
+
+.dtl_tit{position: relative; cursor: pointer; transition: color 0.3s;;}
+.dtl_tit:before ,
+.dtl_tit:after{content:''; display:block; background:transparent; position:absolute;}
+.dtl_tit:before{width:12px; height:12px; border-radius:3px; top:calc(0.55rem + 2px); left:97px;border:1px solid #555;}
+.dtl_tit:after{width:6px; height: 6px; border-top:2px solid #555; border-right:2px solid #555;transform-origin:center ; transform:rotate(135deg);top:calc(0.55rem + 4px);left:100px;}
+
+.dtl_tit.open{color:var(--pk_blue);transition: color 0.3s;;}
+.dtl_tit.open:before,
+.dtl_tit.open:after{width:9px; height:2px; background:var(--pk_blue);border-radius: 25rem; border:0}
+.dtl_tit.open:before{transform:rotate(-45deg);top:calc(0.55rem + 8px); left:55px; }
+.dtl_tit.open:after{transform:rotate(45deg);top:calc(0.55rem + 8px); left:60px; }
+
+.dtl_tit span{opacity: 1; visibility: visible; transition:all 0.2s;}
+.dtl_tit.open span{opacity: 0; visibility: hidden;transition:all 0.2s;}
+
+
+/*전공·교양-서치박스*/
+.search_wrap_bbox .row_box_basic .input-group{width:calc(100% - 280px - 1rem); }
+.search_wrap_bbox .row_box_basic .input-group > *{padding:0.75rem}
+.search_wrap_bbox .row_box_basic .input-group .form-select{max-width: 260px;}
+.search_wrap_bbox .row_box_basic .input-group:before{content:''; display:block; width:1px; height:calc(100% - 1.2rem); background:#ddd; position:absolute ; top:50%; transform:translateY(-50%); left:260px;z-index: 2;}
+.search_wrap_bbox .row_box_basic button{width:160px; padding:0.75rem; border-radius:5px;}
+
+.search_wrap_bbox .row_box_dtl{border-top:1px solid transparent;transition: border 0.5s;;}
+.search_wrap_bbox .dtl_tit {padding-top:0.55rem;}
+
+.search_wrap_bbox .row_box_dtl .column_box_wrap{width:calc(100% - 60px); display:flex; flex-direction: row;}
+.search_wrap_bbox .row_box_dtl .column_box{width:50%;}
+.search_wrap_bbox .unit:not(:last-child){margin-bottom:1rem;}
+.search_wrap_bbox .unit span{display:block; min-width:100px; font-weight:600;}
+.search_wrap_bbox .unit > *:not(span) {width:calc(100% - 100px)}
+.search_wrap_bbox .unit ul.gap-2 li.col-4{width:calc(33.33% - 0.3rem)}
+.search_wrap_bbox .unit ul.gap-2 li.col-3{width:calc(25% - 0.35rem)}
+.search_wrap_bbox .unit ul.gap-3 li.col-6{width:calc(50% - 0.5rem); row-gap:0!important;}
+.search_wrap_bbox .unit .btn{ border:1px solid #ddd; border-radius:0;font-size:15px; position: relative;padding:0.5rem 0.25rem;}
+.search_wrap_bbox .unit li:not(:last-child) .btn{border-right:0;}
+.search_wrap_bbox .unit ul.blue_btn .btn.on{border-radius:5px;; border-color:#001A9F; color:#001A9F; font-weight:700;}
+.search_wrap_bbox .unit ul.blue_btn .btn.on:after{content:'';width:1px; height:calc(100% - 4px); display:block; background: #001A9F; position:absolute; top:50%; right:-1px; transform:translateY(-50%); z-index: 1;;}
+.search_wrap_bbox .unit ul.green_btn .btn.on{border-radius:5px; border-color:#008992; color:#008992;font-weight:700;}
+.search_wrap_bbox .unit ul.green_btn .btn.on:after{content:'';width:1px; height:calc(100% - 4px); display:block; background: #008992; position:absolute; top:50%; right:-1px; transform:translateY(-50%); z-index: 1;;}
+
+.search_wrap_bbox .row_box_dtl.fold_conts{border-color:#ddd; transition: border 0.5s;;}
+.search_wrap_bbox .row_box_dtl.fold_conts~.reload_btn{margin-top:-1.5rem;transition:margin-top 0.3s;}
+
+.reload_btn{background:#fff; border:1px solid #8699BE; color:#114A9C; font-size:14px; display:flex; flex-direction:row;  align-items: center ; padding:0.25rem 0.5rem; gap:0.5rem; border-radius:5px; margin-top:2rem; margin-left:auto;transition:margin-top 0.3s;}
+.reload_btn img{transform-origin: center center ; transform:rotate(0deg); transition:all 0.5s;}
+.reload_btn:hover img{transform:rotate(200deg); transition:all 0.5s;}
+
+/*전공·교양*/
+.majref_wrap .item{width:calc(50% - 0.75rem); border-radius:15px; padding:2rem;transition:border 0.3s;}
+.majref_wrap .item .cate li{color:#fff;}
+.majref_wrap .item .maj_choice{background:#0F3E8E;}
+.majref_wrap .item .maj_esse{background:#F33435;}
+.majref_wrap .item .refin{background:#ED9100;}
+.majref_wrap .item .cate .name_of_class{background:#fff; border:1px solid #9F9F9F; color:#555; font-weight:500;}
+.majref_wrap .item .cate .name_of_class span:not(:first-child){margin-left:0.75rem;position: relative;;}
+.majref_wrap .item .cate .name_of_class span:not(:first-child):before{content:""; display:block ; width:6px; height:6px; border-top:1px solid #555; border-right:1px solid #555; transform:rotate(45deg); transform-origin: center center; top:5px;position: absolute; left: -0.55rem;}
+
+.majref_wrap .item .title a{ color:#222; font-size:22px; line-height: 1.3; min-height:58px;}
+.majref_wrap .item:has(.title a:hover){border-color:#003377!important; transition:border 0.3s;}
+.majref_wrap .item .desc_txt{min-height:48px;}
+.majref_wrap .item .info li strong{min-width: 70px;display:inline-block;}
+.majref_wrap .item .info li span.rounded-pill{background:#E7EBF6;font-size:0.9rem;  padding:0.1rem 0.5rem; font-weight:700;}
+.majref_wrap .item .info li:nth-child(3) span.rounded-pill{background:#D0E2FF; color:#003377;}
+
+
+/*************************************************************************************/
+/*************************************************************************************/
+/*************************************************************************************/
+/*전공·교양상세 - 정보*/
+.majref_dtl_wrap .table_maj{padding-bottom:1rem;border-bottom:1px dashed #888; margin-bottom:2rem;}
+.majref_dtl_wrap .table_maj > .table{border-top:1px solid #222;}
+.majref_dtl_wrap .table_maj > .table tr > *{padding:1rem; vertical-align: middle; font-size:15px;}
+.majref_dtl_wrap .table_maj > .table th{background:rgba(231, 236, 246, 0.7); }
+.majref_dtl_wrap .table_maj > .table tr.col_half td{width:fit-content}
+.majref_dtl_wrap .table_maj > .table .in_table .wrap{border:1px solid #92A3C5; margin-bottom:0;border-right:0;}
+.majref_dtl_wrap .table_maj > .table .in_table .wrap strong{background:#dee3f2; padding:0.5rem; border-right:1px solid #92A3C5;}
+.majref_dtl_wrap .table_maj > .table .in_table .wrap small{border-right:1px solid #92a3c5; padding:0.5rem;font-size:0.9rem;}  
+
+/*전공·교양상세 - 강좌개설이력*/
+.open_history .form-select{max-width: 160px;font-size:0.9rem;}
+.open_history .item{border:1px solid #C0C0C0; border-radius:15px; width:calc(50% - 0.75rem)}
+.open_history .item h5{height:50px;}
+.open_history .item .cate li.nati_navy{color:var(--pk_blue); border:1px solid var(--pk_blue);}
+.open_history .item .cate li.alon_red{color:#F33435; border:1px solid #F33435;}
+.open_history .item .cate li.refi_yell{color:#ED9100; border:1px solid #ED9100;}
+.open_history .item .cate li.styl_skyb{color:#0099D8; border:1px solid #0099D8;}
+.open_history .item .cate li.styl_lighb{color:#0377CE; border:1px solid #0377CE;}
+.open_history .item .cate li.ongo{color:#4571E9; border:1px solid #4571E9;}
+.open_history .item .cate li.past{color:#999; border:1px solid #999;}
+.open_history .item .simply_info{column-gap: 1rem;row-gap: 0.3rem;;}
+.open_history .item .info_box{background:#EFF2FA; border-radius: 5px;}
+.open_history .item .info_box ol{row-gap: 0.5rem;;}
+.open_history .item .info_box ol li.col-lg-8 b{min-width: 100px;}
+.open_history .item .info_box ol li.col-lg-4 b{min-width: 40px;}
+.open_history .item .link_wrap i{width:30px; height:30px; background:var(--pk_blue);   }
+.open_history .item .link_wrap i + span{font-size:0.95rem;}
+.open_history .item .link_wrap i + span:not(.text-dark){color:var(--pk_blue);}
+.open_history .item .link_wrap li.vari_link i{background:#d9d9d9;transition:all 0.3s;}
+.open_history .item .link_wrap li.vari_link.on i{background:var(--pk_blue);transition:all 0.3s; }
+
+.majref_dtl_chart .chart_box{background:transparent;  width:100%; height:400px; border-bottom:1px solid #222; }
+
+/*전공·교양상세 - 강좌개설이력 - 모달*/
+.modal_syllabus{--bs-modal-width:1300px; padding-left:2rem; padding-right:2rem;}
+.modal_syllabus .btn-close{width:25px; height:25px; opacity: 1;}
+.modal_syllabus h2{font-size: 22px; color:#222; font-weight: bolder;}
+.modal_syllabus h2 a{ font-size:15px; font-weight: normal;background:var(--pk_blue); color:#fff;padding:0.5rem 0.7rem;}
+.modal_syllabus table{border-top:1px solid #222; }
+.modal_syllabus table tr > *{font-size:15px;vertical-align: middle; padding:0.5rem;;color:#555;}
+.modal_syllabus table tr th{background:rgba(246, 247, 251, 0.7); border-right:1px solid var(--bs-border-color);color:#222;}
+.modal_syllabus table tr th:not(:first-child){border-left:1px solid var(--bs-border-color);}
+.modal_syllabus table tr td{padding:1rem;}
+.modal_syllabus table .in_table{border:1px solid #92A3C5; margin-bottom:0;border-right:0;}
+.modal_syllabus table .in_table tr > *{border-right:1px solid #92A3C5; font-weight: normal;text-align: center;padding:0.5rem;}
+.modal_syllabus table .in_table tr th{background:#DEE3F2; border-bottom:0;}
+.modal_syllabus .modal-footer button{min-width: 120px;;}
+.modal_syllabus .modal-footer button:first-child{border:1px solid #F55682; color:#F55682;}
+.modal_syllabus .modal-footer button:last-child{border:1px solid var(--pk_blue); color:var(--pk_blue);}
+.modal_syllabus .ttip{width:22px; height:22px; background:#0099D8;color:#fff; border-radius: 50%;padding-right:2px; margin-left:4px; }
+
+
+/*******************************************************z******************************/
+/*************************************************************************************/
+/*************************************************************************************/
+/*교수목록*/
+.profff_search_bbox .row_box_basic > .input-group{width:calc((100% - 280px) / 2 - 1rem)}
+.profff_search_bbox .row_box_basic .input-group:before{left:130px}
+.profff_search_bbox .row_box_basic .input-group .form-select{max-width:130px;}
+
+.profff_search_bbox .unit{margin-bottom:0!important;; width:calc((100% - 280px) / 2 - 1rem)}
+.profff_search_bbox .unit span{min-width:50px;}
+.profff_search_bbox .unit .input-group{width:calc(100% - 50px);}
+.profff_search_bbox .unit .input-group:before{display:none;}
+.profff_search_bbox .unit .input-group > *{padding:0; }
+.profff_search_bbox .unit .input-group .form-select{padding-top:0.8rem; padding-bottom:0.8rem;}
+
+.profss_wrap .item{width:calc(33.33% - 1rem);  border-radius: 1rem;padding:2rem; }
+.profss_wrap .item .photo_box{min-width: 80px; min-height:80px;width:80px; height:80px;}
+.profss_wrap .item .photo_box img{width:100%; height:100%; object-fit: cover;;}
+.profss_wrap .item .txt_box strong{font-size:22px; font-weight: 700; color:#222;;}
+.profss_wrap .item .txt_box strong small{font-size:15px;  color:#555;;}
+
+.profss_wrap .item .txt_box span em:has(+em){position:relative;margin-right:0.5rem; padding-right:0.5rem; }
+.profss_wrap .item .txt_box span em:has(+em):after{content:''; width:7px; height:7px; border-top:1px solid #555; border-right:1px solid #555; transform:rotate(45deg); transform-origin: center center; display:block; position:absolute; top:7px ; right:-0.25rem;;}
+.profss_wrap .item .dtl_info li{color:#555;}
+.profss_wrap .item .dtl_info li strong{min-width:80px;display:inline-block; color:#222; }
+
+
+/*************************************************************************************/
+/*************************************************************************************/
+/*************************************************************************************/
+.profss_dtl_wrap ~ .prof_section{margin-bottom:2rem;}
+/*교수상세 - 교수상세*/
+.profss_dtl_wrap{padding-bottom:2rem; border-bottom:1px dashed #888; margin-bottom:2rem;}
+.profss_dtl_wrap .photo_box{min-width:140px; width: 140px; height: 160px;}
+.profss_dtl_wrap .photo_box > img{width:100%; height:100%; object-fit: cover;}
+.profss_dtl_wrap .profss_info table{border-top:1px solid #222; }
+.profss_dtl_wrap .profss_info table tr th{background:#F9FAFD; border-right:1px solid var(--bs-border-color); }
+.profss_dtl_wrap .profss_info table tr td{border-right:1px solid var(--bs-border-color); }
+.profss_dtl_wrap .profss_info table tr td:last-child{border-right:0;}
+
+/*교수상세 - 강의과목*/
+.prof_lectu table{border-top:1px solid #222;}
+.prof_lectu table tr th{background:#f9f9f9;}
+.prof_lectu table tr th:not(:last-child){border-right:1px solid var(--bs-border-color);}
+
+/*교수상세 - 학력*/
+.prof_section > .box{background:#f9f9f9; border-top:1px solid #222; padding:1.5rem;}
+.prof_section > .box p{line-height: 1.5;margin-bottom:0.5rem;}
+.prof_section > .box p:last-child{margin-bottom:0;}
+
+
+/*************************************************************************************/
+/*************************************************************************************/
+/*************************************************************************************/
+/*전공목록*/
+.speci_wrap .item{width:calc(50% - 0.75rem); border-radius: 1rem; padding:2rem; position:relative;}
+.speci_wrap .item .cate{padding-right:calc(22px + 1rem);}
+.speci_wrap .item .cate li{border:1px solid #9F9F9F; color:#555; font-weight:500;}
+.speci_wrap .item .cate li span:last-child{margin-left:0.75rem;position: relative;;}
+.speci_wrap .item .cate li span:last-child:before{content:""; display:block ; width:6px; height:6px; border-top:1px solid #555; border-right:1px solid #555; transform:rotate(45deg); transform-origin: center center; top:5px;position: absolute; left: -0.55rem;}
+
+.speci_wrap .item .like_container{position:absolute; top:2rem; right:2rem; min-width:22px;}
+.speci_wrap .item .title a{font-size:22px; color:#222;}
+.speci_wrap .item .title a small{font-size:1rem;color:#555;}
+.speci_wrap .item ol li{border-radius:25rem; background-color:#E7EBF6; color:#222;padding:0.1rem 0.5rem; font-size:0.9rem;}
+.speci_wrap .item dt{min-width:65px;}
+.speci_wrap .item dd{color:#555;}
+
+/*전공상세*/
+.speci_curric, .speci_curric ~ section{margin-bottom:2rem;}
+.modal_syllabus2 table .col_half{border-top:0;}
+
+
+
+.speci_talent{padding-bottom:2rem; border-bottom:1px dashed #888; margin-bottom:2rem;}
+.speci_talent h5 .text-grn{color:#008992;}
+.speci_talent table{border-top:1px solid #222; }
+.speci_talent table thead th{background:#F6F7FB;}
+.speci_talent table tbody th{background:#E7EBF6;}
+
+/*전공상세 - 교과과정*/
+.speci_curric ul li{font-size:0.9rem;}
+.speci_curric ul li:before{content:''; display:inline-block ; width: 8px; height:8px;margin-bottom:0.5px; margin-right:4px; }
+.speci_curric ul li.ass_mark{color:#4571E9;}
+.speci_curric ul li.ass_mark:before{background:#4571E9;}
+.speci_curric ul li.cho_mark{color:#222;}
+.speci_curric ul li.cho_mark:before{background:#222;}
+.curricT{border-top:1px solid #222; }
+.curricT thead th[colspan],.curricT thead th[rowspan], .curricT thead th[colspan] + th ,.curricT tbody tr th{background:#E7EBF6!important;}
+.curricT thead th:not([colspan]){background:#F6F7FB;}
+.curricT tbody tr:nth-child(even){border-bottom:1px solid #0F3E8E;}
+.curricT tbody th{border-bottom:1px solid #0f3e8e;}
+.curricT tbody td:not(:last-child){border-right:1px solid #C6C6C6;}
+.curricT td p{margin-bottom:0.4rem; word-break: break-all;;}
+.curricT td a{line-height:1.25; color:#555;position:relative; display:inline-block;}
+.curricT td a:after{content:''; display:block; width:0; height: 1px; position:absolute; bottom:0; left:0;background:#555; transition:width 0.3s;}
+.curricT td a:hover:after{width:100%; transition:width 0.3s;}
+.curricT td a.ass{color:#4571E9; font-weight:500;}
+.curricT td a.ass:after{background:#4571E9;}
+.curricT td p:last-child,.curricT td a:last-child{margin-bottom:0;}
+
+/*전공상세 - 요약*/
+.speci_summary{background:#F5F7FB;}
+.speci_summary h6{color:var(--pk_blue);}
+.speci_summary p{color:#555; }
+/*전공상세 - 교과과정*/
+.speci_balan div{border-top:1px solid #222;border-bottom:1px solid #222;  }
+.speci_balan div dl{border-bottom:1px solid #c6c6c6;padding:0.5rem 1rem;display: flex;align-items:flex-start;}
+.speci_balan div dl:last-child{border-bottom:0;}
+.speci_balan div dt{min-width:100px; text-align: center;background:#D6E0FB; color:var(--pk_blue); font-weight:700; border-radius:25rem;margin-right:0.5rem;padding:2px 0.5rem 1px 0.5rem;}
+
+/*전공상세 - 마이크로 전공*/
+.speci_micro .box:last-child{margin-bottom:0!important;}
+.speci_micro .box h6{font-size:17px; color:#222;}
+.speci_micro .box h6:has(strong){font-size:1rem;}
+.speci_micro .box h6 strong{color:#003377; font-size:17px; margin-right:0.75rem; }
+.speci_micro .box h6 strong:before{content:''; display:inline-block; width:7px; height:2px ; background:#003377; margin-bottom:5px; margin-right:0.5rem;}
+
+.speci_micro table{border-top:1px solid #222; }
+.speci_micro table th{background:#F9F9F9;text-align: center;;}
+.speci_micro table td{text-align: center;;}
+
+/*학생설계전공*/
+.my_plan .box_wrap{padding:0 30px}
+.my_plan .box_wrap .slick-list{margin:0 -0.5rem;}
+.my_plan .box_wrap .slick-list .slick-slide{margin: 0 0.5rem;;}
+.my_plan .box_wrap .slick-arrow:before{display:none;}
+.my_plan .box_wrap .slick-arrow{background:url(../images/arr_thin_lightGray.png) no-repeat; background-size:cover; width: 15px; height:28px;}
+.my_plan .box_wrap .slick-next{transform-origin: center ; transform:translate(0, -50%) rotate(180deg);}
+
+
+.my_plan .box_wrap .slick-list{margin:0 -0.5rem;}
+.my_plan .box_wrap .slick-list .slick-slide{margin: 0 0.5rem;;}
+.my_plan h5{border-bottom:2px solid #222;}
+.plan_section .item{border:1px solid #c0c0c0;padding:35px; border-radius:15px;}
+.plan_section .item:has(.ing){border:1px solid var(--pk_blue)}
+.plan_section .item .title{margin-top:0.75rem;}
+.plan_section .item .title a{font-size:22px; color:#222;}
+.plan_section .detail_maj{padding-left:0.75rem; letter-spacing: -1px;;}
+.plan_section .detail_maj::before{content:''; display:block;  width:3px; height:100%;; background:var(--pk_blue); position:absolute; bottom:0; left:1px;}
+.plan_section .detail_maj span.mb-1{color:#0F3E8E;}
+.plan_section .detail_maj span{color:#555; }
+.plan_section .detail_box{background:#E7ECF6;}
+.plan_section .state_line > *{font-weight:500; padding:3px 10px; border-radius:25rem;}
+.plan_section .state_line .ing{background:#D0E2FF; color: #003377;}
+.plan_section .state_line .end{background:#E7EBF6; color:#222;}
+.plan_section .state_line .proff_plus2{background:#E7EBF6; color:#222;position:relative;margin-right:1rem;}
+.plan_section .state_line .proff_plus2 span{height:calc(100% - 2px); display:block; position:absolute;width:50px; border-radius:25rem; top:50%;z-index: -1;transform:translateY(-50%)}
+.plan_section .state_line .proff_plus2 span:first-child{background:#4571E9;right:-1rem;}
+.plan_section .state_line .proff_plus2 span:nth-child(2){background:#044097;right:-0.5rem;}
+.plan_section .state_line .proff_plus1{background:#044097; color:#fff;margin-right:0;}
+.plan_section .state_line .proff_plus1 span{display:none;}
+
+.plan_section .detail_box dl{line-height:1.35;column-gap:0.75rem;}
+.my_plan .new_plan{background:var(--pk_blue); color:#fff;font-size:15px; display:flex; align-items:Center; gap:0.25rem;padding:0.5rem; font-weight:normal;}
+.my_plan .new_plan:before{content:''; display:inline-block; width:18px; height:18px; background-image:url(../images/ico_w_doc_plus.png); background-repeat: no-repeat; background-size:100%;}
+
+.regi_plan .title_box{border-bottom:2px solid #222;}
+.regi_plan .title_box h5{column-gap:0.5rem; row-gap:3px;}
+.regi_plan .title_box h5 span{font-size:15px; font-weight:normal; display:inline-block; }
+.regi_plan .title_box h5 span strong{color:var(--pk_blue);}
+.regi_plan .title_box .form-select{max-width: 160px;font-size:0.9rem;}
+.regi_plan .item{width:calc(33.3% - 0.66rem);}
+.regi_plan .item .cate .year{background:var(--pk_blue);color:#fff;padding-top: 0.3rem;;}
+
+/*학생설계전공 -- 우측 배너*/
+.right_bann{right:calc(((100% - 1300px) / 2) - 200px - 2rem); top:30%; z-index: 3;;}
+.right_bann .close{background:url(../images/ico_w_close.png) no-repeat; width:19px; height:19px;background-size:100%; position: absolute; top:1rem;right:1rem;transition:all 0.3s; z-index:1;}
+.right_bann .close.if_close{width:55px; height:55px;background:url(../images/bg_bann.png) no-repeat ;background-size:100%; padding:0.5rem; border-radius:50%;box-shadow: 0 1px 4px rgba(0,0,0,0.25);transition:all 0.3s;}
+.right_bann .close.if_close:after{content:''; display:block; background:url(../images/pk_noshad.png) no-repeat; background-size:cover; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:80%; height:80%; }
+.right_bann .right_bann_conts{background:url(../images/bg_bann.png) no-repeat; background-size:100%;padding:40px 23px 30px 23px; min-width: 200px;}
+.right_bann h3{font-size:22px; font-weight: 700;letter-spacing: 0.025rem;;;}
+.right_bann p{font-size:13px; margin-top:1rem;letter-spacing: 0.025rem;line-height:1.25;margin-bottom:2.5rem;}
+.right_bann .link_wrap:before{content:''; display:block; background:url(../images/pk_noshad.png) no-repeat; width:73px; height:70px; position:absolute;top:-60px; right:-22px; background-size:100%; z-index: 1;}
+.right_bann a{background:#fff; border-radius:5px; font-size:13px; font-weight:600; color:#222;padding:0.5rem;padding-left:calc(40px + 0.5rem);position:relative;overflow: hidden;}
+.right_bann a i{width:40px; height:100%;position:absolute; top:50%; left:0; transform:translateY(-50%);}
+.right_bann a.kakao_link i{background:#FFEB3B url(../images/ico_kakao.png) no-repeat center center; }
+.right_bann a.insta_link i{background:linear-gradient(to bottom, #5359D2 0% ,#C8289B 24% , #E35051 46% , #FB8E2A 72%, #FFD976 100% ); }
+.right_bann a.insta_link i:after{content:''; background-image: url(../images/ico_insta.png); background-repeat: no-repeat; background-position: center center;  width:22px; height:22px; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);background-size:100%; }
+
+/*학생설계전공 상세 -- 기본정보*/
+.plan_dtl_section:not(:first-child){margin-top:2rem;}
+.plan_dtl_section textarea{background:#f9f9f9;}
+
+.plan_dtl_basic {padding-bottom:2rem; border-bottom:1px dashed #9f9f9f;}
+.plan_dtl_basic .table_wrap{border-top:1px solid #222;}
+.plan_dtl_basic .table_wrap *{font-size:1rem;}
+.plan_dtl_basic .table_wrap div.d-grid{grid-template-columns: 30% 20% 50%;}
+.plan_dtl_basic .table_wrap div.d-grid:last-child{grid-template-rows: 100%; ;}
+.plan_dtl_basic h3{background:#F9FAFD; color:#222;grid-row:1 / 3;}
+.plan_dtl_basic h4{padding-top:0.5rem;padding-bottom:0.5rem;}
+.plan_dtl_basic .conts{grid-column : 2 / 4}
+.plan_dtl_basic .form-control{width:calc(100% - 35px); max-width: 230px; text-align: right;display:inline-block;}
+
+/*학생설계전공 상세 -- 우측 인풋박스*/
+.right_input{width:200px; right:calc(((100% - 1300px) / 2) - 200px - 2rem); top:35%; z-index: 3;}
+.right_input ul{display:flex; column-gap:0.5rem;}
+.right_input a{border:1px solid var(--bs-border-color);padding:0.5rem; border-radius:5px;color:#555;  }
+.right_input a.active{background:#979797; color:#fff;}
+.right_input .save_btn{padding: 0.5rem;background:#309CBE; color:#fff; min-width:100px; width:76%;margin:1rem auto 0 auto;display:block; } 
+
+
+
+/*학생설계전공 상세 -- bottom section*/
+.dtl_bottom{background:#E7EBF6;}
+.dtl_bottom h5{font-size:15px;}
+.dtl_bottom p{border:1px solid #ddd; color:#888; }
+.dtl_bottom button{background:var(--pk_blue); }
+.dtl_bottom button:before{content:''; display:inline-block;background-image:url(../images/ico_w_doc_plus.png); width:19px; height:20px; background-repeat:no-repeat; background-size:100%; margin-top:-1px; }
+
+/*학생설계전공 상세 -- 참여학생*/
+.plan_join_stu{padding-bottom:2rem; border-bottom:1px dashed #888; margin-bottom:2rem;}
+.plan_join_stu table{border-top:1px solid #222; }
+.plan_join_stu tr{border-bottom:1px solid var(--bs-border-color);}
+.plan_join_stu th{background:#F9FAFD;}
+.plan_join_stu td{padding:0.75rem 1rem}
+
+
+/*학생설계전공 상세 -- 참여학생 -- 모달*/
+.modal_addstu .modal-dialog{max-width:1300px ; padding:0 1rem;}
+.modal_addstu .btn-close{width:25px; height:25px; opacity: 1;}
+.modal_addstu h2{font-size: 22px; color:#222; font-weight: bolder;}
+.modal_addstu h2 > span{color:#0038FF;}
+.modal_addstu table{border-top:1px solid #222;}
+.modal_addstu table tr{border-bottom:1px solid var(--bs-border-color);}
+.modal_addstu tbody th{background:#F9FAFD;}
+.modal_addstu table + button{background:var(--pk_blue)}
+.modal_addstu .result_table thead th{background:#F9F9F9;}
+.modal_addstu .result_table + a{border:1px solid var(--pk_blue);  width:max-content; color:var(--pk_blue);}
+.modal_addstu .result_table + a i{width:15px; height:15px; background:var(--pk_blue); display:inline-block ; border-radius:50%; margin-right:0.5rem; margin-bottom:-3px; position:relative;}
+.modal_addstu .result_table + a i:before ,
+.modal_addstu .result_table + a i:after{content:''; display:block; width:2px; height:7.5px; background:#fff; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);}
+.modal_addstu .result_table + a i:after{transform:translate(-50%, -50%) rotate(90deg)}
+
+/*학생설계전공 상세 -- 관련직업 ~~ 교과목 설계범위CHECKBOX*/
+.plan_dtl_text{margin-top:2rem;}
+.plan_dtl_text .box{background:#f1f1f1; border:1px solid #ddd; padding:0.75rem; margin-bottom:2rem;}
+.plan_dtl_text .box.d-flex{column-gap: 2rem;;}
+
+/*학생설계전공 상세 -- 교과목설계범위 table wrap*/
+.plan_range .title_box button{background:var(--pk_blue);}
+.plan_range .title_box button i{background:#fff; width:15px; height:15px; border-radius:50%; display:inline-block; margin-right:0.5rem; margin-bottom:-3px; position:relative;}
+.plan_range .title_box button i:before,
+.plan_range .title_box button i:after{content:''; display:block; width:2px; height:9px; background:var(--pk_blue); position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);}
+.plan_range .title_box button i:after{transform:translate(-50%, -50%) rotate(90deg)}
+
+.plan_range .table_box{width:25%!important;border:1px solid #666;}
+.plan_range .table_box:not(:last-child){border-right:0;}
+.plan_range table:not(.plan_total table) > *{text-align:center; vertical-align: middle; color:#666; font-size: 14px;;}
+.plan_range table:not(.plan_total table) th{ font-weight:normal!important;}
+.plan_range table:not(.plan_total table) th[colspan="6"]{background:#E7EBF6;padding:1rem 0.5rem;color:#222;}
+.plan_range table:not(.plan_total table) thead th:not([colspan="6"]){background:#F6F7FB;}
+.plan_range table:not(.plan_total table) tbody td[rowspan] ~ td{border-bottom:1px solid #eee;; }
+.plan_range table:not(.plan_total table) tbody td:not([rowspan]){padding:0.25rem 0.5rem;}
+
+
+/*학생설계전공 상세 -- 교과목설계범위 table wrap -- 과목등록하기 모달*/
+.modal_enrollSubj .modal-dialog{max-width:1500px ; padding:0 1rem;}
+.modal_enrollSubj h2, .modal_openUniv h2{font-size: 22px; color:#222; font-weight: bolder;}
+.modal_enrollSubj .btn-close , .modal_openUniv .btn-close{width:25px; height:25px; opacity: 1;;}
+
+.modal_enrollSubj .modal-body .box{width:calc(50% - 1.5rem)}
+.modal_enrollSubj .nav-tabs .nav-link{padding:10px 0;background:#fff; color:#222; border:1px solid #d7d7d7; border-bottom:0;border-radius: 0;}
+.modal_enrollSubj .nav-tabs .nav-link.active{background:#eff2fa; color:#001a9f; font-weight:bolder; border:1px solid #001A9F; }
+
+.modal_enrollSubj .tab-content{margin-top:-1px;}
+.modal_enrollSubj .tab-content .wrap{background:#EFF2FA; border:1px solid var(--pk_blue);}
+.modal_enrollSubj .tab-content .wrap h5{font-size:15px; font-weight:normal;min-width: 80px;;}
+.modal_enrollSubj .tab-content .wrap h5 + div{width:calc(100% - 80px);}
+.modal_enrollSubj .tab-content .wrap select{font-size:15px; width:calc(50% - 0.5rem)}
+.modal_enrollSubj .tab-content .wrap h5.mic{min-width: 100px;;}
+.modal_enrollSubj .tab-content .wrap h5.mic + div{width:calc(100% - 100px);}
+.modal_enrollSubj .tab-content .wrap button{background:var(--pk_blue); border-radius:3px; margin-top:1rem; padding: 0.5rem;}
+
+.modal_enrollSubj .box:not(.selected_box) .lesson_wrap{max-height:600px; overflow-y:auto;position: relative;}
+.modal_enrollSubj .box .lesson_wrap:after{content:''; display:block;height: 0; opacity: 0; transition:all 0.1s;;}
+.modal_enrollSubj .box .lesson_wrap.shad:after{content:''; display:block;width:100%; height:30px; position: sticky; bottom:0; background:linear-gradient(to bottom,rgba(217,217,217,0), rgba(217,217,217,1)); opacity: 0.5; transition:all 0.1s;}
+.modal_enrollSubj .selected_box .lesson_wrap{ overflow-y:auto; height:876.5px;}/*max-height:calc(600px + 277px);*/
+.modal_enrollSubj .box .lesson_wrap::-webkit-scrollbar{width:14px; background:#ddd; }
+.modal_enrollSubj .box .lesson_wrap::-webkit-scrollbar-thumb{background:#fff; border:4px solid #ddd; border-radius: 25rem;;}
+
+
+.modal_enrollSubj .box .lesson_wrap.no_contents_wrap{background:#F1F1F1;}
+.modal_enrollSubj .box .lesson_wrap.no_contents_wrap img{width:200px; height:200px;}
+.modal_enrollSubj .box .lesson_wrap.no_contents_wrap p{font-size:17px; line-height:1.25;}
+
+
+.modal_enrollSubj .item{border:1px solid #ddd; border-top:0;display:flex; align-items:center; justify-content: space-between;}
+.modal_enrollSubj .item .form-check{min-width:26px; }
+.modal_enrollSubj .item section{width:calc(100% - 40px)}
+.modal_enrollSubj .item section div{width:calc(100% - 100px)}
+.modal_enrollSubj .item .cate li{padding-bottom:0;}
+.modal_enrollSubj .item .cate li span:last-child:before{content:""; display:block ; width:6px; height:6px; border-top:1px solid #555; border-right:1px solid #555; transform:rotate(45deg); transform-origin: center center; top:5px;position: absolute; left: -0.55rem;}
+.modal_enrollSubj .item .cate .ass{background:#F33435;}/*전공필수*/
+.modal_enrollSubj .item .cate .cho{background:var(--pk_blue);}/*전공선택*/
+.modal_enrollSubj .item .cate .ref{background:#ED9100;}/*전공선택*/
+.modal_enrollSubj .item h4{font-size:18px; font-weight:700;min-height:45px; }
+.modal_enrollSubj .item dl:first-child{margin-right:1.25rem;}
+.modal_enrollSubj .item dl:first-child:after{content:''; display:block; width:1px; height:16px; background:#d9d9d9; top:3px; right:0; position: absolute;}
+
+
+.modal_enrollSubj .selected_box{position: relative;}
+.modal_enrollSubj .selected_box:before{content:''; display:block; width:23px; height:16px; background:url(../images/arr_b_tail.png) no-repeat; background-size:100%; position:absolute; top:50%; left:-2.25rem; transform:translateY(-50%); }
+.modal_enrollSubj .box:not(.selected_box) h2{margin-bottom:28px}
+.modal_enrollSubj .selected_box .title_row label{min-width:60px;}
+.modal_enrollSubj .selected_box .title_row select{min-width:140px;}
+.modal_enrollSubj .selected_box .item:first-child{border-top:1px solid #ddd;}
+.modal_enrollSubj .selected_box .btn_dele{background-color:#666!important; border-radius: 50%; width:22px; height:22px;display:block; position:relative;}
+.modal_enrollSubj .selected_box .btn_dele:before,
+.modal_enrollSubj .selected_box .btn_dele:after{content:''; display:block; width:12px; height: 2px; border-radius: 25rem; background:#fff; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%) rotate(45deg);}
+.modal_enrollSubj .selected_box .btn_dele:after{ transform:translate(-50%, -50%) rotate(-45deg);}
+
+
+
+.modal_enrollSubj .bottom_btn_group button{height: 39px;padding:0.5rem 1rem; font-weight:bolder; font-size:14px;}
+.modal_enrollSubj .bottom_btn_group .all_check{background:#4571E9;}
+.modal_enrollSubj .bottom_btn_group .all_check i{width:20px; height:20px; border:1px solid #fff; border-radius: 2px; background:transparent; position:relative;display:block}
+.modal_enrollSubj .bottom_btn_group .all_check i:after{content:''; display:block; width:11px; height:7px; background:transparent; border-bottom:2px solid #fff; border-left:2px solid #fff; position:absolute; top:calc(50% - 1px); left:50%; transform:translate(-50%, -50%) rotate(-45deg)}
+
+.modal_enrollSubj .bottom_btn_group .remove_check{background:transparent; border:1px dashed #4571E9; color:#4571E9;;}
+.modal_enrollSubj .bottom_btn_group .select_put{background:var(--pk_blue); }
+.modal_enrollSubj .bottom_btn_group .open_univ{background:#0099D8;}
+.modal_enrollSubj .bottom_btn_group .all_delet{background:#666;min-width:105px;}
+.modal_enrollSubj .bottom_btn_group .all_delet img{width:12px; height:12px;}
+
+.modal_enrollSubj .modal-footer .mod_save{color:var(--pk_blue); border:1px solid var(--pk_blue); font-weight:bolder}
+.modal_enrollSubj .modal-footer .mod_wrt_plan{color:#309CBE; border:1px solid #309CBE; font-weight:bolder}
+
+
+/*학생설계전공 상세 -- 교과목설계범위 table wrap -- 과목등록하기 모달 ---> 타대학/온라인교과목 등록*/
+.modal_openUniv .modal-body > table{border-top:1px solid #222; }
+.modal_openUniv .modal-body > table tr:first-child *{padding:0.75rem 0.5rem;}
+.modal_openUniv table{margin-bottom:0;}
+.modal_openUniv table th{background:#F9FAFD;  border-right:1px solid var(--bs-border-color); vertical-align: middle; }
+.modal_openUniv table td:not(:last-child){border-right:1px solid var(--bs-border-color);}
+.modal_openUniv table + a{border:1px solid var(--pk_blue);  width:max-content; color:var(--pk_blue);}
+.modal_openUniv table + a i{width:15px; height:15px; background:var(--pk_blue); display:inline-block ; border-radius:50%; margin-right:0.5rem; margin-bottom:-3px; position:relative;}
+.modal_openUniv table + a i:before ,
+.modal_openUniv table + a i:after{content:''; display:block; width:2px; height:7.5px; background:#fff; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);}
+.modal_openUniv table + a i:after{transform:translate(-50%, -50%) rotate(90deg)}
+
+
+
+
+
+
+/*학생설계전공 상세 -- 설계학점 총계*/
+.plan_total{margin-top:1rem;}
+.plan_total table{border-top:1px solid #222; }
+.plan_total table *{border-right:1px solid var(--bs-border-color); padding:0.75rem 1rem;vertical-align: middle;}
+.plan_total table th:last-child,
+.plan_total table td:last-child{border-right:1px solid transparent!important;}
+.plan_total table th{background:#F6F7FB;}
+
+.plan_total .search_proff{border-top:1px solid #222;}
+.plan_total .search_proff dl{border-bottom:1px solid var(--bs-border-color);}
+.plan_total .search_proff dt{background:#F9FAFD; border-right:1px solid var(--bs-border-color); height:100%; padding:1rem;}
+.plan_total .search_proff dl:nth-child(2) dt{border-left:1px solid var(--bs-border-color);}
+.plan_total .search_proff dd input{max-width:220px;font-size:15px;}
+.plan_total .search_proff dd button{background:var(--pk_blue); min-width:80px;}
+
+/*학생설계전공 상세 -- 교육과정 신설컨설팅결과*/
+.plan_result table{border-top:1px solid #222; border-bottom:1px solid var(--bs-border-color)}
+.plan_result table *{border-bottom-width:0;}
+.plan_result thead{background:#F6F7FB;}
+.plan_result th:not(:last-child) , .plan_result td:not(:last-child){border-right:1px solid var(--bs-border-color);}
+.plan_result tbody tr{border-bottom:0;}
+.plan_result tbody th, .plan_result tbody td{border-top:1px solid var(--bs-border-color)}
+.plan_result tbody tr:not(:first-child) th ~ td ,.plan_result tbody tr:not(:first-child) th{border-top:1px solid #222;}
+
+
+/*학생설계전공 상세 -- 진행사항 + 버튼*/
+.plan_proces{background:#E7EBF6; border-radius:5px; padding: 30px;font-size:16px;}
+.plan_proces ul{column-gap: 1.5rem;row-gap:0.5rem;}
+.plan_proces ul li{border:1px solid #e2e2e2;  position:relative;background:#fff;}
+.plan_proces ul li:not(:first-child):before{content:''; display:block; background:url(../images/arr_right_lightGray.png) no-repeat; background-size:100%; width:8px; height:15px;position:absolute; top:50%; left:-1rem; transform:translateY(-50%);}
+.plan_proces ul li.on{border:0;background:#309CBE;color:#fff; font-weight: 700;;}
+
+
+.plan_button_wrap button{width:100%; max-width: 120px; color:#fff; font-weight:bolder; text-align: center;border-radius:5px;}
+.plan_button_wrap_2{border-top:1px solid #222; }
+.plan_button_wrap_2 button{background:#fff; border-radius: 5px; width:100%; max-width:140px; font-weight: bolder;text-align: center; border:1px solid var(--pk_blue); color:var(--pk_blue);}
+.plan_button_wrap_2 button:has(svg){border:1px solid #F55682; color:#F55682;}
+.plan_button_wrap_2 button svg{width:18px; height:16px;margin-right:0.25rem;}
+.plan_button_wrap_2 button.onHeart svg path{fill:#F55682!important;;}
+
+
+
+
+/*학생설계전공 교수 목록 -- 컨설팅진행 및 완료된 설계전공*/
+.proff_plan{border-bottom:1px solid #222; margin-bottom:3.5rem; padding-bottom: 2rem;}
+.proff_plan h5{border-bottom:2px solid #222; }
+.cate_proc{column-gap:0.75rem; row-gap: 0.3rem; ;}
+.cate_proc li a{border:1px solid var(--bs-border-color);min-width:140px; display: flex; justify-content: space-between; align-items:center;padding:0.5rem 1rem; border-radius:25rem; color:#222; transition:all 0.3s;}
+.cate_proc li a span{color:#4571E9; font-weight: 700;;}
+.cate_proc li a.active{font-weight: 700; background:var(--pk_blue);color:#fff; border:0; transition:all 0.3s;}
+.cate_proc li a.active span{color:#A6DFF8;}
+
+.pf_plan_proc .item:not(:last-child){border-bottom:1px solid var(--bs-border-color);}
+.pf_plan_proc .item .title_wrap ul{width:calc(100% - 180px)}
+.pf_plan_proc .item .title_wrap .title{font-size:22px; color:#222;  font-weight: 500; margin-bottom:0.5rem; }
+.pf_plan_proc .item .title_wrap .cate li{background:#fff; color:#555; font-weight: 500; ;}
+.pf_plan_proc .item .title_wrap .cate li.color_border{color:#003377; border:1px solid #003377;}
+.pf_plan_proc .item .title_wrap .cate li.color_border span:not(:first-child){margin-left:0.5rem;}
+.pf_plan_proc .item .title_wrap .cate li.color_border span:not(:first-child):before{content:''; display:inline-block; width:1px; height: 12px; background:#003377; margin-bottom:-1px;margin-right:0.4rem}
+.pf_plan_proc .item .title_wrap .btn_wrap{min-width:180px;}
+.pf_plan_proc .item .title_wrap .btn_wrap a{border-radius: 5px; color:#fff;display: flex; align-items:center; justify-content:center; padding:0.5rem;;}
+.pf_plan_proc .item .title_wrap .btn_wrap .writ_consult{width:50%;background:var(--pk_blue);}
+.pf_plan_proc .item .title_wrap .btn_wrap .cancel_regi{width:50%;background:#555;}
+
+.pf_plan_proc .item .info_wrap{background:#EFF2FA; }
+.pf_plan_proc .item dl{min-width:calc(25% - 0.4rem)}
+.pf_plan_proc .item dl:nth-child(3n){min-width:calc(50% - 0.4rem)}
+.pf_plan_proc .item dd{color:#555; }
+.pf_plan_proc .item dd em{color:#fff; background:#0174BE;padding-top:2px;padding-bottom:2px;}
+.pf_plan_proc .item dd.plus2{z-index: 1;position:relative;margin-right:1.5rem;}
+.pf_plan_proc .item dd.plus2 span{width:23px; height:calc(100% - 1px);display:block;  position:absolute; top:0 ;border-radius:25rem;z-index:-1; }
+.pf_plan_proc .item dd.plus2 span:nth-child(2){background:#044097;  right:-0.55rem;}
+.pf_plan_proc .item dl dd.plus2 span:last-child{background:#4571E9; right:-1rem;z-index: -2;}
+
+    /*컨설팅완료*/
+.pf_plan_proc .item.on_consult .title_wrap .title{font-weight:bolder;}
+.pf_plan_proc .item.on_consult .title_wrap .title:before{content:'컨설팅완료'; color:#fff;background:#ED9100; border-radius:5px; padding:2px 0.3rem 1px 0.3rem; display:inline-block; margin-right:0.25rem; font-size:14px; font-weight:normal;margin-bottom:2px;}
+.pf_plan_proc .item.on_consult .title_wrap .btn_wrap .compl_consult{background:#ED9100;width:100%;}
+
+
+    /*심사완료*/
+.pf_plan_proc .item.final_consult,
+.pf_plan_proc .item.final_consult .title_wrap .title,
+.pf_plan_proc .item.final_consult .title_wrap .cate li{color:#9f9f9f;}
+.pf_plan_proc .item.final_consult .title_wrap .cate li.color_border{border-color: var(--bs-border-color);}
+.pf_plan_proc .item.final_consult .title_wrap .cate li.color_border span:not(:first-child):before{background: var(--bs-border-color);}
+.pf_plan_proc .item.final_consult .info_wrap{background:#e2e2e2;}
+.pf_plan_proc .item.final_consult .title_wrap .btn_wrap .end_consult{background:#c0c0c0;width:100%;}
+.pf_plan_proc .item.final_consult dd{color:#9f9f9f;}
+.pf_plan_proc .item.final_consult dd em{background:#9f9f9f;}
+.pf_plan_proc .item.final_consult dd.plus2 span:nth-child(2){background:#C6C6C6;}
+.pf_plan_proc .item.final_consult dd.plus2 span:last-child{background:#D7D7D7;}
+
+
+
+
+/*학생설계전공 교수 목록 -- 학생설계전공 리스트*/
+.regi_plan_pf .item{border:1px solid var(--pk_blue);}
+.regi_plan_pf .item .title_box{gap:0.25rem;border-bottom:0;}
+.regi_plan_pf .item .title_box dl{margin-right:0.7rem;margin-left:auto;}
+.regi_plan_pf .item .title_box dt{font-weight:400;}
+.regi_plan_pf .item .title_box dd{position:relative; z-index: 1; ;}
+.regi_plan_pf .item .title_box dd em{background:#E7EBF6; padding:2px 0.5rem;}
+.regi_plan_pf .item .title_box dd span{width:30px; height:calc(100% - 1px);display:block;  position:absolute; top:0 ;border-radius:25rem;z-index:-1; }
+.regi_plan_pf .item .title_box dd span:nth-child(2){background:#044097;  right:-0.35rem;}
+.regi_plan_pf .item .title_box dd span:last-child{background:#4571E9; right:-0.65rem;z-index: -2;}
+.regi_plan_pf .item .btn_regi{background:var(--pk_blue); padding:0.5rem;  text-align: center; margin-top:0.5rem; border-radius:5px;;}
+.regi_plan_pf .dead_item{border:1px solid #d7d7d7;}
+.regi_plan_pf .dead_item .cate li{color:#555;}
+.regi_plan_pf .dead_item .cate .year,
+.regi_plan_pf .dead_item .detail_maj::before{background:#9f9f9f;}
+.regi_plan_pf .dead_item .detail_maj span.mb-1{color:#555; font-weight:500;}
+.regi_plan_pf .dead_item .detail_box{background:#f3f3f3;}
+.regi_plan_pf .dead_item .btn_regi{background:#c0c0c0;}
+.regi_plan_pf .dead_item .title_box dd em{background:#ddd;}
+.regi_plan_pf .dead_item .title_box dd span:nth-child(2){background:#c0c0c0;}
+.regi_plan_pf .dead_item .title_box dd span:last-child{background:#9f9f9f;}
+
+
+
+
+/*학생설계전공-교수상세*/
+.plan_examin_table{margin-top:2rem;}
+.plan_examin_table table{border-top:1px solid #222; }
+.plan_examin_table table thead{background:#F6F7FB; ;}
+.plan_examin_table table th:not(:last-child), .plan_examin_table table td:not(:last-child){border-right:1px solid var(--bs-border-color)}
+.plan_examin_table input[type="radio"]{display:none;}
+.plan_examin_table .radio_span{width:18px; height:18px; background-size:100%; background-position:center center; display:block;background-repeat:no-repeat;;background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='14' fill='none'%3E%3Cpath fill='%23e4e4e4' d='M5.4 12.781c.37.38.884.594 1.42.594.537 0 1.05-.215 1.421-.594l8.718-8.925a1.879 1.879 0 0 0-.068-2.703 1.997 1.997 0 0 0-2.773.066L6.82 8.689 3.882 5.682a1.997 1.997 0 0 0-2.773-.066A1.879 1.879 0 0 0 1.04 8.32l4.36 4.462Z'/%3E%3C/svg%3E"); transition:all 0.3s;}
+.plan_examin_table input[type="radio"]:checked ~ .radio_span{background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='14' fill='none'%3E%3Cpath fill='%234571E9' d='M5.4 12.781c.37.38.884.594 1.42.594.537 0 1.05-.215 1.421-.594l8.718-8.925a1.879 1.879 0 0 0-.068-2.703 1.997 1.997 0 0 0-2.773.066L6.82 8.689 3.882 5.682a1.997 1.997 0 0 0-2.773-.066A1.879 1.879 0 0 0 1.04 8.32l4.36 4.462Z'/%3E%3C/svg%3E");transition:all 0.3s;}
+.termino{background:#E7EBF6; border-radius:5px;}
+.termino dt{min-width: 66px; text-align: center;}
+.termino dl{column-gap:0.5rem; row-gap:0.1rem;}
+.termino dd{color:#666;}
+.plan_examin_table ~ .plan_button_wrap{border-top:1px solid #222;padding-top:2rem;}
+.plan_examin_table tbody tr:not(:first-child) th ~ td, .plan_examin_table tbody tr:not(:first-child) th{border-top:1px solid var(--bs-border-color)}
+
+
+/*통합검색*/
+.resu_word{border-bottom:2px dashed #9f9f9f;}
+.resu_word span{color:#4571E9; font-weight: 700;;}
+.resu_box{margin-top:40px;}
+.resu_box h4{font-size:22px; color:#222; font-weight:bold; padding-bottom:0.75rem; border-bottom:2px solid #222; }
+.resu_box h4 p{font-size:14px; color:#222; font-weight:500;}
+.resu_box h4 p span{color:var(--pk_blue); }
+
+.resu_box .item{padding:35px 30px;margin-bottom:1rem;}
+.resu_more_btn{border-top:1px solid #c6c6c6; color:#222; font-size:16px; font-weight:500;padding: 0.5rem 0; padding-right:1rem; text-align: right;;position:relative;}
+.resu_more_btn:after{content:''; position:absolute; top:calc(50% - 1px); right:0.25rem;; transform:translateY(-50%) rotate(45deg); width:7px; height:7px; background: transparent; border-top:1px solid #222; border-right:1px solid #222; ;transition:right 0.3s;}
+.resu_more_btn:hover:after{right:0;transition:right 0.3s;}
+
+/*통합검색 - 전공교양*/
+.resu_box .majref_wrap h5{column-gap:0.5rem;}
+.resu_box .majref_wrap h5 a{font-size:19px; font-weight:600; color:#222; }
+.resu_box .majref_wrap h5 span{color:#555;font-size:14px; font-weight:normal;line-height:1.5;}
+.resu_box .majref_wrap .item .desc_txt{min-height:unset;}
+.resu_box .majref_wrap .info{column-gap:3rem;row-gap:0.5rem;}
+.resu_box .majref_wrap .info li strong{min-width:unset;}
+.resu_box .majref_wrap .item .info li:nth-child(4){align-items:flex-start!important;}
+.resu_box .majref_wrap .item .info li:nth-child(4) strong{min-width:45px;}
+
+.resu_box .non_majref_wrap{column-gap:1rem;}
+.resu_box .non_majref_wrap .item{border-radius:15px; width:calc(50% - 0.5rem)}
+.resu_box .non_majref_wrap .item h5 span{padding:0.2rem 0.5rem; border-radius:4px; font-size:13px;font-weight:700;color:#fff;min-width:37px;}
+.resu_box .non_majref_wrap .item h5 span.tag_adv{background:#309CBE;}
+.resu_box .non_majref_wrap .item h5 span.tag_ref{background:#ED9100;}
+.resu_box .non_majref_wrap .item h5 a{color:#222; font-size:19px; font-weight:600;}
+.resu_box .non_majref_wrap .item dl{font-size:14px;}
+.resu_box .non_majref_wrap .item div dl:first-child{margin-right:40px; position:relative;}
+.resu_box .non_majref_wrap .item div dl:first-child:after{content:''; display: inline-block; width:1px; height: calc(100% - 6px); background:#c9c9c9;position:absolute; top:3px; right:-20px;}
+.resu_box .non_majref_wrap .item dt{min-width: 45px;;}
+.resu_box .non_majref_wrap .item dd{margin-left:0.5rem;}
+
+.resu_box .speci_wrap,
+.resu_box .profss_wrap,
+.resu_box .plan_section{column-gap:1rem;}
+.resu_box .profss_wrap .item,
+.resu_box .plan_section .item{width:calc(33.3% - 0.66rem)}
+.resu_box .plan_section .item .cate .year{background:var(--pk_blue); color:#fff;}
+
+/*기타서비스*/
+.etc_title{border-top:1px solid #222; border-bottom:1px solid #222;}
+.etc_bg{padding:20px; background:#EFF2FA; border:1px solid #D0E2FF; border-radius:15px;}
+.etc_section{margin-bottom:2rem;}
+.etc_section h6{color:var(--pk_blue); font-size:17px; font-weight: 700;margin-bottom:0.4rem;}
+.etc_section *{color:#555;letter-spacing: 0;}
+.etc_section ul{ line-height: 1.7;}
+.etc_section a{color:#4571E9;text-decoration: underline;display:inline-block;}
+.etc_section .link_box{text-align: center; margin-top:20px;}
+.etc_section .link_box a{padding:10px 25px; border-radius:5px; border:1px solid #4571E9;display:inline-block;}
+.etc_section .link_box a:after{content:''; width:14px; height:14px; background:url(../images/ico_b_new.png) no-repeat; background-size:100%; background-position: center center;display:inline-block; margin:0 0 -2px 0.5rem;}
+.etc_section table{border-top:1px solid #222;margin-top:0.5rem;}
+.etc_section table th:not(:last-child) , .etc_section table td:not(:last-child){border-right:1px solid var(--bs-border-color)}
+.etc_section table thead th{background:#F9F9F9;}
+.etc_section table th,.etc_section table  td{padding:0.75rem 0.5rem;}
+.etc_section .b_trian{padding-left: 0.1rem;}
+.etc_section .b_trian:before{content:''; display:inline-block;margin-right:0.25rem; border-left:10px solid #222;border-top:6px solid transparent; border-bottom:6px solid transparent;}
+
+.etc_section .img_box{max-width: 620px; margin-left: auto; margin-right:auto;}
+
+
+
+
+
+
+/*마이페이지*/
+.myP_info{border:1px solid #D7D7D7; border-radius:25px;padding:35px;width:30%;}
+.myP_info .info_box .img_box{width:70px; height:70px; border-radius:50%; overflow: hidden;;min-width: 70px;;}
+.myP_info .info_box .text_box{width:calc(100% - 160px - 1rem);}
+.myP_info .info_box .text_box h4{font-size:28px;font-weight: bolder;}
+.myP_info .info_box .text_box p{color:#555; }
+.myP_info .info_box ul li{min-width:90px; text-align: center; border-radius:25rem;color:var(--pk_blue); font-weight: 500;padding:2px 0 ;}
+.myP_info .info_box .numb{background:#D0E2FF; margin-bottom:0.25rem;}
+.myP_info .info_box .sch_y{background:#EFF2FA; }
+
+.myP_info dl{padding:0.5rem 0 ;border-top:1px solid #d7d7d7;}
+.myP_info dl:last-child{padding-bottom:0;}
+.myP_info dt{color:var(--pk_blue);}
+
+.myP_chart{border:1px solid #C1D3F6; border-radius:25px; padding:35px; width:calc(70% - 1.5rem); background:#F6F9FF; }
+.myP_chart .chart_box{width:calc(30% - 0.66rem);max-height:260px;}
+#myCrdDetails{max-height:230px;height:100%; }
+.myP_chart .chart_box:last-child{width:calc(40% - 0.66rem);}
+.myP_chart .chart_box .title{font-size:17px; font-weight:500;color:#555;}
+
+.myGrade_box * , .myPerform_box *{overflow:visible!important;margin:0 auto;}
+.myGrade_box .highcharts-subtitle,
+.myPerform_box .highcharts-subtitle{top:50%!important;; left:50%!important;; transform:translate(-50%, -50%);width:100%!important;; height:100%!important;; }
+.myGrade_infog ,
+.myPerform_infog{top:50%;position:absolute; left:50%; display:inline-flex; flex-direction:column; align-items:center; transform:translate(-50% , -50%)}
+.myGrade_infog li{display:flex; flex-direction:row; align-items:center; column-gap:0.25rem; font-family:"pretendard"; }
+.myGrade_infog strong{font-size:clamp(18px, 4vw, 24px); font-weight:700; color:#003377;}
+.myGrade_infog small{font-size:14px; font-weight:300;color:#5A8AFA;  }
+.myGrade_infog span{background:#999; color:#fff; border-radius:25rem; font-size:13px; font-weight:700;
+padding:1px 8px; display:block; text-align:center; }
+.myPerform_infog strong{color:#003377;font-size:24px; font-weight:700;}
+.myPerform_infog span{color:#8699BE;font-size:24px; font-weight:500;}
+.myPerform_infog li{color:#666; font-size:15px; font-weight:500;margin-top:0.3rem;}
+
+.myP_tab_wrap{border:1px solid #d7d7d7; border-radius:25px; padding:35px; margin-top:1.5rem; }
+.myP_tab_wrap .nav-link{border:0; border-bottom:2px solid #d7d7d7;color:#666; height:100%; line-height:1.25;padding:0.5rem;}
+.myP_tab_wrap .nav-link.active{font-weight:bolder; color:var(--pk_blue);  border-bottom:2px solid var(--pk_blue);}
+
+
+.myP_tab_wrap h5{font-size: 17px; color:#222; font-weight: bolder;margin-bottom:10px;;}
+.myP_tab_wrap h5 .retake_i{font-size:13px; font-weight:bolder; background:#FF8383; border-radius:25rem;display:inline-block; padding:0.25rem;padding-right:0.5rem;}
+.myP_tab_wrap h5 .retake_i:before{content:'!'; width:16px; height:16px;background:#FF0202;display:inline-flex; border-radius:50%; justify-content: center ; align-items:center;font-weight: bold; font-size:13px; ; color:#fff;;margin-right:0.25rem; padding-right:0.1rem;}
+.myP_degrr_cont .table_item table{border-top:1px solid var(--pk_blue);border-bottom:1px solid #DEE3F2;margin-bottom:1.5rem;}
+.myP_degrr_cont .table_item:last-child table{margin-bottom:0;}
+.myP_degrr_cont .table_item table *{text-align: center; vertical-align: middle;color:#555; }
+.myP_degrr_cont .table_item table thead th{color:var(--pk_blue);}
+.myP_degrr_cont .table_item table tbody *{border-bottom-width:0;}
+.myP_degrr_cont .table_item table tbody tr:nth-child(even){background:#EFF2FA;}
+.myP_degrr_cont .table_item table tfoot{border-top:1px solid #DEE3F2; }
+.myP_degrr_cont .table_item table tfoot *{font-weight:700;color:#222;}
+.myP_degrr_cont .table_item table tbody tr.retake{background:#FF8383!important;;}
+.myP_degrr_cont .table_item table tbody tr.retake *{font-weight:700;color:#222;}
+.myP_degrr_cont .table_item table tbody tr.retake td:first-child p:before{content:'!'; width:16px; height:16px;background:#FF0202;display:inline-flex; border-radius:50%; justify-content: center ; align-items:center;font-weight: normal ; color:#fff; margin-right:0.2rem;}
+
+.myP_degrr_cont .table_item.table_item_finish th:not(:last-child),
+.myP_degrr_cont .table_item.table_item_finish td:not(:last-child){border-right:1px solid #d7d7d7;}
+
+.req_credit_box{width:40%}
+.req_credit_chart_box{width:calc(60% - 1.5rem); background:#f9f9f9; border:1px solid #c9c9c9; border-radius:5px;}
+.accum_chek .rank span{display:inline-block; margin-top:-2px;margin-right:2px;}
+
+/*마이페이지 - 나의찜*/
+.myP_favorit .btn_wrap, .myP_favorit .btn_wrap ul{gap:0.5rem; }
+.myP_favorit .btn_wrap li button{min-width:130px; padding:0.5rem 1rem;border:1px solid #d7d7d7; color:#222; font-size:15px;}
+.myP_favorit .btn_wrap li button span{color:#4571E9; font-weight: 700;;}
+.myP_favorit .btn_wrap li button.active{background:var(--pk_blue)!important; color:#fff;}
+.myP_favorit .btn_wrap li button.active span{color:#A6DFF8;}
+.myP_favorit .item.border-color{border:1px solid #003377!important; transition:border 0.3s;}
+.myP_favorit .item{padding:2rem;transition:border 0.3s;}
+.myP_favorit .item .form-check{background:#f9f9f9;}
+
+
+
+.myP_favorit .open_history .item h5{font-size:22px;}
+.myP_favorit .profss_wrap .item,
+.myP_favorit .plan_section .item,
+.myP_favorit .non_majref_wrap .item{width:calc(33.33% - 0.666rem);padding:25px; border-radius:15px;}
+.myP_favorit .plan_section .item .cate .year{background:var(--pk_blue); color:#fff; }
+
+
+.myP_favorit .non_majref_wrap .item .form-check + div{width:100%;}
+.myP_favorit .non_majref_wrap .item h5 span{padding:0.2rem 0.5rem; border-radius:4px; font-size:13px;font-weight:700;color:#fff;min-width:37px;}
+.myP_favorit .non_majref_wrap .item h5 span.tag_adv{background:#309CBE;}
+.myP_favorit .non_majref_wrap .item h5 span.tag_ref{background:#ED9100;}
+.myP_favorit .non_majref_wrap .item h5 a{color:#222; font-size:22px; font-weight:600; min-height: 54px;;}
+.myP_favorit .non_majref_wrap .item dl{font-size:14px; color:#555;}
+.myP_favorit .non_majref_wrap .item dt{min-width: 45px;;}
+.myP_favorit .non_majref_wrap .item dd{margin-left:0.5rem;}
+
+.all_about_wrap button{padding:0.5rem 1rem; font-weight:bolder; font-size:14px;}
+.all_about_wrap .all_check{background:#4571E9;}
+.all_about_wrap .all_check i{width:20px; height:20px; border:1px solid #fff; border-radius: 2px; background:transparent; position:relative;display:block}
+.all_about_wrap .all_check i:after{content:''; display:block; width:11px; height:7px; background:transparent; border-bottom:2px solid #fff; border-left:2px solid #fff; position:absolute; top:calc(50% - 1px); left:50%; transform:translate(-50%, -50%) rotate(-45deg)}
+.all_about_wrap .remove_luv{border:1px solid #F55682; color:#F55682;}
+.all_about_wrap .remove_luv svg{width:16px; height:16px;}
+.all_about_wrap .remove_luv svg path{fill:#F55682!important;}
+.all_about_wrap .remove_check{background:transparent; border:1px dashed #4571E9; color:#4571E9;;}
+.all_about_wrap .all_remove{background:#666; color:#fff;}
+.all_about_wrap .all_remove i{width:16px; height:16px;display:inline-block;position:relative;}
+.all_about_wrap .all_remove i:before, .all_about_wrap .all_remove i:after{content:''; display:block; width:100%; height:3px; border-radius:25rem; background:#fff; top:calc(50% - 1px); left:50%; position:absolute;}
+.all_about_wrap .all_remove i:before{transform:translate(-50%, -50%) rotate(45deg); }
+.all_about_wrap .all_remove i:after{transform:translate(-50%, -50%) rotate(-45deg); }
+
+/*마이페이지 - 장바구니*/
+.myP_shopp .open_history .item{padding:2rem;transition:border 0.3s;}
+.myP_shopp .open_history .item.border-color{border:1px solid #003377!important; transition:border 0.3s;}
+.myP_shopp .open_history .item h5{font-size:22px;}
+.myP_shopp .open_history ol:has(.like_container){position:absolute; right:2rem; top:2rem;}
+.myP_shopp .open_history .like_container{min-width:unset;}
+.myP_shopp .open_history .btn_dele{background:#555555; width:20px; height:20px;position:relative; top:-2px;}
+.myP_shopp .open_history .btn_dele:before ,.myP_shopp .open_history .btn_dele:after{content:''; display:block; position:absolute; width: 11px; height: 3px ; border-radius:25rem;  background:#fff;  left:50%; top:50%; transform:translate(-50%, -50%) rotate(45deg); }
+.myP_shopp .open_history .btn_dele:after{transform:translate(-50%, -50%) rotate(-45deg);}
+
+
+/*마이페이지 - 해시태그설정*/
+.myP_add_hash input{max-width:350px; border:0; border-bottom: 2px solid #222; margin-right:0.5rem;; }
+.myP_add_hash input + button{background:#4571E9;}
+.myP_add_hash ul{background:#E7EBF6;}
+.myP_add_hash ul li{border:1px solid #92A3C5;padding:7px 14px;}
+.myP_add_hash ul li span{display:inline-block; margin-left:0.2rem;}
+.myP_add_hash ul li button{background:#ACBBDD; width:16px; height:16px;position:relative;margin-left:0.5rem;}
+.myP_add_hash ul li button:before ,.myP_add_hash ul li button:after{content:''; display:block; position:absolute; width: 11px; height: 3px ; border-radius:25rem;  background:#fff;  left:50%; top:50%; transform:translate(-50%, -50%) rotate(45deg); }
+.myP_add_hash ul li button:after{transform:translate(-50%, -50%) rotate(-45deg);}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media screen and (max-width: 1800px){
+    /*학생설계전공 상세 -- 우측 인풋박스*/
+    .right_input{position:sticky!important; top:unset!important; width:100%;left:0;bottom:0;background:#fff;right:unset;border-top:1px solid #ddd;}
+    .right_input div{display:flex!important; flex-direction: row;max-width:calc(1300px + 2rem)!important; margin:0 auto;padding:0;}
+    .right_input ul{display:flex; flex-direction: row!important;width:calc(100% - 100px - 0.5rem); align-items:center;gap:0!important;}
+    
+    .right_input li{width:25%}
+    .right_input li a{border:0!important;border-bottom:2px solid #ddd!important; border-radius:0;font-size:15px;text-align: center; height:100%; word-break: keep-all;display:flex; justify-content:center; align-items:center; line-height:1.25;}
+    .right_input li a.active{background:#EFF2FA;border-bottom:2px solid var(--pk_blue)!important;; color:var(--pk_blue); padding:0.5rem; border-radius:0; text-align: center ; font-weight: bolder; min-width:120px ; margin-bottom:0; display:flex; justify-content:center; align-items:center;}
+    .right_input .save_btn{padding: 0.5rem;background:#309CBE; color:#fff; min-width:100px; width:auto;;margin:0; margin-left:0.5rem;;display:block; }
+}
+
+
+
+
+@media screen and (max-width:1399px){
+    .curricT{margin-bottom:0;}
+    
+    .curricT tbody th[scope="row"]{background:#F6F7FB!important;}
+    .curricT tbody tr:nth-child(2n - 1) th[scope="row"]{border-bottom:1px solid var(--bs-border-color);}
+    .curricT tbody tr td:last-child{border-bottom:1px solid var(--pk_blue)}
+    .speci_micro .curricT tbody tr td{border-bottom:1px solid var(--bs-border-color)}
+
+    .right_bann{top:17%;}
+    
+    .speci_bg .search_wrap_bbox .unit ul.gap-2 li.col-3{width:calc(33% - 0.25rem)}
+}
+
+@media screen and (max-width:1199px){
+    /*전공·교양 - 서치박스*/
+    .search_wrap_bbox .row_box_dtl .column_box_wrap{flex-direction:column ; }
+    .search_wrap_bbox .row_box_dtl .column_box{width:100%;  border-left:0!important;}
+    /*전공·교양 - 서치결과*/
+    .majref_wrap .item .info li:nth-child(1){order:3;}
+    .majref_wrap .item .info li:nth-child(2){order:2;}
+    .majref_wrap .item .info li:nth-child(3){order:4;}
+    .majref_wrap .item .info li:nth-child(4){order:1;}
+
+    /*************************************************************************************/
+    /*************************************************************************************/
+    /*************************************************************************************/
+    /*교수목록*/
+    .profff_search_bbox .row_box h4{min-width:50px}
+    .profff_search_bbox .row_box_basic button{width:100px;}
+    .profff_search_bbox .row_box_basic > .input-group,
+    .profff_search_bbox .unit{width:calc((100% - 150px) / 2 - 1rem)}
+    
+    .profss_wrap .item{width:calc(50% - 0.75rem); padding:1.5rem;}
+
+    /*교수상세 - 교수상세*/
+    .profss_dtl_wrap .profss_info table colgroup col:nth-child(odd){width:18%;}
+    .profss_dtl_wrap .profss_info table colgroup col:nth-child(even){width:27%;}
+
+    /*************************************************************************************/
+    /*************************************************************************************/
+    /*************************************************************************************/
+    /*전공상세 - 학부과 교육과정*/
+    .curricT:not(:last-child){margin-bottom:0;}
+    .curricT:not(:first-child){border-top:1px solid #999;}
+    .curricT thead th:not([colspan]){background:#E7EBF6;}
+    .curricT tbody tr th:not([rowspan]){background:#F6F7FB;}
+    
+
+
+    /*학생설계전공상세 - 교과목설계범위 table wrap*/
+    .plan_range .table_box{width:50%!important;}
+    .plan_range .table_box:nth-child(even){border-right:1px solid #666}
+    .plan_range .table_box:nth-child(-n + 2){border-bottom:0}
+
+
+   
+}
+
+@media (min-width:991px) and (max-width:1199px){
+
+    
+    /*마이페이지*/
+    .myP_info .info_box .text_box{width:calc(100% - 70px - 0.5rem);}
+    .myP_info .info_box ul{margin-left:auto; display:flex; width: 100%; gap:0.5rem;}
+    .myP_info .info_box ul li{width:50%; height:100%; }
+}
+
+
+
+@media screen and (max-width:991px){
+    /*전공·교양*/
+    .dtl_tit.open:before{left:calc(100% - 6px - 1.5rem); }
+    .dtl_tit.open:after{left:calc(100% - 1.5rem); }
+    .dtl_tit:before{left:calc(100% - 6px - 1.5rem); }
+    .dtl_tit:after{left:calc(100% - 3px - 1.5rem); }
+    /*전공·교양 - 서치박스*/
+    .search_wrap_bbox .row_box_basic h4{display:none;}
+    .search_wrap_bbox .row_box_basic .input-group{width:100%; }
+    .search_wrap_bbox .row_box_dtl.fold_conts~.reload_btn{margin-top: 0;}
+    .search_wrap_bbox .row_box_dtl .column_box_wrap{width:100%; }
+    .search_wrap_bbox .row_box_dtl .h4{width:100%; background:rgba(231, 236, 246, 0.7)!important; border-top:1px solid #acbbdd!important; padding: 0.5rem 1rem!important; }
+
+
+    /*************************************************************************************/
+    /*************************************************************************************/
+    /*************************************************************************************/
+    /*전공·교양상세 - 정보*/
+    .majref_dtl_wrap .table_maj > .table tr > *{line-height: 1.25;padding: 0.5rem;font-size:0.9rem;}
+
+    /*전공·교양상세 - 강좌개설이력*/
+    .open_history .item .info_box ol li.col-lg-8 b{min-width: 100px;}
+    .open_history .item .info_box ol li.col-lg-4 b{min-width: 100px;}
+    .open_history form .title_align_A {justify-content: space-between;}
+
+
+    /*전공·교양상세 - 강좌개설이력 - 모달*/
+    .modal_syllabus h2{font-size:20px;}
+    .modal_syllabus table{}
+    .modal_syllabus table:not(.in_table) > colgroup{display:none;}
+    .modal_syllabus table tr{display:flex; flex-wrap:wrap; width:100%;}
+    .modal_syllabus table tr > *{border-left:0!important; border-right:0;padding:0.75rem;}
+    .modal_syllabus table tr th{width:35%;font-size:14px;}
+    .modal_syllabus table tr th:nth-last-child(2) , .modal_syllabus table tr td:last-child{border-bottom:1px solid #222;}
+    .modal_syllabus table tr td{width:65%;font-size:14px;}
+    .modal_syllabus table tr:nth-last-child(-n + 2) > *{width:100%;}
+    .modal_syllabus table tr:nth-last-child(-n + 2) th:nth-last-child(2){border:1px solid var(--bs-border-color)}
+    .modal_syllabus .in_table tr{display:table-row;}
+    .modal_syllabus .in_table tr td:last-child{border-bottom:1px solid #92A3C5; }
+    .modal_syllabus .in_table tr:nth-last-child(-n + 2) th:nth-last-child(2){border-top:1px solid #92A3C5; border-right:1px solid #92A3C5; }
+
+    .modal_syllabus .appr_table colgroup , .modal_syllabus .appr_table thead{display:none;}
+    .modal_syllabus .appr_table tbody{border-top:1px solid #222;}
+    .modal_syllabus .appr_table tbody td{width:50%; }
+    .modal_syllabus .appr_table tbody td:last-child{width:100%;}
+    .modal_syllabus .appr_table tbody td:before{display:inline-block; font-weight: 700; color:#222; margin-right:0.5rem;;}
+    .modal_syllabus .appr_table tbody td.year_semi:before{content:'년도/학기'; }
+    .modal_syllabus .appr_table tbody td.name:before{content:'교과목명'; }
+    .modal_syllabus .appr_table tbody td.numb:before{content:'학수번호/분반'; }
+    .modal_syllabus .appr_table tbody td.pepl:before{content:'수강인원'; }
+    .modal_syllabus .appr_table tbody td.app_pepl:before{content:'평가인원'; }
+    .modal_syllabus .appr_table tbody td.avera:before{content:'강좌평균'; }
+    .modal_syllabus .appr_table tbody td.note:before{content:'비고'; }
+
+    .modal_syllabus .modal-dialog-scrollable .modal-body::-webkit-scrollbar{background:#fff; width:8px;}
+    .modal_syllabus .modal-dialog-scrollable .modal-body::-webkit-scrollbar-thumb{background:#ddd; border-radius: 25rem;;}
+
+	/*교수목록*/
+	.profff_search_bbox .unit{width:100%;}
+	.profff_search_bbox .row_box_basic .unit .input-group .form-select{max-width:unset!important;}
+	.profff_search_bbox .row_box_basic button{width:160px;margin-top:1rem;}
+	
+    /*교수상세 - 강의과목 &&&& 전공 상세 - 마이크로전공 ===== table 공통*/
+    .prof_lectu table{border-top:1px solid #222;}
+    .prof_lectu colgroup , .prof_lectu thead{display: none;}
+    .prof_lectu tbody tr{display:flex; flex-wrap:wrap;}
+    .prof_lectu tbody td{border-right:1px solid var(--bs-border-color); display:flex; flex-wrap:wrap;}
+    .prof_lectu tbody td:before{display:inline-block ;font-weight:700; color:#222; margin-right:0.5rem;}
+    .prof_lectu tbody td:nth-last-child(-n + 4){border-bottom:1px solid #222;}
+
+    /*교수상세 - 강의과목*/
+    .prof_lectu tbody td{border-right:1px solid var(--bs-border-color); display:flex; flex-wrap:wrap;}
+    .prof_lectu tbody td:nth-child(4n){border-right:0;}
+    .prof_lectu tbody .name:before{content:'교과목명';}
+    .prof_lectu tbody .year:before{content:'학년도';}
+    .prof_lectu tbody .semi:before{content:'학사';}
+    .prof_lectu tbody .week:before{content:'주야';}
+    .prof_lectu tbody .coll:before{content:'수강대상대학(원)';}
+    .prof_lectu tbody .undg:before{content:'수강대상학과';}
+    .prof_lectu tbody .acad:before{content:'과정구분';}
+    .prof_lectu tbody .numb:before{content:'학수번호';}
+    .prof_lectu tbody .name{width:40%;}
+    .prof_lectu tbody .year,
+    .prof_lectu tbody .semi,
+    .prof_lectu tbody .week,
+    .prof_lectu tbody .acad,
+    .prof_lectu tbody .numb{width:20%;}
+    .prof_lectu tbody .coll,
+    .prof_lectu tbody .undg{width:30%;}
+    
+    /*전공 상세 - 마이크로전공*/
+    .speci_micro .mobile_speci_table tr:nth-child(even) td{border-bottom:1px solid var(--pk_blue)}
+    .speci_micro .mobile_speci_table tr td:last-child{border-bottom:1px solid var(--pk_blue)}
+    .modal_syllabus2 table tr:has(.col_half) td{width:100%;}
+    .modal_syllabus2 table.col_half td,.modal_syllabus2 table.col_half th{border-right:0!important;}
+    .modal_syllabus2 table.col_half tr:nth-last-child(-n + 2) th:nth-last-child(2){border-top: 0;;}
+    .modal_syllabus2 .in_table tr:nth-last-child(-n + 2) th:nth-last-child(2){border-bottom: 0;;}
+    
+
+    /*학생설계전공*/
+    .right_bann .close.if_close{width:45px; height:45px;}
+    .regi_plan .item{width:calc(50% - 0.5rem);}
+    .plan_section .item{padding:23px;}
+    .modal_enrollSubj .item section div{width:100%;}
+    .modal_enrollSubj .item .btn_wrap{width:100%; justify-content:center; column-gap:1rem; margin-top:0.75rem;}
+    .modal_enrollSubj .item .btn_wrap li{width:calc(50% - 0.5rem);}
+    .modal_enrollSubj .item .btn_wrap li button{width:100%; padding:0.5rem; border-radius:5px;}
+    .modal_enrollSubj .item .btn_wrap li:has(.btn_dele){width:100%; }
+    .modal_enrollSubj .item .btn_wrap li button.btn_dele{height:auto;padding-left:1rem!important;}
+    .modal_enrollSubj .selected_box .btn_dele:before, .modal_enrollSubj .selected_box .btn_dele:after{left:calc(50% - 0.75rem)}
+    .modal_enrollSubj .item .btn_mine{background-color:#F55682!important; color:#fff;; }
+    .modal_enrollSubj .item .btn_mine svg path:first-child{fill:transparent!important;}
+    .modal_enrollSubj .item .btn_mine svg path:last-child{fill:#fff!important;}
+    .modal_enrollSubj .item .btn_put{background-color:var(--pk_blue)!important; color:#fff;; }
+    .modal_enrollSubj .item .btn_put svg g{fill:#fff;}
+
+    
+
+    /*통합검색*/
+    .resu_box .profss_wrap .item,
+    .resu_box .plan_section .item{width:calc(50% - 0.5rem)}
+    
+     /*전공 상세 - 인재상 표*/
+    .speci_talent table {font-size:14px;}
+    
+    /*전공 상세 - 학부(과) 교육과정 표*/
+    .table.curricT {font-size: 14px;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*마이페이지*/
+    .myP_info{width:100%;display:flex;  flex-wrap:wrap;}
+    .myP_info .info_box , .myP_chart{width:100%; }
+    .myP_info dl{width:50%;}
+    .myP_info dl:nth-last-child(-n + 2){padding-bottom:0;}
+    .myP_chart .chart_box:not(:last-child){margin-bottom:1.5rem;}
+    .myP_chart .chart_box .box{padding-top:0!important; height:160px;}
+
+    .req_credit_box, .req_credit_chart_box{width:100%;min-height: 150px;;}
+    
+    .myP_favorit .non_majref_wrap .item,
+    .myP_favorit .profss_wrap .item,
+    .myP_favorit .plan_section .item{width:calc(50% - 0.75rem);}
+    
+}
+
+@media (min-width:767px) and (max-width:991px){
+    /*통합검색-비교과*/
+    .resu_box .non_majref_wrap .item div dl:first-child{margin-right:0;}
+    .resu_box .non_majref_wrap .item div dl:first-child:after{display:none;}
+    
+   
+    
+}
+
+
+@media screen and (max-width:767px){
+    /*전공·교양 - 서치박스*/
+    .search_wrap_bbox .row_box_basic .input-group .form-select{max-width:120px}
+    .search_wrap_bbox .row_box_basic .input-group:before{left:120px;}
+    .search_wrap_bbox{padding:1.5rem!important;}
+
+    /*전공·교양 - 서치결과*/
+    .majref_wrap .item{padding:1.5rem; width:calc(50% - 0.5rem);}
+    .majref_wrap .item .title a{font-size:20px; min-height:52px;}
+    .majref_wrap .item .desc_txt{line-height:1.25; min-height:40px;}
+
+    /*전공·교양상세 - 강좌개설이력*/
+    .open_history .item{width:100%; }
+    .open_history .item .info_box ol li.col-lg-8 b{min-width: 100px;}
+    .open_history .item .info_box ol li.col-lg-4 b{min-width: 40px;}
+
+
+
+    /*교수상세 - 교수상세*/
+    .profss_dtl_wrap .profss_info table colgroup{display:none;}
+    .profss_dtl_wrap .profss_info table tbody tr{display:flex; flex-direction: row;width:100%; flex-wrap:wrap;}
+    .profss_dtl_wrap .profss_info table tbody tr th{width: 100px; }
+    .profss_dtl_wrap .profss_info table tbody tr td{width:calc(100% - 100px); border-right: 0;;}
+
+    
+    .prof_lectu tbody .name,
+    .prof_lectu tbody .coll,
+    .prof_lectu tbody .numb{width:100%;border-right:0; }
+    .prof_lectu tbody .year,
+    .prof_lectu tbody .semi,
+    .prof_lectu tbody .week{width:33.3%;}
+    .prof_lectu tbody .undg,
+    .prof_lectu tbody .acad{width:50%;}
+    .prof_lectu tbody .acad{border-right:0;}
+    
+    .prof_lectu tbody td:nth-last-child(-n + 4){border-bottom:1px solid var(--bs-border-color);}
+    .prof_lectu tbody .numb{border-bottom:1px solid #222!important;;}
+
+
+
+    /*전공목록*/
+    .speci_wrap .item{width:100%; }
+
+    /*전공상세 - 마이크로전공*/
+    
+
+    /*학생설계전공*/
+    .plan_section .item, .regi_plan .item{padding:1.5rem;}
+    .right_bann{top:17%;}
+
+    /*학생설계전공 상세 -- 기본정보*/
+    .plan_dtl_basic .table_wrap p,
+    .plan_dtl_basic .table_wrap .conts{border-right:0!important;}
+
+    /*학생설계전공 상세 -- 참여학생*/
+    .plan_join_stu colgroup,
+    .plan_join_stu thead{display: none;}
+    .plan_join_stu table tr{display:flex;flex-wrap:wrap;border-bottom:1px solid #222;}
+    .plan_join_stu td{padding:0.5rem 1rem;}
+    .plan_join_stu td:before{display:inline-block ;font-weight:700; color:#222; margin-right:0.5rem;}
+    .plan_join_stu td.cate:before{content:'구분'}
+    .plan_join_stu td.name:before{content:'성명'}
+    .plan_join_stu td.numb:before{content:'학번'}
+    .plan_join_stu td.univ:before{content:'단과대학'}
+    .plan_join_stu td.majo:before{content:'학부(과) · 전공'}
+    .plan_join_stu td.semi:before{content:'이수학기'}
+
+    .plan_join_stu td.cate , .plan_join_stu td.name , .plan_join_stu td.numb{width:33.33%; border-bottom:1px solid var(--bs-border-color)}
+    .plan_join_stu td.univ , .plan_join_stu td.semi {width:50%;border-bottom:1px solid var(--bs-border-color);}
+    .plan_join_stu td.majo{order: 5;width:100%; border-right:0!important;}
+
+    .plan_join_stu td.numb{border-right:0!important;}
+
+    .modal_addstu table:not(.result_table > table) colgroup{display:none; }
+    .modal_addstu table:not(.result_table > table) tr{display:flex; flex-wrap:wrap;}
+    .modal_addstu table:not(.result_table > table) tr th{width: 20%; display:flex; justify-content:center; align-items:center;}
+    .modal_addstu table:not(.result_table > table) tr td{width: 80%; border-right:0!important;}
+
+    /*학생설계전공 상세 -- 설계학점 총계*/
+    
+
+    .plan_total .search_proff dl:last-child dt{border-left:0!important;}
+    .plan_total .search_proff dd button{min-width:50px;}
+
+    /*학생설계전공 상세 -- 교육과정 신설컨설팅결과*/
+    .plan_result table colgroup, .plan_result table thead{display:none;}
+    .plan_result table tbody tr{display:grid;position:relative;background:#F6F7FB;}
+    .plan_result table tbody tr:nth-child(3n + 1) th[rowspan="3"]{position: absolute;height: 100%;width:80px;top:0; left: 0;border-right:0!important;;}
+    .plan_result table tbody tr td{margin-left:80px; border-right: 0!important; text-align: start!important;border-left:1px solid var(--bs-border-color); background:#fff;}
+    .plan_result table tbody tr td:before{display:inline-block ;font-weight:700; color:#222; margin-right:0.5rem;}
+    .plan_result table tbody tr td.open_maj:before{content:'개설전공';}
+    .plan_result table tbody tr td.guid_opi:before{content:'지도의견'; display:block;margin-bottom:0.25rem;}
+    .plan_result table tbody tr td.guid_opi p{border-radius: 5px ; border:1px solid #e5e5e5; padding:0.3rem;;}
+    .plan_result table tbody tr td.date_opi:before{content:'지도일자';}
+    .plan_result table tbody tr td.date_opi{border-bottom:1px solid #222;}
+    .plan_result table tbody tr:nth-child(3n + 3) td.date_opi{border-bottom:0!important;}
+    
+    .plan_result_proff table tbody tr td.guid_opi{border-bottom:1px solid #333!important;border-top:1px solid var(--bs-border-color)}
+    .plan_result_proff table tbody tr:nth-child(3n + 3) td.guid_opi{border-bottom:0!important; }
+    
+    
+    /*학생설계전공 교수 목록 -- 컨설팅진행 및 완료된 설계전공*/
+    .pf_plan_proc .item {position:relative; padding-bottom:4rem!important;}
+    .pf_plan_proc .item .title_wrap ul{width:100%; }
+    .pf_plan_proc .item .title_wrap .btn_wrap{width:calc(100% - 2rem); position: absolute;; bottom:1rem;}
+    .pf_plan_proc .item dl{min-width:auto!important;margin-right:0.75rem;}
+	
+    
+
+
+    /*학생설계전공 교수 상세 -- 학생설계전공 심사표*/
+    .plan_examin_table table{display:flex; flex-direction: column;;}
+    .plan_examin_table thead th:last-child, .plan_examin_table table colgroup{display:none;}
+    .plan_examin_table thead , .plan_examin_table thead tr{width: 100%; ;display:flex; flex-direction: row;}
+    .plan_examin_table thead th.delib{width:calc(100% - 240px);text-align: start!important;}
+    .plan_examin_table thead th.fit_item,
+    .plan_examin_table thead th.part_item{width: 80px;}
+    .plan_examin_table thead th.re_item{width: 80px; border-right:0!important;}
+    .plan_examin_table tbody tr{display:flex; flex-wrap:wrap;}
+    .plan_examin_table tbody th{width:calc(100% - 240px);text-align: start!important; font-weight: normal;}
+    .plan_examin_table tbody td:not(:has(textarea)){width:80px;display:flex; justify-content:center; align-items:center;}
+    .plan_examin_table table td:nth-last-child(2){border-right:0!important;}
+    .plan_examin_table tbody td:has(textarea):before{content:'검토의견';display:block; font-weight: 700; color:#222; margin-bottom:0.25rem;;}
+    .plan_examin_table tbody td:has(textarea){width:100%; }
+
+
+
+
+    /*학생설계전공 상세 -- 교과목설계범위 table wrap -- 과목등록하기 모달*/
+    .modal_enrollSubj{overflow-y: hidden;}
+    .modal_enrollSubj .modal-content{height:calc(100vh - 50px);}
+    .modal_enrollSubj .modal-body{height:calc(100vh - 210px); overflow-y: auto; position: unset;}
+    .modal_enrollSubj .modal-body .box{width:100% ;}
+    .modal_enrollSubj .selected_box .lesson_wrap{height:600px!important;}
+    .modal_enrollSubj .selected_box:before{top:-2.25rem;  left:-50%; transform:translateX(-50%) rotate(90deg); }
+    .modal_enrollSubj .selected_box .title_row select { min-width: 105px; font-size: 14px;}
+    .form-control { font-size: 14px;}
+    
+    
+    
+    /*학생설계전공 상세 -- 우측 인풋박스*/
+    .right_input ul{flex-wrap:wrap;}
+    .right_input li{height:100%;}
+    .right_input li a{ font-size:14px;}
+
+
+    /*통합검색-비교과*/
+    .resu_box .non_majref_wrap .item{width:100%;}
+    /* .resu_box .profss_wrap .item{width:100%;} */
+
+
+    /*기타서비스*/
+    .etc_section8 table thead th:first-child, 
+    .etc_section8 table colgroup,
+    .etc_section8 table td:not(:nth-last-child(-n + 2)){display:none;}
+
+    .etc_section9 table thead th:first-child,
+    .etc_section9 table thead th:last-child,
+    .etc_section9 table colgroup,
+    .etc_section9 table tbody td:first-child,
+    .etc_section9 table tbody td:last-child{display:none;}
+    .etc_section9 table thead th:nth-last-child(2),
+    .etc_section9 table tbody td:nth-last-child(2){border-right:0;}
+
+    .etc_section10 table thead th:first-child, 
+    .etc_section10 table colgroup,
+    .etc_section10 table td:not(:nth-last-child(-n + 2)){display:none;}
+
+
+
+
+
+
+
+
+
+
+
+	.myGrade_box > div, .myPerform_box > div{max-width:260px;}
+	.myP_chart .chart_box{width:50%; }
+	.myP_chart .chart_box:not(:last-child){margin-bottom:3rem;max-height:270px; }
+	.myP_chart .chart_box:last-child{width:100%; height:100%; }
+
+
+
+    .myP_degrr_cont .table_item table:not(.req_credit_box table) tbody tr:nth-child(even){background:transparent;}
+    .myP_degrr_cont .table_item table:not(.req_credit_box table) tbody tr{border-bottom:1px solid var(--pk_blue)}
+    .myP_degrr_cont .table_item table:not(.req_credit_box table) tbody tr td:nth-child(odd){border-right:1px solid #DEE3F2;}
+    .myP_degrr_cont .table_item table:not(.req_credit_box table) tbody tr td:not(:nth-last-child(-n + 2)){border-bottom:1px solid #dee3f2;}
+    
+    .accum_chek table, .perf_chek table, .table_item_finish{display:flex;flex-direction:column;}
+    .accum_chek colgroup, .perf_chek colgroup, .table_item_finish colgroup ,
+    .accum_chek thead, .perf_chek thead, .table_item_finish thead{display:none;}
+    .accum_chek tbody tr, .perf_chek tbody tr, .table_item_finish tbody tr{display:flex; flex-wrap:wrap;width:100%; align-items:flex-start; justify-content:flex-start; }
+    .accum_chek td, .perf_chek td, .table_item_finish td{width:50%;text-align: start!important;height:100%; }
+    .accum_chek td:before,
+    .perf_chek td:before,
+    .table_item_finish td:before{display:inline-block; font-weight:700; color:#222; margin-right:0.5rem;color:var(--pk_blue); }
+    
+    /*마이페이지 전체-누계성적조회*/
+    .accum_chek .year:before{content:'학년도/학기';}
+    .accum_chek .appl:before{content:'신청학점';}
+    .accum_chek .acqu:before{content:'취득학점';}
+    .accum_chek .gpas:before{content:'평점';}
+    .accum_chek .perc:before{content:'백분율';}
+    .accum_chek .rank:before{content:'석차';}
+    .accum_chek .fexc:before{content:'F제외평점';}
+    .accum_chek .rema:before{content:'비고';}
+    .myP_degrr_cont .table_item.accum_chek tbody tr:last-child{border-bottom:1px solid #222;}
+    .accum_chek tfoot tr{display:flex; flex-wrap:wrap;}
+    .accum_chek tfoot th{width:100%;background:#f9f9f9; border-bottom:1px solid #222;}
+    .accum_chek tfoot td.rema{display:none;}
+    .accum_chek tfoot td:before{color:#555; font-weight:normal; }
+    .accum_chek tfoot td.fexc , .accum_chek tfoot td.rank{border-bottom:1px solid #222;;}
+    .accum_chek tfoot td:nth-child(even){border-right:1px solid #dee3f2;}
+
+
+    /*마이페이지 전체-성적조회*/
+    .perf_chek .year:before{content:'학년도/학기';}
+    .perf_chek .year p{margin-top:-4px;}
+    .perf_chek .numb:before{content:'과목번호';}
+    .perf_chek .name:before{content:'교과목명';}
+    .perf_chek .cate:before{content:'이수구분';}
+    .perf_chek .area:before{content:'이수영역';}
+    .perf_chek .scor:before{content:'학점';}
+    .perf_chek .rank:before{content:'등급';}
+    .perf_chek .vali:before{content:'성적유효구분';}
+    .perf_chek .modi:before{content:'입력 및 수정일자';;}
+    .perf_chek .vali{border-bottom:1px solid #dee3f2!important;}
+    .perf_chek .modi{width:100%; border-right:0!important; }
+
+    .perf_chek tr.retake td:before{color:#222; font-weight:normal;}
+    .perf_chek tr.retake td{border-color:#fff!important;}
+
+    /*마이페이지 전체-이수학년도*/
+    .table_item_finish .grad:before{content:'학년';}
+    .table_item_finish .semi:before{content:'학기';}
+    .table_item_finish .year_comp:before{content:'이수년도';}
+    .table_item_finish .year_appl:before{content:'적용년도';}
+    .table_item_finish .doub1:before{content:'복수전공1';}
+    .table_item_finish .doub2:before{content:'복수전공2';}
+    .table_item_finish .rela:before{content:'연계전공';}
+    .table_item_finish .conv:before{content:'융합전공';}
+    .table_item_finish .stud:before{content:'학생설계전공';}
+    .table_item_finish .shar:before{content:'융합(공유)전공';}
+    .table_item_finish tbody td:nth-child(even){border-right:0!important;}
+
+    .myP_favorit .item{padding:1.5rem;}
+    .myP_favorit .non_majref_wrap .item,
+    .myP_favorit .majref_wrap .item,
+    .myP_favorit .profss_wrap .item,
+    .myP_favorit .plan_section .item{width:100%;}
+    .myP_favorit .majref_wrap .item .title a,
+    .myP_favorit .non_majref_wrap .item h5 a,
+    .myP_favorit .open_history .item h5{font-size:20px;}
+
+    .myP_favorit .open_history .item .link_wrap i + span{font-size:15px;}
+    .myP_favorit .majref_wrap .item .desc_txt{min-height:35px; }
+    .myP_favorit .non_majref_wrap .item h5 a{min-height:48px;}
+
+}
+
+@media screen and (max-width:575px){
+    /*공통****detail page -- title****상세페이지 공통 제목박스*/
+    .detail_title_wrap .title_box a em{display:none;}
+    .detail_title_wrap .like_container ,.detail_title_wrap .title_box a{min-width:20px;}
+    .detail_title_wrap .content_title{width:calc(100% - 60px)}
+
+    /*전공·교양 - 서치박스*/
+    .search_wrap_bbox .row_box_basic button{width:100%; }
+    .search_wrap_bbox .unit:not(:last-child){margin-bottom:1.5rem}
+    .search_wrap_bbox .unit > *:not(span){width:100%; }
+    .search_wrap_bbox .unit span{color:#777; margin-bottom:0.5rem;}
+    .search_wrap_bbox .unit.unit_univ ul.gap-2 li.col-4:last-child{width:100%;}
+    .search_wrap_bbox .unit.unit_univ ul.gap-2 li.col-4:not(:last-child){width:calc(50% - 0.22rem);}
+    .search_wrap_bbox .unit.unit_sort ul.gap-2 li.col-4:first-child{width:100%;}
+    .search_wrap_bbox .unit.unit_sort ul.gap-2 li.col-4:not(:first-child){width:calc(50% - 0.22rem)}
+    .search_wrap_bbox .unit ul.gap-2 li.col-3,
+    .speci_bg .search_wrap_bbox .unit ul.gap-2 li.col-3{width:calc(50% - 0.25rem)}
+    .search_wrap_bbox .unit ul.gap-3 li.col-6{width:100%; }
+
+    .reload_btn{margin-right:auto;}
+
+    /*전공·교양 - 서치결과*/
+    .majref_wrap .item{width:100%; }
+
+    
+
+    /*전공·교양상세 - 정보*/
+    .majref_dtl_wrap .table_maj .table > colgroup{display:none;}
+    .majref_dtl_wrap .table_maj > .table tr{display:flex; flex-wrap:wrap; width:100%;}
+    .majref_dtl_wrap .table_maj > .table tr > *{border-right:0!important;width:100%;padding:0.75rem; }
+    .majref_dtl_wrap .table_maj > .table tr th{padding:0.75rem;}
+    .majref_dtl_wrap .table_maj > .table tr th.m_half{border-right:1px solid var(--bs-border-color)!important;}
+    .majref_dtl_wrap .table_maj > .table tr .m_half{width:50%;}
+    .majref_dtl_wrap .table_maj .in_table .wrap > span:not(:last-child){border-bottom:1px solid #92A3C5}
+    
+    /*전공·교양상세 - 강좌개설이력*/
+    .open_history .form-select{max-width:unset; width:50%; }
+    .open_history .item .info_box ol li.col-lg-8 b{min-width: 100px;}
+    .open_history .item .info_box ol li.col-lg-4 b{min-width: 100px;}
+    .open_history form .title_align_A{display: block !important;}
+    .open_history form .title_align_A .title_align_A01 {width: 100% !important;margin-top: 15px;}
+    .open_history form .title_align_A .title_align_A01 .form-select {}
+	.open_history form .title_align_A .fw-semibold.col-6 {width: 100%;}
+    
+    
+    /*교수목록*/
+    .profss_dtl_wrap .profss_info table {font-size: 14px;}
+    .profss_dtl_wrap .photo_box{width:200px;min-width: 200px;height:240px;margin: 0 auto;}
+    .profss_wrap .item{width:100% ;}
+
+    /*교수상세*/
+    .prof_lectu tbody .undg{width:100%; border-right:0;}
+    .prof_lectu tbody .numb{width:50%;border-bottom:1px solid #222!important;}
+    .prof_lectu tbody .acad{border-bottom:1px solid #222!important;border-right:1px solid var(--bs-border-color)}
+	.prof_lectu table {border-top: 1px solid #222;font-size: 14px;}
+
+    /*전공목록*/
+    .speci_wrap .item{padding:1.5rem; }
+    .speci_wrap .item .like_container{top:1.5rem; right:1.5rem;}
+
+    /*전공상세*/
+    
+
+    .mobile_speci_table{overflow-x:auto;padding-bottom:10px;}
+    .mobile_speci_table::-webkit-scrollbar{height:10px; background:#ccc;}
+    .mobile_speci_table::-webkit-scrollbar-thumb{background:#fff; border:2px solid #ccc; border-radius:25rem;}
+    .mobile_speci_table table{min-width: 500px;;}
+
+    /*학생설계전공*/
+    .regi_plan .item{width:100%;}
+    .plan_section .item, .regi_plan .item{padding:1.3rem;}
+    .regi_plan .title_box h5{margin-bottom:0.5rem; }
+    .regi_plan .title_box .form-select{max-width:unset; width:50%; }
+
+    /*학생설계전공 상세 -- 기본정보*/
+    .plan_dtl_basic .table_wrap *{font-size:14px;}
+    .plan_dtl_basic .table_wrap div.d-grid{grid-template-columns:30% 70%;}
+    .plan_dtl_basic .table_wrap h3{grid-column: 1 / 3; grid-row: auto; padding:0.75rem; border-right:0!important;}
+    .plan_dtl_basic .table_wrap h4{padding:0.5rem 0.25rem;;}
+    .plan_dtl_basic .conts{grid-column: 1 / 4;text-align: center;}
+    .plan_dtl_basic ul.conts{justify-content:center;}
+    .plan_dtl_basic .table_wrap div.d-grid:last-child{grid-template-rows:unset;}
+    
+    /*학생설계전공 상세 -- 참여학생*/
+    .plan_join_stu table {font-size: 14px;}
+    .plan_join_stu td.cate{order:1;width:50%;}
+    .plan_join_stu td.name{order:3;width:50%;}
+    .plan_join_stu td.numb{order:4;width:50%;}
+    .plan_join_stu td.univ{order:5;width:100%; border-right:0!important;}
+    .plan_join_stu td.majo{order:6;width:100%;}
+    .plan_join_stu td.semi{order:2;width:50%;}
+
+    .modal_addstu .result_table{overflow-x: auto;}
+    .modal_addstu .result_table::-webkit-scrollbar{height:4px; background:#ddd; }
+    .modal_addstu .result_table::-webkit-scrollbar-thumb{background:var(--pk_blue);}
+    .modal_addstu .result_table table{min-width:500px;}
+
+    .plan_join_stu .dtl_bottom{flex-wrap:wrap;}
+
+    /*학생설계전공 상세 -- 교과목설계범위 table wrap -- 과목등록하기 모달*/
+    .modal_enrollSubj .box:not(.selected_box) .bottom_btn_group div{width:100%; }
+    .modal_enrollSubj .box:not(.selected_box) .bottom_btn_group div:first-child button{width:50%;justify-content: center; }
+    .modal_enrollSubj .box:not(.selected_box) .bottom_btn_group div:last-child button{width:100%; }
+    .modal_enrollSubj .selected_box .bottom_btn_group{position:relative;}
+    .modal_enrollSubj .selected_box .bottom_btn_group > div:first-child{width:100%; }
+    .modal_enrollSubj .selected_box .bottom_btn_group .all_delet{position:absolute; top:0; right:0;min-width: 87px;}
+    .modal_enrollSubj .bottom_btn_group .open_univ{width:100%; }
+  
+    .modal_syllabus {padding-left: 0.5rem;padding-right: 0.5rem;}
+    
+    .modal_enrollSubj .bottom_btn_group .all_check, 
+	.modal_enrollSubj .bottom_btn_group .remove_check, 
+	.modal_enrollSubj .selected_box .bottom_btn_group .all_delet {padding: 0.5rem 0.6rem;}
+
+    /*학생설계전공상세 - 교과목설계범위 table wrap*/
+    .plan_range .table_box{width:100%!important;border-right:1px solid #666!important;}
+    .plan_range .table_box:not(:last-child){border-bottom:0!important;}
+    .plan_range .dtl_bottom h5{min-width: calc(36px + 0.5rem);}
+    .plan_range .dtl_bottom div:nth-child(2) p{width:100%; text-align: center;;}
+    
+    
+    /*학생설계전공 교수 목록 -- 컨설팅진행 및 완료된 설계전공*/
+    .cate_proc li a{min-width:unset;padding:0.2rem 0.5rem;}
+    .cate_proc li a span{margin-left:0.5rem;}
+
+    /*학생설계전공 상세 -- 진행사항 + 버튼*/
+    .plan_button_wrap button{max-width: unset; width:calc(50% - 0.25rem);}
+    .plan_proces{font-size:14px;}
+    .right_input div{padding:0!important;}
+    .right_input ul{width:calc(100% - 50px); }
+    .right_input li a{font-size:13px;word-break: break-all;;}
+    .right_input li a.active{min-width: unset;padding:0.25rem;}
+    .right_input .save_btn{min-width: 50px;margin-left:0!important;}
+
+
+
+
+
+    
+    /*통합검색-비교과*/
+    .resu_box .non_majref_wrap .item div dl:first-child{margin-right:0;}
+    .resu_box .non_majref_wrap .item div dl:first-child:after{display:none;}
+    .resu_box .profss_wrap .item,
+    .resu_box .plan_section .item{width:100%;}
+
+
+
+
+
+
+
+
+
+
+
+    /*마이페이지*/
+	.myP_chart .chart_box{width:100%;  }
+	
+	
+    .myP_info dl{width:100%; }
+    .perf_chek .name, .perf_chek .area{width:100%; border-right:0!important;}
+    .perf_chek .year{order:1;}
+    .perf_chek .numb{order:2;}
+    .perf_chek .name{order:3;}
+    .perf_chek .cate{order:5; border-right:1px solid #dee3f2;}
+    .perf_chek .area{order:4;}
+    .perf_chek .scor{order:6;}
+    .perf_chek .rank{order:7;}
+    .perf_chek .vali{order:8;}
+    .perf_chek .modi{order:9;}
+    .table_item_finish td:nth-last-child(-n + 6){width:100%; border-right:0!important;}
+
+    
+    
+    .all_about_wrap div{width:100%; flex-wrap: wrap;;}
+    .all_about_wrap .all_check , .all_about_wrap .all_remove{width:100%; }
+    .all_about_wrap .remove_check, 
+    .all_about_wrap .remove_luv{width:calc(50% - 0.25rem); }
+
+    .modal_addstu h2{font-size:19px;}
+    .modal_enrollSubj h2, .modal_openUniv h2{font-size:19px;}
+
+
+}
+
+
+@media screen and (max-width:525px){
+    .myP_favorit .btn_wrap li{width:calc(33.3% - 0.45rem);}
+    .myP_favorit .btn_wrap li button{min-width: unset;width:100%; font-size:13px; }
+}
+
+@media screen and (max-width:425px){
+    /*전공·교양 - 서치박스*/
+    .search_wrap_bbox{padding:1.5rem!important;}
+
+    /*전공·교양상세 - 강좌개설이력*/
+    .open_history .item .link_wrap li{width:50%; }
+    .open_history .item .link_wrap li:nth-child(-n + 2){margin-bottom:0.75rem}
+
+    .modal_syllabus .appr_table tbody td{width:100%; }
+
+    /*교수목록*/
+    .profss_wrap .item{flex-direction: column!important; align-items:center!important;padding-bottom:0.9rem!important;}
+    .profss_wrap .item .txt_box{width:100%;margin-bottom:0!important; }
+    .profss_wrap .item .dtl_info{padding-top:0.9rem!important;}
+
+    .plan_section .item, .regi_plan .item{padding:1.5rem;}
+
+    /*학생설계전공 상세 -- 참여학생*/
+    .plan_join_stu .dtl_bottom button{width:100%; justify-content:center;;}
+
+    /*학생설계전공 상세 -- 설계학점 총계*/
+    .plan_total table colgroup ,.plan_total table thead{display:none;}
+    .plan_total table *{padding:0;border:0;}
+    .plan_total table tr{display:flex; flex-wrap:wrap;border-bottom:1px solid #222;}
+    .plan_total table td{padding:0.5rem; border-bottom:1px solid var(--bs-border-color); border-right:1px solid var(--bs-border-color); display:flex; flex-wrap:wrap;align-items:center;}
+    .plan_total table td:before{display:inline-block ;font-weight:700; color:#222; margin-right:0.5rem;}
+    .plan_total .univ:before{content:'대학';}
+    .plan_total .coll:before{content:'단과대학';}
+    .plan_total .majo:before{content:'학부(과) · 전공';}
+    .plan_total .scor:before{content:'설계학점';}
+    .plan_total table td.numb{order:1;width:3rem;justify-content:center;}
+    .plan_total table td.scor{order:2;width:40%; border-right:1px solid var(--bs-border-color)!important;}
+    .plan_total table td.coll{order:3;width:calc(60% - 3rem);border-right:0;}
+    .plan_total table td.majo{order:4;width:100%;border-right:0;border-bottom:0;}
+    
+
+    .plan_total .search_proff dl{flex-wrap:wrap;flex-direction: column!important; align-items:start!important;;}
+    .plan_total .search_proff dt{background:transparent; border-right:0!important;height:auto;padding:0.6rem 0.5rem 0.3rem 0.5rem; width:100%; }
+    .plan_total .search_proff dd{padding:0 0.5rem 0.6rem 0.5rem!important;width:100%; }
+    .plan_total .search_proff dd input{max-width:unset; width: calc(100% - 50px);}
+
+    /*학생설계전공 상세 - 교과목설계범위 table wrap*/
+    .plan_range .dtl_bottom div:first-child{flex-wrap:wrap;}
+    .plan_range .dtl_bottom div:first-child button{margin-left:calc(37px + 1rem)!important;}
+
+    /*학생설계전공 상세 -- 진행사항 + 버튼*/
+    .plan_proces ul{flex-direction: column!important;row-gap: 1.5rem;;}
+    .plan_proces ul li{text-align: center;;}
+    .plan_proces ul li:not(:first-child):before{left:50%; top:-0.75rem; transform:translate(0 ,-50%) rotate(90deg)}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*마이페이지*/
+    .myP_info .info_box .text_box{width:calc(100% - 70px - 0.5rem);}
+    .myP_info .info_box ul{margin-left:auto; display:flex; width: 100%; gap:0.5rem;}
+    .myP_info .info_box ul li{width:50%; height:100%; }
+    
+    .myP_tab_wrap{padding:25px;}
+
+    .perf_chek .year, .perf_chek .numb{width:100%; border-right:0!important;}
+    .myP_favorit .btn_wrap li{width:calc(50% - 0.25rem);}
+    .myP_favorit .profss_wrap .item .simply_info{flex-direction:column!important;  align-items:center!important;}
+    .myP_favorit .speci_wrap .item dl{flex-direction:column!important;}
+
+    .myP_add_hash .input-group{flex-direction: column;;}
+    .myP_add_hash .input-group input{width:100%; margin-right:0;}
+    .myP_add_hash .input-group button{max-width:200px; margin: 0.5rem auto 0 auto!important;;width: 100%;padding:0.5rem; ;}
+    .myP_add_hash ul li{padding: 4px 9px;}
+}
+
+@media screen and (max-width:375px){
+	
+	.major_bg .search_wrap_bbox .unit ul.gap-2 li.col-4{width:calc(50% - 0.25rem)}
+	
+    /*학생설계전공 교수 상세 -- 심사표*/
+    .plan_examin_table table thead{display:none;}
+    .plan_examin_table table th{width:100%; border-right:0!important;}
+    .plan_examin_table table th:before{content:'심의항목'; display:inline-block; font-weight:700; color:#222;margin-right:0.5rem; }
+    .plan_examin_table tr:first-child td:has(textarea){border-top:1px solid var(--bs-border-color);}
+    .plan_examin_table table th ~ td:not(:has(textarea)){width:33.3%;border-top:0!important;border-bottom:0!important;flex-direction:column;}
+    .plan_examin_table table th ~ td:not(:has(textarea)):before{display:block; font-weight:700; color:#222; text-align: center; margin:0 auto 3px auto;;}
+    .plan_examin_table table td.ffit:before{content:'적합';}
+    .plan_examin_table table td.ppar:before{content:'일부수정';}
+    .plan_examin_table table td.agai:before{content:'재검토';}
+
+    .right_input li a{padding:0 0.1rem;}
+
+    /*마이페이지*/
+    .myP_tab_wrap .nav-tabs{margin-left:-25px; width:calc(100% + 50px)}
+    .myP_degrr_cont .table_item table tbody tr td:nth-last-child(2){border-bottom:1px solid #dee3f2;}
+    .accum_chek td:nth-child(even){border-right:1px solid #dee3f2;}
+    .accum_chek td:nth-child(odd){border-right:0!important;}
+    .accum_chek .year ,.accum_chek .rema{width:100%; border-right:0!important; }
+}
+
+
+@media screen and (min-width: 992px){
+    .modal_syllabus .modal-dialog-scrollable .modal-content{overflow:unset; overflow-y: auto;/*scrollbar-gutter: stable여백생겨서 주석처리함 */}
+    .modal_syllabus .modal-dialog-scrollable .modal-content::-webkit-scrollbar{width:6px; background:#fff;}
+    .modal_syllabus .modal-dialog-scrollable .modal-content::-webkit-scrollbar-thumb{background:#222;}
+    .modal_syllabus .modal-dialog-scrollable .modal-content .modal-header{border-top-right-radius: 0!important;}
+    .modal_syllabus .modal-dialog-scrollable .modal-body{overflow-y:unset;}
+}
+
+/*이동근 추가 빼지마세요*/
+.curricT td p.ass{color:#4571E9; font-weight:500;}
+.curricT td p.ass:after{background:#4571E9;}
+/*이동근 추가 끝*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

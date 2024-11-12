@@ -1,0 +1,56 @@
+{
+	"item_info":{
+		"items":{
+			"contents":{
+				"item_id":"contents"
+				, "column_id":"CONTENTS"
+				,"item_name":"내용"
+				,"item_name_ko":"내용"
+				,"item_name_en":"contents"
+				,"required_write":1
+				,"required_modify":1
+				,"format_type":0
+				,"object_type":1
+				,"maximum":250
+				,"write_type":0
+				,"modify_type":0
+				,"default_item":1
+			}
+		}, "list_order":[
+			"contents"
+		]
+		, "view_order":[
+			"contents"
+		]
+		, "write_order":[
+			"contents"
+		]
+		, "writeproc_order":[
+			"contents"
+		]
+		, "modify_order":[
+			"contents"
+		]
+		, "modifyproc_order":[
+			"contents"
+		]
+		, "list_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+					"contents":{
+						"column_id":"CONTENTS"
+						, "item_name":"내용"
+					}
+				}, "select_order":[
+					"contents"
+				]
+			}, "searchForm_order":[
+				"keyField"
+			], "search_order":[
+				"keyField"
+			]
+		}
+	}
+}

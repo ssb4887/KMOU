@@ -1,0 +1,83 @@
+@charset "utf-8";
+
+#mainContainer {position:relative; top:25px; width:990px; margin:0 auto; height:670px; }
+#mainContents { padding-bottom:30px;}
+
+/* 메인비주얼 */
+#mainContents #visual {float:left; width:1000px;}
+/* main visual image */
+#featured {width:1000px !important; height: 400px !important; background-color:#EEE; overflow: hidden;  background: url('../images/main/banner_no_image.jpg');}
+div.orbit { width: 1px; height: 1px; position: relative;  overflow: hidden;}
+div.orbit img { position: absolute; top: 0; left: 0; }
+/* main visual image bullet */
+.orbit-bullets { position: absolute; z-index: 3; list-style: none; top: 15px; right: 15px; margin: 0; padding: 0; }
+.orbit-bullets li { float: left; margin-left: 5px; cursor: pointer; color: #999; text-indent: -9999px; background: url(../images/main/visual_btn.png) no-repeat; 0 0; width: 11px; height: 11px; overflow: hidden; }
+.orbit-bullets li.active { color: #222; background-position: -11px 0; }
+
+/* 강좌정보 */
+#mainContents #classinfo {float:left; width:440px; height:372px; background:#fff; padding:20px; border:1px solid #d8d8d8;}
+#mainContents #classinfo .title {}
+#mainContents #classinfo .title > ul > li {float:left;}
+#mainContents #classinfo .title > ul > li  > h3{width:370px; font-size:20px; font-weight:600; color:#4D4D4D; line-height:20px; letter-spacing:-0.03em;}
+#mainContents #classinfo .list {margin-top:35px;}
+#mainContents #classinfo .list > ul { float:left; width:422px; padding:7px 0px 13px 10px;}
+#mainContents #classinfo .list > ul > li {float:left; height:35px;}
+#mainContents #classinfo .list  ul  li .text {text-decoration:none; width:317px;padding-left:10px; color:#0020ac; font-weight:600; font-size:14px; line-height:20px; }
+#mainContents #classinfo .list  ul  li .stext { font-size:11px;color:#333333;  }
+#mainContents #classinfo .list > ul > li > .btn {}
+#mainContents #classinfo .list > ul:first-child { border-top:1px solid #EEEEEE; }
+#mainContents #classinfo .list > ul:nth-child(2n) {background-color:#F8F8F8; border-top:1px solid #EEEEEE; border-bottom:1px solid #EEEEEE;}
+
+/* 기관검색 */
+#mainContents #search {float:right; width:243px; height:412px; background:#fff; border:1px solid #d8d8d8;}
+#mainContents #search .map{ text-align:center; height:331px;}
+#mainContents #search .map h3{padding:15px 0; }
+#mainContents #search .map .inputTxt{ border:0; background:#FAFAFB;width:160px; padding:6px; }
+#mainContents #search .map .box {width:210px; margin:0 auto; margin-bottom:10px; background:#FAFAFC; line-height:24px; border:1px solid #E4E4E4;}
+#mainContents #search .banner{ bottom:0px; height:81px;}
+
+/* 공지사항 , 평생교육소식 */
+#alim1 {display:block;position:absolute;top:440px;left:0px;width:360px;height:163px;overflow:hidden; background-color:#ffffff;}
+#alim1 .tab {float:left;}
+#alim1 .tab a { font-size:16px; font-weight:bold; display:block; border:1px solid #E2E2E2; background:#FFF; padding:10px 15px 10px 15px;}
+#alim1 .tab a.on, #alim1 .tab a:hover {text-decoration:none; display:block; background:#005aab; color:#FFF;}
+#alim1 .cont1{position:absolute;left:0;top:25px;width:360px;}
+#alim1 .cont1 .tab_more {position:absolute; top:-13px; right:0; width:47px; height:15px;}
+#alim1 .cont1 .j_box {position:relative; float:left; width:100%; padding:10px 0 6px 0;}
+#alim1 .cont1 .j_box ul {width:100%; float:left; padding:8px 0 0 0;}
+#alim1 .cont1 .j_box li.text {float:left; padding:1px 0 1px 10px; color:#333333; background:url(../images/main/dot.gif) no-repeat 0 7px;}
+#alim1 .cont1 .j_box li.date {float:right; padding:2px 0 2px 0; font:11px normal Tahoma; color:#555555;}
+#alim1 .cont1 .j_box li a {float:left; text-decoration:none;  color:#333333; }
+#alim1 .cont1 .j_box li a:hover {color:#0020ac;}
+
+#alim1 .cont2{position:absolute; left:0px; top:25px;width:360px;}
+#alim1 .cont2 .tab_more {position:absolute; top:-13px; right:0; width:47px; height:15px;}
+#alim1 .cont2 .j_box {position:relative; float:left; width:100%; padding:10px 0 6px 0;}
+#alim1 .cont2 .j_box ul {width:100%; float:left; padding:8px 0 0 0;}
+#alim1 .cont2 .j_box li.text {float:left; padding:1px 0 1px 10px;   color:#333333; background:url(../images/main/dot.gif) no-repeat 0 7px;}
+#alim1 .cont2 .j_box li.date {float:right; padding:2px 0 2px 0; font:11px normal Tahoma; color:#555555;}
+#alim1 .cont2 .j_box li a {float:left; text-decoration:none;  color:#333333; }
+#alim1 .cont2 .j_box li a:hover {color:#0020ac;}
+
+/* 학습갤러리 */
+#gallery {display:block;position:absolute;top:440px;left:390px;width:340px;height:163px;overflow:hidden; background-color:#ffffff;}
+#gallery h3{ float:left; height:30px; padding-top:10px; font-size:16px; font-weight:600; color:#4D4D4D; line-height:16px; letter-spacing:-0.03em;}
+#gallery .more {position:absolute; top:10px; right:0; width:47px; height:15px;}
+#gallery ul {position:relative; float:left; width:100%; }
+#gallery ul li { float:left; width:110px; height:133px; padding-right:5px; text-align: center;}
+#gallery ul li:last-child {padding-right:0px; }
+#gallery ul li.last {padding-right:0px; }
+#gallery ul li span.txt{padding-top:8px; color:#333333;}
+#gallery ul li img {max-width:110px; height:98px; border:1px solid #E4E4E4;}
+#gallery ul li span.img {width:110px;  height:98px; overflow: hidden; background: url('../images/no_image.gif') no-repeat center; background-size:110px 98px;}
+
+
+/* 팝업 */
+#popup {display:block;position:absolute;top:440px;left:750px;width:250px;height:163px;overflow:hidden; background-color:#ffffff;}
+#popup_featured {width:250px !important; height: 163px !important; background-color:#EEE; overflow: hidden;  background: url('../images/main/popup_no_image.jpg') center;}
+
+/* 강좌분야별 검색 */
+#partBanner {position:absolute;top:440px;left:755px;width:240px;height:163px;}
+#partBanner h3{ float:left; height:30px; padding-top:10px; font-size:16px; font-weight:600; color:#4D4D4D; line-height:16px; letter-spacing:-0.03em;}
+#partBanner ul {position:relative; float:left; width:100%; }
+#partBanner ul li { float:left; width:80px; height:65px; }

@@ -1,0 +1,142 @@
+/* Board Search */
+
+
+/* 한줄 box */
+.tbSearch {margin:5px 0; text-align:center; border:1px solid #E0E0E0; background:#F5F5F5; padding:20px 0;}
+
+.tbSearch dl{display:inline;margin-right:5px;}
+.tbSearch dt{display:none;}
+.tbSearch dd{display:inline;}
+
+.tbSearch .select {min-width:82px; height:27px;}
+.tbSearch input[type="text"]{height:25px;padding:0 5px; border:1px solid #dbdbdb; line-height: 30px;}
+
+.tbSearch p {display:inline-block;}
+.tbSearch .btnSearch {width:70px; height:27px; padding:0px; font-size:13px; font-weight:bold; color:#ffffff !important; line-height:27px; text-decoration:none !important; border:0px; background:#6e6e6e; }
+.tbSearch .btnTotalList {width:70px; height:27px; padding:0px; font-size:13px; font-weight:bold; color:#ffffff !important; line-height:27px; text-decoration:none !important; border:0px; background:#006dba; }
+
+.tbSearch #key {width:250px; height:25px; padding:0 5px; border:1px solid #dbdbdb; line-height: 30px;}
+.tbSearch #keyField {min-width:74px;height:27px; /*margin-right:5px;*/ font-family: 'Nanum Gothic', 'NanumGothic', '나눔고딕', '돋움', dotum, sans-serif; color:#535353; border:1px solid #dbdbdb;}
+.btnSearch03 {width:73px; height:27px; background: url("../images/common/btn_bo_search.gif") no-repeat 0 0; text-indent: -9999px; border:0px;}
+.btnSTotList {width:73px; height:30px; padding:0px; font-size:11px; font-weight:bold; color:#ffffff !important; line-height:28px; text-decoration:none !important; border:0px; background:#006dba; }
+
+.tbSearch.tbShowDt dt{display:inline-block; font-weight: bold;}
+
+/* 여러줄 box */
+.tbMSearch {margin:5px 0; border:1px solid #E0E0E0; background:#F5F5F5;}
+
+.tbMSearch dl{margin:20px 50px 10px 50px;}
+.tbMSearch dt{display:inline-block; font-weight: bold; width:10%; margin-top:5px; text-align:right;}
+.tbMSearch dd{display:inline-block; width:35%; margin:5px 10px 0 10px;}
+.tbMSearch dd.lw{width:42%;}
+.tbMSearch dd.sw{width:28%;}
+.tbMSearch dd.full{display:inline-block; width:83%;}
+
+.tbMSearch p {margin:0px 50px 20px 50px; text-align: center;}
+.tbMSearch .btnSearch {width:140px; height:30px; padding:0px; font-size:13px; font-weight:bold; color:#ffffff !important; line-height:28px; text-decoration:none !important; border:0px; background:#6e6e6e; }
+.tbMSearch .btnTotalList {width:140px; height:30px; padding:0px; font-size:13px; font-weight:bold; color:#ffffff !important; line-height:28px; text-decoration:none !important; border:0px; background:#006dba; }
+
+.tbMSearch .select {min-width:100px; height:27px;}
+.tbMSearch input[type="text"]{height:25px;padding:0 5px; border:1px solid #dbdbdb; line-height:25px;}
+
+.tbMSearch #key {width:240px; height:25px; padding:0 5px; border:1px solid #dbdbdb; line-height: 30px;}
+.tbMSearch #keyField {min-width:120px;height:27px; /*margin-right:5px;*/ font-family: 'Nanum Gothic', 'NanumGothic', '나눔고딕', '돋움', dotum, sans-serif; color:#535353; border:1px solid #dbdbdb;}
+
+/* 한줄 라인 - button */
+.tbLSearch {display:inline-block; width:100%; border-bottom:1px solid #E0E0E0;}
+.tbLSearch .left {float:left; margin:5px 0;}
+.tbLSearch .right {float:right; margin:5px 0;}
+
+.tbLSearch .btnTW {padding:0; width:60px; font-size:12px; font-weight:bold; color:#ffffff !important; line-height:26px; text-align:center; text-decoration:none !important; border:0px; background:#006dba;}
+.tbLSearch .btnTD {padding:0; width:60px; font-size:12px; font-weight:bold; color:#ffffff !important; line-height:26px; text-align:center; text-decoration:none !important; border:0px; background:#006dba;}
+.tbLSearch .btnTDL {padding:0; width:60px; font-size:12px; font-weight:bold; color:#ffffff !important; line-height:26px; text-align:center; text-decoration:none !important; border:0px; background:#5d5d5d;}
+
+.tbLSearch .btnTFW {padding:0 10px; font-size:12px; font-weight:bold; color:#ffffff !important; line-height:26px; text-align:center; text-decoration:none !important; border:0px; background:#006dba;}
+.tbLSearch .btnTFD {padding:0 10px; font-size:12px; font-weight:bold; color:#ffffff !important; line-height:26px; text-align:center; text-decoration:none !important; border:0px; background:#006dba;}
+.tbLSearch .btnTFDL {padding:0 10px; font-size:12px; font-weight:bold; color:#ffffff !important; line-height:26px; text-align:center; text-decoration:none !important; border:0px; background:#5d5d5d;}
+
+/* 탭 */
+.tabTypeC {overflow:hidden; min-height:42px; border-left:1px solid #cdcdcd; }
+.tabTypeC > li {float:left; width:auto; box-sizing:border-box;border-right:1px solid #cdcdcd; border-bottom:1px solid #cdcdcd; border-top:1px solid #cdcdcd;}
+.tabTypeC > li:first-child{border-left:none}
+.tabTypeC > li > a.bottom{border-left:1px solid #cdcdcd; border-top:none}
+.tabTypeC > li > a.bottom2{ border-top:none}
+.tabTypeC > li > a {display:block; height:41px; line-height:41px; text-align:center; background:#f8f8f8;padding:0 40px}
+.tabTypeC > li > a.on, .tabTypeC > li > a:hover {color:#ffffff;background:#006dba;}
+
+/* rss */
+.rss {float:left; color:#444; font-size:0.9em; background: url('../images/board/btn_rss.gif') no-repeat 0 0; text-indent: -9999px; width:92px; height:21px;}
+
+/* 상세보기 버튼 */
+.listBtn {float:right; padding:10px 0 20px 0;}
+
+.tbWriteA {width:100%; border-top:2px solid #6b6b6b; border-bottom:1px solid #6b6b6b; border-collapse:collapse; border-spacing:0; table-layout:fixed; word-break:break-all;}
+.tbWriteA thead tr th {padding:10px 0px; font-weight:bold; color:#3e3e3e; text-align:center; vertical-align:middle; border-bottom:1px solid #6b6b6b; background:#fbfbfb;}
+.tbWriteA tbody tr th {/*height:27px;*/ padding:10px 10px 10px 0; line-height:27px; vertical-align:top; font-weight:bold; color:#3e3e3e; text-align:right; /*vertical-align:top;*/ border-top:1px solid #e4e4e4; background:#fbfbfb;}
+.tbWriteA tbody tr td {/*height:27px;*/ padding:10px 0; line-height:27px; vertical-align:top; border-top:1px solid #e4e4e4; background:#fbfbfb;}
+.tbWriteA tbody tr:first-child th, .tbWriteA tbody tr:first-child td {border-top:0;}
+.tbWriteA tbody tr td .chkList {overflow:hidden; margin:-7px 0 10px;}
+.tbWriteA tbody tr td .chkList li {float:left; width:152px; margin-top:12px;}
+.tbWriteA tbody tr td .chkList li.long {width:304px;}
+.tbWriteA tbody tr td .chkList li label input {margin-right:1px;}
+.tbWriteA tbody tr td .chkList li label span {color:#006dba;}
+.tbWriteA ul li {margin-top:3px;}
+.tbWriteA ul li:FIRST-CHILD {margin-top:0px;}
+.tbWriteA span.comment {margin:0 5px 0 10px;}
+.tbWriteA .comment {color: #f15a38; line-height: 20px; font-size:11px;}
+.tbWriteA .comment:before {content:'※ ';}
+.tbWriteA .required:before {color: #f15a38; content:'* ';}
+
+.tbWriteA input[type="text"],.tbWriteA input[type="file"], .tbWriteA textarea {border:1px solid #dbdbdb; padding:0 5px; height:25px; line-height:25px; /*margin-right:4px;*/}
+:root .tbWriteA input[type="file"] {border:0px \0/IE9+10; background:none; padding:0px !important;}
+
+.tbWriteA input[type="file"]::-ms-value {border:1px solid #dbdbdb;}
+
+
+.tbWriteA select {border:1px solid #dbdbdb; padding:2px; height:27px; /*margin-right:4px;*/}
+.tbWriteA label {margin:0 5px 0 3px;}
+
+.tbWriteA ul.fileUL .fn_text_label {width:72px;}
+.tbWriteA dl.saved_file_nb, .tbWriteA dl.saved_file_nb dt, .tbWriteA dl.saved_file_nb dd {display:inline-block; vertical-align: top;}
+.tbWriteA dl.saved_file_nb dt:AFTER{content: ": ";}
+
+.tbWriteA ul.multiFileUL select {height:80px; width:500px;}
+.tbWriteA ul.multiFileUL .fn_text_label {width:72px;}
+.tbWriteA ul.multiFileUL ul.fn_btn_ud {display:inline-block; vertical-align: top;}
+.tbWriteA ul.multiFileUL ul.fn_btn_ud .fn_btn_up {width:50px; font-size:11px; font-weight:bold; color:#fff !important; line-height:26px; text-decoration:none !important; background:url(../images/button/bg_type_f.gif) repeat-x 0 0;}
+.tbWriteA ul.multiFileUL ul.fn_btn_ud .fn_btn_down {width:50px; font-size:11px; font-weight:bold; color:#fff !important; line-height:26px; text-decoration:none !important; background:url(../images/button/bg_type_f.gif) repeat-x 0 0;}
+
+.tbWriteA ul.fn_btn_ad {display:inline-block; vertical-align: top;}
+.tbWriteA ul.fn_btn_ad .fn_btn_add {width:50px; font-size:11px; font-weight:bold; color:#fff !important; line-height:26px; text-decoration:none !important; background:url(../images/button/bg_type_f.gif) repeat-x 0 0;}
+.tbWriteA ul.fn_btn_ad .fn_btn_del {width:50px; font-size:11px; font-weight:bold; color:#fff !important; line-height:26px; text-decoration:none !important; background:url(../images/button/bg_type_f.gif) repeat-x 0 0;}
+
+.tbWriteA li.fn_multiFileDown dl.saved_file_nb dt {line-height:1em;}
+.tbWriteA li.fn_multiFileDown ul li {line-height:1em;}
+
+/* 달력 */
+.btnCal {display:inline-block; /*margin-left:3px; */border:0px; width:20px; height:18px; background: transparent url('../images/button/btn_cal.gif') no-repeat; text-indent:-9999px;vertical-align:middle;}
+
+/* 포토 게시판, 동영상 게시판*/
+.gallery {padding-top:20px;border-top:2px solid #1971b2; border-bottom:1px solid #b5b5b5;margin-top:45px;}
+.group:after {display: block; clear: both; content: '';}
+.gallery li {float:left;width:25%;height:200px;margin-top:20px}
+.gallery li a, #gallery li .meta {display:block;width:220px;margin:0 auto; color:#333}
+.gallery .photo {display:block;overflow:hidden}
+.gallery .photo img {transition:transform .3s; background:#ccc}
+/*#gallery li a:hover .photo img {-ms-transform:scale(1.05,1.05);-webkit-transform:scale(1.05,1.05);transform:scale(1.05,1.05)}*/
+.gallery ul li span.subject {display:block;margin-top:8px;line-height:1.5; text-align:center; font-weight: bolder;}
+.gallery ul li span.date {display:block;margin-top:8px;line-height:1.5; text-align:center; font-weight: bolder;}
+.gallery ul li.nolist {display:block !important;padding:30px 0 !important;height:auto !important;text-align:center;width:100%;}
+
+/* faq 게시판 */
+.fn_faq_list{clear:both;margin:10px 0 20px;border-top:#66747e 2px solid;}
+.fn_faq_list dl{background:#f9f9f9;border-bottom:1px solid #d2d2d2;}
+.fn_faq_list dt{padding:10px 10px 10px 30px;background:#fff url(../images/common/icon_q.gif) 10px 14px no-repeat;}
+.fn_faq_list dd{padding:10px 10px 10px 30px;background:#f9f9f9 url(../images/common/icon_a.gif) 10px 14px no-repeat;border-top:1px dotted #ccc}
+.faqList .btnMore{display:block;width:80px;height:20px;margin-top:21px;padding:0 14px 0 8px;background:#66747e url(../images/board/tiny.gif) 87px -294px no-repeat;color:#fff;font-size:11px;line-height:21px;cursor:pointer;}
+
+/* 이전글, 다음글 */
+.goArticle {width:100%;border:0;border-bottom:1px solid #6b6b6b; border-top:1px solid #6b6b6b; border-collapse:collapse;background:#fbfbfb;table-layout:fixed}
+.goArticle th {padding-left:50px;border-width:0 0 1px 0;text-align:left;color:#3e3e3e;font-size:13px;vertical-align:middle; font-weight:bold;}
+.goArticle td {padding:15px;border-width:0px 0px 1px 0;font-size:13px;}
+.goArticle .goPrev {border-bottom:1px solid #e4e4e4;}

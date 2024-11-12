@@ -1,0 +1,24 @@
+@charset "utf-8";
+@import url('../../common.css');
+
+/* 로그인 */
+#cms_member_article .loginTit {overflow:hidden; margin:10px 0 10px 0px;}
+#cms_member_article .loginTit .tit {display:inline-block;color:#005baf; font-size:45px; line-height:45px;font-family:verdana;letter-spacing:-3.3px; }
+#cms_member_article .loginTit .txt {display:inline-block;margin:10px 10px; font-size:13px; color:#3e3e3e; line-height:15px;}
+#cms_member_article .loginWrap {padding:47px 0 55px; border-top:2px solid #0e6bc1; border-bottom:1px solid #e4e4e4; background:#fbfbfb;}
+#cms_member_article .loginWrap .snsLogin {float:left; padding-left:60px; height:100%; }
+#cms_member_article .loginWrap fieldset {overflow:hidden; margin:20px; text-align: center;}
+#cms_member_article .loginWrap .login { margin-top:15px;/* width: 350px;*/}
+#cms_member_article .loginWrap .login li {margin-top:5px;}
+#cms_member_article .loginWrap .login li:first-child {margin-top:0;}
+#cms_member_article .loginWrap .login li label {display:inline-block; width:65px; padding-left:9px; font-size:14px; font-weight:bold; color:#3e3e3e; line-height:32px; background:url(./images/dot.gif) no-repeat 0 center;}
+#cms_member_article .loginWrap .login li .inputTxt {display:inline-block; width:150px; height:32px; line-height:32px;}
+#cms_member_article .loginWrap .btnLogin { margin-top:15px; margin-left:7px;}
+#cms_member_article .loginWrap .btnLogin {width:230px; height:45px; font-weight:bold; color:#ffffff !important; line-height:45px; font-size:16px; text-align:center; text-decoration:none !important; border:1px solid #0066ae; background:#006dba;}
+#cms_member_article .loginWrap .login li .inputTxt2 {border:1px solid #dbdbdb; margin-right:2px; width:330px; height:32px; line-height:32px;}
+#cms_member_article .loginWrap .login li .inputTxt3 {border:1px solid #dbdbdb; margin-right:2px; width:90px; height:32px; line-height:32px;}
+#cms_member_article .findJoin {padding:38px 0 40px 227px; border-bottom:1px solid #e4e4e4;}
+#cms_member_article .findJoin li {margin-top:7px;}
+#cms_member_article .findJoin li:first-child {margin-top:0;}
+#cms_member_article .findJoin li span {margin-left:10px; padding-left:0px; }
+#cms_member_article .btnTypeK {width:150px; height:25px;  font-size:11px; font-weight:bold; color:#fff !important; line-height:25px;text-align:center;text-decoration:none !important;border:1px solid #004888; background:#005AAB;}

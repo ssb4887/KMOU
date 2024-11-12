@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.member.memberMapper">
+	
+	<!-- 회원약관 -->
+	<select id="selectMemberClause" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.MEMBER_CLAUSE, A.MEMBER_PERINFO 
+			FROM 
+			<include refid="rbs.modules.website.websiteMapper.WEBSITE_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<!-- 일반회원 조회 조건 -->
+	<sql id="MEMBER_SELECT_WHERE">
+		<![CDATA[AND A.USERTYPE_IDX < ${CODE_USERTYPE_ADMIN}]]>
+	</sql>
+	
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT CONCAT('USR', LPAD(CONVERT(RIGHT(IFNULL(MAX(MEMBER_IDX), '0'), 9) + 1, CHAR(9)), 9, '0')) MAXID
+		FROM 
+		<include refid="rbs.modules.member.memberTotMapper.MEMBER_TABLE_NAME"/> A 
+		WHERE MEMBER_IDX LIKE 'USR%'
+	</select>
+	
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.MEMBER_IDX, A.MEMBER_ID, A.MEMBER_NAME, A.USERTYPE_IDX, UTP.USERTYPE_NAME USERTYPE_IDX_NAME, A.MEMBER_EMAIL, A.MOBILE_PHONE1, A.MOBILE_PHONE2, A.MOBILE_PHONE3, A.REGI_DATE 
+			FROM 
+			<include refid="rbs.modules.member.memberTotMapper.MEMBER_TABLE_NAME"/> A 
+			LEFT OUTER JOIN (
+				<include refid="rbs.modules.member.memberUstpJoinMapper.optionJoinSql"/>
+			) UTP 
+			ON A.USERTYPE_IDX = UTP.USERTYPE_IDX 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<include refid="MEMBER_SELECT_WHERE"/>
+			<if test="mbrGrpCd != null">
+			AND A.MEMBER_IDX IN (SELECT MEMBER_IDX
+							     FROM  <include refid="rbs.modules.member.memberTotMapper.MEMBER_GROUP_TABLE_NAME"/>
+							     WHERE GROUP_CODE = #{mbrGrpCd})
+			</if>
+			ORDER BY A.MEMBER_IDX DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="rbs.modules.member.memberTotMapper.MEMBER_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<include refid="MEMBER_SELECT_WHERE"/>
+			<if test="mbrGrpCd != null">
+			AND A.MEMBER_IDX IN (SELECT MEMBER_IDX
+							     FROM  <include refid="rbs.modules.member.memberTotMapper.MEMBER_GROUP_TABLE_NAME"/>
+							     WHERE GROUP_CODE = #{mbrGrpCd})
+			</if>
+	</select>
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.MEMBER_IDX, A.MEMBER_ID, A.MEMBER_NAME, A.MOBILE_PHONE1, A.MOBILE_PHONE2, A.MOBILE_PHONE3, A.MEMBER_EMAIL, A.REGI_DATE, A.PWD_MODI_DATE, A.PWD_MODI_DATE2 
+			FROM 
+			<include refid="rbs.modules.member.memberTotMapper.MEMBER_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<include refid="MEMBER_SELECT_WHERE"/>
+	</select>
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="rbs.modules.member.memberTotMapper.MEMBER_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<include refid="MEMBER_SELECT_WHERE"/>
+	</select>
+	
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.MEMBER_IDX, A.MEMBER_ID, A.MEMBER_NAME, A.USERTYPE_IDX, UTP.USERTYPE_NAME USERTYPE_IDX_NAME, A.MOBILE_PHONE1, A.MOBILE_PHONE2, A.MOBILE_PHONE3, A.LAST_MODI_NAME, A.LAST_MODI_ID, A.REGI_DATE, A.LAST_MODI_DATE 
+			FROM 
+			<include refid="rbs.modules.member.memberTotMapper.MEMBER_TABLE_NAME"/> A 
+			LEFT OUTER JOIN (
+				<include refid="rbs.modules.member.memberUstpJoinMapper.optionJoinSql"/>
+			) UTP 
+			ON A.USERTYPE_IDX = UTP.USERTYPE_IDX 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+			<include refid="MEMBER_SELECT_WHERE"/>
+			<if test="mbrGrpCd != null">
+			AND A.MEMBER_IDX IN (SELECT MEMBER_IDX
+							     FROM  <include refid="rbs.modules.member.memberTotMapper.MEMBER_GROUP_TABLE_NAME"/>
+							     WHERE GROUP_CODE = #{mbrGrpCd})
+			</if>
+			ORDER BY A.MEMBER_IDX DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="rbs.modules.member.memberTotMapper.MEMBER_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+			<include refid="MEMBER_SELECT_WHERE"/> 
+			<if test="mbrGrpCd != null">
+			AND A.MEMBER_IDX IN (SELECT MEMBER_IDX
+							     FROM  <include refid="rbs.modules.member.memberTotMapper.MEMBER_GROUP_TABLE_NAME"/>
+							     WHERE GROUP_CODE = #{mbrGrpCd})
+			</if>
+	</select>
+	
+</mapper>            

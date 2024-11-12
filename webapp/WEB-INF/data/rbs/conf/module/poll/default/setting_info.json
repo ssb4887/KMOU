@@ -1,0 +1,44 @@
+{
+	"setting_info":{
+		"list_title":"설문01 목록"
+		,"input_title":"설문01 등록"
+		,"deleteList_title":"설문01 삭제목록"
+		,"dset_list_block":10
+		,"dset_list_count":20
+		,"use_paging":1
+		,"page_name":"page"
+		,"idx_name":"pollIdx"
+		,"idx_column":"POLL_IDX"
+		,"design":"default"
+		,"use_new":0
+		,"use_notice":0
+		,"use_private":0
+		,"use_reply":0
+	},"ques_setting_info":{
+		"list_title":"문항관리"
+		,"input_title":"문항 등록"
+		,"deleteList_title":"문항 삭제목록"
+		,"dset_list_block":10
+		,"dset_list_count":20
+		,"use_paging":0
+		,"page_name":"qpage"
+		,"idx_name":"qustIdx"
+		,"idx_column":"QUESTION_IDX"
+	},"resp_setting_info":{
+		"list_title":"참여목록"
+		,"dset_list_block":10
+		,"dset_list_count":20
+		,"use_paging":1
+		,"page_name":"rpage"
+		,"idx_name":"respIdx"
+		,"idx_column":"RESP_IDX"
+	},"cont_setting_info":{
+		"list_title":"의견목록"
+		,"dset_list_block":10
+		,"dset_list_count":20
+		,"use_paging":1
+		,"page_name":"cpage"
+		,"idx_name":"respIdx"
+		,"idx_column":"RESP_IDX"
+	}
+}

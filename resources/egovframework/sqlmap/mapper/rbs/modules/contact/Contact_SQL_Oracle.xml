@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.contact.contactMapper">
+	<sql id="CONTACT_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />C_${siteId}_INFO</trim></sql>
+	<sql id="CONTACT_M_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />C_${siteId}_M_INFO</trim></sql>
+	<sql id="CONTACT_MU_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />C_${siteId}_MU_INFO</trim></sql>
+	<sql id="CONTACT_P_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />C_${siteId}_P_INFO</trim></sql>
+	<sql id="CONTACT_U_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />C_${siteId}_U_INFO</trim></sql>
+	
+	<sql id="CONTACT_BACKUP_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />C_${siteId}_${backupYear}</trim></sql>
+	<sql id="CONTACT_P_BACKUP_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />C_${siteId}_P_${backupYear}</trim></sql>
+	<sql id="CONTACT_M_BACKUP_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />C_${siteId}_M_${backupYear}</trim></sql>
+	<sql id="BACKUP_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />C_BACKUP_INFO</trim></sql>
+	
+	<!-- 백업년도 목록 -->
+	<select id="backupYearList" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT YEAR	FROM <include refid="BACKUP_TABLE_NAME"/> A 
+		WHERE SITE_ID = #{siteId} 
+		<if test="searchYear != null"> AND YEAR = #{searchYear}</if>
+		<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+		ORDER BY A.YEAR DESC
+	</select>
+	
+	<!-- 월/일/시간/년 별 조회 컬럼 -->
+	<sql id="DATE_COLUMN">
+		<choose>
+			<when test="searchType == 1">
+				MONTH
+			</when>
+			<when test="searchType == 2">
+				DAY
+			</when>
+			<when test="searchType == 3">
+				HOUR
+			</when>
+			<otherwise>
+				YEAR
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<!-- 사이트 방문수 기본 쿼리 -->
+	<sql id="SITE_DEFAULT_QUERY">
+		FROM
+		<choose>
+			<when test="backupYear == null"><include refid="CONTACT_TABLE_NAME"/></when>
+			<otherwise><include refid="CONTACT_BACKUP_TABLE_NAME"/></otherwise>
+		</choose> 
+		 A 
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</sql>
+	
+	<!-- 사이트 방문수 월/일/시간별 sum 조회 쿼리 : 1개 TABLE -->
+	<sql id="SITE_SUM_QUERY">
+		<trim><include refid="rbs.commonDBMSMapper.nullFn"/>(SUM(CON_CNT), 0)</trim> CONTACT_COUNT <include refid="SITE_DEFAULT_QUERY"/>
+	</sql>
+	
+	<!-- 사이트 방문수 년도별 sum 조회 쿼리 : BACKUP TABLE 포함 -->
+	<sql id="SITE_BACKUP_SUM_QUERYS">
+		<trim><include refid="rbs.commonDBMSMapper.nullFn"/>(SUM(CON_CNT), 0)</trim> CONTACT_COUNT FROM (
+			SELECT <include refid="DATE_COLUMN"/>, CON_CNT FROM <include refid="CONTACT_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			<if test="backupYearList != null">
+			<foreach collection="backupYearList" item="backupYear" index="i">
+			UNION ALL
+			SELECT <include refid="DATE_COLUMN"/>, CON_CNT <include refid="SITE_DEFAULT_QUERY"/>
+			</foreach>
+			</if>
+		) AA
+	</sql>
+	
+	<!-- 사이트 방문수 월/일/시간별 조회 쿼리 : 1개 TABLE -->
+	<sql id="SITE_QUERY">
+		SELECT <include refid="DATE_COLUMN"/> GUBUN_DATA, <include refid="SITE_SUM_QUERY"/>
+		GROUP BY <include refid="DATE_COLUMN"/>
+	</sql>
+	
+	<!-- 사이트 방문수 년도별 조회 쿼리 : BACKUP TABLE 포함 -->
+	<sql id="SITE_BACKUP_QUERYS">
+		SELECT <include refid="DATE_COLUMN"/> GUBUN_DATA, <include refid="SITE_BACKUP_SUM_QUERYS"/>
+		GROUP BY <include refid="DATE_COLUMN"/>
+	</sql>
+	<sql id="SITE_TOTAL_SUM_QUERY">
+		<choose>
+			<when test="backupYearList == null">
+				SELECT <include refid="SITE_SUM_QUERY"/>
+			</when>
+			<otherwise>
+				SELECT <include refid="SITE_BACKUP_SUM_QUERYS"/>
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<sql id="SITE_LIST_QUERY">
+		<choose>
+			<when test="backupYearList == null">
+				<include refid="SITE_QUERY"/>
+			</when>
+			<otherwise>
+				<include refid="SITE_BACKUP_QUERYS"/>
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<!-- 사이트 방문수 -->
+	<select id="siteTotalSum" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		<include refid="SITE_TOTAL_SUM_QUERY"/>
+	</select>
+	<select id="siteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="SITE_LIST_QUERY"/>
+		ORDER BY <include refid="DATE_COLUMN"/> ASC
+	</select>
+	
+	<!-- 페이지뷰 월/일/시간별 조회 쿼리 : 1개 TABLE -->
+	<sql id="PAGE_DEFAULT_QUERY">
+		FROM
+		<choose>
+			<when test="backupYear == null"><include refid="CONTACT_P_TABLE_NAME"/></when>
+			<otherwise><include refid="CONTACT_P_BACKUP_TABLE_NAME"/></otherwise>
+		</choose> 
+		 A 
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</sql>
+	
+	<!-- 페이지뷰 월/일/시간별 sum 조회 쿼리 : 1개 TABLE -->
+	<sql id="PAGE_SUM_QUERY">
+		<trim><include refid="rbs.commonDBMSMapper.nullFn"/>(SUM(CON_CNT), 0)</trim> CONTACT_COUNT <include refid="PAGE_DEFAULT_QUERY"/>
+	</sql>
+	
+	<!-- 페이지뷰 년도별 sum 조회 쿼리 : BACKUP TABLE 포함 -->
+	<sql id="PAGE_BACKUP_SUM_QUERYS">
+		<trim><include refid="rbs.commonDBMSMapper.nullFn"/>(SUM(CON_CNT), 0)</trim> CONTACT_COUNT FROM (
+			SELECT <include refid="DATE_COLUMN"/>, CON_CNT FROM <include refid="CONTACT_P_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			<if test="backupYearList != null">
+			<foreach collection="backupYearList" item="backupYear" index="i">
+			UNION ALL
+			SELECT <include refid="DATE_COLUMN"/>, CON_CNT <include refid="PAGE_DEFAULT_QUERY"/>
+			</foreach>
+			</if>
+		) AA
+	</sql>
+	
+	<!-- 페이지뷰 월/일/시간별 조회 쿼리 : 1개 TABLE -->
+	<sql id="PAGE_QUERY">
+		SELECT <include refid="DATE_COLUMN"/> GUBUN_DATA, <include refid="PAGE_SUM_QUERY"/>
+		GROUP BY <include refid="DATE_COLUMN"/>
+	</sql>
+	
+	<!-- 페이지뷰 년도별 조회 쿼리 : BACKUP TABLE 포함 -->
+	<sql id="PAGE_BACKUP_QUERYS">
+		SELECT <include refid="DATE_COLUMN"/> GUBUN_DATA, <include refid="PAGE_BACKUP_SUM_QUERYS"/>
+		GROUP BY <include refid="DATE_COLUMN"/>
+	</sql>
+	<sql id="PAGE_TOTAL_SUM_QUERY">
+		<choose>
+			<when test="backupYearList == null">
+				SELECT <include refid="PAGE_SUM_QUERY"/>
+			</when>
+			<otherwise>
+				SELECT <include refid="PAGE_BACKUP_SUM_QUERYS"/>
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<sql id="PAGE_LIST_QUERY">
+		<choose>
+			<when test="backupYearList == null">
+				<include refid="PAGE_QUERY"/>
+			</when>
+			<otherwise>
+				<include refid="PAGE_BACKUP_QUERYS"/>
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<!-- 페이지뷰 -->
+	<select id="pageTotalSum" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		<include refid="PAGE_TOTAL_SUM_QUERY"/>
+	</select>
+	<select id="pageList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="PAGE_LIST_QUERY"/>
+		ORDER BY <include refid="DATE_COLUMN"/> ASC
+	</select>
+	
+	<!-- 방문당 페이지뷰 -->
+	<select id="sitePageMaxCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT 
+			<trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(ROUND(PAGE.CONTACT_COUNT / SITE.CONTACT_COUNT, 2)), 0)</trim> MAX_SITE_PAGE_COUNT 
+		FROM 
+			(<include refid="SITE_LIST_QUERY"/>) SITE 
+			INNER JOIN (<include refid="PAGE_LIST_QUERY"/>) PAGE 
+		ON SITE.GUBUN_DATA = PAGE.GUBUN_DATA 
+	</select>
+	
+	<select id="sitePageTotalView" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			SITE.CONTACT_COUNT SITE_CONTACT_COUNT, PAGE.CONTACT_COUNT PAGE_CONTACT_COUNT, 
+			DECODE(SITE.CONTACT_COUNT, 0, 0, ROUND(PAGE.CONTACT_COUNT / SITE.CONTACT_COUNT, 2)) SITE_PAGE_COUNT 
+		FROM 
+			(<include refid="SITE_TOTAL_SUM_QUERY"/>) SITE 
+			INNER JOIN (<include refid="PAGE_TOTAL_SUM_QUERY"/>) PAGE 
+		ON 1 = 1
+	</select>
+	
+	<select id="sitePageList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			SITE.GUBUN_DATA, SITE.CONTACT_COUNT SITE_CONTACT_COUNT, PAGE.CONTACT_COUNT PAGE_CONTACT_COUNT, 
+			DECODE(SITE.CONTACT_COUNT, 0, 0, ROUND(PAGE.CONTACT_COUNT / SITE.CONTACT_COUNT, 2)) SITE_PAGE_COUNT 
+		FROM 
+			(<include refid="SITE_LIST_QUERY"/>) SITE 
+			INNER JOIN (<include refid="PAGE_LIST_QUERY"/>) PAGE 
+		ON SITE.GUBUN_DATA = PAGE.GUBUN_DATA 
+		ORDER BY SITE.GUBUN_DATA ASC
+	</select>
+	
+	<!-- 메뉴별 접속자수 조회 쿼리 : 1개 TABLE -->
+	<sql id="MENU_DEFAULT_QUERY">
+		FROM
+		<choose>
+			<when test="backupYear == null"><include refid="CONTACT_M_TABLE_NAME"/></when>
+			<otherwise><include refid="CONTACT_M_BACKUP_TABLE_NAME"/></otherwise>
+		</choose> 
+		 A 
+		 WHERE 1 = 1
+		<if test="searchDate1 != null"><![CDATA[ AND (YEAR || '-' || MONTH || '-' || DAY) >=]]> #{searchDate1}</if>
+		<if test="searchDate2 != null"><![CDATA[ AND (YEAR || '-' || MONTH || '-' || DAY) <=]]> #{searchDate2}</if>
+		<include refid="rbs.commonMapper.COM_ST_WHERE"/>
+	</sql>
+	
+	<!-- 메뉴별 접속자수 sum 조회 쿼리 : 1개 TABLE -->
+	<sql id="MENU_SUM_QUERY">
+		<trim><include refid="rbs.commonDBMSMapper.nullFn"/>(SUM(CON_CNT), 0)</trim> CONTACT_COUNT <include refid="MENU_DEFAULT_QUERY"/>
+	</sql>
+	
+	<!-- 메뉴별 접속자수  sum 조회 쿼리 : BACKUP TABLE 포함 -->
+	<sql id="MENU_BACKUP_SUM_QUERYS">
+		<trim><include refid="rbs.commonDBMSMapper.nullFn"/>(SUM(CON_CNT), 0)</trim> CONTACT_COUNT FROM (
+			SELECT MENU_IDX<if test="siteId == 'ADM'">, MNG_SITE_ID, MNG_MENU_IDX</if>, CON_CNT FROM <include refid="CONTACT_M_TABLE_NAME"/>
+			 WHERE 1 = 1
+			<if test="searchDate1 != null"><![CDATA[ AND (YEAR || '-' || MONTH || '-' || DAY) >=]]> #{searchDate1}</if>
+			<if test="searchDate2 != null"><![CDATA[ AND (YEAR || '-' || MONTH || '-' || DAY) <=]]> #{searchDate2}</if>
+			<include refid="rbs.commonMapper.COM_ST_WHERE"/>
+			<if test="backupYearList != null">
+			<foreach collection="backupYearList" item="backupYear" index="i">
+			UNION ALL
+			SELECT MENU_IDX<if test="siteId == 'ADM'">, MNG_SITE_ID, MNG_MENU_IDX</if>, CON_CNT <include refid="MENU_DEFAULT_QUERY"/>
+			</foreach>
+			</if>
+		) AA
+	</sql>
+	
+	<sql id="MENU_QUERY">
+		SELECT 'MENU' || MENU_IDX<if test="siteId == 'ADM'"> || MNG_SITE_ID || MNG_MENU_IDX</if> GUBUN_DATA, MENU_IDX<if test="siteId == 'ADM'">, MNG_SITE_ID, MNG_MENU_IDX</if>, <include refid="MENU_SUM_QUERY"/>
+		GROUP BY MENU_IDX<if test="siteId == 'ADM'">, MNG_SITE_ID, MNG_MENU_IDX</if>
+	</sql>
+	
+	<!-- 페이지뷰 년도별 조회 쿼리 : BACKUP TABLE 포함 -->
+	<sql id="MENU_BACKUP_QUERYS">
+		SELECT 'MENU' || MENU_IDX<if test="siteId == 'ADM'"> || MNG_SITE_ID || MNG_MENU_IDX</if> GUBUN_DATA, MENU_IDX<if test="siteId == 'ADM'">, MNG_SITE_ID, MNG_MENU_IDX</if>, <include refid="MENU_BACKUP_SUM_QUERYS"/>
+		GROUP BY MENU_IDX<if test="siteId == 'ADM'">, MNG_SITE_ID, MNG_MENU_IDX</if>
+	</sql>
+	
+	<!-- 페이지뷰 -->
+	<select id="menuTotalSum" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		<choose>
+			<when test="backupYearList == null">
+				SELECT <include refid="MENU_SUM_QUERY"/>
+			</when>
+			<otherwise>
+				SELECT <include refid="MENU_BACKUP_SUM_QUERYS"/>
+			</otherwise>
+		</choose>
+	</select>
+	<select id="menuList" parameterType="java.util.HashMap" resultType="dataMap">
+		<choose>
+			<when test="backupYearList == null">
+				<include refid="MENU_QUERY"/>
+			</when>
+			<otherwise>
+				<include refid="MENU_BACKUP_QUERYS"/>
+			</otherwise>
+		</choose>
+		ORDER BY MENU_IDX ASC
+	</select>
+	
+	<!-- 현재 접속자 정보 -->
+	<select id="userCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="CONTACT_U_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	<select id="userList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			* 
+			FROM 
+			<include refid="CONTACT_U_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			ORDER BY A.YEAR DESC, A.MONTH DESC, A.DAY DESC, A.HOUR DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<!-- 사용자 사이트, 통합관리 시스템  접속로그 등록 -->
+	<update id="insert" parameterType="java.util.HashMap">
+		CALL PRC_RBS_C_${siteId}(#{menuIdx}, #{sessionId}, #{accessIp}, #{memberIdx}, #{memberId}, #{memberName}, <include refid="rbs.commonDBMSMapper.currentDateYYYY"/>, <include refid="rbs.commonDBMSMapper.currentDateMM"/>, <include refid="rbs.commonDBMSMapper.currentDateDD"/>, <include refid="rbs.commonDBMSMapper.currentDateHH24"/>) 
+	</update>
+	
+	
+	<!-- 통합관리 시스템 : 메뉴콘텐츠관리 > 사용자메뉴관리 접속로그 등록 -->
+	<update id="insertMng" parameterType="java.util.HashMap">
+		CALL PRC_RBS_C_${siteId}(#{menuIdx}, #{mngSiteId}, #{mngMenuIdx}, #{sessionId}, #{accessIp}, #{memberIdx}, #{memberId}, #{memberName}, <include refid="rbs.commonDBMSMapper.currentDateYYYY"/>, <include refid="rbs.commonDBMSMapper.currentDateMM"/>, <include refid="rbs.commonDBMSMapper.currentDateDD"/>, <include refid="rbs.commonDBMSMapper.currentDateHH24"/>) 
+	</update>
+	
+	<!-- 접속자 메뉴로그 등록 -->
+	<insert id="insertMl" parameterType="java.util.HashMap">
+		INSERT INTO RBS_C_ML_INFO (
+			SITE_ID, YEAR, MONTH, DAY, SESSION_ID, SESSION_IDX
+			, MENU_IDX, MENU_URL, MANAGE_SITE_ID, MANAGE_MENU_IDX, ACCESS_IP, REGI_DATE
+			, MEMBER_IDX, MEMBER_ID, MEMBER_NAME, ACCESS_INFO, SITE_NAME, MENU_NAME, MANAGE_SITE_NAME, MANAGE_MENU_NAME
+		) (
+			SELECT 
+				#{siteId}, <include refid="rbs.commonDBMSMapper.currentDateYYYY"/>, <include refid="rbs.commonDBMSMapper.currentDateMM"/>, <include refid="rbs.commonDBMSMapper.currentDateDD"/>, #{sessionId}, <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(SESSION_IDX), 0)</trim> + 1
+				, #{menuIdx}, #{accessUrl}, #{mngSiteId}, #{mngMenuIdx}, #{accessIp}, <include refid="rbs.commonDBMSMapper.currentDate"/>
+				, #{memberIdx}, #{memberId}, #{memberName}, #{userAgent}, #{siteName}, #{menuName}, #{mngSiteName}, #{mngMenuName}
+			FROM RBS_C_ML_INFO 
+			WHERE SITE_ID = #{siteId}
+			AND YEAR = <include refid="rbs.commonDBMSMapper.currentDateYYYY"/>
+			AND MONTH = <include refid="rbs.commonDBMSMapper.currentDateMM"/>
+			AND DAY = <include refid="rbs.commonDBMSMapper.currentDateDD"/>
+			AND SESSION_ID = #{sessionId}
+		)
+	</insert>
+	
+	<!-- 접속정보 삭제 -->
+	<update id="delete" parameterType="java.util.HashMap">
+		CALL PRC_CONTACT_DELETE(#{sessionId})
+	</update>
+	
+	<!-- 접속정보 삭제 : was 시작시 초기화 -->
+	<update id="deleteAll" parameterType="java.util.HashMap">
+		CALL PRC_CONTACT_DELETEALL()
+	</update>
+	
+	<!-- 접속자 메뉴로그 목록 -->
+	<select id="selectMlList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.*
+			FROM RBS_C_ML_INFO A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			<choose>
+				<when test="dsetOrderField == null">
+					<bind name="defaultOrderStr" value="'A.REGI_DATE DESC'"/>
+				</when>
+				<otherwise>
+					<bind name="defaultOrderStr" value="_parameter.get('dsetOrderField')"/>
+				</otherwise>
+			</choose>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<!-- 접속자 메뉴로그 목록수 -->
+	<select id="selectMlCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			RBS_C_ML_INFO A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+</mapper>

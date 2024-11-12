@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mart.modules.board.boardOraMapper">
+	<sql id="BORD_TABLE_NAME">KFORU2018.V_AI_TCO_NA_NTT_MANAGE</sql>
+	<sql id="BORD_FIEL_TABLE_NAME">KFORU2018.V_AI_TCO_NA_NTT_FILE</sql>
+	<sql id="SEARCH_CON">
+		<choose>
+			<when test="searchValue != null and searchValue != '' and field == 'sj'">AND  NTT_SJ LIKE #{searchValue}</when>
+			<when test="searchValue != null and searchValue != '' and field == 'all'">AND (NTT_SJ LIKE #{searchValue} OR NTT_CN LIKE #{searchValue})</when>
+			<when test="searchValue != null and searchValue != '' and field == 'cn'">AND NTT_CN LIKE #{searchValue}</when>
+			<when test="searchValue != null and searchValue != '' and field == 'ncnm'">AND NCNM LIKE #{searchValue}</when>
+			<otherwise></otherwise>
+		</choose>
+	</sql>
+	
+	<resultMap id="boardResultMap" type="dataMap">
+	    <result property="BBS_ID" column="BBS_ID"/>
+	    <result property="NTT_SN" column="NTT_SN"/>
+	    <result property="NTT_SJ" column="NTT_SJ"/>
+	    <result property="NTT_CN" column="NTT_CN" jdbcType="CLOB" javaType="java.lang.String"/>
+	    <result property="REG_ID" column="REG_ID"/>
+	    <result property="REG_NM" column="REG_NM"/>
+	    <result property="REG_DT" column="REG_DT"/>
+	    <result property="NTT_RDCNT" column="NTT_RDCNT"/>
+	    <result property="NTT_STTUS" column="NTT_STTUS"/>
+	    <result property="NTT_USE_AT" column="NTT_USE_AT"/>
+	    <result property="SECRET_AT" column="SECRET_AT"/>
+	    <result property="NOTICE_AT" column="NOTICE_AT"/>
+	    <result property="NOTICE_BEGIN_DT" column="NOTICE_BEGIN_DT"/>
+	    <result property="NOTICE_END_DT" column="NOTICE_END_DT"/>
+	    <result property="CNRS_NTCE_AT" column="CNRS_NTCE_AT"/>
+	    <result property="NCNM" column="NCNM"/>
+	    <result property="IMGFL_AT" column="IMGFL_AT"/>
+	    <result property="NTCE_BGNDE" column="NTCE_BGNDE"/>
+	    <result property="NTCE_ENDDE" column="NTCE_ENDDE"/>
+	</resultMap>
+		
+	
+	<!-- <select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		<if test="useNotice">
+			SELECT * 
+			FROM (
+				SELECT 
+				rownum rn, 
+				<include refid="COMMON_SELECT"/>
+				<if test="usePntInfo">
+				, NULL P_REGI_IDX, NULL P_MEMBER_DUP
+				</if>
+				FROM 
+				<include refid="BORD_TABLE_NAME"/> A 
+				LEFT OUTER JOIN (
+					<include refid="rbs.modules.board.boardFileMapper.FILE_TABLE_NAME"/>
+				) T_FILE 
+				ON T_FILE.BRD_IDX = A.BRD_IDX AND T_FILE.ITEM_ID = 'file' AND T_FILE.ORDER_IDX = 1
+				WHERE A.ISDELETE = '0'
+				AND A.NOTICE = '1'
+				<include refid="SELECT_LIST_WHERE"/>
+				<include refid="SELECT_LIST_COMMON_ORDER"/>
+			)
+			UNION ALL
+		</if>
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.*
+			FROM 
+			<include refid="BORD_TABLE_NAME"/> A 
+			LEFT OUTER JOIN (
+				<include refid="rbs.modules.board.boardFileMapper.FILE_TABLE_NAME"/>
+			) T_FILE 
+			ON T_FILE.BRD_IDX = A.BRD_IDX AND T_FILE.ITEM_ID = 'file' AND T_FILE.ORDER_IDX = 1
+			<if test="usePntInfo">
+			LEFT OUTER JOIN <include refid="BORD_TABLE_NAME"/> P 
+			<![CDATA[ ON A.BRD_IDX <> A.PNT_IDX AND A.PNT_IDX = P.BRD_IDX AND P.ISDELETE = '0' AND P.RE_LEVEL = 1 ]]>
+			</if>
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<if test="useNotice">AND A.NOTICE = '0'</if>
+			<include refid="SELECT_LIST_WHERE"/>
+			<include refid="SELECT_LIST_COMMON_ORDER"/>
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select> -->
+	<select id="selectList" parameterType="java.util.HashMap" resultMap="boardResultMap">
+			<choose>
+				<when test="fnIdx == 1">
+					SELECT		*
+					FROM 		(
+								SELECT 		<if test="lastIndex != null and lastIndex > 0">0 AS RN,</if> 
+											BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT, NOTICE_AT 
+								FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE
+								WHERE  		NOTICE_AT = 'Y'  AND NTT_USE_AT = 'Y' AND NOTICE_END_DT > SYSDATE AND BBS_ID IN ('10373', '11786', '10004365')
+								<include refid="SEARCH_CON"/>
+								ORDER BY 	NTT_SN
+								)
+					UNION ALL
+					<if test="lastIndex != null and lastIndex > 0">SELECT * FROM ( SELECT rownum rn, TB.* FROM (</if>
+					SELECT 	BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT, NOTICE_AT 
+					FROM(
+						SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT, 'N' AS NOTICE_AT 
+					    FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+					    WHERE 		BBS_ID ='10373' AND NTT_USE_AT = 'Y' <include refid="SEARCH_CON"/>
+					    UNION ALL
+					    SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT, 'N' AS NOTICE_AT 
+					    FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+					    WHERE 		BBS_ID ='11786' AND NTT_USE_AT = 'Y' AND CNRS_NTCE_AT = 'Y' <include refid="SEARCH_CON"/>
+						UNION ALL
+						SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT, 'N' AS NOTICE_AT 
+						FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+						WHERE 		BBS_ID ='10004365' AND NTT_USE_AT = 'Y' AND CNRS_NTCE_AT = 'Y' <include refid="SEARCH_CON"/>
+					) 
+					ORDER BY NTT_SN DESC
+					<if test="lastIndex != null and lastIndex > 0">) TB ) WHERE rn BETWEEN #{firstIndex} + 1 AND #{lastIndex}</if>
+				</when>
+				<when test="fnIdx == 5">
+					<if test="lastIndex != null and lastIndex > 0">SELECT * FROM ( SELECT rownum rn, TB.* FROM (</if>
+					SELECT 	BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT
+					FROM(
+						SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT 
+					    FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+					    WHERE 		BBS_ID ='10002722' AND NTT_USE_AT = 'Y' <include refid="SEARCH_CON"/>
+					    UNION ALL
+					    SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT
+					    FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+					    WHERE 		BBS_ID ='10002387' AND NTT_USE_AT = 'Y' AND CNRS_NTCE_AT = 'Y' <include refid="SEARCH_CON"/>
+						UNION ALL
+						SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT 
+						FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+						WHERE 		BBS_ID ='10002388' AND NTT_USE_AT = 'Y' AND CNRS_NTCE_AT = 'Y' <include refid="SEARCH_CON"/>
+					) 
+					ORDER BY NTT_SN DESC
+				    <if test="lastIndex != null and lastIndex > 0">) TB ) WHERE rn BETWEEN #{firstIndex} + 1 AND #{lastIndex}</if>
+				</when>
+				<otherwise></otherwise>
+			</choose>
+	</select>
+	<select id="selectBnAList" parameterType="java.util.HashMap" resultMap="boardResultMap">
+		<choose>
+			<when test="fnIdx == 1">
+				 WITH NOTICE_DATA AS (
+				    SELECT 		ROW_NUMBER() OVER (ORDER BY NTT_SN DESC) AS RN, BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, 
+				    			NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT, NOTICE_AT, NTT_USE_AT 
+					FROM(
+						SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT, 'N' AS NOTICE_AT, NTT_USE_AT
+					    FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+					    WHERE 		BBS_ID ='10373' AND NTT_USE_AT = 'Y'
+					    UNION ALL
+					    SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT, 'N' AS NOTICE_AT, NTT_USE_AT 
+					    FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+					    WHERE 		BBS_ID ='11786' AND NTT_USE_AT = 'Y' AND CNRS_NTCE_AT = 'Y'
+						UNION ALL
+						SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT, 'N' AS NOTICE_AT, NTT_USE_AT 
+						FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+						WHERE 		BBS_ID ='10004365' AND NTT_USE_AT = 'Y' AND CNRS_NTCE_AT = 'Y'
+					) ORDER BY NTT_SN DESC
+				)
+				SELECT *
+				FROM NOTICE_DATA
+				WHERE RN BETWEEN (SELECT RN FROM NOTICE_DATA WHERE NTT_SN = #{nttSn}) - 1 AND (SELECT RN FROM NOTICE_DATA WHERE NTT_SN = #{nttSn}) + 1 AND NTT_SN != #{nttSn}
+			</when>
+			<when test="fnIdx == 5">
+			    WITH JOB_DATA AS (
+				    SELECT 		ROW_NUMBER() OVER (ORDER BY NTT_SN DESC) AS RN, BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, 
+				    			NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT
+					FROM(
+						SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT
+					    FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+					    WHERE 		BBS_ID ='10002722' AND NTT_USE_AT = 'Y'
+					    UNION ALL
+					    SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT
+					    FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+					    WHERE 		BBS_ID ='10002387' AND NTT_USE_AT = 'Y' AND CNRS_NTCE_AT = 'Y'
+						UNION ALL
+						SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT
+						FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+						WHERE 		BBS_ID ='10002388' AND NTT_USE_AT = 'Y' AND CNRS_NTCE_AT = 'Y'
+					    ) ORDER BY	NTT_SN DESC
+				)
+				SELECT *
+				FROM JOB_DATA
+				WHERE RN BETWEEN (SELECT RN FROM JOB_DATA WHERE NTT_SN = #{nttSn}) - 1 AND (SELECT RN FROM JOB_DATA WHERE NTT_SN = #{nttSn}) + 1 AND NTT_SN != #{nttSn}
+			</when>
+			<otherwise></otherwise>
+		</choose>
+	</select>
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		<choose>
+			<when test="fnIdx == 1">
+				SELECT 	COUNT(1) CNT
+				FROM(
+					SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT
+				    FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+				    WHERE 		BBS_ID ='10373' AND NTT_USE_AT = 'Y' <include refid="SEARCH_CON"/>
+				    UNION ALL
+				    SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT
+				    FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+				    WHERE 		BBS_ID ='11786' AND NTT_USE_AT = 'Y' AND CNRS_NTCE_AT = 'Y' <include refid="SEARCH_CON"/>
+					UNION ALL
+					SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT
+					FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+					WHERE 		BBS_ID ='10004365' AND NTT_USE_AT = 'Y' AND CNRS_NTCE_AT = 'Y' <include refid="SEARCH_CON"/>
+				) 
+				ORDER BY NTT_SN DESC
+			</when>
+			<when test="fnIdx == 5">
+				SELECT 	COUNT(1) CNT
+				FROM(
+					SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT
+				    FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+				    WHERE 		BBS_ID ='10002722' AND NTT_USE_AT = 'Y' <include refid="SEARCH_CON"/>
+				    UNION ALL
+				    SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT
+				    FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+				    WHERE 		BBS_ID ='10002387' AND NTT_USE_AT = 'Y' AND CNRS_NTCE_AT = 'Y' <include refid="SEARCH_CON"/>
+					UNION ALL
+					SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT, NTT_RDCNT, NCNM, NTCE_BGNDE, NTCE_ENDDE, NOTICE_BEGIN_DT, NOTICE_END_DT
+					FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+					WHERE 		BBS_ID ='10002388' AND NTT_USE_AT = 'Y' AND CNRS_NTCE_AT = 'Y' <include refid="SEARCH_CON"/>
+				) 
+				ORDER BY NTT_SN DESC
+			</when>
+			<otherwise></otherwise>
+		</choose>
+	</select>
+	
+	<select id="selectMainList" parameterType="java.util.HashMap" resultMap="boardResultMap">
+		SELECT * 
+		FROM(
+			SELECT BBS_ID, NTT_SN, NTT_SJ, NTT_CN, REG_DT 
+			FROM(
+				SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, TO_CHAR(REG_DT, 'YYYY-MM-DD') AS REG_DT
+			    FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+			    WHERE 		BBS_ID ='10373' AND NTT_USE_AT = 'Y'
+			    UNION ALL
+			    SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, TO_CHAR(REG_DT, 'YYYY-MM-DD') AS REG_DT 
+			    FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+			    WHERE 		BBS_ID ='11786' AND NTT_USE_AT = 'Y' AND CNRS_NTCE_AT = 'Y'
+				UNION ALL
+				SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, TO_CHAR(REG_DT, 'YYYY-MM-DD') AS REG_DT 
+				FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+				WHERE 		BBS_ID ='10004365' AND NTT_USE_AT = 'Y' AND CNRS_NTCE_AT = 'Y'
+				UNION ALL
+				SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, TO_CHAR(REG_DT, 'YYYY-MM-DD') AS REG_DT
+			    FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+			    WHERE 		BBS_ID ='10002722' AND NTT_USE_AT = 'Y'
+			    UNION ALL
+			    SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, TO_CHAR(REG_DT, 'YYYY-MM-DD') AS REG_DT 
+			    FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+			    WHERE 		BBS_ID ='10002387' AND NTT_USE_AT = 'Y' AND CNRS_NTCE_AT = 'Y'
+				UNION ALL
+				SELECT 		BBS_ID, NTT_SN, NTT_SJ, NTT_CN, TO_CHAR(REG_DT, 'YYYY-MM-DD') AS REG_DT 
+				FROM 		KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+				WHERE 		BBS_ID ='10002388' AND NTT_USE_AT = 'Y' AND CNRS_NTCE_AT = 'Y'
+			) 
+			ORDER BY NTT_SN DESC
+		)
+		WHERE ROWNUM <![CDATA[<=]]> 2
+		
+		<!-- SELECT * 
+		FROM(
+			SELECT BBS_ID, NTT_SN, NTT_SJ, NTT_CN, TO_CHAR(REG_DT, 'YYYY-MM-DD') AS REG_DT
+		    FROM KFORU2018.V_AI_TCO_NA_NTT_MANAGE 
+		    WHERE BBS_ID IN 
+			(
+				<foreach collection="BBS_LIST" item="dataItem" index="i" separator=",">
+					#{dataItem}
+				</foreach>
+			)
+		    AND NTT_USE_AT = 'Y' 
+		    ORDER BY REG_DT DESC
+		)
+		WHERE ROWNUM <![CDATA[<=]]> 2 -->
+	</select>
+	
+	
+	<select id="selectFileList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT *
+			FROM 
+			<include refid="BORD_FIEL_TABLE_NAME"/> A 
+			WHERE 1 = 1
+			<choose>
+				<when test="fnIdx == 1">AND BBS_ID = '10373'</when>
+				<when test="fnIdx == 5">AND BBS_ID = '10002722'</when>
+				<otherwise></otherwise>
+			</choose>
+			AND NTT_SN   = #{nttSn}
+			ORDER BY FILE_SN ASC
+	</select>
+	
+	
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultMap="boardResultMap">
+			SELECT 
+			A.*
+			FROM 
+			<include refid="BORD_TABLE_NAME"/> A 
+			WHERE 1 = 1
+			AND NTT_USE_AT = 'Y'
+			AND NTT_SN = #{nttSn}
+	</select>
+	
+	
+</mapper>            

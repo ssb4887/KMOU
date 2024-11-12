@@ -1,0 +1,41 @@
+{
+	"setting_info": {
+		"list_title":"사이트 목록"
+		, "input_title":"사이트 등록"
+		, "deleteList_title":"사이트 삭제목록"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+		, "page_name":"page"
+		, "idx_name":"siteId"
+		, "idx_column":"SITE_ID"
+	}, "version_setting_info": {
+		"list_title":"버전 목록"
+		, "input_title":"버전 등록"
+		, "deleteList_title":"버전 삭제목록"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":0
+		, "page_name":"page"
+		, "idx_name":"verIdx"
+		, "idx_column":"VER_IDX"
+	}, "layoutTmp_setting_info": {
+		"list_title":"레이아웃 템플릿"
+		, "input_title":"레이아웃 템플릿"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+		, "page_name":"dpage"
+		, "idx_name":"dg"
+		, "idx_column":"VER_IDX"
+	}, "layoutTheme_setting_info": {
+		"list_title":"레이아웃 테마"
+		, "input_title":"레이아웃 테마"
+		, "dset_list_block":10
+		, "dset_list_count":20
+		, "use_paging":1
+		, "page_name":"dpage"
+		, "idx_name":"dg"
+		, "idx_column":"VER_IDX"
+	}
+}

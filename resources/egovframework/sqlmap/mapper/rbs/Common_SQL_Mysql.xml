@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.commonDBMSMapper">
+	
+	<sql id="UPDATE_ADD_SET">
+		<if test="dataList != null">
+			<foreach collection="dataList" item="dataItem" index="i">
+				<if test="dataItem != null">
+					, ${dataItem.columnId} = 
+					<choose>
+						<when test="@com.woowonsoft.egovframework.util.MybatisUtil@isEmpty(dataItem.columnValue)">NULL</when>
+						<when test="dataItem.columnFlag == 1">${dataItem.columnValue}</when>
+						<when test="dataItem.columnFlag == 2">'${dataItem.columnValue}'</when>
+						<otherwise>#{dataItem.columnValue}</otherwise>
+					</choose>
+				</if>
+			</foreach>
+		</if>
+	</sql>
+	<sql id="INC_WHERE_COLUMNIDS">
+		<foreach collection="searchItem.columnIds" item="columnId" index="i" separator="," open="CONCAT(" close=")">
+			${columnId}
+		</foreach>
+	</sql>
+	
+	<sql id="searchMaxDateYYYY-MM-DDHH24:MI:SS">
+		<bind name="smaxDateValue" value="searchItem.columnValue + ' 23:59:59'"/>
+		STR_TO_DATE(#{smaxDateValue}, '%Y-%m-%d %H:%i:%s')
+	</sql>
+	<sql id="searchMinDateYYYY-MM-DDHH24:MI:SS">
+		<bind name="sminDateValue" value="searchItem.columnValue + ' 00:00:00'"/>
+		STR_TO_DATE(#{sminDateValue}, '%Y-%m-%d %H:%i:%s')
+	</sql>
+	<sql id="dataDateYYYY-MM-DD">DATE_FORMAT(${dateColumnId}, '%Y-%m-%d')</sql>
+	<sql id="nullFn">IFNULL</sql>
+	<sql id="currentDate">NOW()</sql>
+	<sql id="currentDateYYYY-MM-DDHH24MI">DATE_FORMAT(<include refid="rbs.commonDBMSMapper.currentDate"/>, '%Y-%m-%d%H%i')</sql>
+	<sql id="currentDateYYYY-MM-DD">DATE_FORMAT(<include refid="rbs.commonDBMSMapper.currentDate"/>, '%Y-%m-%d')</sql>
+	<sql id="currentDateYYYY">DATE_FORMAT(<include refid="rbs.commonDBMSMapper.currentDate"/>, '%Y')</sql>
+	<sql id="currentDateMM">DATE_FORMAT(<include refid="rbs.commonDBMSMapper.currentDate"/>, '%m')</sql>
+	<sql id="currentDateDD">DATE_FORMAT(<include refid="rbs.commonDBMSMapper.currentDate"/>, '%d')</sql>
+	<sql id="currentDateHH24">DATE_FORMAT(<include refid="rbs.commonDBMSMapper.currentDate"/>, '%H')</sql>
+	<sql id="PAGING_TOP"></sql>
+	<sql id="PAGING_BOTTOM"><if test="recordCountPerPage != null and recordCountPerPage > 0"> LIMIT #{recordCountPerPage} OFFSET #{firstIndex}</if></sql>
+</mapper>

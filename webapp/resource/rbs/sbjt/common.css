@@ -1,0 +1,142 @@
+@charset "utf-8";
+@import url('../../../include/js/editor/css/smart_editor2_out.css');
+
+/*Search/Page Count*/
+#cms_trebook_article .btnTopFull {}
+#cms_trebook_article .btnTopFull .left {float:left; margin:20px 0 5px 0;}
+#cms_trebook_article .btnTopFull .left dl{display:inline;margin-right:5px;}
+#cms_trebook_article .btnTopFull .left dt{display:none;}
+#cms_trebook_article .btnTopFull .left dd{display:inline;}
+#cms_trebook_article .btnTopFull .left .select {width:82px; height:27px;}
+#cms_trebook_article .btnTopFull .left input[type="text"]{height:25px;padding:0 5px; border:1px solid #dbdbdb; line-height: 30px;}
+#cms_trebook_article .btnTopFull .left p {display:inline-block;}
+#cms_trebook_article .btnTopFull .left .btnSearch {width:70px; height:27px; padding:0px; font-size:13px; font-weight:bold; color:#ffffff !important; line-height:27px; text-decoration:none !important; border:0px; background:#6e6e6e; }
+#cms_trebook_article .btnTopFull .left .btnTotalList {width:70px; height:27px; padding:0px; font-size:13px; font-weight:bold; color:#ffffff !important; line-height:27px; text-decoration:none !important; border:0px; background:#006dba;text-align:center;}
+#cms_trebook_article .btnTopFull .left #key {width:250px; height:25px; padding:0 5px; border:1px solid #dbdbdb; line-height: 30px;}
+#cms_trebook_article .btnTopFull .left #keyField {min-width:74px;height:27px; /*margin-right:5px;*/ font-family: 'Nanum Gothic', 'NanumGothic', '나눔고딕', '돋움', dotum, sans-serif; color:#535353; border:1px solid #dbdbdb;}
+#cms_trebook_article .btnTopFull .left .btnSTotList {width:73px; height:30px; padding:0px; font-size:11px; font-weight:bold; color:#ffffff !important; line-height:28px; text-decoration:none !important; border:0px; background:#006dba;}
+#cms_trebook_article .btnTopFull .right {float:right; margin:0 0 5px 0;padding:0 0 5px 0;}
+#cms_trebook_article .btnTopFull .right .resultCount {margin-top:15px;}
+
+/*Search*/
+#cms_trebook_article .tbSearch {width:99%;margin-top:10px; text-align:center; border:1px solid #E0E0E0; background:#F5F5F5; padding:20px 0;}
+#cms_trebook_article .tbSearch dl{display:inline;margin-right:5px;}
+#cms_trebook_article .tbSearch dt{display:none;}
+#cms_trebook_article .tbSearch dd{display:inline;}
+#cms_trebook_article .tbSearch .select {width:82px; height:27px;}
+#cms_trebook_article .tbSearch input[type="text"]{height:25px;padding:0 5px; border:1px solid #dbdbdb; line-height: 30px;}
+#cms_trebook_article .tbSearch p {display:inline-block;}
+#cms_trebook_article .tbSearch .btnSearch {width:70px; height:27px; padding:0px; font-size:13px; font-weight:bold; color:#ffffff !important; line-height:27px; text-decoration:none !important; border:0px; background:#6e6e6e; }
+#cms_trebook_article .tbSearch .btnTotalList {width:70px; height:27px; padding:0px; font-size:13px; font-weight:bold; color:#ffffff !important; line-height:27px; text-decoration:none !important; border:0px; background:#006dba; }
+#cms_trebook_article .tbSearch #key {width:250px; height:25px; padding:0 5px; border:1px solid #dbdbdb; line-height: 30px;}
+#cms_trebook_article .tbSearch #keyField {min-width:74px;height:27px; /*margin-right:5px;*/ font-family: 'Nanum Gothic', 'NanumGothic', '나눔고딕', '돋움', dotum, sans-serif; color:#535353; border:1px solid #dbdbdb;}
+
+/*List*/
+#cms_trebook_article .tbListA span.trebookType{line-height:18px;height:18px;color:#fff;width:60px;font-weight:bold;background:#006dba;text-align:center;padding:2px 5px 2px 5px;margin-right:10px;}
+#cms_trebook_article .tbListA .treContents{padding:0 0 10px 0;min-height:215px;margin-bottom:10px;}
+#cms_trebook_article .tbListA tbody.alignC tr td.img{padding:5px;}
+#cms_trebook_article .tbListA .treImg{border:#d1d1d1 1px solid;width:80px;}
+
+/*View*/
+#cms_trebook_article .tbViewTreA {width:100%; border-top:2px solid #6b6b6b; border-bottom:1px solid #6b6b6b; border-collapse:collapse; border-spacing:0; table-layout:fixed; word-break:break-all;}
+#cms_trebook_article .tbViewTreA thead tr {height:19px;}
+#cms_trebook_article .tbViewTreA thead tr th {padding:10px 0px; font-weight:bold; color:#3e3e3e; text-align:center; vertical-align:middle; border-bottom:1px solid #6b6b6b; background:#fbfbfb;line-height:1.2em;}
+#cms_trebook_article .tbViewTreA tbody tr td {height:19px; line-height:17px; padding:7px 5px; color:#3e3e3e; vertical-align:middle; border-top:0px solid #e4e4e4;}
+#cms_trebook_article .tbViewTreA tbody tr:first-child td {border-top:0;}
+#cms_trebook_article .tbViewTreA tbody.alignC tr td {text-align:center;}
+#cms_trebook_article .tbViewTreA tbody tr td.img{padding:20px 10px 20px 10px;vertical-align:top;text-align:left;}
+#cms_trebook_article .tbViewTreA tbody tr td .treImg{border:#d1d1d1 1px solid;width:250px;}
+#cms_trebook_article .tbViewTreA tbody tr td.tlt {text-align:left; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;vertical-align:top;padding:20px 0 20px 0;}
+#cms_trebook_article .tbViewTreA tbody tr td.tlt a{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+#cms_trebook_article .tbViewTreA tbody tr td.tlt .treIssue{font-weight:bold;height:19px;padding:0 0 10px 0;font-size:16px;color:#006dba;}
+#cms_trebook_article .tbViewTreA tbody tr td.tlt .treIssue span{padding-bottom:2px;padding-left:5px;}
+#cms_trebook_article .tbViewTreA tbody tr td.tlt .treIssue span.trebookType{font-size:14px;color:#fff;width:70px;background:#006dba;text-align:center;padding:5px;}
+#cms_trebook_article .tbViewTreA tbody tr td.tlt .treContents{padding:0 0 10px 0;min-height:215px;margin-bottom:10px;}
+#cms_trebook_article .tbViewTreA tbody tr td.num {font-size:12px; color:#747474;}
+#cms_trebook_article .tbViewTreA tbody tr td.rt {text-align: right; padding-right:10px;}
+#cms_trebook_article .tbViewTreA tbody tr td.ct {text-align: center;}
+#cms_trebook_article .tbViewTreA tbody tr td.date {font-size:12px; color:#747474; }
+
+/*View Btn*/
+#cms_trebook_article .btnBottmFull {clear:both}
+#cms_trebook_article .btnBottmFull .left {float:left; margin:10px 0 5px 0;}
+#cms_trebook_article .btnBottmFull .left dl{display:inline;margin-right:5px;}
+#cms_trebook_article .btnBottmFull .left dt{display:none;}
+#cms_trebook_article .btnBottmFull .left dd{display:inline;}
+#cms_trebook_article .btnBottmFull .left .select {width:82px; height:27px;}
+#cms_trebook_article .btnBottmFull .left input[type="text"]{height:25px;padding:0 5px; border:1px solid #dbdbdb; line-height: 30px;}
+#cms_trebook_article .btnBottmFull .left p {display:inline-block;}
+#cms_trebook_article .btnBottmFull .left .btnSearch {width:70px; height:27px; padding:0px; font-size:13px; font-weight:bold; color:#ffffff !important; line-height:27px; text-decoration:none !important; border:0px; background:#6e6e6e; }
+#cms_trebook_article .btnBottmFull .left .btnTotalList {width:70px; height:27px; padding:0px; font-size:13px; font-weight:bold; color:#ffffff !important; line-height:27px; text-decoration:none !important; border:0px; background:#006dba;text-align:center;}
+#cms_trebook_article .btnBottmFull .left #key {width:250px; height:25px; padding:0 5px; border:1px solid #dbdbdb; line-height: 30px;}
+#cms_trebook_article .btnBottmFull .left #keyField {min-width:74px;height:27px; /*margin-right:5px;*/ font-family: 'Nanum Gothic', 'NanumGothic', '나눔고딕', '돋움', dotum, sans-serif; color:#535353; border:1px solid #dbdbdb;}
+#cms_trebook_article .btnBottmFull .left .btnSTotList {width:73px; height:30px; padding:0px; font-size:11px; font-weight:bold; color:#ffffff !important; line-height:28px; text-decoration:none !important; border:0px; background:#006dba;}
+#cms_trebook_article .btnBottmFull .right {float:right; margin:0 0 5px 0;padding:10px 0 5px 0;}
+#cms_trebook_article .btnBottmFull .right .resultCount {margin-top:15px;}
+
+#cms_trebook_article .tbListTreA {width:100%; border-top:2px solid #6b6b6b; border-bottom:1px solid #6b6b6b; border-collapse:collapse; border-spacing:0; table-layout:fixed; word-break:break-all;}
+#cms_trebook_article .tbListTreA thead tr {height:19px;}
+#cms_trebook_article .tbListTreA thead tr th {padding:10px 0px; font-weight:bold; color:#3e3e3e; text-align:center; vertical-align:middle; border-bottom:1px solid #6b6b6b; background:#fbfbfb;line-height:1.2em;}
+#cms_trebook_article .tbListTreA tbody tr td {height:19px; line-height:17px; padding:7px 5px; color:#3e3e3e; vertical-align:middle; border-top:0px solid #e4e4e4;}
+#cms_trebook_article .tbListTreA tbody tr:first-child td {border-top:0;}
+#cms_trebook_article .tbListTreA tbody.alignC tr td {text-align:center;border-top:1px solid #e4e4e4;}
+#cms_trebook_article .tbListTreA tbody tr td.tlt {text-align:left; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;vertical-align:top;padding:10px 0 10px 0;}
+#cms_trebook_article .tbListTreA tbody tr td.tlt a{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+#cms_trebook_article .tbListTreA tbody tr td.num {font-size:12px; color:#747474;padding:10px 0 10px 0;}
+#cms_trebook_article .tbListTreA tbody tr td.rt {text-align: right; padding-right:10px;}
+#cms_trebook_article .tbListTreA tbody tr td.ct {text-align: center;}
+#cms_trebook_article .tbListTreA tbody tr td.date {font-size:12px; color:#747474; }
+#cms_trebook_article .tbListTreA tbody tr td.cont {text-align:left; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;vertical-align:top;padding:0 0 0 100px;border-top:0px solid #e4e4e4;}
+#cms_trebook_article .tbListTreA tbody tr td .conContentG{background:#fbfbfb;min-height:50px;padding:5px;margin-bottom:2px;}
+#cms_trebook_article .tbListTreA tbody tr td.bllist {color:#747474;padding:30px 0; text-align:center;}
+
+/* Year List */
+#cms_trebook_article div.divYearList{float:left;}
+#cms_trebook_article ul.yearList{width:98%;float:right;padding:20px 0 0 20px;border-bottom:1px solid #6b6b6b;}
+#cms_trebook_article ul.yearList>li.yearListLiFirst{clear:both;float:left;width:100%;padding:14px 0 10px 0px;text-align:left;border-top:0px solid #e4e4e4;}
+#cms_trebook_article ul.yearList>li.yearListLi{clear:both;float:left;width:100%;padding:24px 0 10px 0px;text-align:left;border-top:1px solid #e4e4e4;}
+#cms_trebook_article div.treYearTit{width:100%;font-size:24px;font-weight:900;color:#0063b2;height:30px;float:left;}
+#cms_trebook_article ul.treYear {clear:both;float:rigth;width:100%;}
+#cms_trebook_article ul.treYear>li.treMonth {float:left;width:25%;margin:0px;padding:2px 0px 0px 0px;font-size:13px;}
+#cms_trebook_article ul.treYear>li.treMonth>a {width:160px;float:right;margin-right:18px;height:30px;font-weight:bold;line-height:30px;text-align:center;text-decoration:none !important;border:1px solid #badbe6;background:#ddedf2;}
+#cms_trebook_article ul.treYear>li.treMonth>a.fn_view_on{width:160px;float:right;margin-right:18px;height:30px;font-weight:bold;line-height:30px;text-align:center;text-decoration:none !important;border:1px solid #badbe6;background:#DB511D;color:#fff}
+#cms_trebook_article div.pageYeare{float:left;widht:100%;height:50px;line-height:50px;text-align:center;padding-top:5px;padding-left:5px;}
+#cms_trebook_article div.pageYeare>a.pg{width:735px;;border:1px solid #0066ae;background:#0066ae;color:#fff;font-weight:bold;font-size:16px;float:right;text-align:center;text-decoration:none !important;}
+
+/*Common*/
+.tpl5{padding-left:5px}
+.tpl10{padding-left:10px}
+.tpl15{padding-left:15px}
+.tpl20{padding-left:20px}
+
+#cms_trebook_article h4 {line-height:32px; height:32px; margin-left:10px;margin-top:20px;font-weight:bold; font-size:15px; color:#333;padding-left:25px; background: url(./default/images/bul_type3.png) no-repeat 10px 13px;}
+
+#cms_trebook_article legend {position:absolute;top:0;left:0;width:0;height:0;overflow:hidden;visibility:hidden;font-size:0;line-height:0;padding:0;}
+
+#cms_trebook_article .inputTxt {height:25px; line-height:25px; padding:0 5px; border:1px solid #dbdbdb;width:150px;}
+#cms_trebook_article input[type="file"].inputTxt {border:0px;}
+#cms_trebook_article input[type="file"]::-ms-value {border:1px solid #dbdbdb;}
+#cms_trebook_article input[type="file"]::-ms-browse{border:1px solid #dbdbdb;}
+#cms_trebook_article textarea.inputTxt {width:500px;height:170px;}
+#cms_trebook_article .wFull {width:500px;}
+
+/* multi file */
+#cms_trebook_article ul.multiFileUL>li {position:relative;width:510px;}
+#cms_trebook_article ul.multiFileUL>li>span {display: inline !important;}
+#cms_trebook_article ul.multiFileUL input[type="file"].inputTxt {width:100% !important; min-width:150px; padding:0px;}
+#cms_trebook_article ul.multiFileUL input.altTxt {width:100% !important; min-width:150px; padding:0px;}
+#cms_trebook_article ul.multiFileUL select, #cms_calendar_article ul.multiFileUL .selectMultiFile {height:80px;width:100% !important; min-width:150px;}
+#cms_trebook_article ul.multiFileUL .selectMultiFile { min-width:150px;display:inline-block;border:1px solid #dbdbdb; overflow: hidden; overflow-y: auto;}
+#cms_trebook_article ul.multiFileUL .selectMultiFile>li {padding:0 3px;line-height:20px;}
+#cms_trebook_article ul.multiFileUL .selectMultiFile>li>label {width:85%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+#cms_trebook_article ul.multiFileUL .fn_text_label {position:absolute; color: #aaa;}
+#cms_trebook_article ul.multiFileUL button {position:absolute;top:0px;right:-55px;width:50px; font-size:11px; font-weight:bold; color:#fff !important; line-height:26px; text-decoration:none !important; background:url(./images/bg_type_f.gif) repeat-x 0 0;}
+#cms_trebook_article ul.multiFileUL ul.fn_btn_ud {display:inline-block; vertical-align: top;}
+#cms_trebook_article ul.multiFileUL ul.fn_btn_ud .fn_btn_down {top:28px;}
+
+/* single file */
+#cms_calendar_article ul.singleFileUL>li {position:relative;width:510px;}
+#cms_calendar_article ul.singleFileUL input[type="file"].inputTxt {width:100% !important; min-width:150px; padding:0px;}
+#cms_calendar_article ul.singleFileUL input.altTxt {width:100% !important; min-width:150px; padding:0px;}
+#cms_calendar_article ul.singleFileUL select {height:80px; width:500px;}
+#cms_calendar_article ul.singleFileUL .fn_text_label {position:absolute; color: #aaa;}

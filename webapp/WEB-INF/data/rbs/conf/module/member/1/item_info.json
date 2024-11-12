@@ -1,0 +1,1178 @@
+{
+	"usertype_item_info":{
+		"items":{
+			"utpIdx":{
+				"item_id":"utpIdx"
+				, "column_id":"USERTYPE_IDX"
+				, "item_name":"코드"
+				, "required_write":1
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":10
+				, "item_type":"1"
+				, "maximum":3
+				, "default_item":1
+			}, "utpName":{
+				"item_id":"utpName"
+				, "column_id":"USERTYPE_NAME"
+				, "item_name":"코드명"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "remarks":{
+				"item_id":"remarks"
+				, "column_id":"REMARKS"
+				, "item_name":"비고"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "maximum":500
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}
+		}
+		, "list_order":[
+			"utpIdx"
+			, "utpName"
+		]
+		, "write_order":[
+			"utpIdx"
+			, "utpName"
+			, "remarks"
+		]
+		, "writeproc_order":[
+			"utpIdx"
+			, "utpName"
+			, "remarks"
+		]
+		, "modify_order":[
+			"utpIdx"
+			, "utpName"
+			, "remarks"
+		]
+		, "modifyproc_order":[
+			"utpName"
+			, "remarks"
+		]
+	}
+	, "group_item_info":{
+		"items":{
+			"grpCd":{
+				"column_id":"GROUP_CODE"
+				, "item_name":"코드"
+				, "required_write":1
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":10
+				, "maximum":10
+				, "default_item":1
+			}, "grpName":{
+				"column_id":"GROUP_NAME"
+				, "item_name":"코드명"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "remarks":{
+				"column_id":"REMARKS"
+				, "item_name":"비고"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "maximum":500
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}
+		}
+		, "list_order":[
+			"grpCd"
+			, "grpName"
+		]
+		, "write_order":[
+			"grpCd"
+			, "grpName"
+			, "remarks"
+		]
+		, "writeproc_order":[
+			"grpCd"
+			, "grpName"
+			, "remarks"
+		]
+		, "modify_order":[
+			"grpCd"
+			, "grpName"
+			, "remarks"
+		]
+		, "modifyproc_order":[
+			"grpName"
+			, "remarks"
+		]
+		, "list_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+					"grpCd":{
+						"column_id":"GROUP_CODE"
+						, "item_name":"코드"
+					}, "grpName":{
+						"column_id":"GROUP_NAME"
+						, "item_name":"코드명"
+					}
+				}, "select_order":[
+					"grpCd"
+					, "grpName"
+				]
+			}, "searchForm_order":[
+				"keyField"
+			], "search_order":[
+				"keyField"
+			]
+		}
+		, "searchList_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+					"grpCd":{
+						"column_id":"GROUP_CODE"
+						, "item_name":"코드"
+					}, "grpName":{
+						"column_id":"GROUP_NAME"
+						, "item_name":"코드명"
+					}
+				}, "select_order":[
+					"grpCd"
+					, "grpName"
+				]
+			}, "searchForm_order":[
+				"keyField"
+			], "search_order":[
+				"keyField"
+			]
+		}
+	}
+	, "depart_item_info":{
+		"items":{
+			"dptName":{
+				"item_id":"dptName"
+				, "column_id":"DEPART_NAME"
+				, "item_name":"부서명"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "dptDuty":{
+				"item_id":"dptDuty"
+				, "column_id":"DEPART_DUTY"
+				, "item_name":"업무"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":500
+				, "default_item":1
+			}, "ordType":{
+				"item_id":"ordType"
+				, "item_name":"위치"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"ORD_TYPE"
+				, "default_value":"2"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "remarks":{
+				"item_id":"remarks"
+				, "column_id":"REMARKS"
+				, "item_name":"비고"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "maximum":500
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}
+		}, "list_order":[
+			"dptName"
+			, "remarks"
+		], "write_order":[
+			"dptName"
+			, "ordType"
+			, "dptDuty"
+			, "remarks"
+		], "writeproc_order":[
+			"dptName"
+			, "dptDuty"
+			, "remarks"
+		], "modify_order":[
+			"dptName"
+			, "ordType"
+			, "dptDuty"
+			, "remarks"
+		], "modifyproc_order":[
+			"dptName"
+			, "dptDuty"
+			, "remarks"
+		]
+	}
+	, "item_info":{
+		"items":{
+			"mAgree":{
+				"item_id":"mAgree"
+				, "column_id":"MAGREE"
+				, "item_name":"회원약관"
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"JOIN_AGREE"
+				, "default_value":"0"
+				, "default_item":1
+			}, "piAgree":{
+				"item_id":"piAgree"
+				, "column_id":"PIAGREE"
+				, "item_name":"개인정보 수집 이용 안내"
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"JOIN_AGREE"
+				, "default_value":"0"
+				, "default_item":1
+			}, "mbrId":{
+				"item_id":"mbrId"
+				, "column_id":"MEMBER_ID"
+				, "item_name":"아이디"
+				, "required_write":1
+				, "required_modify":1
+				, "required_join03":1
+				, "required_join03_n":1
+				, "required_pwsearch":1
+				, "format_type":10
+				, "object_type":0
+				, "use_privsec":1
+				, "minimum":6
+				, "maximum":50
+				, "write_type":0
+				, "modify_type":10
+				, "default_item":1
+			}, "mbrPwd":{
+				"item_id":"mbrPwd"
+				, "column_id":"MEMBER_PWD"
+				, "item_name":"비밀번호"
+				, "relative_id":"mbrId"
+				, "required_write":1
+				, "required_modify":0
+				, "required_join03":1
+				, "required_join03_n":1
+				, "required_pwdmodi":1
+				, "required_joinout":1
+				, "format_type":9
+				, "object_type":0
+				, "minimum":8
+				, "maximum":15
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "mbrName":{
+				"item_id":"mbrName"
+				, "column_id":"MEMBER_NAME"
+				, "item_name":"이름"
+				, "required_write":1
+				, "required_modify":1
+				, "required_join03":1
+				, "required_idsearch":1
+				, "required_pwsearch":1
+				, "format_type":0
+				, "object_type":0
+				, "maximum":50
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "utpIdx":{
+				"item_id":"utpIdx"
+				, "column_id":"USERTYPE_IDX"
+				, "item_name":"사용자유형"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":2
+				, "option_type":1
+				, "master_code":"usr"
+				, "default_value":"5"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "mbrGrp":{
+				"item_id":"mbrGrp"
+				, "item_name":"사용자그룹"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":3
+				, "option_type":2
+				, "master_code":"usr"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "mbrState":{
+				"item_id":"mbrState"
+				, "column_id":"MEMBER_STATE"
+				, "item_name":"가입상태"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"JOIN_STATE"
+				, "default_value":"1"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "homePhone":{
+				"item_id":"homePhone"
+				, "column_id":"HOME_PHONE"
+				, "item_name":"전화번호"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":1
+				, "object_type":0
+				, "use_privsec":1
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "mobilePhone":{
+				"item_id":"mobilePhone"
+				, "column_id":"MOBILE_PHONE"
+				, "item_name":"휴대폰번호"
+				, "required_write":1
+				, "required_modify":1
+				, "required_join03":1
+				, "required_join03_n":1
+				, "required_myinfo":1
+				, "format_type":2
+				, "object_type":0
+				, "use_privsec":1
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "homeAddr":{
+				"item_id":"homeAddr"
+				, "column_id":"HOME_ADDR"
+				, "item_name":"주소"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":4
+				, "object_type":0
+				, "use_privsec":1
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "mbrEmail":{
+				"item_id":"mbrEmail"
+				, "column_id":"MEMBER_EMAIL"
+				, "item_name":"이메일"
+				, "required_write":1
+				, "required_modify":1
+				, "required_join03":1
+				, "required_join03_n":1
+				, "required_idsearch":1
+				, "required_pwsearch":1
+				, "required_myinfo":1
+				, "format_type":3
+				, "object_type":0
+				, "use_privsec":1
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "ahCode":{
+				"item_id":"ahCode"
+				, "column_id":"AHCODE"
+				, "item_name":"자동기입방지문자"
+				, "required_write":1
+				, "required_modify":0
+				, "required_join03":1
+				, "required_join03_n":1
+				, "format_type":0
+				, "object_type":0
+				, "item_type":1
+				, "maximum":6
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}
+		}
+		, "list_order":[
+			"mbrId"
+			, "mbrName"
+			, "mobilePhone"
+			, "utpIdx"
+		]
+		, "view_order":[
+			"utpIdx"
+			, "mbrGrp"
+			, "mbrId"
+			, "mbrName"
+			, "mbrPwd"
+			, "homePhone"
+			, "mobilePhone"
+			, "mbrEmail"
+		]
+		, "write_order":[
+			"utpIdx"
+			, "mbrGrp"
+			, "mbrId"
+			, "mbrName"
+			, "mbrPwd"
+			, "homePhone"
+			, "mobilePhone"
+			, "mbrEmail"
+		]
+		, "writeproc_order":[
+			"utpIdx"
+			, "mbrGrp"
+			, "mbrId"
+			, "mbrName"
+			, "mbrPwd"
+			, "homePhone"
+			, "mobilePhone"
+			, "mbrEmail"
+		]
+		, "modify_order":[
+			"utpIdx"
+			, "mbrGrp"
+			, "mbrId"
+			, "mbrName"
+			, "mbrPwd"
+			, "homePhone"
+			, "mobilePhone"
+			, "mbrEmail"
+		]
+		, "modifyproc_order":[
+			"utpIdx"
+			, "mbrGrp"
+			, "mbrName"
+			, "mbrPwd"
+			, "homePhone"
+			, "mobilePhone"
+			, "mbrEmail"
+		]
+		, "join01_order":[
+			"mAgree"
+			, "piAgree"
+		]
+		, "join03_order":[
+			"mbrId"
+			, "mbrName"
+			, "mbrPwd"
+			, "homePhone"
+			, "mobilePhone"
+			, "mbrEmail"
+			, "ahCode"
+		]
+		, "join03proc_order":[
+			"mbrId"
+			, "mbrName"
+			, "mbrPwd"
+			, "homePhone"
+			, "mobilePhone"
+			, "mbrEmail"
+			, "ahCode"
+		]
+		, "join03_n_order":[
+			"mbrId"
+			, "mbrPwd"
+			, "homePhone"
+			, "mobilePhone"
+			, "mbrEmail"
+			, "ahCode"
+		]
+		, "join03_nproc_order":[
+			"mbrId"
+			, "mbrPwd"
+			, "homePhone"
+			, "mobilePhone"
+			, "mbrEmail"
+			, "ahCode"
+		]
+		, "myinfo_order":[
+			 "mbrId"
+			, "mbrName"
+			, "mbrPwd"
+			, "homePhone"
+			, "mobilePhone"
+			, "mbrEmail"
+		]
+		, "myinfoproc_order":[
+			"mbrPwd"
+			, "homePhone"
+			, "mobilePhone"
+			, "mbrEmail"
+		]
+		, "idsearch_order":[
+			"mbrName"
+			, "mbrEmail"
+		]
+		, "idsearchproc_order":[
+			"mbrName"
+			, "mbrEmail"
+		]
+		, "pwsearch_order":[
+			"mbrId"
+			, "mbrName"
+			, "mbrEmail"
+		]
+		, "pwsearchproc_order":[
+			"mbrId"
+			, "mbrName"
+			, "mbrEmail"
+		]
+		, "pwdmodi_order":[
+			"mbrPwd"
+		]
+		, "pwdmodiproc_order":[
+			"mbrPwd"
+		]
+		, "joinout_order":[
+			"mbrPwd"
+		]
+		, "joinoutproc_order":[
+			"mbrPwd"
+		]		
+		, "list_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+					"mbrId":{
+						"column_id":"MEMBER_ID"
+						, "item_name":"아이디"
+						, "use_privsec":1
+					}, "mbrName":{
+						"column_id":"MEMBER_NAME"
+						, "item_name":"이름"
+						, "use_full_value":1
+					}
+				}, "select_order":[
+					"mbrId"
+					, "mbrName"
+				]
+			}, "key":{
+				"items":{
+					"utpIdx":{
+						"column_id":"A.USERTYPE_IDX"
+						, "item_name":"사용자유형"
+						, "format_type":0
+						, "object_type":2
+						, "option_type":1
+						, "master_code":"usr"
+						, "style_width":120
+					}, "mbrGrp":{
+						"column_id":"GROUP_CODE"
+						, "item_name":"사용자그룹"
+						, "format_type":0
+						, "object_type":2
+						, "option_type":2
+						, "style_width":120
+					}, "mbrState":{
+						"column_id":"MEMBER_STATE"
+						, "item_name":"가입상태"
+						, "format_type":0
+						, "object_type":2
+						, "master_code":"JOIN_STATE"
+						, "style_width":120
+					}
+				}
+			}, "searchForm_order":[
+				"utpIdx"
+				, "mbrGrp"
+				, "keyField"
+			], "search_order":[
+				"utpIdx"
+				, "keyField"
+			], "searchAddOptn_order":[
+				"mbrGrp"
+			]
+		}
+		, "deleteList_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+					"mbrId":{
+						"column_id":"MEMBER_ID"
+						, "item_name":"아이디"
+						, "use_privsec":1
+					}, "mbrName":{
+						"column_id":"MEMBER_NAME"
+						, "item_name":"이름"
+						, "use_full_value":1
+					}
+				}, "select_order":[
+					"mbrId"
+					, "mbrName"
+				]
+			}, "key":{
+				"items":{
+					"utpIdx":{
+						"column_id":"A.USERTYPE_IDX"
+						, "item_name":"사용자유형"
+						, "format_type":0
+						, "object_type":2
+						, "option_type":1
+						, "master_code":"usr"
+						, "style_width":120
+					}, "mbrGrp":{
+						"column_id":"GROUP_CODE"
+						, "item_name":"사용자그룹"
+						, "format_type":0
+						, "object_type":2
+						, "option_type":2
+						, "style_width":120
+					}, "mbrDpt":{
+						"column_id":"A.DEPART_IDX"
+						, "item_name":"부서"
+						, "format_type":0
+						, "object_type":2
+						, "option_type":3
+						, "style_width":120
+					}, "mbrState":{
+						"column_id":"MEMBER_STATE"
+						, "item_name":"가입상태"
+						, "format_type":0
+						, "object_type":2
+						, "master_code":"JOIN_STATE"
+						, "style_width":120
+					}
+				}
+			}, "searchForm_order":[
+				"utpIdx"
+				, "mbrGrp"
+				, "mbrDpt"
+				, "keyField"
+			], "search_order":[
+				"utpIdx"
+				, "mbrDpt"
+				, "keyField"
+			], "searchAddOptn_order":[
+				"mbrGrp"
+			]
+		}
+		, "totSearchList_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+					"mbrId":{
+						"column_id":"MEMBER_ID"
+						, "item_name":"아이디"
+						, "use_privsec":1
+					}, "mbrName":{
+						"column_id":"MEMBER_NAME"
+						, "item_name":"이름"
+						, "use_full_value":1
+					}
+				}, "select_order":[
+					"mbrId"
+					, "mbrName"
+				]
+			}, "key":{
+				"items":{
+					"utpIdx":{
+						"column_id":"A.USERTYPE_IDX"
+						, "item_name":"사용자유형"
+						, "format_type":0
+						, "object_type":2
+						, "option_type":1
+						, "style_width":120
+					}, "mbrGrp":{
+						"column_id":"GROUP_CODE"
+						, "item_name":"사용자그룹"
+						, "format_type":0
+						, "object_type":2
+						, "option_type":2
+						, "style_width":120
+					}, "mbrDpt":{
+						"column_id":"A.DEPART_IDX"
+						, "item_name":"부서"
+						, "format_type":0
+						, "object_type":2
+						, "option_type":3
+						, "style_width":120
+					}
+				}
+			}, "searchForm_order":[
+				"utpIdx"
+				, "mbrGrp"
+				, "mbrDpt"
+				, "keyField"
+			], "search_order":[
+				"utpIdx"
+				, "mbrDpt"				
+				, "keyField"
+			], "searchAddOptn_order":[
+				"mbrGrp"
+			]
+		}
+	}, "memberAn_item_info":{
+		"items":{
+			"mbrId":{
+				"item_id":"mbrId"
+				, "column_id":"MEMBER_ID"
+				, "item_name":"아이디"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":10
+				, "object_type":0
+				, "use_privsec":1
+				, "minimum":6
+				, "maximum":50
+				, "write_type":0
+				, "modify_type":10
+				, "default_item":1
+			}, "mbrPwd":{
+				"item_id":"mbrPwd"
+				, "column_id":"MEMBER_PWD"
+				, "item_name":"비밀번호"
+				, "relative_id":"mbrId"
+				, "required_write":1
+				, "required_modify":0
+				, "required_myinfo":1
+				, "format_type":9
+				, "object_type":0
+				, "minimum":8
+				, "maximum":15
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "mbrName":{
+				"item_id":"mbrName"
+				, "column_id":"MEMBER_NAME"
+				, "item_name":"이름"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "maximum":50
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "utpIdx":{
+				"item_id":"utpIdx"
+				, "column_id":"USERTYPE_IDX"
+				, "item_name":"사용자유형"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":2
+				, "option_type":1
+				, "master_code":"adm"
+				, "default_value":"1"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "mbrGrp":{
+				"item_id":"mbrGrp"
+				, "item_name":"사용자그룹"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":3
+				, "option_type":2
+				, "master_code":"adm"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "mbrDpt":{
+				"item_id":"mbrDpt"
+				, "item_name":"사용자부서"
+				, "column_id":"DEPART_IDX"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":2
+				, "option_type":3
+				, "master_code":"adm"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "mbrState":{
+				"item_id":"mbrState"
+				, "column_id":"MEMBER_STATE"
+				, "item_name":"가입상태"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"JOIN_STATE"
+				, "default_value":"1"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "mobilePhone":{
+				"item_id":"mobilePhone"
+				, "column_id":"MOBILE_PHONE"
+				, "item_name":"휴대폰번호"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":2
+				, "object_type":0
+				, "use_privsec":1
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "mbrEmail":{
+				"item_id":"mbrEmail"
+				, "column_id":"MEMBER_EMAIL"
+				, "item_name":"이메일"
+				, "required_write":1
+				, "required_modify":1
+				, "required_myIinfo":1
+				, "format_type":3
+				, "object_type":0
+				, "use_privsec":1
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}
+		}
+		, "list_order":[
+			"mbrId"
+			, "mbrName"
+			, "mobilePhone"
+			, "utpIdx"
+		]
+		, "view_order":[
+			"utpIdx"
+			, "mbrGrp"
+			, "mbrDpt"
+			, "mbrId"
+			, "mbrName"
+			, "mbrPwd"
+			, "mobilePhone"
+			, "mbrEmail"
+		]
+		, "write_order":[
+			"utpIdx"
+			, "mbrGrp"
+			, "mbrDpt"
+			, "mbrId"
+			, "mbrName"
+			, "mbrPwd"
+			, "mobilePhone"
+			, "mbrEmail"
+		]
+		, "writeproc_order":[
+			"utpIdx"
+			, "mbrGrp"
+			, "mbrDpt"
+			, "mbrId"
+			, "mbrName"
+			, "mbrPwd"
+			, "mobilePhone"
+			, "mbrEmail"
+		]
+		, "modify_order":[
+			"utpIdx"
+			, "mbrGrp"
+			, "mbrDpt"
+			, "mbrId"
+			, "mbrName"
+			, "mbrPwd"
+			, "mobilePhone"
+			, "mbrEmail"
+		]
+		, "modifyproc_order":[
+			"utpIdx"
+			, "mbrGrp"
+			, "mbrDpt"
+			, "mbrName"
+			, "mbrPwd"
+			, "mobilePhone"
+			, "mbrEmail"
+		]
+		, "join_order":[
+			"mbrId"
+			, "mbrName"
+			, "mbrPwd"
+			, "mobilePhone"
+			, "mbrEmail"
+		]
+		, "joinproc_order":[
+			"mbrId"
+			, "mbrName"
+			, "mbrPwd"
+			, "mobilePhone"
+			, "mbrEmail"
+		]
+		, "joinproc_n_order":[
+			"mbrId"
+			, "mbrPwd"
+			, "mobilePhone"
+			, "mbrEmail"
+		]
+		, "myinfo_order":[
+			 "mbrId"
+			, "mbrName"
+			, "mbrPwd"
+			, "mobilePhone"
+			, "mbrEmail"
+		]
+		, "myinfoproc_order":[
+			"mbrName"
+			, "mbrPwd"
+			, "mobilePhone"
+			, "mbrEmail"
+		]
+		, "list_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+					"mbrId":{
+						"column_id":"MEMBER_ID"
+						, "item_name":"아이디"
+						, "use_privsec":1
+					}, "mbrName":{
+						"column_id":"MEMBER_NAME"
+						, "item_name":"이름"
+						, "use_full_value":1
+					}
+				}, "select_order":[
+					"mbrId"
+					, "mbrName"
+				]
+			}, "key":{
+				"items":{
+					"utpIdx":{
+						"column_id":"A.USERTYPE_IDX"
+						, "item_name":"사용자유형"
+						, "format_type":0
+						, "object_type":2
+						, "option_type":1
+						, "master_code":"adm"
+						, "style_width":120
+					}, "mbrGrp":{
+						"column_id":"GROUP_CODE"
+						, "item_name":"사용자그룹"
+						, "format_type":0
+						, "object_type":2
+						, "option_type":2
+						, "style_width":120
+					}, "mbrDpt":{
+						"column_id":"A.DEPART_IDX"
+						, "item_name":"부서"
+						, "format_type":0
+						, "object_type":2
+						, "option_type":3
+						, "style_width":120
+					}, "mbrState":{
+						"column_id":"MEMBER_STATE"
+						, "item_name":"가입상태"
+						, "format_type":0
+						, "object_type":2
+						, "master_code":"JOIN_STATE"
+						, "style_width":120
+					}
+				}
+			}, "searchForm_order":[
+				"utpIdx"
+				, "mbrGrp"
+				, "mbrDpt"
+				, "keyField"
+			], "search_order":[
+				"utpIdx"
+				, "mbrDpt"
+				, "keyField"
+			], "searchAddOptn_order":[
+				"mbrGrp"
+			]
+		}
+		, "deleteList_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+					"mbrId":{
+						"column_id":"MEMBER_ID"
+						, "item_name":"아이디"
+						, "use_privsec":1
+					}, "mbrName":{
+						"column_id":"MEMBER_NAME"
+						, "item_name":"이름"
+						, "use_full_value":1
+					}
+				}, "select_order":[
+					"mbrId"
+					, "mbrName"
+				]
+			}, "key":{
+				"items":{
+					"utpIdx":{
+						"column_id":"A.USERTYPE_IDX"
+						, "item_name":"사용자유형"
+						, "format_type":0
+						, "object_type":2
+						, "option_type":1
+						, "master_code":"adm"
+						, "style_width":120
+					}, "mbrGrp":{
+						"column_id":"GROUP_CODE"
+						, "item_name":"사용자그룹"
+						, "format_type":0
+						, "object_type":2
+						, "option_type":2
+						, "style_width":120
+					}, "mbrDpt":{
+						"column_id":"A.DEPART_IDX"
+						, "item_name":"부서"
+						, "format_type":0
+						, "object_type":2
+						, "option_type":3
+						, "style_width":120
+					}, "mbrState":{
+						"column_id":"MEMBER_STATE"
+						, "item_name":"가입상태"
+						, "format_type":0
+						, "object_type":2
+						, "master_code":"JOIN_STATE"
+						, "style_width":120
+					}
+				}
+			}, "searchForm_order":[
+				"utpIdx"
+				, "mbrGrp"
+				, "mbrDpt"
+				, "keyField"
+			], "search_order":[
+				"utpIdx"
+				, "mbrDpt"
+				, "keyField"
+			], "searchAddOptn_order":[
+				"mbrGrp"
+			]
+		}
+		, "searchList_search":{
+			"keyField":{
+				"query_name":"key"
+				, "select_name":"keyField"
+				, "items":{
+					"mbrId":{
+						"column_id":"MEMBER_ID"
+						, "item_name":"아이디"
+						, "use_privsec":1
+					}, "mbrName":{
+						"column_id":"MEMBER_NAME"
+						, "item_name":"이름"
+					}
+				}, "select_order":[
+					"mbrId"
+					, "mbrName"
+				]
+			}, "key":{
+				"items":{
+					"utpIdx":{
+						"column_id":"A.USERTYPE_IDX"
+						, "item_name":"사용자유형"
+						, "format_type":0
+						, "object_type":2
+						, "option_type":1
+						, "master_code":"adm"
+						, "style_width":120
+					}, "mbrGrp":{
+						"column_id":"GROUP_CODE"
+						, "item_name":"사용자그룹"
+						, "format_type":0
+						, "object_type":2
+						, "option_type":2
+						, "style_width":120
+					}, "mbrDpt":{
+						"column_id":"A.DEPART_IDX"
+						, "item_name":"부서"
+						, "format_type":0
+						, "object_type":2
+						, "option_type":3
+						, "style_width":120
+					}, "mbrState":{
+						"column_id":"MEMBER_STATE"
+						, "item_name":"가입상태"
+						, "format_type":0
+						, "object_type":2
+						, "master_code":"JOIN_STATE"
+						, "style_width":120
+					}
+				}
+			}, "searchForm_order":[
+				"utpIdx"
+				, "mbrGrp"
+				, "mbrDpt"
+				, "keyField"
+			], "search_order":[
+				"utpIdx"
+				, "mbrDpt"
+				, "keyField"
+			], "searchAddOptn_order":[
+				"mbrGrp"
+			]
+		}
+	}, "login_item_info":{
+		"items":{
+			"mbrId":{
+				"column_id":"MEMBER_ID"
+				, "item_name":"아이디"
+				, "required_write":1
+				, "required_modify":1
+				, "use_privsec":1
+				, "format_type":10
+				, "object_type":0
+				, "maximum":50
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "mbrPwd":{
+				"column_id":"MEMBER_PWD"
+				, "item_name":"비밀번호"
+				, "required_write":1
+				, "required_modify":0
+				, "format_type":9
+				, "object_type":0
+				, "maximum":30
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}
+		}
+		, "login_order":[
+			"mbrId"
+			, "mbrPwd"
+		]
+	}
+}

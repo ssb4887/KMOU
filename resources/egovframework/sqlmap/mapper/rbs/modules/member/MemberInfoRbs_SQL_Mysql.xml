@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.member.memberInfoRbsMapper">
+	<select id="selectMyHashtag" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 	*
+		FROM 	rbs_hashtag_info
+		WHERE 	STD_NO = #{STUDENT_NO}
+				AND FLAG_DEL = 'N'		
+	</select>
+    
+	<insert id="insertHashtag" parameterType="java.util.HashMap">
+		INSERT INTO rbs_hashtag_info (
+			STD_NO
+			, HASHTAG
+			, FLAG_DEL
+			, REGI_IDX
+			, REGI_ID
+			, REGI_NAME
+			, REGI_IP
+		) VALUES (
+			#{STUDENT_NO}
+			, #{HASHTAG}
+			, #{FLAG_DEL}
+			, #{REGI_IDX}
+			, #{REGI_ID}
+			, #{REGI_NAME}
+			, #{REGI_IP}
+		) ON DUPLICATE KEY
+		UPDATE
+			MODI_DATE = now()
+	</insert>
+	
+	<update id="updateHashtag" parameterType="java.util.HashMap">
+		UPDATE rbs_hashtag_info 
+		SET 
+			FLAG_DEL = #{FLAG_DEL}
+			, MODI_DATE = now()
+		WHERE
+			STD_NO = #{STUDENT_NO} 
+			AND HASHTAG = #{HASHTAG}
+	</update>
+	
+</mapper>

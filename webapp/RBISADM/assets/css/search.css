@@ -1,0 +1,87 @@
+@charset "utf-8";
+
+.search_wrap .nav-pills li.col{border-bottom:1px solid #ddd;}
+.search_wrap .nav-pills li .nav-link:disabled{background:#fff; color:#333; font-weight:bolder; border:0; width :160px;}
+.search_wrap .nav-pills li .nav-link{border-bottom-left-radius: 0; border-bottom-right-radius:0; border:1px solid #ddd; background:var(--bs-light); color:#666; border-bottom:0;}
+.search_wrap .nav-pills li .nav-link.active{background:#fff; position:relative;}
+.search_wrap .nav-pills li .nav-link.active:after{content:''; display:block;width:100%; height:3px;background:#fff; position:absolute; bottom:-2px; z-index: 1;;left:0; }
+
+
+.more_view img{width:16px;transition:all 0.3s; right:calc(-16px - 0.25rem)}
+.more_view:hover img{transition:all 0.3s;right:calc(-16px - 0.5rem)}
+
+.box{border:1px solid #e9e9e9; transition:box-shadow 0.5s;}
+.box a:hover{box-shadow: 1px 1px 20px rgba(0,0,0,0.08);transition:box-shadow 0.5s;}
+.box a:hover .h5 , .box a:hover .h4{color:var(--pk_blue)!important;}
+
+/*교과목*/
+.subject_wrap .box .detail_wrap{column-gap:1.5rem; row-gap:0.5rem;}
+.subject_wrap .box .major_label .major_cate{padding: 0.25rem 0.2rem 0.1rem 0.2rem; line-height:1.1; font-size:15px; font-weight:400; border-radius:0.25rem;}
+.subject_wrap .box .major_label .major_cate.major_choo{background:rgba(255,0,24,0.15); border:1px solid var(--bs-danger);color:#333;}/*전공선택*/
+.subject_wrap .box .major_label .major_cate.major_esse{background:var(--bs-danger); border:1px solid var(--bs-danger); color:white;}/*전공필수*/
+.subject_wrap .box .major_label .major_cate.refin_choo{background:rgb(253, 126, 20 ,0.15); border:1px solid var(--bs-orange); color:#333;}/*교양선택*/
+.subject_wrap .box .major_label .major_cate.refin_esse{background:var(--bs-orange); border:1px solid var(--bs-orange); color:white;}/*교양필수*/
+.subject_wrap .box .major_label .major_path small:not(:first-child):before{content:''; display:inline-block;width:8px; height:8px; border-top:1px solid #666; border-right:1px solid #666; transform:rotate(45deg); margin:0 5px 0.5px 2px;}
+
+/*전공*/
+.read_wrap .box .detail_wrap{column-gap:1.5rem; row-gap:0.5rem;}
+.read_wrap .box .major_path small:not(:first-child):before{content:''; display:inline-block;width:8px; height:8px; border-top:1px solid #666; border-right:1px solid #666; transform:rotate(45deg); margin:0 5px 0.5px 2px;}
+.read_wrap .detail_wrap b{min-width:60px;}
+
+/*교수*/
+.proff_wrap .box{ width:calc(25% - 0.75rem);}
+.proff_wrap .box .info .img_box{min-width:100px; height:100px;}
+.proff_wrap .box .info .proff_major{font-size:15px;line-height:1.3; margin-top:0.25rem;}
+.proff_wrap .box .info .proff_major span:not(:first-child):before{content:''; display:inline-block; width:8px; height:8px; border-top:1px solid #666; border-right:1px solid #666; transform:rotate(45deg);margin:0 5px 2px 2px;}
+.proff_wrap .box .proff_about span b{min-width:56px;}
+.proff_wrap .box .proff_about span em{color:#666;line-height:1.25; font-weight:300;}
+.proff_wrap .box a:hover .info .text_box .proff_major{color:#666;}
+
+/*학생전공설계*/
+.student_wrap .box .info_label small{padding:0.25rem 0.2rem 0.1rem 0.2rem; line-height: 1.1;font-size:15px;font-weight:500;}
+.student_wrap .box .info_label .ongoing_major .ass:nth-child(2){color:#666;}
+.student_wrap .box .info_label .ongoing_major .ass:nth-child(2):before{content:''; display:inline-block; width:1px; height:13px;; background:#666; margin:0 0.3rem -1px 0;}
+.student_wrap .box .info_label .ongoing_major .ass:nth-child(3){color:#999;}
+.student_wrap .box .info_label .ongoing_major .ass:nth-child(3):before{content:','; display:inline-block;color:#666; margin:0 0.15rem -1px 0;}
+.student_wrap .box .detail_wrap{column-gap: 1.5rem;row-gap: 0.5rem;;}
+
+
+
+
+@media screen and (max-width:1399px){
+    
+}
+
+@media screen and (max-width:1199px){
+    .proff_wrap .box{width:calc(50% - 0.5rem);}
+}
+
+@media screen and (max-width:991px){
+    
+}
+@media screen and (max-width:767px){
+    .not_subject_wrap .box a .data{position:absolute; width:1px; height:1px; margin:-1px; overflow: hidden; clip-path:polygon(0 0, 0 0, 0 0);}
+}
+
+@media screen and (max-width:575px){
+    .proff_wrap .box{width:100%;}
+    .not_subject_wrap .box a .ellip_2{-webkit-line-clamp: 3;}
+    .not_student_wrap .box .detail_wrap{flex-direction:column!important;}
+}
+
+@media screen and (max-width:425px){
+    .proff_wrap .box .info{flex-direction: column!important;;}
+    .proff_wrap .box .info .text_box .name{justify-content:center!important;}
+
+    
+}
+
+@media screen and (max-width:375px){
+    .proff_about .major_score{flex-direction: column;}
+    .proff_about .major_score em{padding-left:0.3rem!important;}
+}
+
+@media screen and (max-width:320px){
+    .proff_about span{flex-direction: column;}
+    .proff_about span em{padding-left:0.3rem!important;}
+}

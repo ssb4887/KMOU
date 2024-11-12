@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %5p [%c] %m%n" />
+        </Console>
+<!--         <RollingFile name="admMember" fileName="D:/eGovFrameDev-3.5.1-64bit/rbisWorkspace2/rbis4/log/member/admMember.log" filePattern="D:/eGovFrameDev-3.5.1-64bit/rbisWorkspace2/rbis4/log/member/admMember%i_%d{yyyy-MM-dd}.log" append="true"> -->
+<!--   			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %m%n" />   -->
+<!-- 			<Policies> -->
+<!-- 	            <TimeBasedTriggeringPolicy interval="24" modulate="true"/> -->
+<!-- 				<SizeBasedTriggeringPolicy size="100 MB" /> -->
+<!-- 			</Policies> -->
+<!-- 			<DefaultRolloverStrategy max="10"/> -->
+<!--         </RollingFile> -->
+<!--         <RollingFile name="usrMember" fileName="D:/eGovFrameDev-3.5.1-64bit/rbisWorkspace2/rbis4/log/member/usrMember.log" filePattern="D:/eGovFrameDev-3.5.1-64bit/rbisWorkspace2/rbis4/log/member/usrMember%i_%d{yyyy-MM-dd}.log" append="true"> -->
+<!--   			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %m%n" />   -->
+<!-- 			<Policies> -->
+<!-- 	            <TimeBasedTriggeringPolicy interval="24" modulate="true"/> -->
+<!-- 				<SizeBasedTriggeringPolicy size="100 MB" /> -->
+<!-- 			</Policies> -->
+<!-- 			<DefaultRolloverStrategy max="10"/> -->
+<!--         </RollingFile> -->
+<!--         <RollingFile name="admLogin" fileName="D:/eGovFrameDev-3.5.1-64bit/rbisWorkspace2/rbis4/log/login/admLogin.log" filePattern="D:/eGovFrameDev-3.5.1-64bit/rbisWorkspace2/rbis4/log/login/admLogin%i_%d{yyyy-MM-dd}.log" append="true"> -->
+<!--   			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %m%n" />   -->
+<!-- 			<Policies> -->
+<!-- 	            <TimeBasedTriggeringPolicy interval="24" modulate="true"/> -->
+<!-- 				<SizeBasedTriggeringPolicy size="100 MB" /> -->
+<!-- 			</Policies> -->
+<!-- 			<DefaultRolloverStrategy max="10"/> -->
+<!--         </RollingFile> -->
+<!--         <RollingFile name="usrLogin" fileName="D:/eGovFrameDev-3.5.1-64bit/rbisWorkspace2/rbis4/log/login/usrLogin.log" filePattern="D:/eGovFrameDev-3.5.1-64bit/rbisWorkspace2/rbis4/log/login/usrLogin%i_%d{yyyy-MM-dd}.log" append="true"> -->
+<!--   			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %m%n" />   -->
+<!-- 			<Policies> -->
+<!-- 	            <TimeBasedTriggeringPolicy interval="24" modulate="true"/> -->
+<!-- 				<SizeBasedTriggeringPolicy size="100 MB" /> -->
+<!-- 			</Policies> -->
+<!-- 			<DefaultRolloverStrategy max="10"/> -->
+<!--         </RollingFile> -->
+<!--         <RollingFile name="manageContentsAuth" fileName="D:/eGovFrameDev-3.5.1-64bit/rbisWorkspace2/rbis4/log/auth/manageContentsAuth.log" filePattern="D:/eGovFrameDev-3.5.1-64bit/rbisWorkspace2/rbis4/log/auth/manageContentsAuth%i_%d{yyyy-MM-dd}.log" append="true"> -->
+<!--   			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %m%n" />   -->
+<!-- 			<Policies> -->
+<!-- 	            <TimeBasedTriggeringPolicy interval="24" modulate="true"/> -->
+<!-- 				<SizeBasedTriggeringPolicy size="100 MB" /> -->
+<!-- 			</Policies> -->
+<!-- 			<DefaultRolloverStrategy max="10"/> -->
+<!--         </RollingFile> -->
+<!--         <RollingFile name="restrictIp" fileName="D:/eGovFrameDev-3.5.1-64bit/rbisWorkspace2/rbis4/log/access/restrictIp.log" filePattern="D:/eGovFrameDev-3.5.1-64bit/rbisWorkspace2/rbis4/log/access/restrictIp%i_%d{yyyy-MM-dd}.log" append="true"> -->
+<!--   			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %m%n" />   -->
+<!-- 			<Policies> -->
+<!-- 	            <TimeBasedTriggeringPolicy interval="24" modulate="true"/> -->
+<!-- 				<SizeBasedTriggeringPolicy size="100 MB" /> -->
+<!-- 			</Policies> -->
+<!-- 			<DefaultRolloverStrategy max="10"/> -->
+<!--         </RollingFile> -->
+    </Appenders>
+    <Loggers>
+    	<Logger name="admMember" level="DEBUG" additivity="false">
+    		<AppenderRef ref="admMember"/>
+    	</Logger>
+    	<Logger name="usrMember" level="DEBUG" additivity="false">
+    		<AppenderRef ref="usrMember"/>
+    	</Logger>
+    	<Logger name="admLogin" level="DEBUG" additivity="false">
+    		<AppenderRef ref="admLogin"/>
+    	</Logger>
+    	<Logger name="usrLogin" level="DEBUG" additivity="false">
+    		<AppenderRef ref="usrLogin"/>
+    	</Logger>
+    	<Logger name="manageContentsAuth" level="DEBUG" additivity="false">
+    		<AppenderRef ref="manageContentsAuth"/>
+    	</Logger>
+    	<Logger name="restrictIp" level="DEBUG" additivity="false">
+    		<AppenderRef ref="restrictIp"/>
+    	</Logger>
+        <!-- 
+        <Logger name="java.sql" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="jdbc.sqlonly" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="jdbc.audit" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="jdbc.resultset" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+         -->
+        <Logger name="egovframework" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="com.woowonsoft" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="rbs" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="mart" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="ocean" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+		  <!-- log SQL with timing information, post execution 
+	    <Logger name="jdbc.sqltiming" level="DEBUG" additivity="false">
+	        <AppenderRef ref="console" />
+	    </Logger>-->
+        <Root level="ERROR">
+            <AppenderRef ref="console" />
+        </Root>
+    </Loggers>
+</Configuration>

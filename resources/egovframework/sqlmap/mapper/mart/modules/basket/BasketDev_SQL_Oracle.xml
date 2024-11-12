@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mart.modules.basket.basketOraDevMapper">
+
+	<update id="updateOrder" parameterType="java.util.HashMap">
+		UPDATE 
+			SUG025TB
+		SET 
+			ORD = #{ORD}
+		WHERE
+			STUDENT_NO = #{STUDENT_NO}
+		AND YEAR = #{YEAR}
+		AND SMT = #{SMT}
+		AND SUBJECT_CD = #{SUBJECT_CD}
+		AND DIVCLS = #{DIVCLS}
+	</update>
+	
+	<!-- 예비수강 신청 현황 조회 -->
+	<select id="getPreApplSbjt" parameterType="String" resultType="dataMap">
+		WITH NOW AS (SELECT YEAR, SMT
+		FROM (
+		    SELECT YEAR, SMT, FR_DT,
+		           ROW_NUMBER() OVER (ORDER BY FR_DT DESC) AS rn
+		    FROM SCO.SYS080TB
+		    WHERE HAK_DESC LIKE '%수강편람%'
+		    AND SMT IN ('GH0210','GH0220')
+		    AND FR_DT &lt; TO_CHAR(SYSDATE, 'YYYYMMDD')
+		    AND SINBUN_CODE = 'UD340001'
+		) BASE
+		WHERE rn = 1),
+		CURR AS (
+		select
+		    base.YEAR,
+		                     base.SMT,
+		                     (SELECT UF_GET_COMMON_CODESET(base.SMT) FROM dual)                    AS SMT_NM,
+		                     base.TRY_DEPT_CD														AS DEPT_CD,
+		                     (SELECT UF_GET_ORG_CODESET('B', base.TRY_DEPT_CD) FROM dual)              AS COLG_NM,
+		                     (SELECT UF_GET_ORG_CODESET('D', base.TRY_DEPT_CD) FROM dual)              AS DEPT_NM,
+		                     base.TRY_GRADE																AS COM_GRADE,
+		                     base.SUBJECT_CD,
+		                     (SELECT UF_GET_SUBJECT_CODESET(base.SUBJECT_CD) FROM dual)            AS SUBJECT_NM,
+		                     (SELECT SUBJECT_ENM FROM SUF010TB WHERE SUBJECT_CD = base.SUBJECT_CD) AS SUBJECT_ENM,
+		                     base.COMDIV_CODE,
+		                     (SELECT UF_GET_COMMON_CODESET(base.COMDIV_CODE) FROM dual)            AS COMDIV_NM,
+		                     base.CDT_NUM,
+		                     base.EMP_NO,
+		                     UF_APS_EMPNO_NM(base.EMP_NO)                            AS EMP_NM,
+		                     base.DIVCLS                                            AS DIVCLS,
+		                     base.ORD												AS ORD
+		    from SUG.SUG025TB base
+		WHERE STUDENT_NO = #{STUDENT_NO})
+		SELECT
+		    CURR.*
+		FROM
+		    CURR,
+		    NOW
+		WHERE
+		    CURR.YEAR = NOW.YEAR
+		AND CURR.SMT = NOW.SMT
+		ORDER BY CURR.ORD
+	</select>
+	
+	<!-- 예비수강 신청일 조회 -->
+	<select id="getPreApplYN" resultType="java.util.HashMap">
+		WITH NOW_YEAR_SMT AS (
+			    SELECT YEAR, SMT
+			    FROM (
+			        SELECT YEAR, SMT, FR_DT,
+			               ROW_NUMBER() OVER (ORDER BY FR_DT DESC) AS rn
+			        FROM SCO.SYS080TB
+			        WHERE HAK_DESC LIKE '%수강편람%'
+			        AND SMT IN ('GH0210','GH0220')
+			        AND FR_DT &lt; TO_CHAR(SYSDATE, 'YYYYMMDD')
+			        AND SINBUN_CODE = 'UD340001'
+			    ) BASE
+			    WHERE rn = 1
+			)
+		SELECT
+			CASE WHEN 
+				TO_CHAR(SYSDATE,'YYYYMMDDHH24MI') BETWEEN A.FR_DT||A.FR_TIME AND A.TO_DT||A.TO_TIME 
+				THEN 'Y' 
+				ELSE 'N' 
+			END AS PRE_APPL_YN,
+       		TO_CHAR(TO_DATE(A.FR_DT||A.FR_TIME, 'YYYYMMDDHH24MI'),'YYYY"년"MM"월"DD"일 "HH24"시"MI"분"') 
+       			|| ' ~ ' || 
+       		TO_CHAR(TO_DATE(A.TO_DT||A.TO_TIME, 'YYYYMMDDHH24MI'),'YYYY"년"MM"월"DD"일 "HH24"시"MI"분"') AS APPL_DTTM
+		FROM SYS080TB A, NOW_YEAR_SMT B
+		WHERE
+			 A.YEAR = B.YEAR
+		 AND A.SMT = B.SMT
+		 AND A.DIV_CODE = 'SY010025'
+		 AND A.PT_CODE = 'SY020163'
+	</select>
+	
+	<!-- 예비수강 로그인 resultMap -->
+	<resultMap id="sukangLoginResultMap" type="rbs.egovframework.SukangLoginVO">
+        <result column="ERR_CODE" property="errCode" jdbcType="VARCHAR"/>
+        <result column="ERR_MESSAGE" property="errMessage" jdbcType="VARCHAR"/>
+        <result column="YEAR" property="year" jdbcType="VARCHAR"/>
+        <result column="SMT" property="smt" jdbcType="VARCHAR"/>
+        <result column="SMT_NM" property="smtNm" jdbcType="VARCHAR"/>
+        <result column="SINBUN" property="sinbun" jdbcType="VARCHAR"/>
+        <result column="TIME_GB" property="timeGb" jdbcType="VARCHAR"/>
+        <result column="STUDENT_NO" property="studentNo" jdbcType="VARCHAR"/>
+        <result column="NM" property="nm" jdbcType="VARCHAR"/>
+        <result column="COLL_CD" property="collCd" jdbcType="VARCHAR"/>
+        <result column="COLL_NM" property="collNm" jdbcType="VARCHAR"/>
+        <result column="DEPT_CD" property="deptCd" jdbcType="VARCHAR"/>
+        <result column="DEPT_NM" property="deptNm" jdbcType="VARCHAR"/>
+        <result column="MAJOR_CD" property="majorCd" jdbcType="VARCHAR"/>
+        <result column="MAJOR_NM" property="majorNm" jdbcType="VARCHAR"/>
+        <result column="GRADE" property="grade" jdbcType="VARCHAR"/>
+        <result column="SUC_GRADE" property="sucGrade" jdbcType="VARCHAR"/>
+        <result column="ENT_YEAR" property="entYear" jdbcType="VARCHAR"/>
+        <result column="GRADE_CODE" property="gradeCode" jdbcType="VARCHAR"/>
+        <result column="HAKJUK_NM" property="hakjukNm" jdbcType="VARCHAR"/>
+        <result column="ADDR" property="addr" jdbcType="VARCHAR"/>
+        <result column="MAX_CDT" property="maxCdt" jdbcType="VARCHAR"/>
+        <result column="CDT_SUM" property="cdtSum" jdbcType="VARCHAR"/>
+        <result column="CDT_TEACH_SUM" property="cdtTeachSum" jdbcType="VARCHAR"/>
+        <result column="PYN_YN" property="pynYn" jdbcType="VARCHAR"/>
+        <result column="MANAGER_YN" property="managerYn" jdbcType="VARCHAR"/>
+        <result column="LOGIN_DT" property="loginDt" jdbcType="VARCHAR"/>
+        <result column="JUMIN_NO2" property="juminNo2" jdbcType="VARCHAR"/>
+        <result column="SMT_CDT_SUM" property="smtCdtSum" jdbcType="VARCHAR"/>
+        <result column="TOT_CDT_SUM" property="totCdtSum" jdbcType="VARCHAR"/>
+        <result column="CON_GB" property="conGb" jdbcType="VARCHAR"/>
+        <result column="SMAJOR_CD" property="smajorCd" jdbcType="VARCHAR"/>
+        <result column="MINOR_CD" property="minorCd" jdbcType="VARCHAR"/>
+        <result column="FUSE_CD" property="fuseCd" jdbcType="VARCHAR"/>
+        <result column="SMAJOR_NM" property="smajorNm" jdbcType="VARCHAR"/>
+        <result column="MINOR_NM" property="minorNm" jdbcType="VARCHAR"/>
+        <result column="ISU_SMT" property="isuSmt" jdbcType="VARCHAR"/>
+        <result column="TEACH_YN" property="teachYn" jdbcType="VARCHAR"/>
+        <result column="DEGLINK_YN" property="deglinkYn" jdbcType="VARCHAR"/>
+        <result column="LINK_CD" property="linkCd" jdbcType="VARCHAR"/>
+        <result column="FUSE_NM" property="fuseNm" jdbcType="VARCHAR"/>
+        <result column="LINK_NM" property="linkNm" jdbcType="VARCHAR"/>
+        <result column="STU_GRADE" property="stuGrade" jdbcType="VARCHAR"/>
+        <result column="BOKHAK_YN" property="bokhakYn" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!-- 예비수강 로그인 -->
+	<update id="sukangLogin" parameterType="java.util.HashMap" statementType="CALLABLE">
+		{ 
+			CALL SUG.USP_SUKANG_LOGIN_SWIT(
+	             #{vs_id,                mode=IN, jdbcType=VARCHAR}
+	            ,#{vs_pass,              mode=IN, jdbcType=VARCHAR}
+	            ,#{vs_uid,               mode=IN, jdbcType=VARCHAR}
+	            ,#{vs_g_ip,              mode=IN, jdbcType=VARCHAR}
+	            ,#{vs_g_prg_id,          mode=IN, jdbcType=VARCHAR}
+	            ,#{vs_pgm_gb,            mode=IN, jdbcType=VARCHAR}
+	            ,#{vs_precourse,         mode=IN, jdbcType=VARCHAR}
+	            ,null
+	            ,null
+	            ,#{O_CURSOR,             mode=OUT, jdbcType=CURSOR, resultMap=sukangLoginResultMap}
+	            ,null
+	            <!-- 차세대용 로그이기때문에 우선 주석 처리하고 null로 넣음.. -->
+<!-- 	            ,#{VS_SESON_ID,          mode=IN, jdbcType=VARCHAR} -->
+<!-- 	            ,#{VS_USER_BRWR,         mode=IN, jdbcType=VARCHAR} -->
+<!-- 	            ,#{VS_USER_OPERSYSM,     mode=IN, jdbcType=VARCHAR} -->
+				,null
+				,null
+				,null
+			)
+		}
+	</update>
+	
+	<!-- 예비수강 신청 -->
+	<update id="sukangSin" parameterType="java.util.HashMap" statementType="CALLABLE">
+	    {
+	        CALL SUG.USP_SUKANG_SIN_SWIT(
+	            #{vs_year,              mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_smt,               mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_sinbun,            mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_manager_yn,        mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_student_no,        mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_dept_cd,           mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_major_cd,          mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_grade,             mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_suc_grade,         mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_ent_year,          mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_time_gb,           mode=IN, jdbcType=VARCHAR}
+	           ,#{vi_max_cdt,           mode=IN, jdbcType=NUMERIC}
+	           ,#{vs_pyn_yn,            mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_subject_cd,        mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_divcls,            mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_belong_num,        mode=INOUT, jdbcType=VARCHAR}
+	           ,#{vs_recourse_on,       mode=INOUT, jdbcType=VARCHAR}
+	           ,#{vs_precourse,         mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_inwon_over,        mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_other_dept,        mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_cdt_over,          mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_pgm_gb,            mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_try_dept_cd,       mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_try_grade,         mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_coll_not,          mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_g_id,              mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_g_ip,              mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_g_prg_id,          mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_re_year,           mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_re_smt,            mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_re_subject_cd,     mode=IN, jdbcType=VARCHAR}
+	           ,null
+	           ,null
+	           ,null
+	           ,#{vs_confirm_yn,        mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_bokhak_yn,         mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_smajor_cd,         mode=INOUT, jdbcType=VARCHAR}
+	           ,#{vs_minor_cd,          mode=INOUT, jdbcType=VARCHAR}
+	           ,#{vs_fuse_cd,           mode=INOUT, jdbcType=VARCHAR}
+	           ,#{vs_link_cd,           mode=INOUT, jdbcType=VARCHAR}
+	           ,#{vs_err_code,          mode=OUT, jdbcType=VARCHAR}
+	           ,#{vs_msg,               mode=OUT, jdbcType=VARCHAR}
+	        )
+	    }
+	</update>
+	
+	<!-- 예비수강 삭제 -->
+	<update id="sukangDel" parameterType="java.util.HashMap" statementType="CALLABLE">
+	    {
+	        CALL SUG.USP_SUKANG_DEL(
+	            #{vs_year,              mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_smt,               mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_sinbun,            mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_manager_yn,        mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_student_no,        mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_subject_cd,        mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_divcls,        	mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_precourse,        	mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_g_id,        		mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_g_ip,        		mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_g_prg_id,        	mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_bokhak_yn,        	mode=IN, jdbcType=VARCHAR}
+	           ,#{vs_err_code,          mode=OUT, jdbcType=VARCHAR}
+	           ,#{vs_msg,               mode=OUT, jdbcType=VARCHAR}
+	        )
+	    }
+	</update>
+
+</mapper>

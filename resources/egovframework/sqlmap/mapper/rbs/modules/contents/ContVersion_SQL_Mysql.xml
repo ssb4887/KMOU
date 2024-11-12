@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.contents.contVersionMapper">
+    
+	<sql id="VERSION_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG"/>CONTENTS_VER_INFO</trim></sql>
+	
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(VER_IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="VERSION_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<!-- 코드관리 : 코드 순서 목록 -->
+	<select id="optnList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.VER_IDX OPTION_CODE, A.VER_IDX OPTION_NAME
+			FROM 
+			<include refid="VERSION_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<bind name="defaultOrderStr" value="'A.VER_IDX ASC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+	</select>
+	
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		<if test="lastIndex > 0">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+		</if>
+			SELECT 
+			A.VER_IDX, A.WORK_TYPE, A.REMARKS, A.REGI_DATE
+			FROM 
+			<include refid="VERSION_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<bind name="defaultOrderStr" value="'A.VER_IDX DESC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+		<if test="lastIndex > 0">
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+		</if>
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="VERSION_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectDuplicateCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="VERSION_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectMaxOrdIdx" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(ORDER_IDX), 0)</trim>
+		FROM 
+			<include refid="VERSION_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectOrdIdx" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT ORDER_IDX
+		FROM 
+			<include refid="VERSION_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*, BRANCH.BRANCH_NAME, BRANCH.BRANCH_TYPE, CONT.CONTENTS_NAME, CONT.CONTENTS_TYPE 
+			FROM 
+			<include refid="VERSION_TABLE_NAME"/> A 
+			INNER JOIN <include refid="rbs.modules.contents.branchMapper.BRANCH_TABLE_NAME"/> BRANCH ON A.CONTENTS_CODE = BRANCH.CONTENTS_CODE AND A.BRANCH_IDX = BRANCH.BRANCH_IDX  
+			INNER JOIN <include refid="rbs.modules.contents.contentsMapper.CONTENTS_TABLE_NAME"/> CONT ON BRANCH.CONTENTS_CODE = CONT.CONTENTS_CODE  
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="VERSION_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="VERSION_TABLE_NAME"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="updateTotOrdIdx" parameterType="java.util.HashMap">
+		UPDATE <include refid="VERSION_TABLE_NAME"/> SET 
+		ORDER_IDX = (SELECT SEQ_NO FROM (
+	    	SELECT AA.*, @RNUM:=@RNUM+1 SEQ_NO FROM (
+	        	SELECT @RNUM:=0, IOPT.* FROM <include refid="VERSION_TABLE_NAME"/> IOPT 
+	        	<include refid="rbs.commonMapper.COM_SG_WHERE"/> 
+	        	ORDER BY IOPT.ORDER_IDX
+	    	) AA
+		) SEQ WHERE SEQ.MASTER_CODE = <include refid="VERSION_TABLE_NAME"/>.MASTER_CODE AND SEQ.BRANCH_IDX = <include refid="VERSION_TABLE_NAME"/>.BRANCH_IDX)
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.VER_IDX, A.WORK_TYPE, A.REMARKS, A.REGI_DATE, A.LAST_MODI_NAME, A.LAST_MODI_ID, A.LAST_MODI_DATE 
+			FROM 
+			<include refid="VERSION_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+			ORDER BY A.LAST_MODI_DATE DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="VERSION_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/> 
+	</select>
+	
+	<update id="delete" parameterType="java.util.HashMap">
+		UPDATE <include refid="VERSION_TABLE_NAME"/> SET ISDELETE = '1', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="restore" parameterType="java.util.HashMap">
+		UPDATE <include refid="VERSION_TABLE_NAME"/> SET ISDELETE = '0', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="VERSION_TABLE_NAME"/>  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+
+</mapper>            

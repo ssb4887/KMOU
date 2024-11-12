@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.poll.respCntMapper">
+	
+	<select id="pollView" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			<trim><include refid="rbs.commonDBMSMapper.nullFn"/>(RES.RESP_CNT, 0)</trim> RESP_CNT, A.*
+		FROM 
+		<include refid="rbs.modules.poll.pollMapper.POLL_TABLE_NAME"/> A 
+		LEFT OUTER JOIN (
+			SELECT IRES.POLL_IDX, COUNT(RESP_IDX) RESP_CNT 
+			FROM <include refid="rbs.modules.poll.respMapper.RESP_TABLE_NAME"/> IRES 
+			GROUP BY IRES.POLL_IDX 
+		) RES ON A.POLL_IDX = RES.POLL_IDX 
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="pollList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+				<trim><include refid="rbs.commonDBMSMapper.nullFn"/>(RES.RESP_CNT, 0)</trim> RESP_CNT, A.POLL_IDX, A.TITLE, A.ISSTOP, A.LIMIT_DATE11, A.LIMIT_DATE12, A.LIMIT_DATE13, A.LIMIT_DATE21, A.LIMIT_DATE22, A.LIMIT_DATE23, 
+				A.IMG_SAVED_NAME, A.IMG_TEXT, A.ISRESULT 
+				, A.REGI_NAME, A.REGI_DATE 
+			FROM 
+			<include refid="rbs.modules.poll.pollMapper.POLL_TABLE_NAME"/> A 
+			LEFT OUTER JOIN (
+				SELECT IRES.POLL_IDX, COUNT(RESP_IDX) RESP_CNT 
+				FROM <include refid="rbs.modules.poll.respMapper.RESP_TABLE_NAME"/> IRES 
+				GROUP BY IRES.POLL_IDX 
+			) RES ON A.POLL_IDX = RES.POLL_IDX 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<bind name="defaultOrderStr" value="'POLL_IDX DESC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="quesList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(RES.RESP_CNT, 0)</trim> RESP_CNT, A.* FROM <include refid="rbs.modules.poll.quesMapper.QUES_TABLE_NAME"/> A 
+		LEFT OUTER JOIN (
+		    SELECT IRES.POLL_IDX, <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(IQUES.PAR_QUES_IDX, IRES.QUESTION_IDX)</trim> QUESTION_IDX, COUNT(DISTINCT IRES.RESP_IDX) RESP_CNT 
+		    FROM <include refid="rbs.modules.poll.resultMapper.RESULT_TABLE_NAME"/> IRES 
+		    LEFT OUTER JOIN <include refid="rbs.modules.poll.quesMapper.QUES_TABLE_NAME"/> IQUES 
+		    ON IQUES.ISDELETE = '0' AND IQUES.PAR_QUES_IDX IS NOT NULL 
+		    AND IRES.POLL_IDX = IQUES.POLL_IDX AND IRES.QUESTION_IDX = IQUES.QUESTION_IDX 
+		    GROUP BY IRES.POLL_IDX, <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(IQUES.PAR_QUES_IDX, IRES.QUESTION_IDX)</trim>
+		) RES ON A.POLL_IDX = RES.POLL_IDX AND A.QUESTION_IDX = RES.QUESTION_IDX 
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		AND A.PAR_QUES_IDX IS NULL 
+		ORDER BY A.QUESTION_ORDER
+	</select>
+	
+	<select id="itemList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(RES.RESP_CNT, 0)</trim> RESP_CNT, QUES.POLL_IDX, QUES.QUESTION_IDX, A.*
+		FROM <include refid="rbs.modules.poll.itemMapper.ITEM_TABLE_NAME"/> A 
+		INNER JOIN <include refid="rbs.modules.poll.quesMapper.QUES_TABLE_NAME"/> QUES ON QUES.ISDELETE = '0' AND A.POLL_IDX = QUES.POLL_IDX AND A.QUESTION_IDX IN (QUES.QUESTION_IDX, QUES.PAR_QUES_IDX)
+		LEFT OUTER JOIN (
+		    SELECT IRES.POLL_IDX, IRES.QUESTION_IDX, IRES.ITEM_IDX, COUNT(IRES.RESP_IDX) RESP_CNT 
+		    FROM <include refid="rbs.modules.poll.resultMapper.RESULT_TABLE_NAME"/> IRES 
+		    GROUP BY IRES.POLL_IDX, IRES.QUESTION_IDX, IRES.ITEM_IDX
+		) RES ON QUES.POLL_IDX = RES.POLL_IDX AND QUES.QUESTION_IDX = RES.QUESTION_IDX AND A.ITEM_IDX = RES.ITEM_IDX 
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		ORDER BY QUES.QUESTION_ORDER, QUES.PAR_QUES_IDX, A.ITEM_ORDER ASC
+	</select>
+		
+	<select id="pitemList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(RES.RESP_CNT, 0)</trim> RESP_CNT, QUES.POLL_IDX, QUES.QUESTION_IDX, A.*
+		FROM <include refid="rbs.modules.poll.pitemMapper.ITEM_TABLE_NAME"/> A 
+		INNER JOIN <include refid="rbs.modules.poll.quesMapper.QUES_TABLE_NAME"/> QUES ON QUES.ISDELETE = '0' AND A.POLL_IDX = QUES.POLL_IDX
+		LEFT OUTER JOIN (
+		    SELECT IRES.POLL_IDX, IRES.QUESTION_IDX, IRES.ITEM_IDX, COUNT(IRES.RESP_IDX) RESP_CNT 
+		    FROM <include refid="rbs.modules.poll.resultMapper.RESULT_TABLE_NAME"/> IRES 
+		    GROUP BY IRES.POLL_IDX, IRES.QUESTION_IDX, IRES.ITEM_IDX
+		) RES ON QUES.POLL_IDX = RES.POLL_IDX AND QUES.QUESTION_IDX = RES.QUESTION_IDX AND A.ITEM_IDX = RES.ITEM_IDX  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		ORDER BY QUES.QUESTION_ORDER, QUES.PAR_QUES_IDX, A.ITEM_ORDER ASC
+	</select>
+</mapper>

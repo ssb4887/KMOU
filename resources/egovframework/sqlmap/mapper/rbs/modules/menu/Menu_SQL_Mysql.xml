@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.menu.menuMapper">
+
+	<sql id="MENU_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />MENU_INFO</trim></sql>
+	<sql id="MENU_A_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />MENU_A_INFO</trim></sql>
+	<sql id="MENU_D_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />MENU_DEFAULT_INFO</trim></sql>
+	<sql id="MENU_A_LOG_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG" />MENU_A_LOG_INFO</trim></sql>
+	
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(MENU_IDX), 30)</trim> + 1 MAXID
+		FROM 
+		<include refid="MENU_TABLE_NAME"/> A 
+		<![CDATA[WHERE MENU_IDX > 30]]>
+		<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</select>
+	
+	<select id="optnList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.MENU_IDX OPTION_CODE, A.MENU_NAME OPTION_NAME, A.MENU_LEVEL OPTION_LEVEL, A.MENU_LINK, A.AN_MENU_LINK
+			FROM 
+			<include refid="MENU_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			ORDER BY A.ORDER_IDX
+	</select>
+	
+	<select id="menuList" parameterType="java.util.HashMap" resultType="jsonMap">
+			SELECT 
+			*
+			FROM 
+			<include refid="MENU_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			ORDER BY A.ORDER_IDX ASC
+			
+	</select>
+		
+	<select id="allMenuApplyList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*, WEB.SITE_NAME
+			FROM 
+			<include refid="MENU_A_TABLE_NAME"/> A 
+			LEFT OUTER JOIN ( 
+			<include refid="rbs.modules.website.websiteJoinMapper.optionJoinSql"/>
+			) WEB
+			ON A.SITE_ID = WEB.SITE_ID
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			ORDER BY A.ORDER_IDX ASC
+	</select>
+	
+	<select id="allMenuApplyMultiList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*, WEB.SITE_NAME, MULTI.ITEM_ID, MULTI.ITEM_KEY
+			, CASE 
+				WHEN MULTI.ITEM_ID = 'managerGroupIdxs' 
+				THEN (SELECT GROUP_NAME FROM <include refid="rbs.modules.member.lang.memberGrupMapper.GROUP_TABLE_NAME"/> WHERE MULTI.ITEM_KEY = GROUP_CODE AND LOCALE_LANG = 'ko')
+				ELSE NULL 
+			  END GROUP_NAME
+			FROM 
+			<include refid="MENU_A_TABLE_NAME"/> A 
+			LEFT OUTER JOIN 
+			<include refid="rbs.modules.menu.menuMultiMapper.MULTI_A_TABLE_NAME"/> MULTI
+			ON A.MENU_IDX = MULTI.MENU_IDX AND A.VER_IDX = MULTI.VER_IDX AND A.SITE_ID = MULTI.SITE_ID
+			LEFT OUTER JOIN ( 
+			<include refid="rbs.modules.website.websiteJoinMapper.optionJoinSql"/>
+			) WEB
+			ON A.SITE_ID = WEB.SITE_ID
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			ORDER BY A.ORDER_IDX ASC
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MENU_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectDuplicateCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MENU_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectMaxOrdIdx" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(ORDER_IDX), 0)</trim>
+		FROM 
+			<include refid="MENU_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectOrdIdx" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT ORDER_IDX
+		FROM 
+			<include refid="MENU_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectNextOrdIdx" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(ORDER_IDX), 0)</trim>
+		FROM <include refid="MENU_TABLE_NAME"/> A <include refid="rbs.commonMapper.COM_SG_WHERE"/>
+        <![CDATA[AND ORDER_IDX >= (SELECT ORDER_IDX FROM]]> <include refid="MENU_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND MENU_IDX = #{menuIdx}) 
+        <![CDATA[AND ORDER_IDX < (]]>
+            SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MIN(ORDER_IDX), A.ORDER_IDX + 1)</trim> FROM <include refid="MENU_TABLE_NAME"/> INMENU <include refid="rbs.commonMapper.COM_SG_WHERE"/>
+            <![CDATA[AND MENU_LEVEL <= (SELECT MENU_LEVEL FROM]]> <include refid="MENU_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND MENU_IDX = #{menuIdx}) 
+            <![CDATA[AND ORDER_IDX > (SELECT ORDER_IDX FROM]]> <include refid="MENU_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND MENU_IDX = #{menuIdx})
+        )
+	</select>
+	
+	<select id="selectPrtMenuIdx" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT PARENT_MENU_IDX
+		FROM 
+			<include refid="MENU_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectMenuKeyView" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT PARENT_MENU_IDX, MENU_LEVEL, GROUP_MENU_IDX, ORDER_IDX
+		FROM 
+			<include refid="MENU_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<select id="selectInChild" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+	<!-- 
+		SELECT COUNT(1)
+		FROM DUAL WHERE #{searchMenuIdx} IN ( 
+			SELECT MENU_IDX
+	        FROM <include refid="MENU_TABLE_NAME"/> A <include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	        <![CDATA[AND ORDER_IDX >= (SELECT ORDER_IDX FROM]]> <include refid="MENU_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND MENU_IDX = #{menuIdx}) 
+	        <![CDATA[AND ORDER_IDX < (]]>
+	            SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MIN(ORDER_IDX), A.ORDER_IDX + 1)</trim> FROM <include refid="MENU_TABLE_NAME"/> INMENU <include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	            <![CDATA[AND MENU_LEVEL <= (SELECT MENU_LEVEL FROM]]> <include refid="MENU_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND MENU_IDX = #{menuIdx}) 
+	            <![CDATA[AND ORDER_IDX > (SELECT ORDER_IDX FROM]]> <include refid="MENU_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND MENU_IDX = #{menuIdx})
+	        )
+		)
+	-->
+		SELECT #{searchMenuIdx} IN ( 
+			SELECT MENU_IDX
+	        FROM <include refid="MENU_TABLE_NAME"/> A <include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	        <![CDATA[AND ORDER_IDX >= (SELECT ORDER_IDX FROM]]> <include refid="MENU_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND MENU_IDX = #{menuIdx}) 
+	        <![CDATA[AND ORDER_IDX < (]]>
+	            SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MIN(ORDER_IDX), A.ORDER_IDX + 1)</trim> FROM <include refid="MENU_TABLE_NAME"/> INMENU <include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	            <![CDATA[AND MENU_LEVEL <= (SELECT MENU_LEVEL FROM]]> <include refid="MENU_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND MENU_IDX = #{menuIdx}) 
+	            <![CDATA[AND ORDER_IDX > (SELECT ORDER_IDX FROM]]> <include refid="MENU_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND MENU_IDX = #{menuIdx})
+	        )
+		)
+	</select>
+	
+	<!-- 이동할 menu_idx -->
+	<select id="selectSourceList" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT MENU_IDX
+		FROM <include refid="MENU_TABLE_NAME"/> A <include refid="rbs.commonMapper.COM_SG_WHERE"/>
+        <![CDATA[AND ORDER_IDX >= (SELECT ORDER_IDX FROM]]> <include refid="MENU_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND MENU_IDX = #{menuIdx}) 
+        <![CDATA[AND ORDER_IDX < (]]>
+            SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MIN(ORDER_IDX), A.ORDER_IDX + 1)</trim> FROM <include refid="MENU_TABLE_NAME"/> INMENU <include refid="rbs.commonMapper.COM_SG_WHERE"/>
+            <![CDATA[AND MENU_LEVEL <= (SELECT MENU_LEVEL FROM]]> <include refid="MENU_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND MENU_IDX = #{menuIdx}) 
+            <![CDATA[AND ORDER_IDX > (SELECT ORDER_IDX FROM]]> <include refid="MENU_TABLE_NAME"/> <include refid="rbs.commonMapper.COM_SG_WHERE"/> AND MENU_IDX = #{menuIdx})
+        )
+	</select>
+	
+	<!-- 이동할 정보 update -->
+	<update id="updateOrdIdx" parameterType="java.util.HashMap">
+		UPDATE <include refid="MENU_TABLE_NAME"/> SET 
+		<include refid="rbs.commonMapper.UPDATE_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*
+			FROM 
+			<include refid="MENU_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="authCount" parameterType="java.util.HashMap" resultType="int">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MENU_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="MENU_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<select id="selectJSONModify" parameterType="java.util.HashMap" resultType="egovMap">
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="MENU_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<!-- 메뉴 테이블 copy insert -->
+	<insert id="copyInsert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MENU_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) (SELECT 
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		FROM <include refid="MENU_TABLE_NAME"></include>
+		WHERE ISDELETE = '0' 
+		<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+        )
+	</insert>
+	
+	<!-- 적용 테이블 copy insert -->
+	<insert id="copyAInsert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MENU_A_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) (SELECT 
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		FROM <include refid="MENU_A_TABLE_NAME"></include>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+        )
+	</insert>
+	
+	<!-- 기본 메뉴 테이블 copy insert -->
+	<insert id="copyDInsert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MENU_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) (SELECT 
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		FROM <include refid="MENU_D_TABLE_NAME"></include>
+		WHERE ISDELETE = '0' 
+		<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+        )
+	</insert>
+	
+	<!-- 적용 테이블 copy insert -->
+	<insert id="copyDAInsert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MENU_A_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) (SELECT 
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		FROM <include refid="MENU_D_TABLE_NAME"></include>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+        )
+	</insert>
+	
+	<!-- 적용 테이블 insert -->
+	<insert id="apply" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MENU_A_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) 
+		(
+			SELECT 
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		 	FROM <include refid="MENU_TABLE_NAME"/> A
+			WHERE ISDELETE = '0' 
+			<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+		)	
+		
+	</insert>
+	
+	<update id="applyCdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MENU_A_TABLE_NAME"/> 
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MENU_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="MENU_TABLE_NAME"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="updateTotOrdIdx" parameterType="java.util.HashMap">
+		UPDATE <include refid="MENU_TABLE_NAME"/> SET 
+		ORDER_IDX = (SELECT SEQ_NO FROM (
+	    	SELECT AA.*, @RNUM:=@RNUM+1 SEQ_NO FROM (
+	        	SELECT @RNUM:=0, IOPT.* FROM <include refid="MENU_TABLE_NAME"/> IOPT 
+	        	<include refid="rbs.commonMapper.COM_SG_WHERE"/> 
+	        	ORDER BY IOPT.ORDER_IDX
+	    	) AA ORDER BY AA.ORDER_IDX
+		) SEQ WHERE SEQ.SITE_ID = <include refid="MENU_TABLE_NAME"/>.SITE_ID AND SEQ.VER_IDX = <include refid="MENU_TABLE_NAME"/>.VER_IDX 
+		AND SEQ.MENU_IDX = <include refid="MENU_TABLE_NAME"/>.MENU_IDX)
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.MENU_IDX, A.MENU_NAME, FN_RBS_MENU_DN_FPATH_NAMES('&gt;', A.SITE_ID, A.VER_IDX, A.MENU_IDX) MENU_PATH_NAME, A.MENU_LEVEL, A.ORDER_IDX, A.REMARKS, A.REGI_NAME,  
+			A.REGI_DATE, A.LAST_MODI_NAME, A.LAST_MODI_ID, A.LAST_MODI_DATE 
+			FROM 
+			<include refid="MENU_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+			ORDER BY A.REGI_DATE DESC
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MENU_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/> 
+	</select>
+	
+	<update id="delete" parameterType="java.util.HashMap">
+		CALL PRC_MENU_DELETE(#{menuIdx}, #{siteId}, #{verIdx}, '1', #{modiIp}, #{modiIdx}, #{modiId}, #{modiName})
+	</update>
+	<update id="restore" parameterType="java.util.HashMap">
+		CALL PRC_MENU_RESTORE(#{menuIdx}, #{siteId}, #{verIdx}, '0', #{modiIp}, #{modiIdx}, #{modiId}, #{modiName})
+	</update>
+	<update id="cdelete" parameterType="java.util.HashMap">
+		CALL PRC_MENU_CDELETE(#{menuIdx}, #{siteId}, #{verIdx})
+	</update>
+	
+	<!-- 적용메뉴 목록 -->
+	<select id="applyMenuList" parameterType="java.util.HashMap" resultType="jsonMap">
+			SELECT 
+			A.*
+			FROM 
+			<include refid="MENU_A_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			ORDER BY A.ORDER_IDX ASC
+			
+	</select>
+	
+	<select id="applyLogMenuList" parameterType="java.util.HashMap" resultType="jsonMap">
+			SELECT 
+			A.*
+			FROM 
+			<include refid="MENU_A_LOG_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+			ORDER BY A.ORDER_IDX ASC
+			
+	</select>
+	
+	<!-- 적용메뉴 정보 : DB인 경우 -->
+	<select id="selectJSONApplyView_db" parameterType="java.util.HashMap" resultType="egovMap">
+			SELECT 
+			A.*, MODULE.MODULE_NAME, FN.FN_NAME, AUTH.AUTH_NAME, CONT.CONTENTS_NAME, BRANCH.BRANCH_NAME, USERTYPE.USERTYPE_NAME USERTYPE_IDX_NAME, MUSERTYPE.USERTYPE_NAME MANAGER_USERTYPE_IDX_NAME 
+			FROM 
+			<include refid="MENU_A_TABLE_NAME"/> A 
+			LEFT OUTER JOIN <include refid="rbs.modules.module.moduleMapper.MODULE_TABLE_NAME"/> MODULE ON MODULE.ISDELETE = '0' AND A.MODULE_ID = MODULE.MODULE_ID 
+			LEFT OUTER JOIN <include refid="rbs.modules.module.fnMapper.FN_TABLE_NAME"/> FN ON FN.ISDELETE = '0' AND A.MODULE_ID = FN.MODULE_ID AND A.FN_IDX = FN.FN_IDX
+			LEFT OUTER JOIN <include refid="rbs.modules.module.authMapper.AUTH_TABLE_NAME"/> AUTH ON AUTH.ISDELETE = '0' AND A.MODULE_ID = AUTH.MODULE_ID AND A.MODULE_AUTH = AUTH.AUTH_IDX 
+			LEFT OUTER JOIN <include refid="rbs.modules.contents.lang.contentsMapper.VIEW_CONTENTS_TABLE_NAME"/> CONT ON CONT.ISDELETE = '0' AND CONT.LOCALE_LANG = #{localeLang} AND A.MODULE_ID = 'contents' AND A.CONTENTS_CODE = CONT.CONTENTS_CODE  
+			LEFT OUTER JOIN <include refid="rbs.modules.contents.lang.branchMapper.VIEW_BRANCH_TABLE_NAME"/> BRANCH ON BRANCH.ISDELETE = '0' AND BRANCH.LOCALE_LANG = #{localeLang} AND A.MODULE_ID = 'contents' AND A.CONTENTS_CODE = BRANCH.CONTENTS_CODE AND A.BRANCH_IDX = BRANCH.BRANCH_IDX   
+			LEFT OUTER JOIN <include refid="rbs.modules.member.lang.memberUstpMapper.VIEW_USERTYPE_TABLE_NAME"/> USERTYPE ON USERTYPE.ISDELETE = '0' AND USERTYPE.LOCALE_LANG = #{localeLang} AND A.USERTYPE_IDX = USERTYPE.USERTYPE_IDX   
+			LEFT OUTER JOIN <include refid="rbs.modules.member.lang.memberUstpMapper.VIEW_USERTYPE_TABLE_NAME"/> MUSERTYPE ON MUSERTYPE.ISDELETE = '0' AND MUSERTYPE.LOCALE_LANG = #{localeLang} AND A.MANAGER_USERTYPE_IDX = MUSERTYPE.USERTYPE_IDX   
+			
+			<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</select>
+	
+	<!-- 적용메뉴 정보 : json파일인 경우 -->
+	<select id="selectJSONApplyView" parameterType="java.util.HashMap" resultType="egovMap">
+			SELECT 
+			MODULE.MODULE_NAME, FN.FN_NAME, AUTH.AUTH_NAME, CONT.CONTENTS_NAME, BRANCH.BRANCH_NAME 
+			FROM <include refid="rbs.modules.module.moduleMapper.MODULE_TABLE_NAME"/> MODULE 
+			LEFT OUTER JOIN <include refid="rbs.modules.module.fnMapper.FN_TABLE_NAME"/> FN ON FN.ISDELETE = '0' AND MODULE.MODULE_ID = FN.MODULE_ID AND #{FN_IDX} = FN.FN_IDX
+			LEFT OUTER JOIN <include refid="rbs.modules.module.authMapper.AUTH_TABLE_NAME"/> AUTH ON AUTH.ISDELETE = '0' AND MODULE.MODULE_ID = AUTH.MODULE_ID AND #{MODULE_AUTH} = AUTH.AUTH_IDX 
+			LEFT OUTER JOIN <include refid="rbs.modules.contents.lang.contentsMapper.VIEW_CONTENTS_TABLE_NAME"/> CONT ON CONT.ISDELETE = '0' AND CONT.LOCALE_LANG = #{localeLang} AND MODULE.MODULE_ID = 'contents' AND #{CONTENTS_CODE} = CONT.CONTENTS_CODE  
+			LEFT OUTER JOIN <include refid="rbs.modules.contents.lang.branchMapper.VIEW_BRANCH_TABLE_NAME"/> BRANCH ON BRANCH.ISDELETE = '0' AND BRANCH.LOCALE_LANG = #{localeLang} AND MODULE.MODULE_ID = 'contents' AND CONT.CONTENTS_CODE = BRANCH.CONTENTS_CODE AND #{BRANCH_IDX} = BRANCH.BRANCH_IDX   
+			WHERE MODULE.ISDELETE = '0' AND #{MODULE_ID} = MODULE.MODULE_ID 
+			<include refid="rbs.commonMapper.COM_LK_WHERE"/>
+	</select>
+	
+	<select id="maxMenuLevel" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(MENU_LEVEL), 0)</trim> MAXLEVEL
+		FROM 
+		<include refid="MENU_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<select id="selectExcelList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.*, MODULE.MODULE_NAME, FN.FN_NAME, AUTH.AUTH_NAME, CONT.CONTENTS_NAME, BRANCH.BRANCH_NAME, USERTYPE.USERTYPE_NAME USERTYPE_IDX_NAME, MUSERTYPE.USERTYPE_NAME MANAGER_USERTYPE_IDX_NAME 
+			FROM 
+			<include refid="MENU_TABLE_NAME"/> A 
+			LEFT OUTER JOIN <include refid="rbs.modules.module.moduleMapper.MODULE_TABLE_NAME"/> MODULE ON MODULE.ISDELETE = '0' AND A.MODULE_ID = MODULE.MODULE_ID 
+			LEFT OUTER JOIN <include refid="rbs.modules.module.fnMapper.FN_TABLE_NAME"/> FN ON FN.ISDELETE = '0' AND A.MODULE_ID = FN.MODULE_ID AND A.FN_IDX = FN.FN_IDX
+			LEFT OUTER JOIN <include refid="rbs.modules.module.authMapper.AUTH_TABLE_NAME"/> AUTH ON AUTH.ISDELETE = '0' AND A.MODULE_ID = AUTH.MODULE_ID AND A.MODULE_AUTH = AUTH.AUTH_IDX 
+			LEFT OUTER JOIN <include refid="rbs.modules.contents.lang.contentsMapper.VIEW_CONTENTS_TABLE_NAME"/> CONT ON CONT.ISDELETE = '0' AND CONT.LOCALE_LANG = #{localeLang} AND A.MODULE_ID = 'contents' AND A.CONTENTS_CODE = CONT.CONTENTS_CODE  
+			LEFT OUTER JOIN <include refid="rbs.modules.contents.lang.branchMapper.VIEW_BRANCH_TABLE_NAME"/> BRANCH ON BRANCH.ISDELETE = '0' AND BRANCH.LOCALE_LANG = #{localeLang} AND A.MODULE_ID = 'contents' AND A.CONTENTS_CODE = BRANCH.CONTENTS_CODE AND A.BRANCH_IDX = BRANCH.BRANCH_IDX   
+			LEFT OUTER JOIN <include refid="rbs.modules.member.lang.memberUstpMapper.VIEW_USERTYPE_TABLE_NAME"/> USERTYPE ON USERTYPE.ISDELETE = '0' AND USERTYPE.LOCALE_LANG = #{localeLang} AND A.USERTYPE_IDX = USERTYPE.USERTYPE_IDX   
+			LEFT OUTER JOIN <include refid="rbs.modules.member.lang.memberUstpMapper.VIEW_USERTYPE_TABLE_NAME"/> MUSERTYPE ON MUSERTYPE.ISDELETE = '0' AND MUSERTYPE.LOCALE_LANG = #{localeLang} AND A.MANAGER_USERTYPE_IDX = MUSERTYPE.USERTYPE_IDX   
+			
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			ORDER BY A.ORDER_IDX
+	</select>
+</mapper>            

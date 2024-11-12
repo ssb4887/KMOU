@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.egovframework.lang.rbsCodeOptnMapper">
+    	
+    <!-- 항목 코드 목록 -->	
+    <!-- 기초 코드 3차 -->
+	<select id="classMasterList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.MASTER_CODE OPTION_CODE, A.MASTER_NAME OPTION_NAME
+			FROM 
+			<include refid="rbs.modules.itemClass.lang.masterMapper.VIEW_MASTER_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+			<bind name="defaultOrderStr" value="'A.ORDER_IDX ASC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+	</select>
+	
+    <!-- 기초 코드 3차 -->
+	<select id="classOptionList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.CLASS_IDX OPTION_CODE, A.CLASS_NAME OPTION_NAME, A.PARENT_CLASS_IDX PARENT_OPTION_CODE, A.CLASS_LEVEL OPTION_LEVEL
+			FROM 
+			<include refid="rbs.modules.itemClass.lang.optionMapper.VIEW_ICLASS_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+			<bind name="defaultOrderStr" value="'A.ORDER_IDX ASC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+	</select>
+	
+    <!-- 기초 코드 3차 Map -->
+	<select id="classOptionMapList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			CONCAT('_class_', A.MASTER_CODE) AS MASTER_CODE, A.CLASS_IDX OPTION_CODE, A.CLASS_NAME OPTION_NAME, A.PARENT_CLASS_IDX PARENT_OPTION_CODE, A.CLASS_LEVEL OPTION_LEVEL
+			FROM 
+			<include refid="rbs.modules.itemClass.lang.optionMapper.VIEW_ICLASS_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+			<bind name="defaultOrderStr" value="'A.ORDER_IDX ASC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+	</select>
+	
+    <!-- 기초 코드 -->
+	<select id="masterList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.MASTER_CODE OPTION_CODE, A.MASTER_NAME OPTION_NAME
+			FROM 
+			<include refid="rbs.modules.code.lang.masterMapper.VIEW_MASTER_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+			<bind name="defaultOrderStr" value="'A.ORDER_IDX ASC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+	</select>
+    <!-- 기초 코드(map) -->
+	<select id="optionMapList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.MASTER_CODE, A.OPTION_CODE, A.OPTION_NAME
+			FROM 
+			<include refid="rbs.modules.code.lang.optionMapper.VIEW_OPTION_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+			<bind name="defaultOrderStr" value="'A.MASTER_CODE ASC, A.ORDER_IDX ASC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+	</select>
+    <!-- 기초 코드 -->
+	<select id="optionList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.OPTION_CODE, A.OPTION_NAME
+			FROM 
+			<include refid="rbs.modules.code.lang.optionMapper.VIEW_OPTION_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+			<bind name="defaultOrderStr" value="'A.ORDER_IDX ASC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+	</select>
+    <!-- 기초 코드 -->
+	<select id="optionJSONList" parameterType="java.util.HashMap" resultType="egovMap">
+			SELECT 
+			A.OPTION_CODE, A.OPTION_NAME
+			FROM 
+			<include refid="rbs.modules.code.lang.optionMapper.VIEW_OPTION_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+			<bind name="defaultOrderStr" value="'A.ORDER_IDX ASC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+	</select>
+	
+	<select id="optionName" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT OPTION_NAME
+		FROM 
+			<include refid="rbs.modules.code.lang.optionMapper.VIEW_OPTION_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+	</select>
+	
+	<select id="usertypeName" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT USERTYPE_NAME
+		FROM 
+			<include refid="rbs.modules.member.lang.memberUstpMapper.VIEW_USERTYPE_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+	</select>
+    	
+    <!-- 사용자회원 -->	
+    <sql id="memberListQuery">
+		SELECT 
+		A.MEMBER_IDX OPTION_CODE, A.MEMBER_NAME OPTION_NAME, A.MEMBER_ID OPTION_ID
+		FROM 
+		<include refid="rbs.modules.member.memberTotMapper.MEMBER_TABLE_NAME"/> A 
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<bind name="defaultOrderStr" value="'A.MEMBER_IDX DESC'"/>
+		<include refid="rbs.commonMapper.COM_ORDER"/>
+    </sql>
+	<select id="memberList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="memberListQuery"/>
+	</select>
+	<select id="memberJSONList" parameterType="java.util.HashMap" resultType="egovMap">
+		<include refid="memberListQuery"/>
+	</select>
+    	
+    <!-- 사용자유형 -->	
+	<select id="usertypeList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.USERTYPE_IDX OPTION_CODE, A.USERTYPE_NAME OPTION_NAME
+			FROM 
+			<include refid="rbs.modules.member.lang.memberUstpMapper.VIEW_USERTYPE_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+			<bind name="defaultOrderStr" value="'A.USERTYPE_IDX ASC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+	</select>
+	
+    <!-- 사용자그룹 -->	
+	<select id="groupList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.GROUP_CODE OPTION_CODE, A.GROUP_NAME OPTION_NAME
+			FROM 
+			<include refid="rbs.modules.member.lang.memberGrupMapper.VIEW_GROUP_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+			<bind name="defaultOrderStr" value="'A.ORDER_IDX ASC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+	</select>
+	
+    <!-- 사용자부서 -->	
+	<select id="departList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.DEPART_IDX OPTION_CODE, A.DEPART_NAME OPTION_NAME, A.PARENT_DEPART_IDX, A.DEPART_LEVEL OPTION_LEVEL, A.ORDER_IDX
+			FROM 
+			<include refid="rbs.modules.member.lang.memberDprtMapper.VIEW_DEPART_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE_LANG"/>
+			<bind name="defaultOrderStr" value="'A.ORDER_IDX ASC'"/>
+			<include refid="rbs.commonMapper.COM_ORDER"/>
+	</select>
+	
+	<!-- 메뉴관리에서 사용하는 모듈 -->
+	<select id="menuModuleList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.MODULE_ID OPTION_CODE, A.MODULE_NAME OPTION_NAME, A.CONF_MODULE, UR_URL MENU_LINK, UR_URL2 MENU_LINK2, AN_URL AN_MENU_LINK, AN_URL2 AN_MENU_LINK2
+			FROM 
+			<include refid="rbs.modules.module.moduleMapper.MODULE_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			AND A.ISMENU = '1'
+			ORDER BY A.ORDER_IDX ASC
+	</select>
+
+</mapper>            

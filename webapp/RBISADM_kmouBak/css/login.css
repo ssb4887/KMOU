@@ -1,0 +1,27 @@
+@charset "utf-8";
+
+@import url('default.css');
+@import url('login_layout.css');
+
+/* 로그인 */
+.loginTit {overflow:hidden; margin:140px 0 20px 0px;}
+.loginTit .tit { text-align: center; color:#005baf; font-size:45px; font-weight:bold; line-height:45px;letter-spacing:-3.3px; }
+.loginTit .txt strong {color:#005baf; font-size:13px; letter-spacing:0px; vertical-align: top;  font-weight:normal;}
+.loginTit .txt {margin-left:25px; font-size:13px; color:#3e3e3e; line-height:18px; width:280px;}
+
+.loginWrap {padding:35px 0 35px; border-top:2px solid #0e6bc1; border-bottom:1px solid #e4e4e4; background:#fbfbfb;}
+.loginWrap fieldset {overflow:hidden; margin-left:40px;}
+.loginWrap .login {float:left; margin-top:15px; width: 350px;}
+.loginWrap .login li {margin-top:5px;/*float:left;*/}
+.loginWrap .login li:first-child {margin-top:0;}
+.loginWrap .login li label {width:65px; padding-left:9px; font-size:14px; font-weight:bold; color:#3e3e3e; line-height:32px; }
+
+.loginWrap .login li.fn_gubun {text-align:right;}
+.loginWrap .login li.fn_gubun label {width:auto; padding-right:15px;}
+
+.loginWrap .login li .inputTxt {width:260px; height:32px; line-height:32px;}
+.loginWrap .btnLogin {float:left; margin-top:15px; margin-left:7px;}
+.loginWrap .btnLogin {width:140px; height:74px; font-weight:bold; color:#ffffff !important; line-height:74px; font-size:16px; text-align:center; text-decoration:none !important; border:1px solid #0066ae; background:#006dba;}
+
+.loginWrap .login li .inputTxt2 {border:1px solid #dbdbdb; margin-right:2px; width:330px; height:32px; line-height:32px;}
+.loginWrap .login li .inputTxt3 {border:1px solid #dbdbdb; margin-right:2px; width:90px; height:32px; line-height:32px;}

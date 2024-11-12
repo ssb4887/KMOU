@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+<!--
+ ************************************************************************************************
+	메뉴의 세부권한 인증 여부를 확인 할 수있는 서비스 클래스
+	1. rbs 메뉴설정정보를 사용하는 빈
+ ************************************************************************************************
+-->
+	<!--메뉴의 세부권한 인증 여부를 확인 할 수있는 서비스 클래스-->
+	<bean id="rbsAuthHelper" class="com.woowonsoft.egovframework.util.AuthHelper">
+        <property name="authService">
+        	<!-- 원하는 bean id를 아래에 ref 태그에 적용한다 -->
+            <ref bean="rbsAuthService" />
+        </property>
+    </bean>
+
+    <!-- 1. rbs 메뉴설정정보를 사용하는 빈 -->
+    <bean id="rbsAuthService" class="rbs.egovframework.service.AuthServiceImpl"/>
+
+</beans>

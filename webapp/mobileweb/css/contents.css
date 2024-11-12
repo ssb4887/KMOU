@@ -1,0 +1,9 @@
+@charset "utf-8";
+
+/*소개*/
+.about {width:100%;}
+.about dt {line-height:30px; font-weight: bold; background: url(../images/common/bul_circle_grey.png) no-repeat 0 center; padding-left:10px;}
+.about dd {line-height:20px;margin:0 0 10px 10px;font-size:13px;}
+
+.solution p {line-height:22px; margin-bottom:10px; text-indent: 0.5em;font-size:13px;}
+.solution img {max-width: 96%;}

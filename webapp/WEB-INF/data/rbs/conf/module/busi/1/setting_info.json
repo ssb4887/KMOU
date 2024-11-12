@@ -1,0 +1,30 @@
+{
+   "setting_info":{
+      "list_title":"테스트 사업 목록",
+      "input_title":"테스트 사업 등록",
+      "deleteList_title":"테스트 사업 삭제목록",
+      "dset_list_block":10,
+      "dset_list_count":20,
+      "use_paging":1,
+      "page_name":"page",
+      "idx_name":"busiIdx",
+      "idx_column":"BUSI_IDX",
+      "design":"default",
+      "use_file":1,
+      "use_new":1
+   },
+   "appl_setting_info":{
+      "list_title":"테스트 사업 신청 목록",
+      "input_title":"테스트 사업 신청 등록",
+      "deleteList_title":"테스트 사업 신청 삭제목록",
+      "dset_list_block":10,
+      "dset_list_count":20,
+      "use_paging":1,
+      "page_name":"rpage",
+      "idx_name":"applIdx",
+      "idx_column":"APPL_IDX",
+      "design":"default",
+      "use_file":1,
+      "use_new":1
+   }
+}

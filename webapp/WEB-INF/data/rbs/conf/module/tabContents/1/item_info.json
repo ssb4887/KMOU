@@ -1,0 +1,566 @@
+{
+	"item_info":{
+		"items":{
+			 "reference":{
+			   "column_id":"REFERENCE"
+				, "item_name":"참고문헌1"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":14
+				, "default_value":"0"
+				, "master_code":"ISUSE"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "tabName1":{
+				"column_id":"TAB_NAME1"
+				, "item_name":"탭명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "tabName2":{
+				"column_id":"TAB_NAME2"
+				, "item_name":"탭명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "tabName3":{
+				"column_id":"TAB_NAME3"
+				, "item_name":"탭명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "tabName4":{
+				"column_id":"TAB_NAME4"
+				, "item_name":"탭명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "tabName5":{
+				"column_id":"TAB_NAME5"
+				, "item_name":"탭명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "tabName6":{
+				"column_id":"TAB_NAME6"
+				, "item_name":"탭명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "tabName7":{
+				"column_id":"TAB_NAME7"
+				, "item_name":"탭명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "tabName8":{
+				"column_id":"TAB_NAME8"
+				, "item_name":"탭명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "tabName9":{
+				"column_id":"TAB_NAME9"
+				, "item_name":"탭명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "tabName10":{
+				"column_id":"TAB_NAME10"
+				, "item_name":"탭명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "tabCont1":{
+				"column_id":"TAB_CONTENTS1"
+				, "item_name":"내용"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":'1'
+				, "content_type":2
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "tabCont2":{
+				"column_id":"TAB_CONTENTS2"
+				, "item_name":"내용"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":'1'
+				, "content_type":2
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "tabCont3":{
+				"column_id":"TAB_CONTENTS3"
+				, "item_name":"내용"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":'1'
+				, "content_type":2
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "tabCont4":{
+				"column_id":"TAB_CONTENTS4"
+				, "item_name":"내용"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":'1'
+				, "content_type":2
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "tabCont5":{
+				"column_id":"TAB_CONTENTS5"
+				, "item_name":"내용"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":'1'
+				, "content_type":2
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "tabCont6":{
+				"column_id":"TAB_CONTENTS6"
+				, "item_name":"내용"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":'1'
+				, "content_type":2
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "tabCont7":{
+				"column_id":"TAB_CONTENTS7"
+				, "item_name":"내용"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":'1'
+				, "content_type":2
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "tabCont8":{
+				"column_id":"TAB_CONTENTS8"
+				, "item_name":"내용"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":'1'
+				, "content_type":2
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "tabCont9":{
+				"column_id":"TAB_CONTENTS9"
+				, "item_name":"내용"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":'1'
+				, "content_type":2
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "tabCont10":{
+				"column_id":"TAB_CONTENTS10"
+				, "item_name":"내용"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":1
+				, "editor":'1'
+				, "content_type":2
+				, "maximum":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "file":{
+				"column_id":"FILE"
+				, "item_name":"파일"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":9
+				, "write_type":0
+				, "modify_type":0
+				,"use_setting_id":"use_file"
+				, "default_item":1
+			} , "ordType":{
+				"item_name":"위치"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":5
+				, "master_code":"ORD_TYPE"
+				, "default_value":"2"
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}
+		}, "list_order":[
+			"class_idx"
+		],"view_order":[
+		   "class_idx"
+			, "reference"
+			, "tabName1"
+			, "tabCont1"
+			, "tabName2"
+			, "tabCont2"
+			, "tabName3"
+			, "tabCont3"
+			, "tabName4"
+			, "tabCont4"
+			, "tabName5"
+			, "tabCont5"
+			, "tabName6"
+			, "tabCont6"
+			, "tabName7"
+			, "tabCont7"
+			, "tabName8"
+			, "tabCont8"
+			, "tabName9"
+			, "tabCont9"
+			, "tabName10"
+			, "tabCont10"
+			, "file"
+			, "ordType"
+		],"write_order":[
+			"class_idx"
+			, "reference"
+			, "tabName1"
+			, "tabCont1"
+			, "tabName2"
+			, "tabCont2"
+			, "tabName3"
+			, "tabCont3"
+			, "tabName4"
+			, "tabCont4"
+			, "tabName5"
+			, "tabCont5"
+			, "tabName6"
+			, "tabCont6"
+			, "tabName7"
+			, "tabCont7"
+			, "tabName8"
+			, "tabCont8"
+			, "tabName9"
+			, "tabCont9"
+			, "tabName10"
+			, "tabCont10"
+			, "file"
+			, "ordType"
+		]
+		, "writeproc_order":[
+			"class_idx"
+			, "reference"
+			, "tabName1"
+			, "tabCont1"
+			, "tabName2"
+			, "tabCont2"
+			, "tabName3"
+			, "tabCont3"
+			, "tabName4"
+			, "tabCont4"
+			, "tabName5"
+			, "tabCont5"
+			, "tabName6"
+			, "tabCont6"
+			, "tabName7"
+			, "tabCont7"
+			, "tabName8"
+			, "tabCont8"
+			, "tabName9"
+			, "tabCont9"
+			, "tabName10"
+			, "tabCont10"
+			, "file"
+			, "ordType"
+		]
+		, "modify_order":[
+			"class_idx"
+			, "reference"
+			, "tabName1"
+			, "tabCont1"
+			, "tabName2"
+			, "tabCont2"
+			, "tabName3"
+			, "tabCont3"
+			, "tabName4"
+			, "tabCont4"
+			, "tabName5"
+			, "tabCont5"
+			, "tabName6"
+			, "tabCont6"
+			, "tabName7"
+			, "tabCont7"
+			, "tabName8"
+			, "tabCont8"
+			, "tabName9"
+			, "tabCont9"
+			, "tabName10"
+			, "tabCont10"
+			, "file"
+			, "ordType"
+		]
+		, "modifyproc_order":[
+			"class_idx"
+			, "reference"
+			, "tabName1"
+			, "tabCont1"
+			, "tabName2"
+			, "tabCont2"
+			, "tabName3"
+			, "tabCont3"
+			, "tabName4"
+			, "tabCont4"
+			, "tabName5"
+			, "tabCont5"
+			, "tabName6"
+			, "tabCont6"
+			, "tabName7"
+			, "tabCont7"
+			, "tabName8"
+			, "tabCont8"
+			, "tabName9"
+			, "tabCont9"
+			, "tabName10"
+			, "tabCont10"
+			, "file"
+			, "ordType"
+		]
+		, "list_search":{
+			"key":{
+				"items":{
+					
+
+					}
+				}
+			}, "searchForm_order":[
+				
+			], "search_order":[
+				
+			]
+		},"class_item_info":{
+		"items":{
+		    "classIdx":{
+		    	"column_id":"CLASS_IDX"
+				, "item_name":"분류코드"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			},
+			"clName":{
+				"column_id":"CLASS_NAME"
+				, "item_name":"분류명"
+				, "required_write":1
+				, "required_modify":1
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "default_item":1
+			}, "dmgDepart":{
+				"column_id":"DMNG_DEPART"
+				, "item_name":"관리부서"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "dmgLdate":{
+				"column_id":"DMNG_LDATE"
+				, "item_name":"관리일자"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "dmgName":{
+				"column_id":"DMNG_NAME"
+				, "item_name":"관리담당명"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}, "dmgPhone":{
+				"column_id":"DMNG_PHONE"
+				, "item_name":"관리전화번호"
+				, "required_write":0
+				, "required_modify":0
+				, "format_type":0
+				, "object_type":0
+				, "option_type":0
+				, "write_type":0
+				, "modify_type":0
+				, "maximum":50
+				, "default_item":1
+			}
+		}, "list_order":[
+			"classIdx"
+			, "clName"
+		], "view_order":[
+			"class_idx"
+			, "reference"
+			, "tabName1"
+			, "tabCont1"
+			, "tabName2"
+			, "tabCont2"
+			, "tabName3"
+			, "tabCont3"
+			, "tabName4"
+			, "tabCont4"
+			, "tabName5"
+			, "tabCont5"
+			, "tabName6"
+			, "tabCont6"
+			, "tabName7"
+			, "tabCont7"
+			, "tabName8"
+			, "tabCont8"
+			, "tabName9"
+			, "tabCont9"
+			, "tabName10"
+			, "tabCont10"
+			, "file"
+			, "ordType"
+		], "write_order":[
+			"classIdx"
+			, "clName"
+			, "dmgDepart"
+			, "dmgLdate"
+			, "dmgName"
+			, "dmgPhone"
+			, "ordType"
+		], "writeproc_order":[
+			"classIdx"
+			, "clName"
+			, "dmgDepart"
+			, "dmgLdate"
+			, "dmgName"
+			, "dmgPhone"
+		], "modify_order":[
+			"classIdx"
+			, "clName"
+			, "dmgDepart"
+			, "dmgLdate"
+			, "dmgName"
+			, "dmgPhone"
+		], "modifyproc_order":[
+			"classIdx"
+			, "clName"
+			, "dmgDepart"
+			, "dmgLdate"
+			, "dmgName"
+			, "dmgPhone"
+		]
+	}
+	
+}

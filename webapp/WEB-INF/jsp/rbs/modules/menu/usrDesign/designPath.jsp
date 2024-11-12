@@ -1,0 +1,2 @@
+<spring:message var="jspModuleResourceRPath" code="Globals.module.resource.path"/>
+<link href="<c:out value="${contextPath}${jspModuleResourceRPath}/menu/${menuDesign}/style.css"/>" rel="stylesheet" type="text/css" />

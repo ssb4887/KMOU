@@ -1,0 +1,829 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	1. IDX, <include refid="MAJORINFO_TABLE_NAME"/>, [목록에 사용할 컬럼], [기본정렬쿼리], 테이블명 등 변경해서 사용
+	2. 그 외 필요에 따라 쿼리 수정하여 사용 
+-->
+<mapper namespace="rbs.modules.majorInfo.majorInfoMapper">
+	<!-- 테이블명 -->
+	<sql id="DEPT_TABLE_NAME"><trim>DEPT_INFO</trim></sql>
+	<sql id="MAJOR_TABLE_NAME"><trim>MAJOR_INFO</trim></sql>
+	<sql id="MAJOR_ABTY_TABLE_NAME"><trim>MAJOR_ABTY_INFO</trim></sql>
+	<sql id="MAJOR_ABTY_DETAIL_TABLE_NAME"><trim>MAJOR_ABTY_DETAIL_INFO</trim></sql>
+	<sql id="MAJOR_COUR_TABLE_NAME"><trim>MAJOR_EDU_COUR_INFO</trim></sql>
+	<sql id="MAJOR_NONSBJT_TABLE_NAME"><trim>MAJOR_NONSBJT_INFO</trim></sql>
+	<sql id="MAJOR_LICENSE_TABLE_NAME"><trim>MAJOR_LICENSE_INFO</trim></sql>
+	
+	
+	<sql id="MAJORINFO_TABLE_NAME"><trim><include refid="rbs.commonMapper.TABLE_PRE_FLAG"/>MAJOR_${fnIdx}_INFO</trim></sql>
+	<sql id="MAJORINFO_TABLE_MAJOR"><trim>major_info</trim></sql>
+	<sql id="MAJORINFO_TABLE_YEAR"><trim>inu_major_year</trim></sql>
+	<sql id="MAJORINFO_TABLE_FILE"><trim>inu_major_year_file</trim></sql>
+	<sql id="MAJORINFO_TABLE_JOB"><trim>inu_major_year_job</trim></sql>
+	<sql id="MAJORINFO_TABLE_DTL"><trim>inu_major_year_job_dtl</trim></sql>
+	<sql id="MAJORINFO_TABLE_STATISTIC"><trim>inu_major_year_statistic</trim></sql>
+	<sql id="MAJORINFO_TABLE_TRACK"><trim>inu_major_year_track</trim></sql>
+	
+	<!-- KEY가 INT인 경우 -->
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="MAJORINFO_TABLE_NAME"/> A
+	</select>
+	<!-- KEY가 INT인 경우 -->
+	<select id="nextMajorId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(ORD), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="MAJOR_TABLE_NAME"/> A
+	</select>
+	<!-- KEY가 INT인 경우 -->
+	<select id="nextMajorOrdId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(ORD), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="MAJOR_ABTY_DETAIL_TABLE_NAME"/> A
+		WHERE A.MAJOR_CD = #{majorCd}
+	</select>
+	<!-- KEY가 이미 있는 경우 -->
+	<select id="getMajorIdx" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(MAJOR_IDX), 0)</trim> MAXID
+		FROM 
+		<include refid="MAJORINFO_TABLE_MAJOR"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		and A.MAJOR_CD = #{majorCd}
+	</select>
+	<!-- KEY가 INT인 경우 -->
+	<select id="nextYearId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(YEAR_IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="MAJORINFO_TABLE_YEAR"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<!-- KEY가 INT인 경우 -->
+	<select id="getCopyYear" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(YEAR), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="MAJORINFO_TABLE_YEAR"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<!-- KEY가 INT인 경우 -->
+	<select id="nextFileId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(FILE_IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="MAJORINFO_TABLE_FILE"/> A
+	</select>
+	<!-- KEY가 INT인 경우 -->
+	<select id="nextJobId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(JOB_IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="MAJORINFO_TABLE_JOB"/> A
+	</select>
+	<!-- KEY가 INT인 경우 -->
+	<select id="nextDtlId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(DTL_IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="MAJORINFO_TABLE_DTL"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<!-- KEY가 INT인 경우 -->
+	<select id="nextStatisticId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(STATISTIC_IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="MAJORINFO_TABLE_STATISTIC"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<!-- KEY가 이미 있는 경우 -->
+	<select id="getStatisticIdx" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(STATISTIC_IDX), 0)</trim> MAXID
+		FROM 
+		<include refid="MAJORINFO_TABLE_STATISTIC"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<!-- KEY가 이미 있는 경우 -->
+	<select id="getTrackIdx" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(TRACK_IDX), 0)</trim> MAXID
+		FROM 
+		<include refid="MAJORINFO_TABLE_TRACK"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<!-- KEY가 이미 있는 경우 -->
+	<select id="getJobIdx" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(JOB_IDX), 0)</trim> MAXID
+		FROM 
+		<include refid="MAJORINFO_TABLE_JOB"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<!-- KEY가 INT인 경우 -->
+	<select id="nextTrackId" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT <trim><include refid="rbs.commonDBMSMapper.nullFn"/>(MAX(TRACK_IDX), 0)</trim> + 1 MAXID
+		FROM 
+		<include refid="MAJORINFO_TABLE_TRACK"/> A
+		where
+			A.MAJOR_IDX = #{majorIdx}
+		and A.YEAR_IDX = #{yearIdx}
+<!-- 		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/> -->
+	</select>
+	
+	<!-- KEY가 STRING인 경우 - KEY형식에 맞게 변경하여 사용 
+	<select id="nextId" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT CONCAT(<include refid="rbs.commonDBMSMapper.currentDateYYYYMM"/>, LPAD(CONVERT(RIGHT(IFNULL(MAX(A.IDX), '0'), 6) + 1, CHAR(6)), 6, '0')) MAXID
+		FROM 
+		<include refid="MAJORINFO_TABLE_NAME"/> A 
+		WHERE A.IDX LIKE CONCAT(<include refid="rbs.commonDBMSMapper.currentDateYYYYMM"/>, '%')
+	</select>
+	-->
+	<!-- 수정/삭제 권한 : 등록자 -->
+    <!-- 목록 수정/삭제 권한 조건 쿼리 -->
+	<sql id="editAuthListQuery">
+		<if test="AUTH_MEMBER_IDX != null">
+		, CASE WHEN A.REGI_IDX = #{AUTH_MEMBER_IDX} THEN '1' ELSE '0' END AS AUTH_MNG
+		</if>
+	</sql>
+	
+    <!-- 수정/삭제 권한 조건 쿼리 -->	
+	<sql id="editAuthWhereQuery">
+		<if test="AUTH_MEMBER_IDX != null">
+		AND A.REGI_IDX = #{AUTH_MEMBER_IDX} 
+		</if>
+	</sql>
+	
+	<select id="selectList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT * FROM <include refid="MAJOR_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<choose>
+				<when test="dsetOrderField == null">
+					<bind name="defaultOrderStr" value="'A.YEAR_IDX'"/>
+				</when>
+				<otherwise>
+					<bind name="defaultOrderStr" value="_parameter.get('dsetOrderField')"/>
+				</otherwise>
+			</choose>
+			ORDER BY A.LAST_MODI_DATE DESC
+<!-- 			<include refid="rbs.commonMapper.COM_ORDER"/> -->
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="selectDeptList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT * FROM <include refid="DEPT_TABLE_NAME"/> A
+			WHERE 1 =1
+			<if test="COLG != null">AND COLG_CD = #{COLG}</if> 
+			<if test="DEPART != null and MAJOR == null">AND (DEPT_CD = #{DEPART} OR UP_CD = #{DEPART})</if>
+			<if test="MAJOR != null">AND DEPT_CD = #{MAJOR} AND UP_CD = #{DEPART}</if>
+			<if test="MAJOR_NM != null">AND DEPT_NM LIKE #{MAJOR_NM}</if>
+			ORDER BY A.ISDELETE ASC, A.DEPT_CD ASC 
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="selectTrackList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT * FROM 
+			<include refid="MAJORINFO_TABLE_TRACK"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<choose>
+				<when test="dsetOrderField == null">
+					<bind name="defaultOrderStr" value="'A.TRACK_IDX'"/>
+				</when>
+				<otherwise>
+					<bind name="defaultOrderStr" value="_parameter.get('dsetOrderField')"/>
+				</otherwise>
+			</choose>
+			ORDER BY A.LAST_MODI_DATE DESC
+<!-- 			<include refid="rbs.commonMapper.COM_ORDER"/> -->
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="selectJobList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT * FROM 
+			<include refid="MAJORINFO_TABLE_JOB"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<choose>
+				<when test="dsetOrderField == null">
+					<bind name="defaultOrderStr" value="'A.JOB_IDX'"/>
+				</when>
+				<otherwise>
+					<bind name="defaultOrderStr" value="_parameter.get('dsetOrderField')"/>
+				</otherwise>
+			</choose>
+			ORDER BY A.JOB_IDX ASC
+<!-- 			<include refid="rbs.commonMapper.COM_ORDER"/> -->
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="selectDtlList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT * FROM 
+		<include refid="MAJORINFO_TABLE_DTL"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MAJOR_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			<if test="DEPART != null">AND DEPT_CD = #{DEPART}</if>
+			<if test="MAJOR != null">AND MAJOR_CD = #{MAJOR}</if>
+	</select>
+	
+	<select id="selectDeptCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="DEPT_TABLE_NAME"/> A
+			WHERE 1=1
+			<if test="COLG != null">AND COLG_CD = #{COLG}</if> 
+			<if test="DEPART != null and MAJOR == null">AND (DEPT_CD = #{DEPART} OR UP_CD = #{DEPART})</if>
+			<if test="MAJOR != null">AND DEPT_CD = #{MAJOR} AND UP_CD = #{DEPART}</if>
+			<if test="MAJOR_NM != null">AND DEPT_NM LIKE #{MAJOR_NM}</if>
+	</select>
+	
+	<select id="selectTrackCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MAJORINFO_TABLE_TRACK"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectJobCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MAJORINFO_TABLE_JOB"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectMajorCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			(SELECT A.MAJOR_IDX FROM
+				<include refid="MAJORINFO_TABLE_MAJOR"/> A
+				inner join
+				<include refid="MAJORINFO_TABLE_YEAR"/> B
+				on A.MAJOR_IDX = B.MAJOR_IDX
+				<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			) as C
+	</select>
+	
+	<select id="selectMajorEtcCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			<include refid="MAJORINFO_TABLE_MAJOR"/> A
+		WHERE
+			A.MAJOR_IDX = #{majorIdx}
+		AND A.DEPT_CD = 'VA00'
+	</select>
+	
+	<select id="selectMajorYearCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+			(SELECT A.MAJOR_IDX FROM
+				<include refid="MAJORINFO_TABLE_YEAR"/> A
+				<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			) as C
+	</select>
+	
+	<!-- 신설된 학부/학과 등록 -->
+	<insert id="insertDept" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="DEPT_TABLE_NAME"/> (
+			DEPT_CD, DEPT_NM, DEPT_ENM, DEPT_LEVEL, UP_CD, UP_NM, COLG_CD, COLG_NM, 
+			MULTI_MAJOR, MULTI_MAJOR_NM, CRE_DT, REGI_DATE
+		) VALUES (
+			#{DEPT_CD}, #{DEPT_NM}, #{DEPT_ENM}, #{DEPT_LEVEL}, #{UP_CD}, #{UP_NM}, #{COLL_CD}, #{COLL_NM}, 
+			#{GROUP5_CODE}, #{MULTI_MAJOR_NM}, #{CRE_DT}, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	<!-- 신설된 학부/학과 등록 끝 -->
+	
+	<!-- 전공정보 조회 -->
+	<select id="selectView" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			A.*
+			<include refid="editAuthListQuery"/>
+		FROM 
+		<include refid="MAJORINFO_TABLE_NAME"/> A 
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<select id="selectAbtyList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 				*
+		FROM   				
+		<include refid="MAJOR_ABTY_TABLE_NAME"/> A 
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<!-- 전공정보 조회  끝-->
+	
+	
+	<!-- 전공능력 삭제 -->
+	<delete id="deleteMajorAbility" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MAJOR_ABTY_TABLE_NAME"/>	
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	<!-- 전공능력 삭제  끝-->
+	
+	<!-- 전공능력 입력 -->
+	<insert id="insertMajorAbility" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJOR_ABTY_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>		
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	<!-- 전공능력 입력 끝 -->
+	
+	<!-- 인재상 전공능력 목록 조회 -->
+	<select id="selectTalentList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT  	*
+			FROM 
+			<include refid="MAJOR_ABTY_DETAIL_TABLE_NAME"/> A
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+			AND A.MAJOR_CD = #{MAJOR_CD}
+			AND A.PARENT_ABTY_CD IS NULL
+			ORDER BY ABTY_CD		
+	</select>
+	
+	<!-- 인재상 전공능력 목록 조회 끝 -->
+	
+	<select id="selectAbtyMngList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT A.*, FN_GET_ABTY_NAME(A.PARENT_ABTY_CD) AS PARENT_ABTY_NM
+		FROM <include refid="MAJOR_ABTY_DETAIL_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		AND MAJOR_CD = #{MAJOR_CD}
+	</select>
+	
+	<insert id="insertAddMajorList" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJOR_COUR_TABLE_NAME"/>
+			( MAJOR_CD, FIELD_CD, SUBJECT_NM, GRADE, FIELD, SMT, SUBJECT_CD, YEAR,
+			 SINBUN_CODE, CDT_NUM, WTIME_NUM, PTIME_NUM, REGI_ID, REGI_IP, LAST_MODI_ID, LAST_MODI_IP )
+		VALUES
+			(#{MAJOR_CD}, #{FIELD_CD}, #{SUBJECT_NM}, #{COM_GRADE}, #{FIELD}, #{SMT}, #{SUBJECT_CD}, #{YEAR},
+			#{COMDIV_CODE}, #{CDT_NUM}, #{WTIME_NUM}, #{PTIME_NUM}, #{REGI_ID}, #{REGI_IP}, #{REGI_ID}, #{REGI_IP})    
+	</insert>
+	
+	<!-- 교육과정 목록 조회 -->
+	<select id="selectCourMajorList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT MAJOR_CD
+			,SUBJECT_NM
+			,SUBJECT_CD
+			,FIELD_CD
+			,FIELD
+			,GRADE
+			,YEAR
+			,SMT
+		FROM <include refid="MAJOR_COUR_TABLE_NAME"/>
+		WHERE 1=1
+		<if test=' YEAR != null and YEAR != "" '>
+			AND YEAR = #{YEAR}
+		</if>
+		<if test=' MAJOR_CD != null and MAJOR_CD != "" '>
+			AND MAJOR_CD = #{MAJOR_CD}
+		</if>
+		<if test=' SUBJECT_CD != null and SUBJECT_CD != "" '>
+			AND SUBJECT_CD = #{SUBJECT_CD}
+		</if>
+		ORDER BY GRADE, SUBJECT_CD, FIELD_CD
+	</select>
+	
+	<delete id="deleteCourMajorList" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MAJOR_COUR_TABLE_NAME"/>		
+		WHERE MAJOR_CD = #{MAJOR_CD}
+	</delete>
+	
+	<insert id="insertMajorCour" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJOR_COUR_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>	
+	
+	<select id="selectFieldList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT A.*
+		FROM RBS_OPTION_INFO A
+		WHERE A.OPTION_CODE LIKE CONCAT('%', #{MAJOR_CD}, '%')
+	</select>
+	
+	<select id="selectNonSbjtList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT A.*
+		FROM <include refid="MAJOR_NONSBJT_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		ORDER BY ORD
+	</select>
+	
+	<!-- 비교과 삭제 -->
+	<delete id="deleteNonSbjt" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MAJOR_NONSBJT_TABLE_NAME"/>	
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	<!-- 비교과 삭제  끝-->
+	
+	<insert id="insertNonSbjt" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJOR_NONSBJT_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>		
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<select id="selectLicenseList" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT A.*
+		FROM <include refid="MAJOR_LICENSE_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		AND MAJOR_CD = #{MAJOR_CD}
+		ORDER BY ORD
+	</select>
+	
+	<!-- 관련자격증 삭제 -->
+	<delete id="deleteLicense" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MAJOR_LICENSE_TABLE_NAME"/>	
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	<!-- 관련자격증 삭제  끝-->
+	
+	<insert id="insertLicense" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJOR_LICENSE_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>		
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<select id="selectFileList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			<foreach collection="columnList" item="columnItem" index="i" separator=",">
+				${columnItem}
+			</foreach>
+			FROM 
+			<include refid="MAJORINFO_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	<select id="selectFileView" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 
+			A.${columnItem}_SAVED_NAME, A.${columnItem}_ORIGIN_NAME
+			FROM 
+			<include refid="MAJORINFO_TABLE_YEAR"/> A 
+			<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+	</select>
+	
+	<update id="updateFileDown" parameterType="java.util.HashMap">
+		UPDATE <include refid="MAJORINFO_TABLE_YEAR"/> SET ${FILE_COLUMN}_DCNT = ${FILE_COLUMN}_DCNT + 1 
+		WHERE MAJOR_IDX = #{MAJOR_IDX}
+		and YEAR = #{YEAR}
+	</update>
+	
+<!-- 	<update id="updateFileDown" parameterType="java.util.HashMap"> -->
+<!-- 		UPDATE <include refid="MAJORINFO_TABLE_NAME"/> SET ${FILE_COLUMN}_DCNT = ${FILE_COLUMN}_DCNT + 1  -->
+<!-- 		WHERE IDX = #{IDX} -->
+<!-- 	</update> -->
+	
+	<select id="authCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+		<include refid="MAJORINFO_TABLE_MAJOR"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<include refid="editAuthWhereQuery"/>
+	</select>
+	
+	<select id="selectModify" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			A.*
+		FROM 
+		<include refid="MAJORINFO_TABLE_MAJOR"/> A
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<include refid="editAuthWhereQuery"/>
+	</select>
+	
+	<select id="selectDeptModify" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			A.*
+		FROM 
+		<include refid="DEPT_TABLE_NAME"/> A  
+		WHERE A.DEPT_CD = #{DEPT_CD}
+	</select>
+	
+	<select id="selectModifyTrack" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			A.*
+		FROM 
+		<include refid="MAJORINFO_TABLE_TRACK"/> A 
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<include refid="editAuthWhereQuery"/>
+	</select>
+	
+	<select id="selectModifyJob" parameterType="java.util.HashMap" resultType="dataMap">
+		SELECT 
+			A.*
+<!-- 			B.TITLE as DTL_TITLE, -->
+<!-- 			B.CONTENTS as DTL_CONTENTS -->
+		FROM 
+		<include refid="MAJORINFO_TABLE_JOB"/> A
+<!-- 		left join -->
+<!-- 		<include refid="MAJORINFO_TABLE_DTL"/> B -->
+<!-- 		on A.MAJOR_IDX = B.MAJOR_IDX -->
+<!-- 		and A.YEAR_IDX = B.YEAR_IDX -->
+<!-- 		and A.JOB_IDX = B.JOB_IDX -->
+		<include refid="rbs.commonMapper.SELECT_DF_WHERE"/>
+		<include refid="editAuthWhereQuery"/>
+	</select>
+	
+	<insert id="insert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJORINFO_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<insert id="insertMajor" parameterType="java.util.HashMap">
+		<selectKey resultType="int" keyProperty="MAJOR_IDX" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+		INSERT INTO <include refid="MAJORINFO_TABLE_MAJOR"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<insert id="insertMajorYear" parameterType="java.util.HashMap">
+		<selectKey resultType="int" keyProperty="YEAR_IDX" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+		INSERT INTO <include refid="MAJORINFO_TABLE_YEAR"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<insert id="copyMajorYear" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJORINFO_TABLE_YEAR"/> 
+		( <include refid="rbs.commonMapper.INSERT_COLUMNS"/> , YEAR, YEAR_IDX, REGI_DATE, LAST_MODI_DATE)
+		(SELECT
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/> , #{copyYear} , #{keyIdx}
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		FROM
+			<include refid="MAJORINFO_TABLE_YEAR"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		) 
+	</insert>
+	
+	<insert id="copyMajorStatistic" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJORINFO_TABLE_STATISTIC"/> 
+		( <include refid="rbs.commonMapper.INSERT_COLUMNS"/> , YEAR_IDX, STATISTIC_IDX, REGI_DATE, LAST_MODI_DATE)
+		(SELECT
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/> , #{keyIdx} , 1
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		FROM
+			<include refid="MAJORINFO_TABLE_STATISTIC"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		) 
+	</insert>
+	
+	<insert id="copyMajorTrack" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJORINFO_TABLE_TRACK"/> 
+		( <include refid="rbs.commonMapper.INSERT_COLUMNS"/> , YEAR_IDX, TRACK_IDX, REGI_DATE, LAST_MODI_DATE)
+		(SELECT
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/> , #{keyIdx} , TRACK_IDX
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		FROM
+			<include refid="MAJORINFO_TABLE_TRACK"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		) 
+	</insert>
+	
+	<insert id="copyMajorJob" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJORINFO_TABLE_JOB"/> 
+		( <include refid="rbs.commonMapper.INSERT_COLUMNS"/> , YEAR_IDX, JOB_IDX, REGI_DATE, LAST_MODI_DATE)
+		(SELECT
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/> , #{keyIdx} , JOB_IDX
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		FROM
+			<include refid="MAJORINFO_TABLE_JOB"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		) 
+	</insert>
+	
+	<insert id="copyMajorDtl" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJORINFO_TABLE_DTL"/> 
+		( <include refid="rbs.commonMapper.INSERT_COLUMNS"/> , YEAR_IDX, JOB_IDX, DTL_IDX, REGI_DATE, LAST_MODI_DATE)
+		(SELECT
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/> , #{keyIdx} , JOB_IDX, DTL_IDX
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		FROM
+			<include refid="MAJORINFO_TABLE_DTL"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+		) 
+	</insert>
+	
+	<insert id="insertMajorStatistic" parameterType="java.util.HashMap">
+		<selectKey resultType="int" keyProperty="STATISTIC_IDX" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+		INSERT INTO <include refid="MAJORINFO_TABLE_STATISTIC"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<insert id="insertMajorTrack" parameterType="java.util.HashMap">
+		<selectKey resultType="int" keyProperty="TRACK_IDX" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+		INSERT INTO <include refid="MAJORINFO_TABLE_TRACK"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<insert id="insertMajorJob" parameterType="java.util.HashMap">
+		<selectKey resultType="int" keyProperty="JOB_IDX" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+		INSERT INTO <include refid="MAJORINFO_TABLE_JOB"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<insert id="insertMajorJobDtl" parameterType="java.util.HashMap">
+		<selectKey resultType="int" keyProperty="JOB_IDX" order="AFTER">SELECT LAST_INSERT_ID()</selectKey>
+		INSERT INTO <include refid="MAJORINFO_TABLE_DTL"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<delete id="deleteMajorJobDtl" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MAJORINFO_TABLE_DTL"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	
+	
+	<update id="update" parameterType="java.util.HashMap">
+		UPDATE <include refid="MAJORINFO_TABLE_NAME"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	<update id="updateMajor" parameterType="java.util.HashMap">
+		UPDATE <include refid="MAJORINFO_TABLE_MAJOR"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	<update id="updateDept" parameterType="java.util.HashMap">
+		UPDATE <include refid="DEPT_TABLE_NAME"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		, ISDELETE = #{ISDELETE}
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	<update id="updateYear" parameterType="java.util.HashMap">
+		UPDATE <include refid="MAJORINFO_TABLE_YEAR"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	<update id="updateStatistic" parameterType="java.util.HashMap">
+		UPDATE <include refid="MAJORINFO_TABLE_STATISTIC"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	<update id="updateTrack" parameterType="java.util.HashMap">
+		UPDATE <include refid="MAJORINFO_TABLE_TRACK"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	<update id="updateJob" parameterType="java.util.HashMap">
+		UPDATE <include refid="MAJORINFO_TABLE_JOB"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	
+	<insert id="abtyInsert" parameterType="java.util.HashMap">
+		INSERT INTO <include refid="MAJOR_ABTY_DETAIL_TABLE_NAME"/> (
+			<include refid="rbs.commonMapper.INSERT_COLUMNS"/>
+			, REGI_DATE, LAST_MODI_DATE
+		) VALUES (
+			<include refid="rbs.commonMapper.INSERT_VALUES"/>
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>		
+			, <include refid="rbs.commonDBMSMapper.currentDate"/>
+		)
+	</insert>
+	
+	<update id="abtyUpdate" parameterType="java.util.HashMap">
+		UPDATE <include refid="MAJOR_ABTY_DETAIL_TABLE_NAME"/> SET LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/> 
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		WHERE ABTY_CD = #{ABTY_CD}
+	</update>
+	
+	<delete id="abtyDelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MAJOR_ABTY_DETAIL_TABLE_NAME"/>  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	
+	<delete id="parentAbtyDelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MAJOR_ABTY_DETAIL_TABLE_NAME"/>  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	
+	<select id="deleteList" parameterType="java.util.HashMap" resultType="dataMap">
+		<include refid="rbs.commonDBMSMapper.PAGING_TOP"/>
+			SELECT 
+			A.* 
+			FROM 
+			<include refid="MAJORINFO_TABLE_NAME"/> A 
+			<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+			ORDER BY A.IDX
+		<include refid="rbs.commonDBMSMapper.PAGING_BOTTOM"/>
+	</select>
+	
+	<select id="deleteCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(1) CNT
+		FROM 
+		<include refid="MAJORINFO_TABLE_NAME"/> A
+		<include refid="rbs.commonMapper.SELECT_DT_WHERE"/>
+	</select>
+	
+	<update id="delete" parameterType="java.util.HashMap">
+		UPDATE <include refid="MAJORINFO_TABLE_NAME"/> SET ISDELETE = '1', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="deleteTrack" parameterType="java.util.HashMap">
+		UPDATE <include refid="MAJORINFO_TABLE_TRACK"/> SET ISDELETE = '1', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<update id="restore" parameterType="java.util.HashMap">
+		UPDATE <include refid="MAJORINFO_TABLE_NAME"/> SET ISDELETE = '0', LAST_MODI_DATE = <include refid="rbs.commonDBMSMapper.currentDate"/>  
+		<include refid="rbs.commonDBMSMapper.UPDATE_ADD_SET"/>
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</update>
+	
+	<delete id="cdelete" parameterType="java.util.HashMap">
+		DELETE FROM <include refid="MAJORINFO_TABLE_NAME"/>  
+		<include refid="rbs.commonMapper.COM_SG_WHERE"/>
+	</delete>
+	
+	
+	<select id="getRegisteredYear" parameterType="java.lang.String" resultType="dataMap">
+		SELECT 
+			YY 
+		FROM 
+			UNI_MJ_INFMT
+		WHERE
+			MJ_CD = #{mjCd}
+		GROUP BY YY
+	</select>
+	
+	<select id="getCollegeList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		COLG_CD	, COLG_NM
+			FROM 		<include refid="DEPT_TABLE_NAME"/>
+			WHERE 		ISDELETE = '0'
+						AND DEPT_LEVEL = '2'	
+			ORDER BY 	COLG_CD
+			
+	</select>
+	
+	<select id="getDepartList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		DEPT_CD, DEPT_NM
+			FROM 		<include refid="DEPT_TABLE_NAME"/>
+			WHERE 		ISDELETE = '0'
+						AND DEPT_LEVEL = '3'
+						<if test="univ != null and univ != ''">
+						AND UP_CD = #{univ}
+						</if>
+			ORDER BY 	COLG_CD, DEPT_CD
+			
+	</select>
+	
+	<select id="getMajorList" parameterType="java.util.HashMap" resultType="dataMap">
+			SELECT 		*
+			FROM 		<include refid="DEPT_TABLE_NAME"/>
+			WHERE		ISDELETE = '0'
+						AND DEPT_LEVEL = '4'
+			AND 		UP_CD = #{depart}
+			ORDER BY 	DEPT_CD ASC
+	</select>
+	
+	
+</mapper>            

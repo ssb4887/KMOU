@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.search.searchMapper">
+
+<!-- 	만족도 조사 insert -->
+	<insert id="insertPoint" parameterType="java.util.HashMap">
+	    INSERT INTO uni_qrywd_point (
+	        POINT_TYPE, 		POINT, 			CONTENTS,
+	        COLL_CD, 			COLL_NM, 		DEPT_CD, 
+	        DEPT_NM,			MAJOR_CD, 		MAJOR_NM, 
+	        USERTYPE_IDX, 		REGI_ID, 		REGI_NAME, 
+	        REGI_IP, 			REGI_DATE
+	    ) VALUES (
+	        #{POINT_TYPE}, 		#{POINT}, 		#{CONTENTS},
+	        #{COLL_CD}, 		#{COLL_NM}, 	#{DEPT_CD}, 
+	        #{DEPT_NM}, 		#{MAJOR_CD}, 	#{MAJOR_NM}, 
+	        #{USERTYPE_IDX}, 	#{REGI_ID}, 	#{REGI_NAME}, 
+	        #{REGI_IP},			NOW()
+	    )
+	</insert>
+		
+<!-- 	검색 로그 insert -->
+	<insert id="insertSearchLog" parameterType="java.util.HashMap">
+	    INSERT INTO uni_qrywd_hst (
+	        SEARCH_TYPE,  		KEYWORD, 		RESPONSE,	
+	        COLL_CD, 			COLL_NM, 		DEPT_CD, 
+			DEPT_NM, 			MAJOR_CD, 		MAJOR_NM, 
+	        GRADE,				USER_TYPE,  	REGI_ID,  		
+	        REGI_NAME, 			REGI_IP, 		SESSION_ID,		
+	        REGI_DATE
+	    ) VALUES (
+	        #{SEARCH_TYPE}, 	#{KEYWORD}, 	NULL,
+	        #{COLL_CD}, 		#{COLL_NM}, 	#{DEPT_CD}, 
+	        #{DEPT_NM}, 		#{MAJOR_CD}, 	#{MAJOR_NM}, 
+	        #{GRADE},			#{USER_TYPE},	#{REGI_ID}, 	
+	        #{REGI_NAME}, 		#{REGI_IP}, 	#{SESSION_ID},	
+	        NOW()
+	    )
+	</insert>
+
+</mapper>            

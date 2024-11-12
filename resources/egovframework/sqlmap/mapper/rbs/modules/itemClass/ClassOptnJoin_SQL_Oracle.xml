@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rbs.modules.itemClass.OptionJoinMapper">
+    <!-- join에서 사용 -->
+    <sql id="optionJoinSql">
+    	
+    	SELECT CLASS_IDX, CLASS_NAME FROM
+    	<choose>
+    		<when test="${USE_LANG} == 1">
+		    	<include refid="rbs.modules.itemClass.lang.optionMapper.VIEW_ICLASS_TABLE_NAME"/> 
+		    	WHERE ISDELETE = '0' AND LOCALE_LANG = #{localeLang}
+    		</when>
+    		<otherwise>
+		    	<include refid="rbs.modules.itemClass.optionMapper.ICLASS_TABLE_NAME"/> 
+		    	WHERE ISDELETE = '0'
+    		</otherwise>
+    	</choose>
+    </sql>
+</mapper>            
